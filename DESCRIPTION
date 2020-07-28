@@ -1,6 +1,6 @@
 Package: fundamentos
 Type: Book
-Title: Notas del curso fundamentos de estadística.
+Title: Notas del curso fundamentos de estadistica.
 Version: 0.0.1
 Imports: bookdown
 Remotes: rstudio/bookdown
