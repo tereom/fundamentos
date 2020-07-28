@@ -1,0 +1,6 @@
+book_filename: "fundamentos-estadística"
+language:
+  ui:
+    chapter_name: "Sección "
+delete_merged_file: true
+new_session: yes

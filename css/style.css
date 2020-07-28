@@ -1,0 +1,30 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+	
+.comentario {
+  padding: 1em 1em 1em 4em;
+  margin-bottom: 10px;
+  background: #F0E7E7;
+  position:relative;
+}
+
+.comentario:before {
+    content: "\f075";
+    font-family: FontAwesome;
+    left:10px;
+    position:absolute;
+    top:0px;
+    font-size: 30px;
+ }
