@@ -7,7 +7,7 @@ documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: rstudio/bookdown-demo
+github-repo: tereom/fundamentos
 description: "Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, 2020."
 ---
 
