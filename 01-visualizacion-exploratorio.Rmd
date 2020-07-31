@@ -1,0 +1,656 @@
+# Análisis exploratorio y visualización
+
+> "Exploratory data analysis can never be the whole story, but nothing
+else can serve as the foundation stone --as the first step." --- John Tukey
+
+> "The simple graph has brought more information to the data analyst’s mind 
+than any other device." --- John Tukey
+
+## El papel de la exploración en el análisis de datos {-}
+
+El estándar científico para contestar preguntas o tomar decisiones 
+es uno que se basa en el análisis de datos: para contestar preguntas o tomar 
+decisiones es necesario, en primer lugar, reunir todos los datos disponibles 
+que puedan contener o sugerir alguna guía para entender mejor la pregunta o la 
+decisión a la que nos enfrentamos. Esta recopilación de 
+datos -que pueden ser cualitativos, cuantitativos, 
+o una mezcla de los dos, debe entonces ser analizada para extraer información 
+relevante para nuestro problema.
+
+```{block2, type='comentario'}
+En análisis de datos existen dos distintos tipos de trabajo:
+
+- El trabajo **exploratorio** o  de **detective**: ¿cuáles son los aspectos importantes de estos datos?
+¿qué indicaciones generales muestran los datos? ¿qué tareas de análisis debemos
+empezar haciendo? ¿cuáles son los caminos generales para formular con precisión y 
+contestar algunas preguntas que nos interesen? 
+- El trabajo **inferencial**, **confirmatorio**, o de **juez**: ¿cómo evaluar el peso de 
+la evidencia de los descubrimientos
+del paso anterior? ¿qué tan bien soportadas están las respuestas y conclusiones 
+por nuestro conjunto de datos? 
+```
+
+
+
+## Algunos conceptos básicos {-}
+
+Empezamos explicando algunas ideas que no serán útiles más adelante.
+
+Por ejemplo, los siguientes datos fueron registrados en un restaurante durante cuatro días consecutivos:
+
+```{r, message = FALSE}
+library(tidyverse)
+library(patchwork)
+source("R/funciones_auxiliares.R")
+# usamos los datos tips del paquete reshape2
+tips <- reshape2::tips
+# renombramos variables y niveles
+propinas <- tips %>% 
+  rename(cuenta_total = total_bill, 
+         propina = tip, sexo = sex, 
+         fumador = smoker,
+         dia = day, momento = time, 
+         num_personas = size) %>% 
+  mutate(sexo = recode(sexo, Female = "Mujer", Male = "Hombre"), 
+         fumador = recode(fumador, No = "No", Si = "Si"),
+         dia = recode(dia, Sun = "Dom", Sat = "Sab", Thur = "Jue", Fri = "Vie"),
+         momento = recode(momento, Dinner = "Cena", Lunch = "Comida")) %>% 
+  select(-sexo) %>% 
+  mutate(dia  = fct_relevel(dia, c("Jue", "Vie", "Sab", "Dom")))
+```
+
+Y vemos una muestra
+
+```{r}
+sample_n(propinas, 10) 
+```
+
+
+Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones numéricas
+de cada cuenta: cúanto fue la cuenta total, la propina, y el número de personas asociadas a la cuenta.
+Los datos están separados según se fumó o no en la mesa, y temporalmente en dos partes: el día
+(Jueves, Viernes, Sábado o Domingo), cada uno separado por Cena y Comida. 
+
+El primer tipo de comparaciones que nos interesa hacer es para una medición: ¿Varían mucho o poco los datos 
+de un tipo  de medición? ¿Cuáles son valores típicos o centrales? ¿Existen valores atípicos?
+
+Supongamos entonces que consideramos simplemente la variable de *cuenta_total*. Podemos comenzar
+por **ordenar los datos**, y ver cuáles datos están en los extremos y cuáles están en los lugares centrales:
+
+```{r}
+propinas <- propinas %>% 
+  mutate(orden_cuenta = rank(cuenta_total, ties.method = "first"), 
+         f = (orden_cuenta - 0.5) / n()) 
+cuenta <- propinas %>% select(orden_cuenta, f, cuenta_total) %>% arrange(f)
+bind_rows(head(cuenta), tail(cuenta)) %>% knitr::kable()
+```
+
+
+y graficamos los datos en orden, interpolando valores consecutivos.
+
+```{r, fig.width = 7, fig.height = 4, echo = FALSE}
+g_orden <- ggplot(cuenta, aes(x = orden_cuenta, y = cuenta_total)) + 
+  geom_point(colour = "red", alpha = 0.5) + 
+  labs(subtitle = "Cuenta total") 
+g_cuantiles <- ggplot(cuenta, aes(x = f, y = cuenta_total)) + 
+  geom_point(colour = "red", alpha = 0.5) + geom_line() +
+  labs(subtitle = "") +
+  scale_x_continuous(breaks = seq(0, 1, 0.1))
+g_orden + g_cuantiles
+```
+
+A esta función le llamamos la **función de cuantiles** para la variable cuenta total. Nos
+sirve para comparar directamente los distintos valores que observamos los datos
+según el orden que ocupan. 
+
+**Dispersión y Valores centrales**
+
+- El *rango* de datos va de unos 3 dólares hasta 50 dólares
+- Los **valores centrales** (del cuantil 0.25 al 0.75, por ejemplo), están
+entre unos 13 y 25 dólares
+- Podemos usar el cuantil 0.5 (**mediana**) para dar un valor *central* de esta distribución,
+que está alrededor de 18 dólares.
+
+Y podemos dar resúmenes más refinados si es necesario
+
+- El cuantil 0.95 es de unos 35 dólares - sólo 5\% de las cuentas son de más de 35 dólares
+- El cuantil 0.05 es de unos 8 dólares - sólo 5\% de las cuentas son de 8 dólares o menos.
+
+Finalmente, la forma de la gráfica se interpreta usando su pendientes, haciendo comparaciones
+de diferentes partes de la gráfica:
+
+- La distribución de valores tiene asimetría: el 10\% de las cuentas más altas 
+tiene considerablemente más dispersión que el 10\% de las cuentas más bajas. 
+
+- Entre los cuantiles 0.2 y 0.5 es donde existe *mayor* densidad de datos: la pendiente
+es baja, lo que significa que al avanzar en los cuantiles, los valores observados no cambian mucho.
+
+- Cuando la pendiente es alta, quiere decir que los datos tienen más dispersión local o están más separados.
+
+En algunos casos, es más natural hacer un *histograma*, donde dividimos el rango de la variable
+en cubetas o intervalos (en este caso de igual longitud), y graficamos cuántos datos caen en cada
+cubeta:
+
+```{r, fig.width = 10, fig.height = 4, echo = FALSE}
+binwidth_min = 1
+g_1 <- ggplot(propinas, aes(x = cuenta_total)) + geom_histogram(binwidth = binwidth_min) 
+g_2 <- ggplot(propinas, aes(x = cuenta_total)) + geom_histogram(binwidth = binwidth_min * 2) 
+g_3 <- ggplot(propinas, aes(x = cuenta_total)) + geom_histogram(binwidth = binwidth_min * 5) 
+g_1 + g_2 + g_3
+```
+
+Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas particiones 
+resaltan distintos aspectos de los datos.
+
+Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el histograma
+es el diagrama de caja y brazos. Mostramos dos versiones, la clásica de Tukey (T) y otra versión
+menos común de Spear/Tufte (ST):
+
+```{r, fig.width = 8, fig.height = 4}
+library(ggthemes)
+cuartiles <- quantile(cuenta$cuenta_total)
+cuartiles
+g_1 <- ggplot(cuenta, aes(x = f, y = cuenta_total)) + 
+  labs(subtitle = "Gráfica de cuantiles: Cuenta total") +
+  geom_hline(yintercept = cuartiles[2], colour = "gray") + 
+  geom_hline(yintercept = cuartiles[3], colour = "gray") +
+  geom_hline(yintercept = cuartiles[4], colour = "gray") +
+  geom_point(alpha = 0.5) + geom_line() 
+g_2 <- ggplot(cuenta, aes(x = factor("ST", levels =c("ST")), y = cuenta_total)) + 
+  geom_tufteboxplot() +
+  labs(subtitle = " ") +  xlab("") + ylab("")
+g_3 <- ggplot(cuenta, aes(x = factor("T"), y = cuenta_total)) + geom_boxplot() +
+  labs(subtitle = " ") +  xlab("") + ylab("")
+g_4 <- ggplot(cuenta, aes(x = factor("P"), y = cuenta_total)) + geom_jitter(height = 0, width =0.2, alpha = 0.5) +
+  labs(subtitle = " ") +  xlab("") + ylab("")
+g_1 + g_2 + g_3 + g_4 +
+  plot_layout(widths = c(8, 2, 2, 2))
+```
+
+
+**Ventajas en el análisis inicial**
+
+En un principio del análisis, estos resúmenes
+(cuantiles) pueden ser más útiles que utilizar medias y varianzas, por ejemplo. La razón es
+que los cuantiles:
+
+- Son cantidades más fácilmente interpretables
+- Los cuantiles centrales son más resistentes a valores atípicos que medias o varianzas
+- Sin embargo, permite identificar valores extremos
+- Es fácil comparar cuantiles de distintos bonches de datos
+
+
+
+### Media y desviación estándar {-}
+
+Las medidas más comunes de localización y dispersión para conjuntos
+de datos son media y [desviación estándar muestral](https://es.wikipedia.org/wiki/Desviación_t%C3%ADpica).
+
+En general, no son muy apropiadas para iniciar el análisis exploratorio,
+pues:
+
+- Son medidas más difíciles de interpretar y explicar que los cuantiles. En
+este sentido, son medidas especializadas. Como ejercicio, intenta explicar
+intuitivamente qué es la media.
+- No son resistentes a valores atípicos o erróneos. Su falta de resistencia
+los vuelve poco útiles en las primeras etapas de limpieza y descripción.
+
+Sin embargo,
+
+- La media y desviación estándar son computacionalmente convenientes, y 
+para el trabajo de modelado, por ejemplo, tienen ventajas claras (cuando se
+cumplen supuestos).
+- Muchas veces, ya sea por tradición, porque así se ha hecho el análisis
+antes, conviene usar estas medidas conocidas. 
+
+## Ejemplo: precios de casas {-}
+
+
+Consideramos [datos de precios de ventas de la ciudad de Ames, Iowa](https://www.kaggle.com/prevek18/ames-housing-dataset).
+Nos interesa entender la variación del precio de las casas.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+source("R/casas_preprocesamiento.R")
+set.seed(21)
+casas_completo <- casas
+casas <- casas_completo %>% sample_frac(0.9)
+casas_holdout <- casas_completo %>% anti_join(casas)
+nombres <- casas %>% group_by(nombre_zona) %>% tally %>% pull(nombre_zona)
+zonas <- nombres[table(casas$nombre_zona) > 30]
+casas <- casas %>% mutate(nombre_zona = fct_reorder(nombre_zona, precio_miles)) %>% 
+  filter(nombre_zona %in% zonas) %>% 
+  mutate(precio_m2 = precio_m2_miles * 1000)
+```
+
+Calculamos primeros unos cuantiles de los precios de las casas:
+
+```{r}
+quantile(casas %>% pull(precio_miles)) 
+```
+
+Una primera comparación que podemos hacer es considerar las distintas zonas de la ciudad.
+Podemos usar diagramas de caja y brazos para **comparar** precios en distintas zonas
+de la ciudad:
+
+```{r}
+ggplot(casas, aes(x = nombre_zona, y = precio_miles)) + geom_boxplot() + coord_flip()
+```
+
+La primera pregunta que nos hacemos de esta comparación es cómo pueden variar características
+de las casas dentro de cada zona. En primer lugar, podemos considerar el área de las casas. En lugar
+de graficar el precio, graficamos el precio por metro cuadrado, por ejemplo:
+
+```{r, echo = FALSE}
+casas <- casas %>% 
+  mutate(nombre_zona = fct_reorder(nombre_zona, precio_m2_miles)) %>% 
+  filter(nombre_zona %in% zonas)
+```
+
+```{r}
+ggplot(casas, aes(x = nombre_zona, y = precio_m2)) + geom_boxplot() + coord_flip()
+```
+
+
+Podemos cuantificar la variación que observamos de zona a zona y la variación que hay dentro de zonas. La 
+variación que vemos entre las medianas de la zona es:
+
+```{r}
+casas %>% group_by(nombre_zona) %>% 
+  summarise(mediana_zona = median(precio_m2)) %>% 
+  pull(mediana_zona) %>% quantile %>% round
+```
+
+Y las variaciones con respecto a las medianas **dentro** de cada zona, agrupadas, se resume como:
+
+```{r}
+quantile(casas %>% group_by(nombre_zona) %>% 
+  mutate(residual = precio_m2 - median(precio_m2)) %>% 
+  pull(residual)) %>% round
+```
+
+Nótese que este último paso tiene sentido pues la variación dentro de las zonas, en términos de precio por metro
+cuadrado, es similar. Esto no lo podríamos hacer de manera efectiva si hubiéramos usado el precio de las casas sin
+ajustar por su tamaño.
+
+Y vemos que la mayor parte de la variación del precio por metro cuadrado ocurre dentro de cada
+zona, una vez que controlamos por el tamaño de las casas. La variación dentro de cada zona
+es aproximadamente simétrica, aunque la cola derecha es ligeramente más larga con algunos valores
+extremos.
+
+Podemos seguir con otro indicador importante: la calificación de calidad de los terminados
+de las casas. Como primer intento podríamos hacer:
+
+```{r, echo = FALSE}
+ggplot(casas %>% mutate(ind_calidad = cut(calidad_gral, c(0, 5, 8,10))), aes(y = precio_m2, x = nombre_zona, 
+        colour=factor(ind_calidad))) + 
+  geom_hline(yintercept = c(1000, 2000), colour = "gray") +
+  geom_jitter(width = 0.2, height = 0, alpha = 0.5) +
+  coord_flip() + scale_colour_colorblind() +
+  facet_wrap(~ind_calidad)
+```
+
+Lo que indica que las calificaciones de calidad están distribuidas de manera
+muy distinta a lo largo de las zonas, y que probablemente no va ser simple
+desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
+
+
+
+## Enlace {-}
+
+Consideremos la prueba Enlace (2011) de matemáticas para primarias. Una primera pregunta 
+que alguien podría hacerse es:  ¿qué escuelas son mejores, las privadas o las públicas? 
+
+
+```{r, message = FALSE, echo = FALSE}
+enlace <- read_csv("data/enlace.csv")
+enlace <- enlace %>%  filter(num_evaluados_total > 0, mate_6 > 0) %>%
+    mutate(marginacion = fct_reorder(marginacion, mate_6, median)) %>% 
+    mutate(tipo = recode(tipo, `INDÍGENA`="Indígena/Conafe", CONAFE="Indígena/Conafe", GENERAL="General", PARTICULAR="Particular")) %>% 
+    mutate(tipo = fct_reorder(tipo, mate_6, mean)) 
+```
+
+```{r, message = FALSE}
+enlace_tbl <- enlace %>% group_by(tipo) %>% 
+    summarise(n_escuelas = n(),
+              cuantiles = list(cuantil(mate_6, c(0.05, 0.25, 0.5, 0.75, 0.95)))) %>% 
+    unnest(cols = cuantiles) %>% mutate(valor = round(valor)) 
+enlace_tbl %>% spread(cuantil, valor) %>% formatear_tabla()
+```
+
+
+Podemos graficar de varias maneras, por ejemplo (en la gráfica 1 usamos cuantiles 0.05, 0.25, 0.5, 0.75 y 0.95) :
+
+
+```{r, fig.width = 10, fig.height = 6, echo = FALSE, message = FALSE}
+g_medianas <- ggplot(enlace_tbl %>% filter(cuantil == 0.50), aes(x = tipo, y = valor)) +
+    geom_point(colour = "red") + ylim(c(150,880)) + labs(subtitle = "Gráfica 1")
+g_80 <- ggplot(enlace_tbl  %>% spread(cuantil,valor), 
+                                     aes(x = tipo, y = `0.5`)) +
+    geom_linerange(aes(ymin= `0.05`, ymax = `0.95`), colour = "gray40") +
+    geom_point(colour = "red", size = 3) + ylim(c(150,880)) + 
+    labs(subtitle = "Gráfica 1") +
+    ylab("Promedios Matemáticas")
+    
+g_80_p <- ggplot(enlace_tbl  %>% spread(cuantil,valor), aes(x = tipo, y = `0.5`)) +
+    geom_linerange(aes(ymin= `0.05`, ymax = `0.95`), colour = "gray40") +
+    geom_linerange(aes(ymin= `0.25`, ymax = `0.75`), size = 2, colour = "white") +
+    geom_point(colour = "red", size = 3) +
+     ylim(c(150,880)) + labs(subtitle = "Gráfica 1")+
+    ylab("Promedios Matemáticas")
+
+g_boxplot <- ggplot(enlace  , aes(x = tipo, y = mate_6)) + 
+    geom_boxplot(outlier.size = 0.7) +
+    labs(subtitle = "Gráfica 2")+ ylim(c(150,930))+
+    ylab("Promedios Matemáticas")
+
+g_cuantil <- ggplot(enlace, aes(sample = mate_6, colour = tipo)) +
+  geom_qq(distribution = stats::qunif, size = 1) + ylab("Promedios Matemáticas") +
+  xlab("orden") + labs(subtitle = "Gráfica 3")
+
+g_80_p + g_boxplot + g_cuantil
+```
+
+En términos de comparaciones, podemos discutir qué tan apropiada es cada gráfica. Graficar más
+cuantiles es más útil para hacer comparaciones.  Por ejemplo, en la Gráfica 1 podemos ver que la
+mediana de las escuelas generales está cercano al cuantil 5\% de las escuelas particulares. Por otro
+lado, el diagrama de caja y brazos muestra también valores "atípicos". 
+
+La diferencia es considerable entre tipos de escuela, pero antes de contestar prematuramente
+la pregunta: ¿cuáles son las mejores escuelas?
+busquemos mejorar la interpretabilidad de nuestras comparaciones usando los principios 2 y 3. Podemos comenzar
+por agregar, por ejemplo, el nivel del marginación del municipio donde se encuentra la escuela.
+
+```{r, echo = FALSE}
+enlace_tbl_marg <- enlace %>% 
+    group_by(tipo, marginacion) %>% 
+    summarise(n_alumnos = sum(num_evaluados_total),
+              cuantiles = list(cuantil(mate_6, c(0.05, 0.25, 0.5, 0.75, 0.95)))) %>% 
+    unnest(cols = cuantiles) %>% mutate(valor = round(valor)) %>% 
+    filter( n_alumnos > 20)
+```
+
+Podemos graficar de esta manera, usándo páneles (pequeños múltiplos útiles para hacer comparaciones):
+
+```{r, fig.width = 10, fig.height = 4, echo = FALSE}
+g_80_p <- ggplot(enlace_tbl_marg  %>% spread(cuantil, valor), 
+                                     aes(x = marginacion, y = `0.5`)) +
+    geom_linerange(aes(ymin= `0.05`, ymax = `0.95`), colour = "gray40") +
+    geom_linerange(aes(ymin= `0.25`, ymax = `0.75`), size = 2, colour = "white") +
+    geom_point(colour = "red", aes(size = log10(n_alumnos/1000))) +
+    ylab("Promedios Matemáticas") + facet_wrap(~tipo, nrow = 1) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    scale_size_continuous(name = "Miles de \nAlumnos",
+                          breaks = c(-0.3, 0, 1, 2, 2.7),
+                          labels = c(0.5, 1, 10, 100, 500)) 
+g_80_p
+```
+
+
+
+Esta gráfica pone en contexto la pregunta inicial, y señala la dificultad 
+de contestarla. En primer lugar,
+
+- Señala que la pregunta no sólo debe concentarse en el tipo de "sistema": pública, privada, etc. Las
+escuelas públicas en zonas de marginación baja no tienen una distribución de calificaciones muy distinta
+a las privadas en zonas de marginación alta
+- Quiere decir que el contexto de la escuela es importante.
+- Y si eso es importante, podríamos entonces pensar, por ejemplo, que factores como el entorno familiar
+de los estudiantes (por ejemplo: cosas tan extremas como si tienen que trabajar o no) puede resultar en comparaciones
+que favorecen a las escuelas privadas - cuando quizá en parte no se debe a que tengan un sistema especialmente
+bueno.
+- Si esto es cierto, entonces la pregunta inicial es demasiado vaga y mal planteada: quizá deberíamos intentar
+entender cuánto "aporta" cada escuela a cada estudiante, como medida de qué tan buena es cada escuela.
+
+
+
+## Estados y calificaciones en SAT {-}
+
+¿Cómo se relaciona el gasto por alumno, a nivel estatal, 
+con sus resultados académicos? Hay trabajo
+considerable en definir estos términos, pero supongamos que tenemos el
+[siguiente conjunto de datos](http://jse.amstat.org/datasets/sat.txt) (@Guber2011, @sleuth), que son
+datos oficiales agregados por estado de Estados Unidos. Tenemos las variables
+*sat*, por ejemplo, que es la calificación promedio de los alumnos en cada estado
+(para 1997), y la variable *expend*, que es el gasto en miles de dólares
+por estudiante en (1994-1995), además de algunas otras variables. 
+
+
+```{r, message = FALSE}
+sat <- read_csv("data/sat.csv")
+sat_tbl <- sat %>% select(state, expend, sat) %>% 
+    gather(variable, valor, expend:sat) %>% 
+    group_by(variable) %>% 
+    summarise(cuantiles = list(cuantil(valor))) %>% 
+    unnest(cols = c(cuantiles)) %>% 
+    mutate(valor = round(valor, 1)) %>% 
+    spread(cuantil, valor)
+sat_tbl %>% formatear_tabla
+```
+
+
+Esta variación considerable es considerable para promedios del SAT: 
+el percentil 75 es alrededor de 1050 puntos, mientras que el percentil 33 corresponde a alrededor de 800, 
+e igualmente hay diferencias considerables de gasto por alumno (miles de dólares) a lo largo 
+de los estados.
+
+Ahora hacemos nuestro primer ejercico de comparación: ¿Cómo se ven las
+calificaciones para estados en distintos niveles de gasto? Podemos
+usar una gráfica de dispersión:
+
+
+```{r}
+library(ggrepel)
+ ggplot(sat, aes(x = expend, y = sat, label = state)) + 
+  geom_point(colour = "red", size = 2) + geom_text_repel(colour = "gray50") +
+  xlab("Gasto por alumno (miles de dólares)") +
+  ylab("Calificación promedio en SAT")
+```
+
+Estas comparaciones no son de muy alta calidad, solo estamos usando 2 variables (pocas),
+y no hay mucho que podamos decir en cuanto explicación.
+
+**Las unidades que estamos comparando pueden diferir fuertemente en otras 
+dimensiones importantes, lo cual hace interpretar la gráfica muy difícil**
+
+Sabemos que es posible que el IQ difiera en los estados, pero no como producir
+diferencias de este tipo. Sin embargo, descubrimos que existe una variable adicional, 
+que es el porcentaje de alumnos de cada estado
+que toma el SAT. Podemos agregar como sigue:
+
+```{r}
+ ggplot(sat, aes(x = expend, y = math, label=state, colour = frac)) + 
+  geom_point() + geom_text_repel() +
+  xlab("Gasto por alumno (miles de dólares)") +
+  ylab("Calificación en matemáticas") 
+```
+
+
+Y vemos entonces por qué nuestra comparación inicial es relativamente pobre:
+los estados con mejores resultados promedio en el SAT son aquellos donde una
+fracción relativamente baja de los estudiantes toma el examen. La diferencia
+es considerable.
+
+En este punto podemos hacer varias cosas. Una primera idea es intentar comparar
+estados más similares en cuanto a la población de alumnos que asiste. Podríamos hacer
+grupos como sigue:
+
+```{r, fig.width = 6, fig.height = 3}
+set.seed(991)
+k_medias_sat <- kmeans(sat %>% select(frac), centers = 4,  nstart = 100, iter.max = 100) 
+sat$clase <- k_medias_sat$cluster
+sat <- sat %>% group_by(clase) %>% 
+  mutate(clase_media = round(mean(frac))) %>% 
+  ungroup %>% 
+  mutate(clase_media = factor(clase_media))
+sat <- sat %>% 
+  mutate(rank_p = rank(frac, ties= "first") / length(frac))
+ggplot(sat, aes(x = rank_p, y = frac, label = state, 
+                colour = clase_media)) +
+  geom_point(size = 2) 
+```
+
+Estos resultados indican que es más probable que buenos alumnos decidan hacer
+el SAT - y esto ocurre de manera diferente en cada estado (en algunos estados
+era más común otro examen, el ACT). 
+
+Si hacemos clusters de estados
+según el % de alumnos, empezamos a ver otra historia. Ajustamos rectas
+de mínimos cuadrados como referencia:
+
+```{r, echo = FALSE}
+ggplot(sat, aes(x = expend, y = math, label=state, colour = clase_media)) + 
+  geom_point(size = 3) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  xlab("Gasto por alumno (miles)") +
+  ylab("Calificación en matemáticas") + 
+  geom_text_repel(colour = "gray70") 
+```
+
+
+
+Sin embargo, el resultado puede variar considerablemente si categorizamos de distintas maneras.
+
+
+
+
+## Tablas de conteos {-}
+
+Consideremos los siguientes datos de tomadores de te (del paquete @factominer):
+
+```{r}
+tea <- read_csv("data/tea.csv")
+# nombres y códigos
+te <- tea %>% select(how, price, sugar) %>% 
+  rename(presentacion = how, precio = price, azucar = sugar) %>% 
+  mutate(
+    presentacion = fct_recode(presentacion, 
+        suelto = "unpackaged", bolsas = "tea bag", mixto = "tea bag+unpackaged"),
+    precio = fct_recode(precio, 
+        marca = "p_branded", variable = "p_variable", barato = "p_cheap", 
+        marca_propia = "p_private label", desconocido = "p_unknown", fino = "p_upscale"), 
+    azucar = fct_recode(azucar,
+        sin_azúcar = "No.sugar", con_azúcar = "sugar"))
+```
+
+```{r}
+sample_n(te, 10)
+```
+
+Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por ver las proporciones
+que compran té según su empaque (en bolsita o suelto):
+
+```{r}
+precio <- te %>% group_by(precio) %>% 
+  tally() %>% mutate(prop = round(100 * n / sum(n))) %>% 
+  select(-n)
+tipo <- te %>% group_by(presentacion) %>% tally() %>% 
+  mutate(pct = round(100 * n / sum(n)))
+tipo %>% formatear_tabla
+```
+
+La mayor parte de las personas toma té en bolsas. Sin embargo, el tipo de té  (en términos de precio o marca) que compran es
+muy distinto dependiendo de la presentación
+
+
+```{r}
+tipo <- tipo %>% select(presentacion, prop_presentacion = pct)
+tabla_cruzada <- te %>% 
+  group_by(presentacion, precio) %>% 
+  tally() %>% 
+  # porcentajes por presentación
+  group_by(presentacion) %>% 
+  mutate(prop = round(100 * n / sum(n))) %>% 
+  select(-n) 
+tabla_cruzada %>% 
+  pivot_wider(names_from = presentacion, values_from = prop,
+              values_fill = list(prop = 0)) %>% 
+  formatear_tabla()
+```
+
+Estos datos podemos examinarlos un rato y llegar a conclusiones,
+pero la tabla no son muy efectiva en mostrar
+claramente los patrones. Tampoco es la siguiente gráfica:
+
+```{r}
+ggplot(tabla_cruzada %>% ungroup %>% 
+  mutate(price = fct_reorder(precio, prop)),
+  aes(x = precio, y = prop, group = presentacion, colour = presentacion)) + 
+  geom_point() + coord_flip() + geom_line()
+```
+
+En lugar de eso, calcuaremos *perfiles columna*. Comparamos cada una de las columnas con la
+columna marginal (la tabla de tipo de estilo de té):
+
+```{r, message = FALSE}
+num_grupos <- n_distinct(te %>% select(presentacion))
+tabla <- te %>% 
+  group_by(presentacion, precio) %>% 
+  tally() %>%
+  group_by(presentacion) %>% 
+  mutate(prop_precio = (100 * n / sum(n))) %>% 
+  group_by(precio) %>% 
+  mutate(prom_prop = sum(prop_precio)/num_grupos) %>% 
+  mutate(perfil = 100 * (prop_precio / prom_prop - 1))  
+tabla
+```
+
+```{r}
+tabla_perfil <- tabla %>%   
+  select(presentacion, precio, perfil, pct = prom_prop) %>% 
+  pivot_wider(names_from = presentacion, values_from = perfil,
+              values_fill = list(perfil = -100.0))
+if_profile <- function(x){
+  any(x < 0) & any(x > 0)
+}
+marcar <- marcar_tabla_fun(25, "red", "black")
+tab_out <- tabla_perfil %>% 
+  arrange(desc(bolsas)) %>% 
+  select(-pct, everything()) %>% 
+  mutate_if(if_profile, marcar) %>%
+  knitr::kable(format = "html", escape = F, digits = 0) %>% 
+  kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
+tab_out
+```
+
+Leemos esta tabla como sigue: por ejemplo, los compradores de té suelto compran té *fino*  a una
+tasa casi el doble (98%) que el promedio. 
+
+También podemos graficar como:
+
+```{r, fig.width = 6, fig.height = 2}
+tabla_graf <- tabla_perfil %>% 
+  ungroup %>% 
+  mutate(precio = fct_reorder(precio, bolsas)) %>% 
+  select(-pct) %>% 
+  pivot_longer(cols = -precio, names_to = "presentacion", values_to = "perfil")
+g_perfil <- ggplot(tabla_graf,
+  aes(x = precio, xend = precio, y = perfil, yend = 0, group = presentacion)) + 
+  geom_point() + geom_segment() + facet_wrap(~presentacion) +
+  geom_hline(yintercept = 0 , colour = "gray")+ coord_flip()
+g_perfil
+```
+
+**Observación**: hay dos maneras de construir la columna promedio: tomando los porcentajes sobre todos los datos, o promediando los porcentajes de las columnas. Si los grupos de las columnas están desbalanceados, estos promedios
+son diferentes.
+
+- Cuando usamos porcentajes sobre la población, perfiles columna y renglón dan el mismo resultado
+- Sin embargo, cuando hay un grupo considerablemente más grande que otros, las comparaciones se vuelven vs 
+este grupo particular. No siempre queremos hacer esto.
+
+
+## Interpretación {-}
+
+En el último ejemplo de tomadores de té utilizamos una muestra personas, no toda
+la población de tomadores de té. Eso quiere decir que tenemos cierta incertidumbre
+de cómo se generalizan o no los resultados que obtuvimos en nuestro análisis 
+a la población general.
+
+Nuestra respuesta depende de cómo se extrajo la muestra que estamos considerando. Si el 
+mecanismo de extracción incluye algún proceso probabilístico, entonces es posible en principio
+entender qué tan bien generalizan los resultados de nuestro análisis a la población general,
+y entender esto depende de entender qué tanta variación hay de muestra a muestra, de todas
+las posibles muestras que pudimos haber extraido.
+
+En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos del
+trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
+

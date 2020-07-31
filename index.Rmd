@@ -90,3 +90,4 @@ Referencias: [@Kruschke]
 - Tareas semanales 20%
 - Parcial teórico + parcial a casa 40%
 - Final a casa 40%
+
