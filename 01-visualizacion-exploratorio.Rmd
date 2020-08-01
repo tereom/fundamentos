@@ -23,25 +23,27 @@ problema.
 ```{block2, type='comentario'}
 En análisis de datos existen dos distintos tipos de trabajo:
 
-- El trabajo **exploratorio** o  de **detective**: ¿cuáles son los aspectos importantes de estos datos?
+- El trabajo **exploratorio** o de **detective**: ¿cuáles son los aspectos importantes de estos datos?
 ¿qué indicaciones generales muestran los datos? ¿qué tareas de análisis debemos
 empezar haciendo? ¿cuáles son los caminos generales para formular con precisión y 
 contestar algunas preguntas que nos interesen? 
+
 - El trabajo **inferencial**, **confirmatorio**, o de **juez**: ¿cómo evaluar el peso de 
 la evidencia de los descubrimientos
 del paso anterior? ¿qué tan bien soportadas están las respuestas y conclusiones 
 por nuestro conjunto de datos? 
-```
 
+```
 
 
 ## Algunos conceptos básicos {-}
 
 Empezamos explicando algunas ideas que no serán útiles más adelante.
 
-Por ejemplo, los siguientes datos fueron registrados en un restaurante durante cuatro días consecutivos:
+Por ejemplo, los siguientes datos fueron registrados en un restaurante durante
+cuatro días consecutivos:
 
-```{r, message = FALSE}
+```{r, message = FALSE, warning=FALSE}
 library(tidyverse)
 library(patchwork)
 source("R/funciones_auxiliares.R")
@@ -69,16 +71,19 @@ sample_n(propinas, 10)
 ```
 
 
-Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones numéricas
-de cada cuenta: cúanto fue la cuenta total, la propina, y el número de personas asociadas a la cuenta.
-Los datos están separados según se fumó o no en la mesa, y temporalmente en dos partes: el día
-(Jueves, Viernes, Sábado o Domingo), cada uno separado por Cena y Comida. 
+Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
+numéricas de cada cuenta: cúanto fue la cuenta total, la propina, y el número de
+personas asociadas a la cuenta. Los datos están separados según se fumó o no en
+la mesa, y temporalmente en dos partes: el día (Jueves, Viernes, Sábado o
+Domingo), cada uno separado por Cena y Comida.
 
-El primer tipo de comparaciones que nos interesa hacer es para una medición: ¿Varían mucho o poco los datos 
-de un tipo  de medición? ¿Cuáles son valores típicos o centrales? ¿Existen valores atípicos?
+El primer tipo de comparaciones que nos interesa hacer es para una medición:
+¿Varían mucho o poco los datos de un tipo  de medición? ¿Cuáles son valores
+típicos o centrales? ¿Existen valores atípicos?
 
-Supongamos entonces que consideramos simplemente la variable de *cuenta_total*. Podemos comenzar
-por **ordenar los datos**, y ver cuáles datos están en los extremos y cuáles están en los lugares centrales:
+Supongamos entonces que consideramos simplemente la variable de `cuenta_total`.
+Podemos comenzar por **ordenar los datos**, y ver cuáles datos están en los
+extremos y cuáles están en los lugares centrales:
 
 ```{r}
 propinas <- propinas %>% 
@@ -102,37 +107,42 @@ g_cuantiles <- ggplot(cuenta, aes(x = f, y = cuenta_total)) +
 g_orden + g_cuantiles
 ```
 
-A esta función le llamamos la **función de cuantiles** para la variable cuenta total. Nos
-sirve para comparar directamente los distintos valores que observamos los datos
-según el orden que ocupan. 
+A esta función le llamamos la **función de cuantiles** para la variable cuenta
+total. Nos sirve para comparar directamente los distintos valores que observamos
+los datos según el orden que ocupan.
 
-**Dispersión y Valores centrales**
+La gráfica anterior, también nos sirve para poder estudiar la **dispersión y
+valores centrales** de los datos observados. Por ejemplo, podemos notar que:
 
-- El *rango* de datos va de unos 3 dólares hasta 50 dólares
-- Los **valores centrales** (del cuantil 0.25 al 0.75, por ejemplo), están
+- El **rango** de datos va de unos 3 dólares hasta 50 dólares
+- Los **valores centrales** ---del cuantil 0.25 al 0.75, por decir un ejemplo--- están
 entre unos 13 y 25 dólares
-- Podemos usar el cuantil 0.5 (**mediana**) para dar un valor *central* de esta distribución,
-que está alrededor de 18 dólares.
+- El cuantil 0.5 (o también conocido como **mediana**) está alrededor de 18 dólares. 
 
-Y podemos dar resúmenes más refinados si es necesario
 
-- El cuantil 0.95 es de unos 35 dólares - sólo 5\% de las cuentas son de más de 35 dólares
-- El cuantil 0.05 es de unos 8 dólares - sólo 5\% de las cuentas son de 8 dólares o menos.
+Éste último puede ser utilizado para dar un valor *central* de la distribución
+de valores para `cuenta_total`. Asimismo podemos dar resúmenes más refinados si
+es necesario. Por ejemplo, podemos reportar que:
 
-Finalmente, la forma de la gráfica se interpreta usando su pendientes, haciendo comparaciones
-de diferentes partes de la gráfica:
+- El cuantil 0.95 es de unos 35 dólares --- sólo 5\% de las cuentas son de más de 35 dólares
+- El cuantil 0.05 es de unos 8 dólares --- sólo 5\% de las cuentas son de 8 dólares o menos.
 
-- La distribución de valores tiene asimetría: el 10\% de las cuentas más altas 
-tiene considerablemente más dispersión que el 10\% de las cuentas más bajas. 
+Finalmente, la forma de la gráfica se interpreta usando su pendiente, haciendo
+comparaciones de diferentes partes de la gráfica:
 
-- Entre los cuantiles 0.2 y 0.5 es donde existe *mayor* densidad de datos: la pendiente
-es baja, lo que significa que al avanzar en los cuantiles, los valores observados no cambian mucho.
+- La distribución de valores tiene asimetría: el 10\% de las cuentas más altas
+tiene considerablemente más dispersión que el 10\% de las cuentas más bajas.
 
-- Cuando la pendiente es alta, quiere decir que los datos tienen más dispersión local o están más separados.
+- Entre los cuantiles 0.2 y 0.5 es donde existe *mayor* densidad de datos: la
+pendiente es baja, lo que significa que al avanzar en los cuantiles, los valores
+observados no cambian mucho.
 
-En algunos casos, es más natural hacer un *histograma*, donde dividimos el rango de la variable
-en cubetas o intervalos (en este caso de igual longitud), y graficamos cuántos datos caen en cada
-cubeta:
+- Cuando la pendiente es alta, quiere decir que los datos tienen más dispersión
+local o están más separados.
+
+En algunos casos, es más natural hacer un *histograma*, donde dividimos el rango
+de la variable en cubetas o intervalos (en este caso de igual longitud), y
+graficamos cuántos datos caen en cada cubeta:
 
 ```{r, fig.width = 10, fig.height = 4, echo = FALSE}
 binwidth_min = 1
