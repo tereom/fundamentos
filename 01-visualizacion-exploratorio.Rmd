@@ -218,10 +218,12 @@ Sin embargo,
 comparaciones históricas o tradicionales ---pues análisis anteriores pudieran
 estar basados en éstas.
 
-## Ejemplo: precios de casas {-}
+## Ejemplos {-}
 
-Consideramos [datos de precios de ventas de la ciudad de Ames, Iowa](https://www.kaggle.com/prevek18/ames-housing-dataset).
-Nos interesa entender la variación del precio de las casas.
+### Precios de casas {-}
+
+En este ejemplo consideremos los [datos de precios de ventas de la ciudad de Ames, Iowa](https://www.kaggle.com/prevek18/ames-housing-dataset).
+En particular nos interesa entender la variación del precio de las casas.
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 source("R/casas_preprocesamiento.R")
@@ -236,23 +238,27 @@ casas <- casas %>% mutate(nombre_zona = fct_reorder(nombre_zona, precio_miles)) 
   mutate(precio_m2 = precio_m2_miles * 1000)
 ```
 
-Calculamos primeros unos cuantiles de los precios de las casas:
+Por este motivo calculamos los cuantiles que corresponden al 25\%, 50\% y 75\%
+(también llamados **cuartiles**), así como el mínimo y máximo de los precios de
+las casas:
 
 ```{r}
 quantile(casas %>% pull(precio_miles)) 
 ```
 
-Una primera comparación que podemos hacer es considerar las distintas zonas de la ciudad.
-Podemos usar diagramas de caja y brazos para **comparar** precios en distintas zonas
-de la ciudad:
+Una posible comparación es considerar los precios y sus variación en función de
+zona de la ciudad en que se encuentra una vivienda. Podemos usar diagramas de
+caja y brazos para hacer una **comparación burda** de los precios en distintas
+zonas de la ciudad:
 
 ```{r}
 ggplot(casas, aes(x = nombre_zona, y = precio_miles)) + geom_boxplot() + coord_flip()
 ```
 
-La primera pregunta que nos hacemos de esta comparación es cómo pueden variar características
-de las casas dentro de cada zona. En primer lugar, podemos considerar el área de las casas. En lugar
-de graficar el precio, graficamos el precio por metro cuadrado, por ejemplo:
+La primera pregunta que nos hacemos es cómo pueden variar las características de
+las casas dentro de cada zona. Para esto, podemos considerar el área de las
+casas. En lugar de graficar el precio, graficamos el precio por metro cuadrado,
+por ejemplo:
 
 ```{r, echo = FALSE}
 casas <- casas %>% 
@@ -265,8 +271,10 @@ ggplot(casas, aes(x = nombre_zona, y = precio_m2)) + geom_boxplot() + coord_flip
 ```
 
 
-Podemos cuantificar la variación que observamos de zona a zona y la variación que hay dentro de zonas. La 
-variación que vemos entre las medianas de la zona es:
+Podemos cuantificar la variación que observamos de zona a zona y la variación
+que hay dentro de cada una de las zonas. Una primera aproximación es observar
+las variación del precio al calcular la mediana dentro de cada zona, y después
+cuantificar por medio de cuantiles cómo varía la mediana entre zonas:
 
 ```{r}
 casas %>% group_by(nombre_zona) %>% 
@@ -274,7 +282,8 @@ casas %>% group_by(nombre_zona) %>%
   pull(mediana_zona) %>% quantile %>% round
 ```
 
-Y las variaciones con respecto a las medianas **dentro** de cada zona, agrupadas, se resume como:
+Por otro lado, las variaciones con respecto a las medianas **dentro** de cada
+zona, por grupo, se resume como:
 
 ```{r}
 quantile(casas %>% group_by(nombre_zona) %>% 
@@ -282,14 +291,15 @@ quantile(casas %>% group_by(nombre_zona) %>%
   pull(residual)) %>% round
 ```
 
-Nótese que este último paso tiene sentido pues la variación dentro de las zonas, en términos de precio por metro
-cuadrado, es similar. Esto no lo podríamos hacer de manera efectiva si hubiéramos usado el precio de las casas sin
+Nótese que este último paso tiene sentido pues la variación dentro de las zonas,
+en términos de precio por metro cuadrado, es similar. Esto no lo podríamos haber
+hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
 ajustar por su tamaño.
 
-Y vemos que la mayor parte de la variación del precio por metro cuadrado ocurre dentro de cada
-zona, una vez que controlamos por el tamaño de las casas. La variación dentro de cada zona
-es aproximadamente simétrica, aunque la cola derecha es ligeramente más larga con algunos valores
-extremos.
+Vemos que la mayor parte de la variación del precio por metro cuadrado ocurre
+dentro de cada zona, una vez que controlamos por el tamaño de las casas. La
+variación dentro de cada zona es aproximadamente simétrica, aunque la cola
+derecha es ligeramente más larga con algunos valores extremos.
 
 Podemos seguir con otro indicador importante: la calificación de calidad de los terminados
 de las casas. Como primer intento podríamos hacer:
@@ -308,8 +318,7 @@ muy distinta a lo largo de las zonas, y que probablemente no va ser simple
 desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
 
 
-
-## Enlace {-}
+### Prueba enlace {-}
 
 Consideremos la prueba Enlace (2011) de matemáticas para primarias. Una primera pregunta 
 que alguien podría hacerse es:  ¿qué escuelas son mejores, las privadas o las públicas? 
