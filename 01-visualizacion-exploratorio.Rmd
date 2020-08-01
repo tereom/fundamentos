@@ -1,21 +1,24 @@
 # Análisis exploratorio y visualización
 
 > "Exploratory data analysis can never be the whole story, but nothing
-else can serve as the foundation stone --as the first step." --- John Tukey
+else can serve as the foundation stone --as the first step."
+> 
+> --- John Tukey
 
 > "The simple graph has brought more information to the data analyst’s mind 
-than any other device." --- John Tukey
+than any other device." 
+> 
+> --- John Tukey
 
 ## El papel de la exploración en el análisis de datos {-}
 
-El estándar científico para contestar preguntas o tomar decisiones 
-es uno que se basa en el análisis de datos: para contestar preguntas o tomar 
-decisiones es necesario, en primer lugar, reunir todos los datos disponibles 
-que puedan contener o sugerir alguna guía para entender mejor la pregunta o la 
-decisión a la que nos enfrentamos. Esta recopilación de 
-datos -que pueden ser cualitativos, cuantitativos, 
-o una mezcla de los dos, debe entonces ser analizada para extraer información 
-relevante para nuestro problema.
+El estándar científico para contestar preguntas o tomar decisiones es uno que se
+basa en el análisis de datos. Es decir, en primer lugar se deben reunir todos
+los datos disponibles que puedan contener o sugerir alguna guía para entender
+mejor la pregunta o la decisión a la que nos enfrentamos. Esta recopilación de
+datos ---que pueden ser cualitativos, cuantitativos, o una mezcla de los dos---
+debe entonces ser analizada para extraer información relevante para nuestro
+problema.
 
 ```{block2, type='comentario'}
 En análisis de datos existen dos distintos tipos de trabajo:
