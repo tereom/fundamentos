@@ -44,3 +44,13 @@ pre code {
 .ejercicio {
   background-image: url("../images/manicule.png");
 }
+
+.level1 .header-section-number {
+  display: inline-block;
+  border-bottom: 3px solid;
+}
+
+.level1 h1 {
+  border-bottom: 1px solid;
+}
+
