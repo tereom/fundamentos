@@ -128,21 +128,21 @@ es necesario. Por ejemplo, podemos reportar que:
 - El cuantil 0.05 es de unos 8 dólares --- sólo 5\% de las cuentas son de 8 dólares o menos.
 
 Finalmente, la forma de la gráfica se interpreta usando su pendiente (tasa de
-cambio) haciendo comparaciones de diferentes partes de la gráfica:
+cambio) haciendo comparaciones en diferentes partes de la gráfica:
 
 - La distribución de valores tiene asimetría: el 10\% de las cuentas más altas
 tiene considerablemente más dispersión que el 10\% de las cuentas más bajas.
 
 - Entre los cuantiles 0.2 y 0.5 es donde existe *mayor* densidad de datos: la
-pendiente es baja, lo que significa que al avanzar en los cuantiles, los valores
-observados no cambian mucho.
+pendiente (tasa de cambio) es alta, lo que significa que al avanzar en los
+valores observados, los cuantiles cambian rápidamente.
 
-- Cuando la pendiente es alta, quiere decir que los datos tienen más dispersión
-local o están más separados.
+- Cuando la pendiente es casi plana, quiere decir que los datos tienen más
+dispersión local o están más separados.
 
 En algunos casos, es más natural hacer un *histograma*, donde dividimos el rango
 de la variable en cubetas o intervalos (en este caso de igual longitud), y
-graficamos cuántos datos caen en cada cubeta:
+graficamos por medio de barras cuántos datos caen en cada cubeta:
 
 ```{r, fig.width = 10, fig.height = 4, echo = FALSE}
 binwidth_min = 1
@@ -152,12 +152,12 @@ g_3 <- ggplot(propinas, aes(x = cuenta_total)) + geom_histogram(binwidth = binwi
 g_1 + g_2 + g_3
 ```
 
-Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas particiones 
-resaltan distintos aspectos de los datos.
+Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas
+particiones resaltan distintos aspectos de los datos.
 
-Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el histograma
-es el diagrama de caja y brazos. Mostramos dos versiones, la clásica de Tukey (T) y otra versión
-menos común de Spear/Tufte (ST):
+Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
+histograma es el *diagrama de caja y brazos*. Mostramos dos versiones, la
+clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):
 
 ```{r, fig.width = 8, fig.height = 4}
 library(ggthemes)
@@ -176,7 +176,9 @@ g_3 <- ggplot(cuenta, aes(x = factor("T"), y = cuenta_total)) + geom_boxplot() +
   labs(subtitle = " ") +  xlab("") + ylab("")
 g_4 <- ggplot(cuenta, aes(x = factor("P"), y = cuenta_total)) + geom_jitter(height = 0, width =0.2, alpha = 0.5) +
   labs(subtitle = " ") +  xlab("") + ylab("")
-g_1 + g_2 + g_3 + g_4 +
+g_5 <- ggplot(cuenta, aes(x = factor("V"), y = cuenta_total)) + geom_violin() +
+  labs(subtitle = " ") +  xlab("") + ylab("")
+g_1 + g_2 + g_3 + g_4 + 
   plot_layout(widths = c(8, 2, 2, 2))
 ```
 
@@ -193,31 +195,30 @@ que los cuantiles:
 - Es fácil comparar cuantiles de distintos bonches de datos
 
 
-
 ### Media y desviación estándar {-}
 
-Las medidas más comunes de localización y dispersión para conjuntos
-de datos son media y [desviación estándar muestral](https://es.wikipedia.org/wiki/Desviación_t%C3%ADpica).
+Las medidas más comunes de localización y dispersión para un conjunto
+de datos son la media muestral y la [desviación estándar muestral](https://es.wikipedia.org/wiki/Desviación_t%C3%ADpica).
 
 En general, no son muy apropiadas para iniciar el análisis exploratorio,
 pues:
 
-- Son medidas más difíciles de interpretar y explicar que los cuantiles. En
-este sentido, son medidas especializadas. Como ejercicio, intenta explicar
+- Son medidas más difíciles de interpretar y explicar que los cuantiles. En este
+sentido, son medidas especializadas. Por ejemplo, intenta explicar
 intuitivamente qué es la media.
-- No son resistentes a valores atípicos o erróneos. Su falta de resistencia
-los vuelve poco útiles en las primeras etapas de limpieza y descripción.
+- No son resistentes a valores atípicos o erróneos. Su falta de resistencia los
+vuelve poco útiles en las primeras etapas de limpieza y descripción.
 
 Sin embargo,
 
-- La media y desviación estándar son computacionalmente convenientes, y 
-para el trabajo de modelado, por ejemplo, tienen ventajas claras (cuando se
-cumplen supuestos).
-- Muchas veces, ya sea por tradición, porque así se ha hecho el análisis
-antes, conviene usar estas medidas conocidas. 
+- La media y desviación estándar son computacionalmente convenientes. 
+- Para el trabajo de modelado estas medidas de resumen tienen ventajas claras
+(bajo ciertos supuestos teóricos).
+- En muchas ocasiones conviene usar estas medidas pues permite hacer
+comparaciones históricas o tradicionales ---pues análisis anteriores pudieran
+estar basados en éstas.
 
 ## Ejemplo: precios de casas {-}
-
 
 Consideramos [datos de precios de ventas de la ciudad de Ames, Iowa](https://www.kaggle.com/prevek18/ames-housing-dataset).
 Nos interesa entender la variación del precio de las casas.
