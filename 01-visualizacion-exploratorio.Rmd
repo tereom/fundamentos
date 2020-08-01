@@ -321,7 +321,7 @@ enlace_tbl %>% spread(cuantil, valor) %>% formatear_tabla()
 Podemos graficar de varias maneras, por ejemplo (en la gráfica 1 usamos cuantiles 0.05, 0.25, 0.5, 0.75 y 0.95) :
 
 
-```{r, fig.width = 10, fig.height = 6, echo = FALSE, message = FALSE}
+```{r, fig.width = 10, fig.height = 6, echo = FALSE, message = FALSE, cache = TRUE}
 g_medianas <- ggplot(enlace_tbl %>% filter(cuantil == 0.50), aes(x = tipo, y = valor)) +
     geom_point(colour = "red") + ylim(c(150,880)) + labs(subtitle = "Gráfica 1")
 g_80 <- ggplot(enlace_tbl  %>% spread(cuantil,valor), 
@@ -497,7 +497,7 @@ Si hacemos clusters de estados
 según el % de alumnos, empezamos a ver otra historia. Ajustamos rectas
 de mínimos cuadrados como referencia:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, cache = TRUE}
 ggplot(sat, aes(x = expend, y = math, label=state, colour = clase_media)) + 
   geom_point(size = 3) + 
   geom_smooth(method = "lm", se = FALSE) +

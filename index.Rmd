@@ -22,7 +22,7 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 #### Ligas {-}
 
 Notas:    
-Correos: <teresa.ortiz.mancera@gmail.com>,   
+Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@gmail.com>.  
 GitHub: https://github.com/tereom/fundamentos  
 Slack: Grupo Teresa <https:fundamentos-est.slack.com>
 
