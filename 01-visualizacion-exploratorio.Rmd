@@ -94,22 +94,22 @@ bind_rows(head(cuenta), tail(cuenta)) %>% knitr::kable()
 ```
 
 
-y graficamos los datos en orden, interpolando valores consecutivos.
+También podemos graficar los datos en orden, interpolando valores consecutivos.
 
 ```{r, fig.width = 7, fig.height = 4, echo = FALSE}
-g_orden <- ggplot(cuenta, aes(x = orden_cuenta, y = cuenta_total)) + 
+g_orden <- ggplot(cuenta, aes(y = orden_cuenta, x = cuenta_total)) + 
   geom_point(colour = "red", alpha = 0.5) + 
   labs(subtitle = "Cuenta total") 
-g_cuantiles <- ggplot(cuenta, aes(x = f, y = cuenta_total)) + 
+g_cuantiles <- ggplot(cuenta, aes(y = f, x = cuenta_total)) + 
   geom_point(colour = "red", alpha = 0.5) + geom_line() +
-  labs(subtitle = "") +
-  scale_x_continuous(breaks = seq(0, 1, 0.1))
+  labs(subtitle = "") 
+  # scale_y_continuous(breaks = seq(0, 1, 0.1))
 g_orden + g_cuantiles
 ```
 
-A esta función le llamamos la **función de cuantiles** para la variable cuenta
-total. Nos sirve para comparar directamente los distintos valores que observamos
-los datos según el orden que ocupan.
+A esta función le llamamos la **función de cuantiles** para la variable
+`cuenta_total`. Nos sirve para comparar directamente los distintos valores que
+observamos los datos según el orden que ocupan.
 
 La gráfica anterior, también nos sirve para poder estudiar la **dispersión y
 valores centrales** de los datos observados. Por ejemplo, podemos notar que:
@@ -127,8 +127,8 @@ es necesario. Por ejemplo, podemos reportar que:
 - El cuantil 0.95 es de unos 35 dólares --- sólo 5\% de las cuentas son de más de 35 dólares
 - El cuantil 0.05 es de unos 8 dólares --- sólo 5\% de las cuentas son de 8 dólares o menos.
 
-Finalmente, la forma de la gráfica se interpreta usando su pendiente, haciendo
-comparaciones de diferentes partes de la gráfica:
+Finalmente, la forma de la gráfica se interpreta usando su pendiente (tasa de
+cambio) haciendo comparaciones de diferentes partes de la gráfica:
 
 - La distribución de valores tiene asimetría: el 10\% de las cuentas más altas
 tiene considerablemente más dispersión que el 10\% de las cuentas más bajas.
