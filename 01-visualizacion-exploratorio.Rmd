@@ -135,12 +135,12 @@ tiene considerablemente más dispersión que el 10\% de las cuentas más bajas.
 
 - Entre los cuantiles 0.2 y 0.5 es donde existe *mayor* densidad de datos: la
 pendiente (tasa de cambio) es alta, lo que significa que al avanzar en los
-valores observados, los cuantiles cambian rápidamente.
+valores observados, los cuantiles (el porcentaje de casos) aumenta rápidamente.
 
 - Cuando la pendiente es casi plana, quiere decir que los datos tienen más
 dispersión local o están más separados.
 
-En algunos casos, es más natural hacer un *histograma*, donde dividimos el rango
+En algunos casos, es más natural hacer un **histograma**, donde dividimos el rango
 de la variable en cubetas o intervalos (en este caso de igual longitud), y
 graficamos por medio de barras cuántos datos caen en cada cubeta:
 
@@ -156,7 +156,7 @@ Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas
 particiones resaltan distintos aspectos de los datos.
 
 Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
-histograma es el *diagrama de caja y brazos*. Mostramos dos versiones, la
+histograma es el **diagrama de caja y brazos**. Mostramos dos versiones, la
 clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):
 
 ```{r, fig.width = 8, fig.height = 4}
@@ -318,13 +318,14 @@ muy distinta a lo largo de las zonas, y que probablemente no va ser simple
 desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
 
 
-### Prueba enlace {-}
+### Prueba Enlace {-}
 
-Consideremos la prueba Enlace (2011) de matemáticas para primarias. Una primera pregunta 
-que alguien podría hacerse es:  ¿qué escuelas son mejores, las privadas o las públicas? 
+Consideremos la prueba Enlace (2011) de matemáticas para primarias. Una primera
+pregunta que alguien podría hacerse es: ¿cuáles escuelas son mejores en este
+rubro, las privadas o las públicas?
 
 
-```{r, message = FALSE, echo = FALSE}
+```{r, message = FALSE, echo = FALSE, warning=FALSE}
 enlace <- read_csv("data/enlace.csv")
 enlace <- enlace %>%  filter(num_evaluados_total > 0, mate_6 > 0) %>%
     mutate(marginacion = fct_reorder(marginacion, mate_6, median)) %>% 
@@ -332,7 +333,7 @@ enlace <- enlace %>%  filter(num_evaluados_total > 0, mate_6 > 0) %>%
     mutate(tipo = fct_reorder(tipo, mate_6, mean)) 
 ```
 
-```{r, message = FALSE}
+```{r, message = FALSE, warning=FALSE}
 enlace_tbl <- enlace %>% group_by(tipo) %>% 
     summarise(n_escuelas = n(),
               cuantiles = list(cuantil(mate_6, c(0.05, 0.25, 0.5, 0.75, 0.95)))) %>% 
@@ -341,7 +342,10 @@ enlace_tbl %>% spread(cuantil, valor) %>% formatear_tabla()
 ```
 
 
-Podemos graficar de varias maneras, por ejemplo (en la gráfica 1 usamos cuantiles 0.05, 0.25, 0.5, 0.75 y 0.95) :
+Para un análisis exploratorio podemos utilizar distintas gráficas. Por ejemplo,
+podemos utilizar nuevamente las gráficas de caja y brazos, así como graficar los
+percentiles. Nótese que en la gráfica 1 se utilizan los cuantiles 0.05, 0.25,
+0.5, 0.75 y 0.95:
 
 
 ```{r, fig.width = 10, fig.height = 6, echo = FALSE, message = FALSE, cache = TRUE}
@@ -373,15 +377,20 @@ g_cuantil <- ggplot(enlace, aes(sample = mate_6, colour = tipo)) +
 g_80_p + g_boxplot + g_cuantil
 ```
 
-En términos de comparaciones, podemos discutir qué tan apropiada es cada gráfica. Graficar más
-cuantiles es más útil para hacer comparaciones.  Por ejemplo, en la Gráfica 1 podemos ver que la
-mediana de las escuelas generales está cercano al cuantil 5\% de las escuelas particulares. Por otro
-lado, el diagrama de caja y brazos muestra también valores "atípicos". 
+Se puede discutir qué tan apropiada es cada gráfica con el objetivo de realizar
+comparaciones. Sin duda, graficar más cuantiles es más útil para hacer
+comparaciones. Por ejemplo, en la Gráfica 1 podemos ver que la mediana de las
+escuelas generales está cercana al cuantil 5\% de las escuelas particulares. Por
+otro lado, el diagrama de caja y brazos muestra también valores "atípicos". Es
+importante notar que una comparación más robusta se puede lograr por medio de
+**pruebas de hipótesis**, las cuales veremos mas adelante en el curso.
 
-La diferencia es considerable entre tipos de escuela, pero antes de contestar prematuramente
-la pregunta: ¿cuáles son las mejores escuelas?
-busquemos mejorar la interpretabilidad de nuestras comparaciones usando los principios 2 y 3. Podemos comenzar
-por agregar, por ejemplo, el nivel del marginación del municipio donde se encuentra la escuela.
+Regresando a nuestro análisis exploratorio, notemos que la diferencia es
+considerable entre tipos de escuela. Antes de contestar prematuramente la
+pregunta: ¿cuáles son las mejores escuelas? busquemos mejorar la
+interpretabilidad de nuestras comparaciones ~usando los principios 2 y 3~. Podemos
+comenzar por agregar, por ejemplo, el nivel del marginación del municipio donde
+se encuentra la escuela.
 
 ```{r, echo = FALSE}
 enlace_tbl_marg <- enlace %>% 
@@ -392,7 +401,9 @@ enlace_tbl_marg <- enlace %>%
     filter( n_alumnos > 20)
 ```
 
-Podemos graficar de esta manera, usándo páneles (pequeños múltiplos útiles para hacer comparaciones):
+
+Para este objetivo, podemos usar páneles (pequeños múltiplos útiles para hacer
+comparaciones) y graficar:
 
 ```{r, fig.width = 10, fig.height = 4, echo = FALSE}
 g_80_p <- ggplot(enlace_tbl_marg  %>% spread(cuantil, valor), 
@@ -410,23 +421,26 @@ g_80_p
 
 
 
-Esta gráfica pone en contexto la pregunta inicial, y señala la dificultad 
-de contestarla. En primer lugar,
+Esta gráfica pone en contexto la pregunta inicial, y permite evidenciar la dificultad 
+de contestarla. En particular:
 
-- Señala que la pregunta no sólo debe concentarse en el tipo de "sistema": pública, privada, etc. Las
-escuelas públicas en zonas de marginación baja no tienen una distribución de calificaciones muy distinta
-a las privadas en zonas de marginación alta
-- Quiere decir que el contexto de la escuela es importante.
-- Y si eso es importante, podríamos entonces pensar, por ejemplo, que factores como el entorno familiar
-de los estudiantes (por ejemplo: cosas tan extremas como si tienen que trabajar o no) puede resultar en comparaciones
-que favorecen a las escuelas privadas - cuando quizá en parte no se debe a que tengan un sistema especialmente
-bueno.
-- Si esto es cierto, entonces la pregunta inicial es demasiado vaga y mal planteada: quizá deberíamos intentar
-entender cuánto "aporta" cada escuela a cada estudiante, como medida de qué tan buena es cada escuela.
+1. Señala que la pregunta no sólo debe concentarse en el tipo de "sistema":
+pública, privada, etc. Por ejemplo, las escuelas públicas en zonas de marginación baja no
+tienen una distribución de calificaciones muy distinta a las privadas en zonas
+de marginación alta. 
+2. El contexto de la escuela es importante.
+3. Debemos de pensar qué factores --por ejemplo, el entorno familiar de los
+estudiantes-- puede resultar en comparaciones que favorecen a las escuelas
+privadas. Un ejemplo de esto es considerar si los estudiantes tienen que
+trabajar o no. A su vez, esto puede o no ser reflejo de la calidad del sistema
+educativo.
+4. Si esto es cierto, entonces la pregunta inicial es demasiado vaga y mal
+planteada. Quizá deberíamos intentar entender cuánto "aporta" cada escuela a
+cada estudiante, como medida de qué tan buena es cada escuela.
 
 
 
-## Estados y calificaciones en SAT {-}
+### Estados y calificaciones en SAT {-}
 
 ¿Cómo se relaciona el gasto por alumno, a nivel estatal, 
 con sus resultados académicos? Hay trabajo
