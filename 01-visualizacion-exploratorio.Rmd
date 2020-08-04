@@ -442,14 +442,14 @@ cada estudiante, como medida de qué tan buena es cada escuela.
 
 ### Estados y calificaciones en SAT {-}
 
-¿Cómo se relaciona el gasto por alumno, a nivel estatal, 
+¿Cómo se relaciona el gasto por alumno, a nivel estatal,
 con sus resultados académicos? Hay trabajo
 considerable en definir estos términos, pero supongamos que tenemos el
-[siguiente conjunto de datos](http://jse.amstat.org/datasets/sat.txt) (@Guber2011, @sleuth), que son
-datos oficiales agregados por estado de Estados Unidos. Tenemos las variables
-*sat*, por ejemplo, que es la calificación promedio de los alumnos en cada estado
-(para 1997), y la variable *expend*, que es el gasto en miles de dólares
-por estudiante en (1994-1995), además de algunas otras variables. 
+[siguiente conjunto de datos](http://jse.amstat.org/datasets/sat.txt) [@Guber], que son
+datos oficiales agregados por `estado` de Estados Unidos. Consideremos el subconjunto de variables
+`sat`, que es la calificación promedio de los alumnos en cada estado
+(para 1997) y `expend`, que es el gasto en miles de dólares
+por estudiante en (1994-1995). 
 
 
 ```{r, message = FALSE}
@@ -465,14 +465,14 @@ sat_tbl %>% formatear_tabla
 ```
 
 
-Esta variación considerable es considerable para promedios del SAT: 
-el percentil 75 es alrededor de 1050 puntos, mientras que el percentil 33 corresponde a alrededor de 800, 
-e igualmente hay diferencias considerables de gasto por alumno (miles de dólares) a lo largo 
-de los estados.
+Esta variación es considerable para promedios del SAT: el percentil 75 es
+alrededor de 1050 puntos, mientras que el percentil 25 corresponde a alrededor
+de 800. Igualmente, hay diferencias considerables de gasto por alumno (miles de
+dólares) a lo largo de los estados.
 
 Ahora hacemos nuestro primer ejercico de comparación: ¿Cómo se ven las
-calificaciones para estados en distintos niveles de gasto? Podemos
-usar una gráfica de dispersión:
+calificaciones para estados en distintos niveles de gasto? Podemos usar una
+gráfica de dispersión:
 
 
 ```{r}
@@ -483,16 +483,20 @@ library(ggrepel)
   ylab("Calificación promedio en SAT")
 ```
 
-Estas comparaciones no son de muy alta calidad, solo estamos usando 2 variables (pocas),
-y no hay mucho que podamos decir en cuanto explicación.
+Estas comparaciones no son de alta calidad, solo estamos usando 2 variables
+---que son muy pocas--- y no hay mucho que podamos decir en cuanto explicación.
+Sin duda nos hace falta una imagen más completa.  Necesitaríamos entender la
+correlación que existe entre las demás características de nuestras unidades de
+estudio.
 
-**Las unidades que estamos comparando pueden diferir fuertemente en otras 
-dimensiones importantes, lo cual hace interpretar la gráfica muy difícil**
+**Las unidades que estamos comparando pueden diferir fuertemente en otras
+propiedades importantes (*aka*, dimensiones), lo cual no permite interpretar la
+gráfica de manera sencilla.**
 
-Sabemos que es posible que el IQ difiera en los estados, pero no como producir
-diferencias de este tipo. Sin embargo, descubrimos que existe una variable adicional, 
-que es el porcentaje de alumnos de cada estado
-que toma el SAT. Podemos agregar como sigue:
+Sabemos que es posible que el IQ difiera en los estados. Pero no sabemos cómo
+producir diferencias de este tipo. Sin embargo, ¡descubrimos que existe una
+variable adicional! Ésta es el porcentaje de alumnos de cada estado que toma el
+SAT. Podemos agregar como sigue:
 
 ```{r}
  ggplot(sat, aes(x = expend, y = math, label=state, colour = frac)) + 
@@ -502,14 +506,14 @@ que toma el SAT. Podemos agregar como sigue:
 ```
 
 
-Y vemos entonces por qué nuestra comparación inicial es relativamente pobre:
-los estados con mejores resultados promedio en el SAT son aquellos donde una
-fracción relativamente baja de los estudiantes toma el examen. La diferencia
+Esto nos permite entender por qué nuestra comparación inicial es relativamente
+pobre. Los estados con mejores resultados promedio en el SAT son aquellos donde
+una fracción relativamente baja de los estudiantes toma el examen. La diferencia
 es considerable.
 
 En este punto podemos hacer varias cosas. Una primera idea es intentar comparar
-estados más similares en cuanto a la población de alumnos que asiste. Podríamos hacer
-grupos como sigue:
+estados más similares en cuanto a la población de alumnos que asiste. Podríamos
+hacer grupos como sigue:
 
 ```{r, fig.width = 6, fig.height = 3}
 set.seed(991)
@@ -526,15 +530,14 @@ ggplot(sat, aes(x = rank_p, y = frac, label = state,
   geom_point(size = 2) 
 ```
 
-Estos resultados indican que es más probable que buenos alumnos decidan hacer
-el SAT - y esto ocurre de manera diferente en cada estado (en algunos estados
-era más común otro examen, el ACT). 
+Estos resultados indican que es más probable que buenos alumnos decidan hacer el
+SAT. Lo interesante es que esto ocurre de manera diferente en cada estado. Por
+ejemplo, en algunos estados era más común otro examen: el ACT.
 
-Si hacemos clusters de estados
-según el % de alumnos, empezamos a ver otra historia. Ajustamos rectas
-de mínimos cuadrados como referencia:
+Si hacemos *clusters* de estados según el % de alumnos, empezamos a ver otra
+historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:
 
-```{r, echo = FALSE, cache = TRUE}
+```{r, echo = FALSE, cache = TRUE, warning=FALSE, message=FALSE}
 ggplot(sat, aes(x = expend, y = math, label=state, colour = clase_media)) + 
   geom_point(size = 3) + 
   geom_smooth(method = "lm", se = FALSE) +
@@ -544,17 +547,14 @@ ggplot(sat, aes(x = expend, y = math, label=state, colour = clase_media)) +
 ```
 
 
-
 Sin embargo, el resultado puede variar considerablemente si categorizamos de distintas maneras.
 
 
+### Tablas de conteos {-}
 
+Consideremos los siguientes datos de tomadores de té (del paquete FactoMineR [@factominer]):
 
-## Tablas de conteos {-}
-
-Consideremos los siguientes datos de tomadores de te (del paquete @factominer):
-
-```{r}
+```{r, message=FALSE, warning=FALSE}
 tea <- read_csv("data/tea.csv")
 # nombres y códigos
 te <- tea %>% select(how, price, sugar) %>% 
@@ -573,8 +573,8 @@ te <- tea %>% select(how, price, sugar) %>%
 sample_n(te, 10)
 ```
 
-Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por ver las proporciones
-que compran té según su empaque (en bolsita o suelto):
+Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
+ver las proporciones que compran té según su empaque (en bolsita o suelto):
 
 ```{r}
 precio <- te %>% group_by(precio) %>% 
@@ -585,8 +585,9 @@ tipo <- te %>% group_by(presentacion) %>% tally() %>%
 tipo %>% formatear_tabla
 ```
 
-La mayor parte de las personas toma té en bolsas. Sin embargo, el tipo de té  (en términos de precio o marca) que compran es
-muy distinto dependiendo de la presentación
+La mayor parte de las personas toma té en bolsas. Sin embargo, el tipo de té
+(en términos de precio o marca) que compran es muy distinto dependiendo de la
+presentación:
 
 
 ```{r}
@@ -604,9 +605,9 @@ tabla_cruzada %>%
   formatear_tabla()
 ```
 
-Estos datos podemos examinarlos un rato y llegar a conclusiones,
-pero la tabla no son muy efectiva en mostrar
-claramente los patrones. Tampoco es la siguiente gráfica:
+Estos datos podemos examinarlos un rato y llegar a conclusiones. Notemos que el
+uso de tablas no permite mostrar claramente patrones. Tampoco por medio de
+gráficas como siguiente:
 
 ```{r}
 ggplot(tabla_cruzada %>% ungroup %>% 
@@ -615,8 +616,8 @@ ggplot(tabla_cruzada %>% ungroup %>%
   geom_point() + coord_flip() + geom_line()
 ```
 
-En lugar de eso, calcuaremos *perfiles columna*. Comparamos cada una de las columnas con la
-columna marginal (la tabla de tipo de estilo de té):
+En lugar de eso, calcularemos *perfiles columna*. Esto es, comparamos cada una
+de las columnas con la columna marginal (en la tabla de tipo de estilo de té):
 
 ```{r, message = FALSE}
 num_grupos <- n_distinct(te %>% select(presentacion))
@@ -631,7 +632,7 @@ tabla <- te %>%
 tabla
 ```
 
-```{r}
+```{r, message=FALSE}
 tabla_perfil <- tabla %>%   
   select(presentacion, precio, perfil, pct = prom_prop) %>% 
   pivot_wider(names_from = presentacion, values_from = perfil,
@@ -667,27 +668,32 @@ g_perfil <- ggplot(tabla_graf,
 g_perfil
 ```
 
-**Observación**: hay dos maneras de construir la columna promedio: tomando los porcentajes sobre todos los datos, o promediando los porcentajes de las columnas. Si los grupos de las columnas están desbalanceados, estos promedios
+**Observación**: hay dos maneras de construir la columna promedio: tomando los
+porcentajes sobre todos los datos, o promediando los porcentajes de las
+columnas. Si los grupos de las columnas están desbalanceados, estos promedios
 son diferentes.
 
-- Cuando usamos porcentajes sobre la población, perfiles columna y renglón dan el mismo resultado
-- Sin embargo, cuando hay un grupo considerablemente más grande que otros, las comparaciones se vuelven vs 
-este grupo particular. No siempre queremos hacer esto.
+- Cuando usamos porcentajes sobre la población, perfiles columna y renglón dan
+el mismo resultado
+- Sin embargo, cuando hay un grupo considerablemente más grande que otros, las
+comparaciones se vuelven vs este grupo particular. No siempre queremos hacer
+esto.
 
 
 ## Interpretación {-}
 
-En el último ejemplo de tomadores de té utilizamos una muestra personas, no toda
-la población de tomadores de té. Eso quiere decir que tenemos cierta incertidumbre
-de cómo se generalizan o no los resultados que obtuvimos en nuestro análisis 
-a la población general.
+En el último ejemplo de tomadores de té utilizamos una muestra de personas, no
+toda la población de tomadores de té. Eso quiere decir que tenemos cierta
+incertidumbre de cómo se generalizan o no los resultados que obtuvimos en
+nuestro análisis a la población general.
 
-Nuestra respuesta depende de cómo se extrajo la muestra que estamos considerando. Si el 
-mecanismo de extracción incluye algún proceso probabilístico, entonces es posible en principio
-entender qué tan bien generalizan los resultados de nuestro análisis a la población general,
-y entender esto depende de entender qué tanta variación hay de muestra a muestra, de todas
-las posibles muestras que pudimos haber extraido.
+Nuestra respuesta depende de cómo se extrajo la muestra que estamos
+considerando. Si el mecanismo de extracción incluye algún proceso
+probabilístico, entonces es posible en principio entender qué tan bien
+generalizan los resultados de nuestro análisis a la población general, y
+entender esto depende de entender qué tanta variación hay de muestra a muestra,
+de todas las posibles muestras que pudimos haber extraido.
 
-En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos del
-trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
+En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos
+del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
