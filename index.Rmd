@@ -1,5 +1,5 @@
 --- 
-title: "Fundamentos de Estadística con Remuestreo"
+title: "EST-46111-002: Fundamentos de Estadística con Remuestreo"
 author: "Teresa Ortiz, Alfredo Garbuno, Felipe González"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
@@ -23,7 +23,7 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 #### Ligas {-}
 
 Notas:    
-Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@gmail.com>.  
+Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@itam.mx>.  
 GitHub: https://github.com/tereom/fundamentos  
 Slack: Grupo Teresa <https:fundamentos-est.slack.com>
 
