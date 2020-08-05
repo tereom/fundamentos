@@ -29,6 +29,17 @@ pre code {
     font-size: 30px;
  }
 
+.mathblock {
+  padding: 1em 1em 1em 4em;
+  margin-bottom: 10px;
+  background: #E7E7F0 5px center/2.5em no-repeat;
+}
+
+.mathblock {
+  background-image: url("../images/eye.png");
+}
+
+
 .resumen {
   padding: 1em 1em 1em 4em;
   margin-bottom: 10px;
