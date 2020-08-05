@@ -246,7 +246,7 @@ g_1 + g_2 + g_3 + g_4 +
 
 ```{block, type='mathblock'}
 Hasta ahora hemos utilizado la definición general de *cuantiles*. Donde
-consideramos el quantil $q$, para buscar $x$ tal que $\hat F(x) = q.$ Hay
+consideramos el cuantil $q$, para buscar $x$ tal que $\hat F(x) = q.$ Hay
 valores típicos de interés que corresponden a $q$ igual a 25\%, 50\% y 75\%.
 Éstos valores se denominan **cuartiles.**
 ```
