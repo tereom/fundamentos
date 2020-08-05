@@ -158,7 +158,7 @@ El cuantil $p$ es el valor $x = x(p)$, esta notación sirve para definir $x$ com
 $$ 
   \hat F(x) = p. 
 $$
-Es decir, $x$ acumula el $p$\% de los casos. 
+Es decir, $x$ acumula el $p$-\% de los casos. 
 ```
 
 ```{block, type='ejercicio'}
