@@ -153,6 +153,14 @@ $$
 $$
 ```
 
+```{block, type='mathblock'}
+El cuantil $p$ es el valor $x = x(p)$, esta notación sirve para definir $x$ como una función de $p,$ tal que 
+$$ 
+  \hat F(x) = p. 
+$$
+Es decir, $x$ acumula el $p$\% de los casos. 
+```
+
 ```{block, type='ejercicio'}
   Para una medición de interés $x$ con posibles valores en el intervalo $[a, b]$.  
   Comprueba que $\hat F(a) = 0$ y $\hat F(b) = 1$ para cualquier colección de datos de tamaño $N.$
@@ -383,7 +391,7 @@ denotamos por $N$, donde
 $$
   N = \sum_{k=1}^K N_k. 
 $$
-Finalmente nos puede interesar, como en el ejemplo, los promedios por grupo 
+Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo 
 $$ 
   \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n}, 
 $$
