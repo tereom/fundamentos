@@ -1,17 +1,18 @@
 --- 
-title: "Fundamentos de Estadística con Remuestreo"
-author: "Teresa Ortiz, Alfredo Garbuno, Felipe González"
+title: "EST-46111: Fundamentos de Estadística con Remuestreo"
+author: "Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
-github-repo: rstudio/bookdown-demo
-description: "Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, 2020."
+github-repo: tereom/fundamentos
+description: "Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020."
 ---
 
-# Información del curso {-}
+# Información del curso {-}  
+
 
 Notas del curso *Fundamentos de Estadística con Remuestreo* del programa de 
 maestría en Ciencia de Datos del ITAM. En caso de encontrar 
@@ -22,7 +23,7 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 #### Ligas {-}
 
 Notas:    
-Correos: <teresa.ortiz.mancera@gmail.com>,   
+Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@itam.mx>.  
 GitHub: https://github.com/tereom/fundamentos  
 Slack: Grupo Teresa <https:fundamentos-est.slack.com>
 
@@ -31,7 +32,7 @@ Slack: Grupo Teresa <https:fundamentos-est.slack.com>
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Este trabajo está bajo una <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Licencia Creative Commons Atribución 4.0 Internacional</a>.
 
 
-## Temario {-}
+## Temario {-}  
 
 #### Datos y análisis exploratorio {-}
 
@@ -53,7 +54,7 @@ Referencias: [@Chihara]
 
 Referencias: [@Chihara], [@Hesterberg]
 
-5. Estimadores y su distribución de meustreo
+5. Estimadores y su distribución de muestreo
 6. Repaso de probabilidad y Teorema del límite central
 
 #### Introducción a estimación por intervalos {-}
@@ -90,3 +91,4 @@ Referencias: [@Kruschke]
 - Tareas semanales 20%
 - Parcial teórico + parcial a casa 40%
 - Final a casa 40%
+

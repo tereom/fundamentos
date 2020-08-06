@@ -1,4 +1,7 @@
 bookdown::gitbook:
+  includes:
+    in_header: "in_header.html"
+    after_body: "after_body.html"
   css: [css/style.css, css/toc.css]
   config:
     toc:
@@ -8,6 +11,9 @@ bookdown::gitbook:
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
     edit: https://github.com/rstudio/bookdown-demo/edit/master/%s
     download: ["pdf"]
+    sharing:
+      github: yes
+      facebook: no
 bookdown::pdf_book:
   includes:
     in_header: preamble.tex
