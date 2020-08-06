@@ -37,6 +37,7 @@ pre code {
 
 .mathblock {
   background-image: url("../images/eye.png");
+  background-position: 10px 15px;
 }
 
 
@@ -50,10 +51,11 @@ pre code {
 .ejercicio {
   padding: 1em 1em 1em 4em;
   margin-bottom: 10px;
-  background: #f5f5f5 5px center/3.5em no-repeat;
+  background: #F0E7E7 5px center/3.5em no-repeat;
 }
 .ejercicio {
   background-image: url("../images/manicule.png");
+  background-position: 6px 15px;
 }
 
 .level1 .header-section-number {

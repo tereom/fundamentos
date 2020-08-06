@@ -20,7 +20,7 @@ datos ---que pueden ser cualitativos, cuantitativos, o una mezcla de los dos---
 debe entonces ser analizada para extraer información relevante para nuestro
 problema.
 
-```{block2, type='comentario'}
+
 En análisis de datos existen dos distintos tipos de trabajo:
 
 - El trabajo **exploratorio** o de **detective**: ¿cuáles son los aspectos importantes de estos datos?
@@ -33,7 +33,6 @@ la evidencia de los descubrimientos
 del paso anterior? ¿qué tan bien soportadas están las respuestas y conclusiones 
 por nuestro conjunto de datos? 
 
-```
 
 
 ## Algunos conceptos básicos {-}
@@ -457,7 +456,9 @@ enlace_tbl <- enlace %>% group_by(tipo) %>%
     summarise(n_escuelas = n(),
               cuantiles = list(cuantil(mate_6, c(0.05, 0.25, 0.5, 0.75, 0.95)))) %>% 
     unnest(cols = cuantiles) %>% mutate(valor = round(valor)) 
-enlace_tbl %>% spread(cuantil, valor) %>% formatear_tabla()
+enlace_tbl %>% 
+  spread(cuantil, valor) %>% 
+  formatear_tabla()
 ```
 
 
@@ -507,7 +508,7 @@ importante notar que una comparación más robusta se puede lograr por medio de
 Regresando a nuestro análisis exploratorio, notemos que la diferencia es
 considerable entre tipos de escuela. Antes de contestar prematuramente la
 pregunta: ¿cuáles son las mejores escuelas? busquemos mejorar la
-interpretabilidad de nuestras comparaciones ~~usando los principios 2 y 3~~.
+interpretabilidad de nuestras comparaciones usando los principios 2 y 3.
 Podemos comenzar por agregar, por ejemplo, el nivel del marginación del
 municipio donde se encuentra la escuela.
 
@@ -515,7 +516,8 @@ municipio donde se encuentra la escuela.
 enlace_tbl_marg <- enlace %>% 
     group_by(tipo, marginacion) %>% 
     summarise(n_alumnos = sum(num_evaluados_total),
-              cuantiles = list(cuantil(mate_6, c(0.05, 0.25, 0.5, 0.75, 0.95)))) %>% 
+              cuantiles = list(cuantil(mate_6, c(0.05, 0.25, 0.5, 0.75, 0.95))),
+              .groups = "drop") %>% 
     unnest(cols = cuantiles) %>% mutate(valor = round(valor)) %>% 
     filter( n_alumnos > 20)
 ```
@@ -594,7 +596,7 @@ calificaciones para estados en distintos niveles de gasto? Podemos usar una
 gráfica de dispersión:
 
 
-```{r}
+```{r, warning=FALSE}
 library(ggrepel)
  ggplot(sat, aes(x = expend, y = sat, label = state)) + 
   geom_point(colour = "red", size = 2) + geom_text_repel(colour = "gray50") +
