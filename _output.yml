@@ -20,7 +20,7 @@ bookdown::pdf_book:
     before_body: latex/before_body.tex
   keep_tex: yes
   dev: "cairo_pdf"
-  latex_engine: xelatex
+  latex_engine: pdflatex
   citation_package: natbib
   template: null
   pandoc_args: --top-level-division=chapter
