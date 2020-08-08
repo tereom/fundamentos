@@ -1,3 +1,5 @@
+\mainmatter
+
 # Analisis exploratorio y visualizacion
 
 > "Exploratory data analysis can never be the whole story, but nothing
