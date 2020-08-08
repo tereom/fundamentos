@@ -1,7 +1,7 @@
 bookdown::gitbook:
   includes:
-    in_header: "in_header.html"
-    after_body: "after_body.html"
+    in_header: html/in_header.html
+    after_body: html/after_body.html
   css: [css/style.css, css/toc.css]
   config:
     toc:
