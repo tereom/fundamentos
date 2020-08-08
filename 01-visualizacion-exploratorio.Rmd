@@ -64,8 +64,8 @@ propinas <- tips %>%
 
 Y vemos una muestra
 
-```{r}
-sample_n(propinas, 10)  %>% formatear_tabla()
+```{r }
+sample_n(propinas, 10) %>% formatear_tabla()
 ```
 
 
@@ -343,7 +343,7 @@ zona de la ciudad en que se encuentra una vivienda. Podemos usar diagramas de
 caja y brazos para hacer una **comparación burda** de los precios en distintas
 zonas de la ciudad:
 
-```{r}
+```{r, fig.asp = 0.7, fig.align = 'center', out.width = '80%'}
 ggplot(casas, aes(x = nombre_zona, y = precio_miles)) + geom_boxplot() + coord_flip()
 ```
 
@@ -358,7 +358,7 @@ casas <- casas %>%
   filter(nombre_zona %in% zonas)
 ```
 
-```{r}
+```{r, fig.asp = 0.7, fig.align = 'center', out.width = '80%'}
 ggplot(casas, aes(x = nombre_zona, y = precio_m2)) + geom_boxplot() + coord_flip()
 ```
 
@@ -420,7 +420,7 @@ derecha es ligeramente más larga con algunos valores extremos.
 Podemos seguir con otro indicador importante: la calificación de calidad de los terminados
 de las casas. Como primer intento podríamos hacer:
 
-```{r, echo = FALSE}
+```{r, fig.asp = 0.7, fig.align = 'center', out.width = '80%', echo = FALSE}
 ggplot(casas %>% mutate(ind_calidad = cut(calidad_gral, c(0, 5, 8,10))), aes(y = precio_m2, x = nombre_zona,
         colour=factor(ind_calidad))) +
   geom_hline(yintercept = c(1000, 2000), colour = "gray") +
@@ -465,8 +465,7 @@ podemos utilizar nuevamente las gráficas de caja y brazos, así como graficar l
 percentiles. Nótese que en la gráfica 1 se utilizan los cuantiles 0.05, 0.25,
 0.5, 0.75 y 0.95:
 
-
-```{r, fig.width = 10, fig.height = 6, echo = FALSE, message = FALSE, cache = TRUE}
+```{r, fig.width = 10, fig.height = 6, echo = FALSE, message = FALSE, cache = TRUE, out.width = '95%', fig.align= 'center'}
 g_medianas <- ggplot(enlace_tbl %>% filter(cuantil == 0.50), aes(x = tipo, y = valor)) +
     geom_point(colour = "red") + ylim(c(150,880)) + labs(subtitle = "Gráfica 1")
 g_80 <- ggplot(enlace_tbl  %>% spread(cuantil,valor),
@@ -524,7 +523,7 @@ enlace_tbl_marg <- enlace %>%
 Para este objetivo, podemos usar páneles (pequeños múltiplos útiles para hacer
 comparaciones) y graficar:
 
-```{r, fig.width = 10, fig.height = 4, echo = FALSE}
+```{r, fig.width = 10, fig.height = 4, echo = FALSE, cache=TRUE, out.width = '95%', fig.align= 'center'}
 g_80_p <- ggplot(enlace_tbl_marg  %>% spread(cuantil, valor),
                                      aes(x = marginacion, y = `0.5`)) +
     geom_linerange(aes(ymin= `0.05`, ymax = `0.95`), colour = "gray40") +
@@ -594,7 +593,7 @@ calificaciones para estados en distintos niveles de gasto? Podemos usar una
 gráfica de dispersión:
 
 
-```{r, warning=FALSE}
+```{r, warning=FALSE,  cache=TRUE, out.width = '95%', fig.align= 'center'}
 library(ggrepel)
  ggplot(sat, aes(x = expend, y = sat, label = state)) +
   geom_point(colour = "red", size = 2) + geom_text_repel(colour = "gray50") +
@@ -617,7 +616,7 @@ producir diferencias de este tipo. Sin embargo, ¡descubrimos que existe una
 variable adicional! Ésta es el porcentaje de alumnos de cada estado que toma el
 SAT. Podemos agregar como sigue:
 
-```{r}
+```{r,  cache=TRUE, out.width = '95%', fig.align= 'center'}
  ggplot(sat, aes(x = expend, y = math, label=state, colour = frac)) +
   geom_point() + geom_text_repel() +
   xlab("Gasto por alumno (miles de dólares)") +
@@ -634,7 +633,7 @@ En este punto podemos hacer varias cosas. Una primera idea es intentar comparar
 estados más similares en cuanto a la población de alumnos que asiste. Podríamos
 hacer grupos como sigue:
 
-```{r, fig.width = 6, fig.height = 3}
+```{r, fig.width = 6, fig.height = 3,  cache=TRUE, out.width = '95%', fig.align= 'center'}
 set.seed(991)
 k_medias_sat <- kmeans(sat %>% select(frac), centers = 4,  nstart = 100, iter.max = 100)
 sat$clase <- k_medias_sat$cluster
@@ -656,7 +655,7 @@ ejemplo, en algunos estados era más común otro examen: el ACT.
 Si hacemos *clusters* de estados según el % de alumnos, empezamos a ver otra
 historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:
 
-```{r, echo = FALSE, cache = TRUE, warning=FALSE, message=FALSE}
+```{r, echo = FALSE, cache = TRUE, warning=FALSE, message=FALSE, out.width = '95%', fig.align= 'center'}
 ggplot(sat, aes(x = expend, y = math, label=state, colour = clase_media)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", se = FALSE) +
@@ -689,7 +688,7 @@ te <- tea %>% select(how, price, sugar) %>%
 ```
 
 ```{r}
-sample_n(te, 10)
+sample_n(te, 10) 
 ```
 
 Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
@@ -726,9 +725,9 @@ tabla_cruzada %>%
 
 Estos datos podemos examinarlos un rato y llegar a conclusiones. Notemos que el
 uso de tablas no permite mostrar claramente patrones. Tampoco por medio de
-gráficas como siguiente:
+gráficas como la siguiente:
 
-```{r}
+```{r,  cache=TRUE, out.width = '90%', fig.asp = 0.55, fig.align= 'center', fig.width = 5}
 ggplot(tabla_cruzada %>% ungroup %>%
   mutate(price = fct_reorder(precio, prop)),
   aes(x = precio, y = prop, group = presentacion, colour = presentacion)) +
@@ -767,7 +766,8 @@ tab_out <- tabla_perfil %>%
   mutate_if(if_profile, marcar) %>%
   knitr::kable(format_table_salida(), escape = FALSE, digits = 0, booktabs = T) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"), 
-                            bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
+                            bootstrap_options = c( "hover", "condensed"), 
+                            full_width = FALSE)
 
 if (knitr::is_latex_output()) {
   gsub("marca_propia", "marca-propia", tab_out)
@@ -781,7 +781,7 @@ tasa casi el doble (98%) que el promedio.
 
 También podemos graficar como:
 
-```{r, fig.width = 6, fig.height = 2}
+```{r, fig.width = 6, fig.height = 2,  cache=TRUE, out.width = '95%', fig.align= 'center'}
 tabla_graf <- tabla_perfil %>%
   ungroup %>%
   mutate(precio = fct_reorder(precio, bolsas)) %>%
