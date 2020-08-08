@@ -750,6 +750,7 @@ tabla <- te %>%
 tabla
 ```
 
+
 ```{r, message=FALSE}
 tabla_perfil <- tabla %>%
   select(presentacion, precio, perfil, pct = prom_prop) %>%
@@ -763,7 +764,7 @@ tab_out <- tabla_perfil %>%
   arrange(desc(bolsas)) %>%
   select(-pct, everything()) %>%
   mutate_if(if_profile, marcar) %>%
-  knitr::kable(escape = escape_table_salida(), digits = 0) %>%
+  knitr::kable(escape = escape_table_salida(), digits = 0) %>%  
   kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
 tab_out
 ```

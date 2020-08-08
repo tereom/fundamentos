@@ -7,7 +7,7 @@ escape_table_salida <- function() {
 formatear_tabla <- function(x_tbl, scroll = FALSE){
   tabla <- knitr::kable(x_tbl) %>%
     kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                              full_width = FALSE, font_size = 15, fixed_thead = TRUE)
+                              full_width = FALSE, fixed_thead = TRUE)
   if(scroll) tabla <- tabla %>% scroll_box(width = "780px")
   tabla
 }
