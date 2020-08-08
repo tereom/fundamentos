@@ -73,16 +73,16 @@ sample_n(propinas, 10)
 
 ```
 ##    cuenta_total propina fumador dia momento num_personas
-## 1         19.49    3.51      No Dom    Cena            2
-## 2         24.55    2.00      No Dom    Cena            4
-## 3         10.07    1.83      No Jue  Comida            1
-## 4         35.26    5.00      No Dom    Cena            4
-## 5         14.73    2.20      No Sab    Cena            2
-## 6         28.44    2.56     Yes Jue  Comida            2
-## 7         13.94    3.06      No Dom    Cena            2
-## 8         22.49    3.50      No Vie    Cena            2
-## 9         11.24    1.76     Yes Sab    Cena            2
-## 10        16.99    1.01      No Dom    Cena            2
+## 1         17.26    2.74      No Dom    Cena            3
+## 2         17.51    3.00     Yes Dom    Cena            2
+## 3         28.17    6.50     Yes Sab    Cena            3
+## 4         18.71    4.00     Yes Jue  Comida            3
+## 5         11.61    3.39      No Sab    Cena            2
+## 6         14.83    3.02      No Dom    Cena            2
+## 7         25.21    4.29     Yes Sab    Cena            2
+## 8         15.01    2.09     Yes Sab    Cena            2
+## 9         25.29    4.71      No Dom    Cena            4
+## 10        20.90    3.50     Yes Dom    Cena            3
 ```
 
 
