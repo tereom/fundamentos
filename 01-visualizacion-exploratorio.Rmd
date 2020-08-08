@@ -65,7 +65,7 @@ propinas <- tips %>%
 Y vemos una muestra
 
 ```{r}
-sample_n(propinas, 10)
+sample_n(propinas, 10)  %>% formatear_tabla()
 ```
 
 
@@ -113,7 +113,7 @@ propinas <- propinas %>%
   mutate(orden_cuenta = rank(cuenta_total, ties.method = "first"),
          f = (orden_cuenta - 0.5) / n())
 cuenta <- propinas %>% select(orden_cuenta, f, cuenta_total) %>% arrange(f)
-bind_rows(head(cuenta), tail(cuenta)) %>% knitr::kable()
+bind_rows(head(cuenta), tail(cuenta)) %>% formatear_tabla()
 ```
 
 
@@ -220,7 +220,7 @@ clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):
 ```{r, fig.width = 8, fig.height = 4}
 library(ggthemes)
 cuartiles <- quantile(cuenta$cuenta_total)
-cuartiles
+t(cuartiles) %>%  formatear_tabla()
 g_1 <- ggplot(cuenta, aes(x = f, y = cuenta_total)) +
   labs(subtitle = "Gráfica de cuantiles: Cuenta total") +
   geom_hline(yintercept = cuartiles[2], colour = "gray") +
@@ -232,7 +232,8 @@ g_2 <- ggplot(cuenta, aes(x = factor("ST", levels =c("ST")), y = cuenta_total)) 
   labs(subtitle = " ") +  xlab("") + ylab("")
 g_3 <- ggplot(cuenta, aes(x = factor("T"), y = cuenta_total)) + geom_boxplot() +
   labs(subtitle = " ") +  xlab("") + ylab("")
-g_4 <- ggplot(cuenta, aes(x = factor("P"), y = cuenta_total)) + geom_jitter(height = 0, width =0.2, alpha = 0.5) +
+g_4 <- ggplot(cuenta, aes(x = factor("P"), y = cuenta_total)) + 
+  geom_jitter(height = 0, width =0.2, alpha = 0.5) +
   labs(subtitle = " ") +  xlab("") + ylab("")
 g_5 <- ggplot(cuenta, aes(x = factor("V"), y = cuenta_total)) + geom_violin() +
   labs(subtitle = " ") +  xlab("") + ylab("")
@@ -764,9 +765,15 @@ tab_out <- tabla_perfil %>%
   arrange(desc(bolsas)) %>%
   select(-pct, everything()) %>%
   mutate_if(if_profile, marcar) %>%
-  knitr::kable(escape = escape_table_salida(), digits = 0) %>%  
-  kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
-tab_out
+  knitr::kable(format_table_salida(), escape = FALSE, digits = 0, booktabs = T) %>%
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"), 
+                            bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
+
+if (knitr::is_latex_output()) {
+  gsub("marca_propia", "marca-propia", tab_out)
+} else {
+  tab_out
+}
 ```
 
 Leemos esta tabla como sigue: por ejemplo, los compradores de té suelto compran té *fino*  a una
