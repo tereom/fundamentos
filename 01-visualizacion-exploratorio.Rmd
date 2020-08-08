@@ -759,13 +759,13 @@ if_profile <- function(x){
   any(x < 0) & any(x > 0)
 }
 marcar <- marcar_tabla_fun(25, "red", "black")
-# tab_out <- tabla_perfil %>%
-#   arrange(desc(bolsas)) %>%
-#   select(-pct, everything()) %>%
-#   mutate_if(if_profile, marcar) %>%
-#   knitr::kable(format = "html", escape = F, digits = 0) %>%
-#   kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
-# tab_out
+tab_out <- tabla_perfil %>%
+  arrange(desc(bolsas)) %>%
+  select(-pct, everything()) %>%
+  mutate_if(if_profile, marcar) %>%
+  knitr::kable(escape = escape_table_salida(), digits = 0) %>%
+  kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
+tab_out
 ```
 
 Leemos esta tabla como sigue: por ejemplo, los compradores de té suelto compran té *fino*  a una
