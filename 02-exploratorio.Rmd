@@ -446,7 +446,7 @@ hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
 ajustar por su tamaño.
 
 Podemos resumir este primer análisis con un par de gráficas de cuantiles 
-(@Cleveland):
+(@cleveland93):
 
 ```{r}
 mediana <- median(casas$precio_m2)
