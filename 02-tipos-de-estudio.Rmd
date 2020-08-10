@@ -19,6 +19,6 @@ de unidades muestrales, o del grupo al que pertenecen.
 #### Discriminación {-}
 
 ## Muestras diseñadas y muestras naturales {-}
-
 ## Experimentos y datos observacionales {-}
+
 
