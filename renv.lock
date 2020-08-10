@@ -219,6 +219,13 @@
       "Repository": "CRAN",
       "Hash": "1cb4279e697650f0bd78cd3601ee7576"
     },
+    "foreign": {
+      "Package": "foreign",
+      "Version": "0.8-78",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "719d063c5471897282c0b3270b84b580"
+    },
     "fs": {
       "Package": "fs",
       "Version": "1.4.1",
@@ -260,6 +267,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "f43e0d5e85ccb0a4045670c0607ee504"
+    },
+    "gridExtra": {
+      "Package": "gridExtra",
+      "Version": "2.3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "7d7f283939f563670a697165b2cf5560"
     },
     "gtable": {
       "Package": "gtable",
@@ -646,12 +660,19 @@
       "Repository": "CRAN",
       "Hash": "bd51be662f359fa99021f3d51e911490"
     },
-    "tinytex": {
-      "Package": "tinytex",
-      "Version": "0.23",
+    "timeDate": {
+      "Package": "timeDate",
+      "Version": "3043.102",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "a8c653ef8ce67683f588e6088ed45572"
+      "Hash": "fde4fc571f5f61978652c229d4713845"
+    },
+    "tinytex": {
+      "Package": "tinytex",
+      "Version": "0.25",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a4b9662282097d1033c60420dcb83350"
     },
     "utf8": {
       "Package": "utf8",
