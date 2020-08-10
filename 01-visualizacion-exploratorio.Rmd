@@ -593,7 +593,7 @@ calificaciones para estados en distintos niveles de gasto? Podemos usar una
 gráfica de dispersión:
 
 
-```{r, warning=FALSE,  cache=TRUE, out.width = '95%', fig.align= 'center'}
+```{r, warning=FALSE,  cache=TRUE, out.width = '95%', fig.align= 'center', fig.asp=0.65, }
 library(ggrepel)
  ggplot(sat, aes(x = expend, y = sat, label = state)) +
   geom_point(colour = "red", size = 2) + geom_text_repel(colour = "gray50") +
@@ -616,7 +616,7 @@ producir diferencias de este tipo. Sin embargo, ¡descubrimos que existe una
 variable adicional! Ésta es el porcentaje de alumnos de cada estado que toma el
 SAT. Podemos agregar como sigue:
 
-```{r,  cache=TRUE, out.width = '95%', fig.align= 'center'}
+```{r,  cache=TRUE, out.width = '95%', fig.align= 'center', fig.asp=0.65, }
  ggplot(sat, aes(x = expend, y = math, label=state, colour = frac)) +
   geom_point() + geom_text_repel() +
   xlab("Gasto por alumno (miles de dólares)") +
@@ -655,7 +655,7 @@ ejemplo, en algunos estados era más común otro examen: el ACT.
 Si hacemos *clusters* de estados según el % de alumnos, empezamos a ver otra
 historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:
 
-```{r, echo = FALSE, cache = TRUE, warning=FALSE, message=FALSE, out.width = '95%', fig.align= 'center'}
+```{r, echo = FALSE, cache = TRUE, warning=FALSE, message=FALSE, out.width = '90%', fig.asp=0.65, fig.align= 'center'}
 ggplot(sat, aes(x = expend, y = math, label=state, colour = clase_media)) +
   geom_point(size = 3) +
   geom_smooth(method = "lm", se = FALSE) +
