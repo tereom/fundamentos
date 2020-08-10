@@ -1,2 +1,24 @@
 # Tipos de estudio y experimentos
 
+El contexto es el de dos muestras. Una *respuesta* a una pregunta de interés
+viene acomapañada de una *medida de incertidumbre*, la cual se basa en una
+*modelo de probabilidad*. Hay veces en el que el modelo de probabilidad está
+bien justificado, pues hay un *mecanismo aleatorio* detrás ---pensemos en el
+lanzamiento de una moneda. En otras ocasiones el modelo de probabilidad es un
+*artefacto* matemático que asemeja la realidad y con lo que se pueden aplicar
+*modelos estadísticos*.
+
+Para entender y comunicar las conclusiones de un modelo hay que estar
+conscientes del mecanismo aleatorio que se utilizó, por ejemplo, en la selección
+de unidades muestrales, o del grupo al que pertenecen.
+
+### Ejemplos {-}
+
+#### Retroalimentacion y creatividad {-}
+
+#### Discriminación {-}
+
+## Muestras diseñadas y muestras naturales {-}
+
+## Experimentos y datos observacionales {-}
+
