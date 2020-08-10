@@ -7,7 +7,9 @@ Imports:
     tidyverse,
     patchwork,
     ggthemes,
-    ggrepel
+    ggrepel, 
+    lubridate, 
+    gridExtra
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
 BugReports: https://github.com/tereom/fundamentos/issues
