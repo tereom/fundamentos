@@ -98,13 +98,13 @@ En general la colección de datos no está ordenada por sus valores. Esto es
 debido a que las observaciones en general se recopilan de manera *aleatoria*.
 Utilizamos la notación de $\sigma(n)$ para denotar un *reordenamiento* de los
 datos de tal forma
-$$
+\begin{align}
   \{x_{\sigma(1)}, \ldots, x_{\sigma(N)}\},
-$$
+\end{align}
 y que satisface la siguiente serie de desigualdades
-$$
+\begin{align}
   x_{\sigma(1)} \leq \ldots \leq x_{\sigma(N)}.
-$$
+\end{align}
 ```
 
 
@@ -136,24 +136,24 @@ observamos los datos según el orden que ocupan.
 
 ```{block, type='mathblock'}
 La función de cuantiles muestral esta definida por
-$$
+\begin{align}
 \hat{F}(x) = \frac1N \sum_{n = 1}^N \mathbb{1}\{x_n \leq x\},
-$$
+\end{align}
 donde la funcion indicadora está definida por
-$$
+\begin{align}
 1\{ x \leq t\} =
     \begin{cases}
       1,  \text{ si } x \leq t  \\
       0,  \text{ en otro caso}
     \end{cases}.
-$$
+\end{align}
 ```
 
 ```{block, type='mathblock'}
 El cuantil $p$ es el valor $x = x(p)$, esta notación sirve para definir $x$ como una función de $p,$ tal que
-$$
+\begin{align}
   \hat F(x) = p.
-$$
+\end{align}
 Es decir, $x$ acumula el $p$-\% de los casos.
 ```
 
@@ -276,13 +276,13 @@ vuelve poco útiles en las primeras etapas de limpieza y descripción.
 
 ```{block, type='mathblock'}
 La media, o promedio, se denota por $\bar x$ y se define como
-$$
+\begin{align}
 \bar x = \frac1N \sum_{n = 1}^N x_n.
-$$
+\end{align}
 La desviación estándar muestral se define como
-$$
+\begin{align}
 \text{std}(x) = \sqrt{\frac1{N-1} \sum_{n = 1}^N (x_n - \bar x)^2}.
-$$
+\end{align}
 ```
 
 
@@ -377,25 +377,25 @@ casas %>% group_by(nombre_zona) %>%
 ```{block, type='mathblock'}
 Tratar con datos por segmento es una situación común en aplicaciones. Usualmente
 denotamos por
-$$
+\begin{align}
   x_{k, n}
-$$
+\end{align}
 a la $n$-ésima observación del $k$-ésimo grupo. Usualmente tenemos un universo
 de $K$ posibles grupos y para cada grupo tenemos un total diferente de
 observaciones. Esto lo denotamos por $N_k$, el número total de observaciones del
 grupo $k$ para cualquier $k = 1, \ldots, K.$ El número total de muestras lo
 denotamos por $N$, donde
-$$
+\begin{align}
   N = \sum_{k=1}^K N_k.
-$$
+\end{align}
 Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo
-$$
+\begin{align}
   \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n},
-$$
+\end{align}
 y contrastar contra el promedio total
-$$
+\begin{align}
   \bar x = \frac1K \sum_{k = 1}^K \bar x_k = \frac1K \sum_{k = 1}^K \left( \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n} \right).
-$$
+\end{align}
 ```
 
 Por otro lado, las variaciones con respecto a las medianas **dentro** de cada
