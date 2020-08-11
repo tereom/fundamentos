@@ -156,6 +156,13 @@
       "Repository": "CRAN",
       "Hash": "2b7d10581cc730804e9ed178c8374bd6"
     },
+    "datasauRus": {
+      "Package": "datasauRus",
+      "Version": "0.1.4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "e43590e853297a0eb7703995c544208c"
+    },
     "dbplyr": {
       "Package": "dbplyr",
       "Version": "1.4.4",
