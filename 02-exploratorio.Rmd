@@ -1,3 +1,5 @@
+\mainmatter
+
 # Analisis exploratorio
 
 > "Exploratory data analysis can never be the whole story, but nothing
@@ -118,7 +120,7 @@ propinas <- propinas %>%
   mutate(orden_cuenta = rank(cuenta_total, ties.method = "first"),
          f = (orden_cuenta - 0.5) / n())
 cuenta <- propinas %>% select(orden_cuenta, f, cuenta_total) %>% arrange(f)
-bind_rows(head(cuenta), tail(cuenta)) %>% knitr::kable(digits = 3)
+bind_rows(head(cuenta), tail(cuenta)) %>% formatear_tabla()
 ```
 
 
@@ -248,18 +250,32 @@ g_1 + g_2 + g_3 + g_4 +
   plot_layout(widths = c(8, 2, 2, 2))
 ```
 
-<div style= "float:right;padding=10px; top:-10px; width:40%">
+:::::: {.cols data-latex=""}
 
-![Imagen [Jumanbar / CC BY-SA](https://creativecommons.org/licenses/by-sa/3.0)](images/boxplot.png)
-
-</div>
+::: {.col data-latex="{0.50\textwidth}"}
 
 El diagrama de la derecha explica los elementos de la versión típica del
 diagrama de caja y brazos (*boxplot*). *RIC* se refiere al *Rango
 Intercuantílico**, definido por la diferencia entre los cuantiles 25% y 75%.
 
-<div style="clear:both"></div>
+:::
 
+::: {.col data-latex="{0.10\textwidth}"}
+\ 
+<!-- an empty Div (with a white space), serving as
+a column separator -->
+:::
+
+
+::: {.col data-latex="{0.4\textwidth}"}
+
+```{r, out.width='95%', echo=FALSE}
+knitr::include_graphics('images/boxplot.png')
+```
+Figura: [Jumanbar / CC BY-SA](https://creativecommons.org/licenses/by-sa/3.0)
+:::
+
+::::::
 
 ```{block, type='mathblock'}
 Hasta ahora hemos utilizado la definición general de *cuantiles*. Donde
@@ -443,7 +459,7 @@ ajustar por su tamaño.
 Podemos resumir este primer análisis con un par de gráficas de cuantiles
 (@cleveland93):
 
-```{r}
+```{r, out.width = '90%', fig.align= 'center', cache=TRUE, fig,height = 5, fig.asp = 0.55}
 mediana <- median(casas$precio_m2)
 resumen <- casas %>%
   group_by(nombre_zona) %>%
@@ -453,8 +469,10 @@ resumen <- casas %>%
   mutate(mediana_zona = mediana_zona - mediana) %>%
   select(nombre_zona, mediana_zona, residual) %>%
   pivot_longer(mediana_zona:residual, names_to = "tipo", values_to = "valor")
-ggplot(resumen, aes(sample = valor)) + geom_qq(distribution = stats::qunif) +
-  facet_wrap(~ tipo) + ylab("Precio por m2") + xlab("f") +
+ggplot(resumen, aes(sample = valor)) + 
+  geom_qq(distribution = stats::qunif) +
+  facet_wrap(~ tipo) + 
+  ylab("Precio por m2") + xlab("f") +
   labs(subtitle = "Precio por m2 por zona",
        caption = paste0("Mediana total de ", round(mediana)))
 ```
@@ -873,29 +891,29 @@ de todas las posibles muestras que pudimos haber extraido.
 En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos
 del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
-## Ejemplo: nacimientos en México
+## Caso de estudio: nacimientos en México {-}
 
-Este ejemplo sigue sigue ideas de un análisis de [A. Vehtari y A. Gelman](https://statmodeling.stat.columbia.edu/2016/05/18/birthday-analysis-friday-the-13th-update/),
-junto con análisis de serie de tiempo de @cleveland93
+Este caso de estudio esta basado en un análisis propuesto por [A. Vehtari y A. Gelman](https://statmodeling.stat.columbia.edu/2016/05/18/birthday-analysis-friday-the-13th-update/),
+junto con un análisis de serie de tiempo de @cleveland93.
 
-Usaremos los datos de nacimientos registrados por día en México, desde 1999. Haremos una pregunta
-como ¿cuáles son los cumpleaños más frecuentes?, o ¿Qué mes del año hay más nacimientos?
+En nuestro caso, usaremos los datos de nacimientos registrados por día en México
+desde 1999. Los usaremos para contestar las preguntas: ¿cuáles son los cumpleaños más
+frecuentes? y ¿en qué mes del año hay más nacimientos?
 
-Una gráfica popular (ver por ejemplo [esta visualización](http://thedailyviz.com/2016/09/17/how-common-is-your-birthday-dailyviz/)):
+Podríamos utilizaar una gráfica popular (ver por ejemplo [esta visualización](http://thedailyviz.com/2016/09/17/how-common-is-your-birthday-dailyviz/)) como:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.align='center'}
 knitr::include_graphics("./images/heatmapbirthdays1.png")
 ```
 
-¿Cómo criticarías este análisis desde el punto de vista de los tres primeros principios del
-diseño analítico? ¿Las comparaciones son útiles? ¿Hay aspectos multivariados? ¿Qué tan bien
-explica o sugiere estructura, mecanismos o causalidad?
+Sin embargo, ¿cómo criticarías este análisis desde el punto de vista de los tres
+primeros principios del diseño analítico? ¿Las comparaciones son útiles? ¿Hay
+aspectos multivariados? ¿Qué tan bien explica o sugiere estructura, mecanismos o
+causalidad?
 
+### Datos de natalidad para México {-}
 
-## Datos de natalidad para México {-}
-
-
-```{r, echo = FALSE, message = FALSE, warning = FALSE}
+```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width = '90%', fig.align= 'center'}
 library(lubridate)
 library(ggthemes)
 theme_set(theme_minimal(base_size = 14))
@@ -906,37 +924,45 @@ natalidad <- readRDS("./data/nacimientos/natalidad.rds") %>%
     mutate(mes = month(fecha)) %>% ungroup %>%
     mutate(dia_semana = recode(dia_semana, Monday = "Lunes", Tuesday = "Martes", Wednesday = "Miércoles",
                                Thursday = "Jueves", Friday = "Viernes", Saturday = "Sábado", Sunday = "Domingo")) %>%
-    mutate(dia_semana = fct_relevel(dia_semana, c("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")))
+    mutate(dia_semana = fct_relevel(dia_semana, c("Lunes", "Martes", "Miércoles",
+                                                  "Jueves", "Viernes", "Sábado", "Domingo")))
 ```
 
-Consideramos los datos agregados de número de nacimientos (registrados) por día desde 1999 hasta 2016.
+Consideremos los *datos agregados* del número de nacimientos (registrados) por
+día desde 1999 hasta 2016. Un primer intento podría ser hacer una gráfica de la
+serie de tiempo. Sin embargo, vemos que no es muy útil:
 
-Podemos hacer una primera gráfica de la serie de tiempo que no es muy útil:
-
-```{r, fig.width = 10, fig.height=3, echo = FALSE}
+```{r, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 ggplot(natalidad, aes(x = fecha, y = n)) +
-    geom_line(alpha = 0.2) + geom_point(alpha = 0.5) +
+    geom_line(alpha = 0.2) +
+    geom_point(alpha = 0.5) +
     ylab("Nacimientos")
 ```
 
-Hay varias características que notamos. Principalmente, la tendencia ligeramente decreciente de número de nacimientos
-a lo largo de los años, un patrón anual, dispersión producida por los días de la semana.
+Hay varias características que notamos. Primero, parece haber una tendencia
+ligeramente decreciente del número de nacimientos a lo largo de los años.
+Segundo, la gráfica sugiere un patrón anual. Y por último, encontramos que hay
+dispersión producida por los días de la semana.
 
-Solo estas características hacen que la comparación
-entre días sea una difícil de interpretar. Supongamos que comparamos el número de nacimientos de dos miércoles dados.
-Esa comparación será diferente dependiendo del año donde ocurrieron, el mes donde ocurrieron, si semana santa ocurrió
-en algunos de los miércoles, y así sucesivamente.
+Sólo estas características hacen que la comparación entre días sea difícil
+de realizar. Supongamos que comparamos el número de nacimientos de dos
+miércoles dados. Esa comparación será diferente dependiendo: del año donde
+ocurrieron, el mes donde ocurrieron, si semana santa ocurrió en algunos de los
+miércoles, y así sucesivamente.
 
-Como en nuestros ejemplos anteriores, la idea  del siguiente análisis es aislar las componentes que
-observamos en la serie de tiempo: extraemos componentes ajustadas, y luego examinamos los residuales.
+Como en nuestros ejemplos anteriores, la idea  del siguiente análisis es aislar
+las componentes que observamos en la serie de tiempo: extraemos componentes
+ajustadas, y luego examinamos los residuales.
 
-En este caso particular, construiremos una **descomposición aditiva** de la serie de tiempo (@cleveland93).
+En este caso particular, asumiremos una **descomposición aditiva** de la
+serie de tiempo [@cleveland93].
 
-## Tendencia {-}
+### Tendencia {-}
 
-Comenzamos por extraer la tendencia, haciendo promedios loess con vecindades relativamente grandes. Quizá preferiríamos
-suavizar menos para capturar más variación lenta,
-pero si hacemos esto en este punto empezamos a absorber parte de la componente anual:
+Comenzamos por extraer la tendencia, haciendo promedios `loess` con vecindades
+relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
+variación lenta, pero si hacemos esto en este punto empezamos a absorber parte
+de la componente anual:
 
 
 ```{r}
@@ -945,25 +971,27 @@ datos_dia <- natalidad %>% mutate(ajuste_1 = fitted(mod_1)) %>%
     mutate(res_1 = n - ajuste_1)
 ```
 
-```{r, message = FALSE, echo = FALSE, fig.width = 10, fig.height = 4}
-g_1 <- ggplot(datos_dia, aes(x = fecha)) + geom_point(aes(y = n), alpha = 0.2, size = 1) +
-    geom_line(aes(y = ajuste_1), colour = "red", size = 1.2) + xlab("") + labs(caption = "Suavizamiento apropiado")
-g_2 <- ggplot(datos_dia, aes(x = fecha, y = n)) + geom_point(alpha = 0.2, size = 1) +
+```{r, message = FALSE, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '95%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+g_1 <- ggplot(datos_dia, aes(x = fecha)) +
+    geom_point(aes(y = n), alpha = 0.2, size = 1) +
+    geom_line(aes(y = ajuste_1), colour = "red", size = 1.2) + xlab("") +
+    labs(caption = "Suavizamiento apropiado")
+g_2 <- ggplot(datos_dia, aes(x = fecha, y = n)) +
+    geom_point(alpha = 0.2, size = 1) +
     geom_smooth(method = "loess", span = 0.075, method.args = list(degree = 1), se = FALSE) + xlab("") +
     labs(caption = "Requiere mayor suavizamiento")
 gridExtra::grid.arrange(g_1, g_2, ncol = 2)
 ```
 
-A principios de 2000 el suavizador está en niveles de alrededor de 7000 nacimientos diarios, hacia 2015 ese número es más
-cercano a unos 6000.
+Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
+7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.
 
+### Componente anual {-}
 
-## Componente anual {-}
-
-Restamos a la serie la tendencia, y así obtenemos mejores comparaciones controlando por tendencia
-(por ejemplo, comparar un día de 2000 y de 2015 tendria más sentido). Ahora ajustamos **los residuales
-del suavizado anterior**, pero con menos
-suavizamiento. Así evitamos capturar tendencia:
+Al obtener la tendencia podemos aislar el efecto a largo plazo y proceder a
+realizar mejores comparaciones (por ejemplo, comparar un día de 2000 y de 2015
+tendria más sentido). Ahora, ajustamos **los residuales del suavizado anterior**,
+pero con menos suavizamiento. Así evitamos capturar tendencia:
 
 ```{r}
 mod_anual <- loess(res_1 ~ as.numeric(fecha), data = datos_dia, degree = 2, span = 0.005)
@@ -971,20 +999,25 @@ datos_dia <- datos_dia %>% mutate(ajuste_2 = fitted(mod_anual)) %>%
     mutate(res_2 = res_1 - ajuste_2)
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 ggplot(datos_dia, aes(x = fecha)) +
     geom_point(aes(y = res_1), alpha = 0.2, size = 1) +
     geom_line(aes(y = ajuste_2), colour = "red", size = 1.2)
 ```
 
 
-## Día de la semana {-}
+### Día de la semana {-}
 
-Ahora podemos capturar el efecto de día de la semana. En este caso, podemos hacer suavizamiento
-loess para cada serie independiente
+Hasta ahora, hemos aislado los efectos por plazos largos de tiempo (tendencia) y
+hemos incorporado las variaciones estacionales (componente anual) de nuestra
+serie de tiempo. Ahora, veremos cómo capturar el efecto por día de la semana. En
+este caso, podemos hacer suavizamiento `loess` para cada serie de manera
+independiente
 
 ```{r}
-datos_dia <- datos_dia %>% group_by(dia_semana) %>% nest() %>%
+datos_dia <- datos_dia %>%
+    group_by(dia_semana) %>%
+    nest() %>%
     mutate(ajuste_mod =
       map(data, ~ loess(res_2 ~ as.numeric(fecha), data = .x, span = 0.1, degree = 1))) %>%
     mutate(ajuste_3 =  map(ajuste_mod, fitted)) %>%
@@ -992,49 +1025,54 @@ datos_dia <- datos_dia %>% group_by(dia_semana) %>% nest() %>%
     mutate(res_3 = res_2 - ajuste_3) %>% ungroup
 ```
 
-```{r, echo = FALSE, fig.width = 8}
-ggplot(datos_dia, aes(x = fecha)) + geom_point(aes(y = res_2), alpha = 0.5, colour = "gray") +
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+ggplot(datos_dia, aes(x = fecha)) +
+    geom_point(aes(y = res_2), alpha = 0.5, colour = "gray") +
     geom_line(aes(y = ajuste_3, colour = dia_semana), size = 1) +
-  xlab("")
+    xlab("")
 ```
 
-## Residuales {-}
+### Residuales {-}
 
-Examinamos los residuales finales quitando los efectos ajustados:
+Por último, examinamos los residuales finales quitando los efectos ajustados:
 
-```{r}
-ggplot(datos_dia, aes(x = fecha, y = res_3)) + geom_line() +
+```{r, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+ggplot(datos_dia, aes(x = fecha, y = res_3)) +
+    geom_line() +
     geom_smooth(method = "loess", span = 0.02,
                 method.args = list(degree=1, family = "symmetric"))
 ```
 
-**Observación**: nótese que la distribución de estos residuales tiene irregularidades interesante:
-es una distribución con colas largas, y no se debe a unos cuantos atípicos.
-Esto generalmente es indicación que hay factores importantes que hay que examinar en los residuales:
+**Observación**: nótese que la distribución de estos residuales presenta
+irregularidades interesantes. La distribución es de *colas largas*, y no se debe
+a unos cuantos datos atípicos. Esto generalmente es indicación que hay factores
+importantes que hay que examinar mas a detalle en los residuales:
 
-```{r, echo = FALSE, fig.width = 4, fig.height = 3}
-ggplot(datos_dia, aes(sample = res_3)) + geom_qq(distribution = stats::qunif) +
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+ggplot(datos_dia, aes(sample = res_3)) +
+  geom_qq(distribution = stats::qunif) +
   ylab("Nacimientos (residual)") + xlab("")
 ```
 
-## Reestimación {-}
+### Reestimación {-}
 
-Cuando hacemos este proceso secuencial ajuste -> residual, a veces conviene iterarlo. La razón es que un una
-segunda o tercera pasada podemos hacer mejores estimaciones de cada componente, y es posible suavizar menos sin
-capturar componentes de más alta frecuencia.
+Cuando hacemos este proceso secuencial de llevar el ajuste a los residual, a
+veces conviene iterarlo. La razón es que un una segunda o tercera pasada podemos
+hacer mejores estimaciones de cada componente, y es posible suavizar menos sin
+capturar *componentes de más alta frecuencia.*
 
-Así que podemos regresar a la serie
-original para hacer mejores estimaciones, más suavizadas:
+Así que podemos regresar a la serie original para hacer mejores estimaciones,
+más suavizadas:
 
 ```{r}
-# quitamos componente anual y efecto de día de la semana
+# Quitamos componente anual y efecto de día de la semana
 datos_dia <- datos_dia %>% mutate(n_1 = n - ajuste_2 - ajuste_3)
-# reajustamos
+# Reajustamos
 mod_1 <- loess(n_1 ~ as.numeric(fecha), data = datos_dia, span = 0.02, degree = 2,
                family = "symmetric")
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE,fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 datos_dia <- datos_dia %>% ungroup %>%
     mutate(ajuste_4 = fitted(mod_1)) %>%
     mutate(res_4 = n - ajuste_4) %>%
@@ -1045,7 +1083,7 @@ ggplot(datos_dia, aes(x = fecha)) +
 ```
 
 
-```{r}
+```{r, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 mod_anual <- loess(n_2 ~ as.numeric(fecha), data = datos_dia,
                degree = 2,  span = 0.01, family = "symmetric")
 datos_dia <- datos_dia %>%
@@ -1054,16 +1092,15 @@ datos_dia <- datos_dia %>%
     mutate(n_3 = n - ajuste_4 - ajuste_5)
 ```
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 ggplot(datos_dia, aes(x = fecha)) +
     geom_point(aes(y = n_2), alpha = 0.2, size = 1) +
     geom_line(aes(y = ajuste_5), colour = "red", size = 1)
 ```
 
-
 Y ahora repetimos con la componente de día de la semana:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 datos_dia <- datos_dia %>% group_by(dia_semana) %>% nest() %>%
     mutate(ajuste_mod = map(data, ~ loess(n_3 ~ as.numeric(fecha), data = .x, span = 0.1,
                                           degree=1, family = "symmetric"))) %>%
@@ -1076,13 +1113,13 @@ ggplot(datos_dia, aes(x = fecha, y = n_3, group = dia_semana)) +
     geom_line(aes(y = ajuste_6, colour = dia_semana), size =1)
 ```
 
+### Análisis de componentes {-}
 
-## Análisis de componentes {-}
+Ahora comparamos las componentes estimadas y los residuales en una misma
+gráfica. Por definición, la suma de todas estas componentes da los datos
+originales.
 
-Ahora comparamos las componentes estimadas y los residuales en una misma gráfica. La suma de todas
-estas componentes da los datos originales: es una descomposición aditiva.
-
-```{r, fig.width =7, fig.height = 7, echo = FALSE}
+```{r, fig.width =7, fig.height = 7, cache = TRUE, echo = FALSE,  out.width = '90%', fig.align= 'center'}
 media <- mean(datos_dia$n) %>% round
 datos_l <- datos_dia %>%
     select(fecha, dia_semana, n, ajuste_4, ajuste_5, ajuste_6, res_6) %>%
@@ -1098,9 +1135,9 @@ ggplot(datos_l, aes(x = fecha, y = valor, colour = dia_semana)) +
 
 ```
 
-Y esto nos da muchas comparaciones buenas que explican la variación que vimos en los datos.
-Una gran parte de los residuales está entre +-/250 nacimientos por día, pero las colas tienen
-una dispersión mucho mayor:
+Este último paso nos permite diversas comparaciones que explican la variación que vimos en
+los datos. Una gran parte de los residuales está entre $\pm 250$ nacimientos por
+día. Sin embargo, vemos que las colas tienen una dispersión mucho mayor:
 
 ```{r}
 quantile(datos_dia$res_6, c(00, .01,0.05, 0.10, 0.90, 0.95, 0.99, 1)) %>% round
@@ -1129,9 +1166,9 @@ datos_dia <- datos_dia %>% mutate(semana_santa = pascua + pascua_m1 +
                                       pascua_m2 + pascua_m3 + pascua_m4 + pascua_m5 + pascua_m6)
 ```
 
-### Viernes 13? {-}
+#### Viernes 13? {-}
 
-Podemos empezar con una curosidad: En Viernes o Martes 13, ¿nacen menos niños?
+Podemos empezar con una curosidad. Los días Viernes o Martes 13, ¿nacen menos niños?
 
 ```{r, echo = FALSE, fig.width = 12, fig.height = 4}
 datos_dia <- datos_dia %>%
@@ -1153,12 +1190,12 @@ ggplot(datos_13,
 Nótese que fue útil agregar el indicador de Semana santa por el Viernes 13 de Semana Santa
 que se ve como un atípico en el panel de los viernes 13.
 
-## Residuales: antes y después de 2006 {-}
+### Residuales: antes y después de 2006 {-}
 
-Veamos primero una agregación sobre los años de los residuales. Lo primero es observar un
-cambio que sucedió repentinamente en 2006:
+Veamos primero una agregación sobre los años de los residuales. Lo primero es
+observar un cambio que sucedió repentinamente en 2006:
 
-```{r}
+```{r, fig.height=7, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.55}
 sept_1 <- ymd(paste0(2000:2016, "-09-01")) %>% yday
 datos_dia <- datos_dia %>% mutate(antes_2006 = ifelse(año < 2006, "Antes de 2006", "2006 en adelante"))
 ggplot(datos_dia , aes(x = dia_año, y = res_6, group = factor(año))) +
@@ -1179,13 +1216,14 @@ Otras características que debemos investigar:
 - Semana santa: como la fecha cambia, vemos que los residuales negativos tienden a ocurrir dispersos
 alrededor del día 100 del año.
 
-##  Otros días especiales: más de residuales {-}
+###  Otros días especiales: más de residuales {-}
 
-Ahora promediamos residuales (es posible agregar barras para indicar dispersión a lo largo de los años) para cada
-día del año. Podemos identificar ahora los residuales más grandes: se deben, por ejemplo, a días feriados, con
+Ahora promediamos residuales (es posible agregar barras para indicar dispersión
+a lo largo de los años) para cada día del año. Podemos identificar ahora los
+residuales más grandes: se deben, por ejemplo, a días feriados, con
 consecuencias adicionales que tienen en días ajuntos (excesos de nacimientos):
 
-```{r, echo = FALSE, fig.width = 10, fig.height = 8}
+```{r, fig.width=10, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.55}
 datos_da <- datos_dia %>%
     mutate(bisiesto = (año %in% c(2000, 2004, 2008, 2012, 2016))) %>%
     mutate(dia_año_366 = ifelse(!bisiesto & dia_año >= 60, dia_año + 1, dia_año)) %>%
@@ -1231,7 +1269,7 @@ Para Semana Santa tenemos que hacer unos cálculos. Si alineamos los datos por d
 obtenemos un patrón de caída fuerte de nacimientos el Viernes de Semana Santa, y la característica forma
 de "valle con hombros" en días anteriores y posteriores estos Viernes. ¿Por qué ocurre este patrón?
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.55}
 pascuas <- tibble(pascua_dia = ymd(as.character(timeDate::Easter(1999:2017)))) %>%
     mutate(año = year(pascua_dia))
 datos_dia <- left_join(datos_dia, pascuas, by = "año") %>%

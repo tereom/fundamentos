@@ -75,4 +75,6 @@ body {
   text-align: justify;
 }
 
-
+.cols {
+  display: flex;
+}
