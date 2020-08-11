@@ -142,7 +142,7 @@ En resumen, hablaremos de las siguientes guías:
 ### Principios generales del diseño analítico {-}
 
 Aplicables a una presentación o análisis completos, y como guía para construir
-nuevas visualizaciones ([@tufte06]).
+nuevas visualizaciones [@tufte06].
 
 <div class="caja">
 **Principio 1.** Muestra comparaciones, contrastes, diferencias.  

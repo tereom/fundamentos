@@ -36,7 +36,7 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 
 #### Datos y análisis exploratorio {-}
 
-Referencias: [@Cleveland], [@Chihara]
+Referencias: [@cleveland94], [@Chihara]
 
 1. Visualización y análisis exploratorio
 2. Tipos de datos o estudios
