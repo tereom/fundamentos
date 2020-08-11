@@ -247,6 +247,13 @@
       "Repository": "CRAN",
       "Hash": "b8cff1d1391fd1ad8b65877f4c7f2e53"
     },
+    "gganimate": {
+      "Package": "gganimate",
+      "Version": "1.0.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "1a34307f6fca1bc7391586860ea0aa55"
+    },
     "ggplot2": {
       "Package": "ggplot2",
       "Version": "3.3.1",
@@ -680,6 +687,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "a4b9662282097d1033c60420dcb83350"
+    },
+    "tweenr": {
+      "Package": "tweenr",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "fc77eb5297507cccfa3349a606061030"
     },
     "utf8": {
       "Package": "utf8",
