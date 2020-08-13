@@ -962,12 +962,20 @@ relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
 variación lenta, pero si hacemos esto en este punto empezamos a absorber parte
 de la componente anual:
 
+```{block loess, type='mathblock}
+
+Detalles de `loess`.
+
+```
+
+
 
 ```{r}
 mod_1 <- loess(n ~ as.numeric(fecha), data = natalidad, span = 0.2, degree = 1)
 datos_dia <- natalidad %>% mutate(ajuste_1 = fitted(mod_1)) %>%
     mutate(res_1 = n - ajuste_1)
 ```
+
 
 ```{r, message = FALSE, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '95%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
 g_1 <- ggplot(datos_dia, aes(x = fecha)) +
