@@ -1,0 +1,80 @@
+# Tipos de estudio y experimentos
+
+El contexto es el de  **dos muestras**. Es una práctica común en estudios
+estadísticos pues permite contrastar el efecto de un diseño o prueba. Ejemplos
+de esto se da en medir la tasa de captura en diseño de páginas *web*, la prueba
+de una nueva medicina, o simple contraste entre dos poblaciones con
+características distintas.
+
+Una *respuesta* a una pregunta de interés
+viene acomapañada de una *medida de incertidumbre*, la cual se basa en una
+*modelo de probabilidad*. Hay veces en el que el modelo de probabilidad está
+bien justificado, pues hay un *mecanismo aleatorio* detrás ---pensemos en el
+lanzamiento de una moneda. En otras ocasiones el modelo de probabilidad es un
+*artefacto* matemático que asemeja la realidad y permite aplicar
+*modelos estadísticos*.
+
+Para entender y comunicar las conclusiones de un modelo hay que estar
+conscientes del mecanismo aleatorio que se utilizó, por ejemplo, en la selección
+de unidades muestrales, o del grupo al que pertenecen.
+
+### Ejemplos {-}
+
+#### Retroalimentacion y creatividad {-}
+
+#### Discriminación {-}
+
+## Muestras diseñadas y muestras naturales {-}
+
+Hay dos formas de inferencia. La **inferencia causal** y la **inferencia a
+poblaciones**. Saber los mecanismos que generaron los datos nos permite saber
+qué tipo de inferencia es más adecuada para el estudio en cuestión.
+
+### Inferencia Causal {-}
+
+En un **experimento aleatorizado** el investigador asume el control de
+asignación de cada unidad experimental a los distintos grupos de estudio por
+medio de un mecanismo aleatorio, por ejemplo, una moneda. 
+
+En un **estudio observacional** la asignación a los grupos se encuentra fuera del 
+control de la investigadora. 
+
+Es natural cuestionar si por medio de análisis estadísticos podemos concluir
+relaciones causales. La respuesta es: 
+
+```{block, type='comentario'}
+Las relaciones de causa y efecto se pueden inferir sólo si se utiliza un estudio aleatorizado, 
+pero no por medio de estudios observacionales. 
+```
+
+El componente aleatorio asegura que las unidades observacionales con diferentes
+características se mezclen, y cualquier evidencia de dicha relación se muestra
+por medio del estudio. Aún asi, no hay certeza absoluta de la presencia de la
+relación causal. Dicha incertidumbre es la que usualement se pretende inculuir
+en el modelo a través de las técnicas estadísticas.
+
+En un estudio observacional es imposible concluir una relación causal por medio
+de un análisis estadístico. La analista no puede asegurar la ausencia de algún
+factor de confusión (*confounding variable*) que sea responsable de distorsionar
+las conclusiones.
+
+```{block, type='comentario'}
+Un factor de confusión está asociado tanto a la pertenencia de un grupo de estudio 
+como al resultado del estudio mismo. La presencia de un factor de confusión no permite
+relacionar de manera directa la consecuencia con la pertenencia al grupo. 
+```
+
+### El valor de estudios observacionales {-}
+
+Incluso aunque no podamos establecer relaciones causa-efecto, los estudios observacionales 
+poseen valor en un estudio formal. Las ventajas se pueden resumir en: 
+
+1. El objetivo del estudio. 
+2. Establecer la relacion causa-efecto se puede hacer por medio de otras rutas. 
+3. Datos observacionales pueden sugerir nuevas direcciones de investigación a través de *evidencia*.
+
+
+
+## Experimentos y datos observacionales {-}
+
+
