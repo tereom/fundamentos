@@ -1,6 +1,6 @@
 on:
   push:
-    branches: master
+    branches: render-html
 
 name: bookdown
 
@@ -37,7 +37,7 @@ jobs:
 
       - name: Install packages
         run: |
-          R -e 'install.packages(c("renv", "tidyverse"))'
+          R -e 'install.packages(c("renv"))'
           R -e 'renv::restore()'
 
       - name: Build site
