@@ -1,9 +1,7 @@
 on:
   push:
      branches:
-       - master
-
-
+       - render-html
 
 name: renderbook
 
