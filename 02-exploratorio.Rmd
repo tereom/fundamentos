@@ -1,5 +1,3 @@
-\mainmatter
-
 # Analisis exploratorio
 
 > "Exploratory data analysis can never be the whole story, but nothing
