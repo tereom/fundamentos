@@ -26,7 +26,7 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 - Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@itam.mx>.  
 - GitHub: https://github.com/tereom/fundamentos  
 - Foros de discusion:  
-        - Grupo Teresa:  [slack](https:fundamentos-est.slack.com)  
+        - Grupo Teresa:  [slack](fundamentos-est.slack.com)  
         - Grupo Alfredo: [canvas](https://itam.instructure.com/)
 
 </br>
@@ -38,7 +38,7 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 
 #### Datos y análisis exploratorio {-}
 
-Referencias: [@Cleveland], [@Chihara]
+Referencias: [@cleveland93], [@Chihara]
 
 1. Visualización y análisis exploratorio
 2. Tipos de datos o estudios
