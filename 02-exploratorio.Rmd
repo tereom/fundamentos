@@ -1,4 +1,4 @@
-# Analisis exploratorio y visualizacion
+# Analisis exploratorio y visualización
 
 > "Exploratory data analysis can never be the whole story, but nothing
 else can serve as the foundation stone --as the first step."
