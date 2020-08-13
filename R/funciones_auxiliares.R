@@ -1,8 +1,19 @@
 
+escape_table_salida <- function() {
+  if (knitr::is_latex_output())
+    T else F
+}
+
+format_table_salida <- function() {
+  if (knitr::is_latex_output())
+    "latex" else "html"
+}
+
 formatear_tabla <- function(x_tbl, scroll = FALSE){
-  tabla <- knitr::kable(x_tbl) %>%
-    kableExtra::kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
-                              full_width = FALSE, font_size = 15, fixed_thead = TRUE)
+  tabla <- knitr::kable(x_tbl, booktabs = T) %>%
+    kableExtra::kable_styling(latex_options = c("striped"),
+                              bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                              full_width = FALSE, fixed_thead = TRUE)
   if(scroll) tabla <- tabla %>% scroll_box(width = "780px")
   tabla
 }
@@ -37,16 +48,15 @@ grafica_cuantiles <- function(datos, grupo, valor){
 
 marcar_tabla_fun <- function(corte, color_1 = "darkgreen", color_2 = "red"){
   fun_marcar <- function(x){
-    kableExtra::cell_spec(x, "html",
+    kableExtra::cell_spec(x, format_table_salida(),
                           color = ifelse(x <= -corte, color_1, ifelse(x>= corte, color_2, "lightgray")))
   }
   fun_marcar
 }
 
-
 marcar_tabla_fun_doble <- function(corte_1, corte_2, color_1 = "darkgreen", color_2 = "red"){
   fun_marcar <- function(x){
-    kableExtra::cell_spec(x, "html",
+    kableExtra::cell_spec(x, format_table_salida(),
                           color = ifelse(x <= corte_1, color_1, ifelse(x>= corte_2, color_2, "lightgray")),
                           bold = ifelse(x <= 3*corte_1, TRUE, ifelse(x>= 3*corte_2, TRUE, FALSE)))
   }
