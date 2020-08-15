@@ -1,9 +1,7 @@
 on:
   push:
      branches:
-       - master
-
-
+       - render-html
 
 name: renderbook
 
@@ -16,7 +14,7 @@ jobs:
       - uses: r-lib/actions/setup-r@v1
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install rmarkdown
-        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra"))'
+        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra")'
       - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd")'
       - uses: actions/upload-artifact@v1
