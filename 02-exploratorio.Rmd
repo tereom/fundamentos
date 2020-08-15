@@ -970,7 +970,7 @@ datos_dia <- natalidad %>% mutate(ajuste_1 = fitted(mod_1)) %>%
     mutate(res_1 = n - ajuste_1)
 ```
 
-```{r, message = FALSE, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '95%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, message = FALSE, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '95%', fig.align= 'center', cache=TRUE, fig.asp = 0.45, warning=FALSE}
 g_1 <- ggplot(datos_dia, aes(x = fecha)) +
     geom_point(aes(y = n), alpha = 0.2, size = 1) +
     geom_line(aes(y = ajuste_1), colour = "red", size = 1.2) + xlab("") +
@@ -979,7 +979,7 @@ g_2 <- ggplot(datos_dia, aes(x = fecha, y = n)) +
     geom_point(alpha = 0.2, size = 1) +
     geom_smooth(method = "loess", span = 0.075, method.args = list(degree = 1), se = FALSE) + xlab("") +
     labs(caption = "Requiere mayor suavizamiento")
-gridExtra::grid.arrange(g_1, g_2, ncol = 2)
+g_1 + g_2
 ```
 
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
