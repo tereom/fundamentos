@@ -955,6 +955,19 @@ ajustadas, y luego examinamos los residuales.
 En este caso particular, asumiremos una **descomposición aditiva** de la
 serie de tiempo [@cleveland93].
 
+```{block, type = 'mathblock'}
+En el estudio de **series de tiempo** una estructura común es considerar 
+el efecto de diversos factores como tendencia, estacionalidad, ciclicidad 
+e irregularidades de manera aditiva. Esto es, consideramos la descomposición
+\begin{align}
+y(t) = f_{t}(t) + f_{e}(t) + f_{c}(t) + \varepsilon.
+\end{align}
+Una estrategia de ajuste, como veremos más adelante, es proceder de manera 
+*modular.* Es decir, se ajustan los componentes de manera secuencial 
+considerando los residuales de los anteriores.
+```
+
+
 ### Tendencia {-}
 
 Comenzamos por extraer la tendencia, haciendo promedios `loess` [@cleveland1979robust] 
