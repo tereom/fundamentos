@@ -13,7 +13,6 @@ description: "Curso de Fundamentos de Estadística con Remuestreo, maestría en 
 
 # Información del curso {-}  
 
-
 Notas del curso *Fundamentos de Estadística con Remuestreo* del programa de 
 maestría en Ciencia de Datos del ITAM. En caso de encontrar 
 errores o tener sugerencias del material se agradece la propuesta de 
@@ -22,23 +21,22 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 
 #### Ligas {-}
 
-- Notas: https://tereom.github.io/fundamentos/  
+- Notas: https://fundamentos-est.netlify.app/  
 - Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@itam.mx>.  
 - GitHub: https://github.com/tereom/fundamentos  
 - Foros de discusion:  
-        - Grupo Teresa:  [slack](https:fundamentos-est.slack.com)  
+        - Grupo Teresa:  [slack](fundamentos-est.slack.com)  
         - Grupo Alfredo: [canvas](https://itam.instructure.com/)
 
 </br>
 
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Licencia Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />Este trabajo está bajo una <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Licencia Creative Commons Atribución 4.0 Internacional</a>.
 
-
 ## Temario {-}  
 
 #### Datos y análisis exploratorio {-}
 
-Referencias: [@Cleveland], [@Chihara]
+Referencias: [@cleveland94], [@Chihara]
 
 1. Visualización y análisis exploratorio
 2. Tipos de datos o estudios
