@@ -1,4 +1,4 @@
-# Analisis exploratorio
+# Análisis exploratorio
 
 
 > "Exploratory data analysis can never be the whole story, but nothing
@@ -346,16 +346,6 @@ Sin embargo,
 - En muchas ocasiones conviene usar estas medidas pues permite hacer
 comparaciones históricas o tradicionales ---pues análisis anteriores pudieran
 estar basados en éstas.
-
-```{block , type='ejercicio'}
-1. Considera el caso de tener $N$ observaciones y asume que ya tienes calculado el
-promedio para dichas observaciones. Este promedio lo denotaremos por $\bar x_N$.
-Ahora, considera que has obtenido $M$ observaciones más. Escribe una fórmula
-recursiva para la media del conjunto total de datos $\bar x_{N+M}$ en función
-de lo que ya tenías precalculado $\bar x_N.$
-
-2. ¿En qué situaciones esta propiedad puede ser conveniente?
-```
 
 ## Ejemplos {-}
 
@@ -890,7 +880,7 @@ comparaciones se vuelven vs este grupo particular. No siempre queremos hacer
 esto.
 
 
-## Interpretación {-}
+#### Interpretación {-}
 
 En el último ejemplo de tomadores de té utilizamos una muestra de personas, no
 toda la población de tomadores de té. Eso quiere decir que tenemos cierta
@@ -907,7 +897,7 @@ de todas las posibles muestras que pudimos haber extraido.
 En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos
 del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
-## Loess
+## Loess {-}
 
 Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas 
 veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
@@ -924,7 +914,8 @@ load(here::here("data", "ventas_sorteo.Rdata"))
 
 ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
   geom_point() +
-  geom_smooth(method = "loess", alpha = 0.5, degree = 1, se = FALSE)
+  geom_smooth(method = "loess", alpha = 0.5, method.args = list(degree = 1), 
+              se = FALSE)
 ```
 
 El patrón no era difícil de ver en los datos originales, sin embargo, la curva 
@@ -973,6 +964,8 @@ sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
 tiempo sea robusto.
 
+
+
 ### Ajustando curvas loess {-}
 
 La idea es producir ajustes locales de rectas o funciones cuadráticas. En estas
@@ -1020,7 +1013,7 @@ Aplicamos el tricubo (gráfica de abajo), para encontrar los pesos de cada punto
 Los puntos que están a una distancia mayor a $d_q(x)$ reciben un peso de cero, y 
 los más cercanos un peso que depende de que tan cercanos están a $x$.
 
-```{r, fig.width=3.4, fig.height=3.2}
+```{r, fig.height=3.5, fig.width=3.8}
 tricubo <- function(x) {
   ifelse(abs(x) < 1, (1 - abs(x) ^ 3) ^ 3, 0)
 }
@@ -1060,7 +1053,7 @@ de seleccionar un suavizamiento adecuado.
 Ejemplo de distintas selecciones de $\lambda$, en este ejemplo consideramos la 
 ventas semanales de un producto a lo largo de 5 años. 
 
-```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE} 
+```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE, out.width='70%', fig.align='center'} 
 library(broom)
 ventas <- readr::read_csv(here::here("data", "ventas_semanal.csv"))
 
@@ -1097,9 +1090,9 @@ if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
     facet_wrap(~span, ncol = 1) +
     ggtitle("x0 = ")
 
-    gganimate::gganimate(loess_spans, 
-                         filename = here::here("images", "02_loess-spans.gif"),
-                         interval= .1)
+    # gganimate::gganimate(loess_spans, 
+    #                      filename = here::here("images", "02_loess-spans.gif"),
+    #                      interval= .1)
 }
 
 knitr::include_graphics(here::here("images", "02_loess-spans.gif"))
@@ -1137,7 +1130,7 @@ primeros principios del diseño analítico? ¿Las comparaciones son útiles? ¿H
 aspectos multivariados? ¿Qué tan bien explica o sugiere estructura, mecanismos o
 causalidad?
 
-### Datos de natalidad para México {-}
+##### Datos de natalidad para México {-}
 
 ```{r, echo = TRUE, message = FALSE, warning = FALSE, out.width = '90%', fig.align= 'center'}
 library(lubridate)
@@ -1196,7 +1189,7 @@ considerando los residuales de los anteriores.
 ```
 
 
-### Tendencia {-}
+##### Tendencia {-}
 
 Comenzamos por extraer la tendencia, haciendo promedios `loess` [@cleveland1979robust] 
 con vecindades relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
@@ -1225,55 +1218,7 @@ g_1 + g_2
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.
 
-```{block loess, type='mathblock'}
-
-El modelo de *regresion lineal* ajusta una recta a un conjunto de datos. Por ejemplo, 
-consideremos la familia $f_{a,b} = a x + b$ para un conjunto de datos bivariados 
-$\{ (x_1, y_1), \ldots, (x_N, y_N)\}$. La recta se ajusta al minimizar
-la suma de errores cuadráticos
-\begin{align}
-\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2. 
-\end{align}
-
-Sin embargo, este modelo es muy *inflexible*. Una manera de mejorar su ajuste es 
-considerar rectas de manera local. Esto lo logramos al minimizar una suma de errores
-cuadráticos ponderados por los pesos $w_n(x)$. Para esto minimizamos las $N$ 
-funciones de error
-\begin{align}
-\sum_{n = 1}^N w_n(x_k) ( y_n - a x_n - b)^2,
-\end{align}
-donde $x_k \in \{x_1, \ldots, x_N\}$. 
-```
-
-```{block, type = 'mathblock'}
-Notemos que el ajuste tradicional por medio de mínimos cuadrados considera un ajuste
-con pesos 
-\begin{align}
-w_n(x) = \frac1N. 
-\end{align}
-```
-
-```{block, type = 'mathblock'}
-En la práctica, los pesos $w_n(\cdot)$ contienen a su vez un conjunto de parámetros 
-que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta 
-pesos Gaussianos
-\begin{align}
-w_n(x) = \text{exp}\left( -\frac{ (x - x_n)^2 }{2\sigma^2} \right),
-\end{align}
-el parámetro $\sigma$ dicta el efecto local de los puntos ancla $x_n$. Dicho de otro
-modo, dicta la vecindad de incidencia de los datos $x_n.$
-```
-
-```{block, type = 'mathblock'}
-Una generalización sencilla es considerar polinomios para el ajuste
-\begin{align}
-f_p(x) = b + a_1 x + \cdots + a_p x ^p,
-\end{align}
-donde $p$ es el máximo grado del polinomio. De esta forma, $p$ controla el suavizamiento
-de la curva. El caso de recta lineal claramente es para $p=1.$
-```
-
-### Componente anual {-}
+##### Componente anual {-}
 
 Al obtener la tendencia podemos aislar el efecto a largo plazo y proceder a
 realizar mejores comparaciones (por ejemplo, comparar un día de 2000 y de 2015
@@ -1293,7 +1238,7 @@ ggplot(datos_dia, aes(x = fecha)) +
 ```
 
 
-### Día de la semana {-}
+##### Día de la semana {-}
 
 Hasta ahora, hemos aislado los efectos por plazos largos de tiempo (tendencia) y
 hemos incorporado las variaciones estacionales (componente anual) de nuestra
@@ -1319,7 +1264,7 @@ ggplot(datos_dia, aes(x = fecha)) +
     xlab("")
 ```
 
-### Residuales {-}
+##### Residuales {-}
 
 Por último, examinamos los residuales finales quitando los efectos ajustados:
 
@@ -1341,7 +1286,7 @@ ggplot(datos_dia, aes(sample = res_3)) +
   ylab("Nacimientos (residual)") + xlab("")
 ```
 
-### Reestimación {-}
+##### Reestimación {-}
 
 Cuando hacemos este proceso secuencial de llevar el ajuste a los residual, a
 veces conviene iterarlo. La razón es que un una segunda o tercera pasada podemos
@@ -1400,7 +1345,7 @@ ggplot(datos_dia, aes(x = fecha, y = n_3, group = dia_semana)) +
     geom_line(aes(y = ajuste_6, colour = dia_semana), size =1)
 ```
 
-### Análisis de componentes {-}
+##### Análisis de componentes {-}
 
 Ahora comparamos las componentes estimadas y los residuales en una misma
 gráfica. Por definición, la suma de todas estas componentes da los datos
@@ -1453,7 +1398,7 @@ datos_dia <- datos_dia %>% mutate(semana_santa = pascua + pascua_m1 +
                                       pascua_m2 + pascua_m3 + pascua_m4 + pascua_m5 + pascua_m6)
 ```
 
-#### Viernes 13? {-}
+##### Viernes 13? {-}
 
 Podemos empezar con una curosidad: en *viernes o martes 13*, ¿nacen menos niños?
 
@@ -1477,7 +1422,7 @@ ggplot(datos_13,
 Nótese que fue útil agregar el indicador de Semana santa por el Viernes 13 de Semana Santa
 que se ve como un atípico en el panel de los viernes 13.
 
-### Residuales: antes y después de 2006 {-}
+##### Residuales: antes y después de 2006 {-}
 
 Veamos primero una agregación sobre los años de los residuales. Lo primero es
 observar un cambio que sucedió repentinamente en 2006:
@@ -1503,7 +1448,7 @@ Otras características que debemos investigar:
 - Semana santa: como la fecha cambia, vemos que los residuales negativos tienden a ocurrir dispersos
 alrededor del día 100 del año.
 
-###  Otros días especiales: más de residuales {-}
+#####  Otros días especiales: más de residuales {-}
 
 Ahora promediamos residuales (es posible agregar barras para indicar dispersión
 a lo largo de los años) para cada día del año. Podemos identificar ahora los
@@ -1550,7 +1495,7 @@ ggplot(datos_da, aes(x = dia_año_366, y = residual_prom, colour = grupo, group=
 ```
 
 
-### Semana santa {-}
+##### Semana santa {-}
 
 Para Semana Santa tenemos que hacer unos cálculos. Si alineamos los datos por días antes de Domingo de Pascua,
 obtenemos un patrón de caída fuerte de nacimientos el Viernes de Semana Santa, y la característica forma
