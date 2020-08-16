@@ -58,13 +58,6 @@
       "Repository": "CRAN",
       "Hash": "e652f23d8b1807cc975c51410d05b72f"
     },
-    "animation": {
-      "Package": "animation",
-      "Version": "2.6",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "b726b7119ba99cc79dfdd24cb4ee6894"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -253,13 +246,6 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "b8cff1d1391fd1ad8b65877f4c7f2e53"
-    },
-    "gganimate": {
-      "Package": "gganimate",
-      "Version": "0.1.1",
-      "Source": "Repository",
-      "Repository": null,
-      "Hash": "526d4ad9bcc9a28c28c9dfed31fce1bf"
     },
     "ggplot2": {
       "Package": "ggplot2",
@@ -701,6 +687,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "a4b9662282097d1033c60420dcb83350"
+    },
+    "tweenr": {
+      "Package": "tweenr",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "fc77eb5297507cccfa3349a606061030"
     },
     "utf8": {
       "Package": "utf8",
