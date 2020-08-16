@@ -218,6 +218,23 @@ g_1 + g_2 + g_3
 Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas
 particiones resaltan distintos aspectos de los datos.
 
+
+```{block, type='ejercicio'}
+¿Cómo se ve la gráfica de cuantiles de las propinas? ¿Cómo crees que esta gráfica se
+compara con distintos histogramas?
+```
+
+```{r, fig.width = 4, fig.height = 3}
+g_1 <- ggplot(propinas, aes(sample = propina)) + 
+  geom_qq(distribution = stats::qunif) + xlab("f") + ylab("propina")
+g_1
+```
+
+**Observación**. Cuando hay datos repetidos, los cuantiles tienen que interpretarse como sigue: 
+el cuantil-$f$ con valor $q$ satisface que existe una proporción aproximada $f$ de los datos que están en el valor
+$q$ o por debajo de éste, pero no necesariamente exactamente una proporción $f$ de los datos estan en $q$ o por debajo.
+
+
 Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
 histograma es el **diagrama de caja y brazos**. Mostramos dos versiones, la
 clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):
@@ -889,7 +906,201 @@ de todas las posibles muestras que pudimos haber extraido.
 En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos
 del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
-## Caso de estudio: nacimientos en México {-}
+## Loess
+
+Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas 
+veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
+*loess* que suavice.
+
+**Ajustando familias paramétricas.** Supongamos que tenemos la familia 
+$f_{a,b}=ax+b$ y datos bivariados $(x_1,y_1), ..., (x_n, y_n)$. Buscamos 
+encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. El
+criterio de mínimos cuadrados consiste en encontrar $a$, $b$ que minimicen la
+suma de cuadrados:
+
+$$\sum_{i=1}^n(y_i-ax_i-b)^2$$
+
+En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando esta
+función objetivo. En este caso, estamos ajustando una recta a los datos, pero
+podemos repetir el argumento con otras familias de funciones (por ejemplo 
+cuadráticas). Para nuestro ejemplo obtenemos:
+
+```{r, fig.width=3.6, fig.height=3.3}
+# cargamos los datos
+load(here::here("datos", "ventas_sorteo.Rdata"))
+# desplegamos las primeras lineas
+head(ventas.sorteo)
+
+ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+Donde los parámetros $a$ y $b$ están dados por:
+
+```{r}
+mod_lineal <- lm(log(ventas.tot.1) ~ log(premio), data = ventas.sorteo)
+round(coef(mod_lineal), 2)
+```
+
+De modo que la curva ajustada es $\log(V) = 4.6 + 0.47 \log(P)$, o en las 
+unidades originales $V = 100 P^{0.47}$, donde $V$ son las ventas y $P$ el 
+premio. Si observamos la gráfica notamos que este modelo lineal (en los 
+logaritmos) no es adecuado para estos datos. Podríamos experimentar con otras
+familias (por ejemplo, una cuadrática o cúbica, potencias, exponenciales, etc.);
+sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
+flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
+tiempo sea robusto.
+
+**Observación:** Los modelos lineales, cuando se pueden ajustar de manera 
+razonable, son altamente deseables por su simplicidad: los datos se describen 
+con pocos parámetros y tenemos incrementos marginales constantes en todo el 
+rango de la variable que juega como factor, de modo que la interpretación es 
+simple. 
+
+### Ajustando curvas loess {-}
+
+La idea es producir ajustes locales de rectas o funciones cuadráticas. En estas
+familias es necesario especificar dos parámetros:
+
+* Parámetro de suavizamiento $\alpha$: cuando $\alpha$ es más grande, la curva
+ajustada es más suave.
+
+* Grado de los polinomios locales que ajustamos $\lambda$: generalmente se 
+toma $\lambda=1,2$.
+
+Entonces, supongamos que los datos están dados por $(x_1,y_1), ..., (x_n, y_n)$,
+y sean $\alpha$ un parámetro de suavizamiento fijo, y $\lambda=1$. Denotamos
+como $\hat{g}(x)$ la curva loess ajustada, y como $w_i(x)$ a una función de peso
+(que depende de x) para la observación $(x_i, y_i)$.
+
+Para poder calcular $w_i(x)$ debemos comenzar calculando 
+$q=\lfloor{n\alpha}\rfloor$ que suponemos mayor que uno. Ahora definimos la 
+función *tricubo*:
+
+$$
+\begin{equation}
+  T(u)=\begin{cases}
+    (1-|u|^3)^3, & \text{para $|u| < 1$}.\\
+    0, & \text{en otro caso}.
+  \end{cases}
+\end{equation}
+$$
+
+entonces, para el punto $x$ definimos el peso correspondiente al dato $(x_i,y_i)$, 
+denotado por $w_i(x)$ como:
+
+$$w_i(x)=T\bigg(\frac{|x-x_i|}{d_q(x)}\bigg)$$
+
+donde $d_q(x)$ es el valor de la $q-ésima$ distancia más chica (la más grande 
+entre las $q$ más chicas) entre los valores $|x-x_j|$, $j=1,2,...,n$. De esta 
+forma, las observaciones $x_i$ reciben más peso cuanto más cerca estén de $x$. 
+
+En palabras, de $x_1,...,x_n$ tomamos los $q$ datos más cercanos a $x$, que 
+denotamos $x_{i_1}(x) \leq x_{i_2}(x) \leq \cdots x_{i_q}(x) \leq$. Los 
+re-escalamos a $[0,1]$ haciendo corresponder $x$ a $0$ y el punto más alejado de
+$x$ (que es $x_{i_q}$) a 1.
+
+Aplicamos el tricubo (gráfica de abajo), para encontrar los pesos de cada punto.
+Los puntos que están a una distancia mayor a $d_q(x)$ reciben un peso de cero, y 
+los más cercanos un peso que depende de que tan cercanos están a $x$.
+
+```{r, fig.width=3.4, fig.height=3.5}
+tricubo <- function(x) {
+  ifelse(abs(x) < 1, (1 - abs(x) ^ 3) ^ 3, 0)
+}
+curve(tricubo, from = -1.5, to = 1.5)
+```
+
+Finalmente ajustamos una recta de mínimos cuadrados ponderados por los pesos
+$w_i(x)$, es decir, minimizamos
+
+$$\sum_{i=1}^nw_i(x)(y_i-ax_i-b)^2$$
+
+Hacemos esto para cada valor de $x$ que está en el rango de los datos 
+$x_1,...,x_n$.
+
+**Observaciones:** 
+
+1. Cualquier función con la forma de flan del tricubo (se 
+desvanece fuera de $(-1,1)$, es creciente en $(-1,0)$ y decreciente en $(0, 1)$,
+además de ser continua y quizás diferenciable) es un buen candidato para usar 
+en lugar del tricubo. La razón por la que escogemos precisamente esta forma 
+algebráica no tiene que ver con el análisis exploratorio, sino con las ventajas
+teóricas adicionales que tiene en la inferencia.
+
+2. El caso $\lambda=2$ es similar. La única diferencia es en el paso de ajuste, 
+donde usamos funciones cuadráticas, y obtendríamos entonces tres parámetros 
+$a(x), b(x), c(x)$.
+
+**Escogiendo de los parámetros.** Los parámetros $\alpha$ y $\lambda$ se 
+encuentran por ensayo y error. La idea general es que debemos encontrar una 
+curva que explique patrones importantes en los datos (que *ajuste* los datos)
+pero que no muestre variaciones a escalas más chicas difíciles de explicar (que 
+pueden ser el resultado de influencias de otras variables, variación muestral, 
+ruido o errores de redondeo, por ejemplo). En el proceso de prueba y error 
+iteramos el ajuste y en cada paso hacemos análisis de residuales, con el fin 
+de seleccionar un suavizamiento adecuado.
+
+
+```{r binsmoother-animation, echo=FALSE, warning=FALSE} 
+library(gganimate)
+library(broom)
+ventas <- readr::read_csv(here::here("data", "ventas_semanal.csv"))
+
+if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
+  # spans a considerar
+  spans <- c(.06, .25, .5, 1)
+
+  # crear ajustes loess, uno por span
+  fits <- crossing(ventas, span = spans) %>%
+    nest_by(span) %>%
+    mutate(
+      mod = list(loess(sales.kg ~ period, data = data, degree = 1, 
+                            span = span)), 
+      data_mod = list(augment(mod))
+           )
+    
+  # calcular pesos
+  dat <- ventas %>%
+    tidyr::crossing(span = spans, center = unique(ventas$period)) %>%
+    mutate(dist = abs(period - center)) %>%
+    filter(rank(dist) / n() <= span) %>%
+    mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3)
+
+  # Crear gráfica de páneles con puntos que se mueven, ajustes locales lineales, 
+  # y líneas verticales
+  loess_spans <- ggplot(dat, aes(period, sales.kg)) +
+    geom_point(aes(alpha = weight, frame = center)) +
+    geom_smooth(aes(group = center, frame = center, weight = weight),
+                method = "lm", se = FALSE) +
+    geom_vline(aes(xintercept = center, frame = center), lty = 2) +
+    geom_point(shape = 1, data = ventas, alpha = .25) +
+    geom_line(aes(y = .fitted, frame = period, cumulative = TRUE), 
+              data = unnest(fits, cols = data_mod), color = "red") +
+    facet_wrap(~span, ncol = 1) +
+    ggtitle("x0 = ")
+
+  gganimate(loess_spans, filename = here::here("images", "02_loess-spans.gif"),
+            interval= .1)
+}
+
+knitr::include_graphics(here("images", "binsmoother-animation.gif"))
+```
+
+### Series de tiempo {-}
+
+Podemos usar el suavizamiento loess para entender y describir el comportamiento 
+de series de tiempo, en las cuáles intentamos entender la dependencia de una 
+serie de mediciones indexadas por el tiempo. Típicamente es necesario utilizar
+distintas componentes para describir exitosamente una serie de tiempo, y para 
+esto usamos distintos tipos de suavizamientos. Veremos que distintas componentes
+varían en distintas escalas de tiempo (unas muy lentas, cono la tendencia, otras
+más rapidamente, como variación quincenal, etc.).
+
+
+
+#### Caso de estudio: nacimientos en México {-}
 
 Este caso de estudio esta basado en un análisis propuesto por [A. Vehtari y A. Gelman](https://statmodeling.stat.columbia.edu/2016/05/18/birthday-analysis-friday-the-13th-update/),
 junto con un análisis de serie de tiempo de @cleveland93.
