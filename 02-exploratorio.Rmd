@@ -1166,19 +1166,25 @@ ajustadas, y luego examinamos los residuales.
 En este caso particular, asumiremos una **descomposición aditiva** de la
 serie de tiempo [@cleveland93].
 
-### Tendencia {-}
-
-Comenzamos por extraer la tendencia, haciendo promedios `loess` con vecindades
-relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
-variación lenta, pero si hacemos esto en este punto empezamos a absorber parte
-de la componente anual:
-
-```{block loess, type='mathblock}
-
-Detalles de `loess`.
-
+```{block, type = 'mathblock'}
+En el estudio de **series de tiempo** una estructura común es considerar 
+el efecto de diversos factores como tendencia, estacionalidad, ciclicidad 
+e irregularidades de manera aditiva. Esto es, consideramos la descomposición
+\begin{align}
+y(t) = f_{t}(t) + f_{e}(t) + f_{c}(t) + \varepsilon.
+\end{align}
+Una estrategia de ajuste, como veremos más adelante, es proceder de manera 
+*modular.* Es decir, se ajustan los componentes de manera secuencial 
+considerando los residuales de los anteriores.
 ```
 
+
+### Tendencia {-}
+
+Comenzamos por extraer la tendencia, haciendo promedios `loess` [@cleveland1979robust] 
+con vecindades relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
+variación lenta, pero si hacemos esto en este punto empezamos a absorber parte
+de la componente anual:
 
 
 ```{r}
@@ -1202,6 +1208,54 @@ gridExtra::grid.arrange(g_1, g_2, ncol = 2)
 
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.
+
+```{block loess, type='mathblock'}
+
+El modelo de *regresion lineal* ajusta una recta a un conjunto de datos. Por ejemplo, 
+consideremos la familia $f_{a,b} = a x + b$ para un conjunto de datos bivariados 
+$\{ (x_1, y_1), \ldots, (x_N, y_N)\}$. La recta se ajusta al minimizar
+la suma de errores cuadráticos
+\begin{align}
+\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2. 
+\end{align}
+
+Sin embargo, este modelo es muy *inflexible*. Una manera de mejorar su ajuste es 
+considerar rectas de manera local. Esto lo logramos al minimizar una suma de errores
+cuadráticos ponderados por los pesos $w_n(x)$. Para esto minimizamos las $N$ 
+funciones de error
+\begin{align}
+\sum_{n = 1}^N w_n(x_k) ( y_n - a x_n - b)^2,
+\end{align}
+donde $x_k \in \{x_1, \ldots, x_N\}$. 
+```
+
+```{block, type = 'mathblock'}
+Notemos que el ajuste tradicional por medio de mínimos cuadrados considera un ajuste
+con pesos 
+\begin{align}
+w_n(x) = \frac1N. 
+\end{align}
+```
+
+```{block, type = 'mathblock'}
+En la práctica, los pesos $w_n(\cdot)$ contienen a su vez un conjunto de parámetros 
+que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta 
+pesos Gaussianos
+\begin{align}
+w_n(x) = \text{exp}\left( -\frac{ (x - x_n)^2 }{2\sigma^2} \right),
+\end{align}
+el parámetro $\sigma$ dicta el efecto local de los puntos ancla $x_n$. Dicho de otro
+modo, dicta la vecindad de incidencia de los datos $x_n.$
+```
+
+```{block, type = 'mathblock'}
+Una generalización sencilla es considerar polinomios para el ajuste
+\begin{align}
+f_p(x) = b + a_1 x + \cdots + a_p x ^p,
+\end{align}
+donde $p$ es el máximo grado del polinomio. De esta forma, $p$ controla el suavizamiento
+de la curva. El caso de recta lineal claramente es para $p=1.$
+```
 
 ### Componente anual {-}
 
