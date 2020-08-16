@@ -889,7 +889,7 @@ comparaciones se vuelven vs este grupo particular. No siempre queremos hacer
 esto.
 
 
-## Interpretación {-}
+#### Interpretación {-}
 
 En el último ejemplo de tomadores de té utilizamos una muestra de personas, no
 toda la población de tomadores de té. Eso quiere decir que tenemos cierta
@@ -906,18 +906,21 @@ de todas las posibles muestras que pudimos haber extraido.
 En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos
 del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
-## Loess
+## Loess {-}
 
 Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas 
 veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
 *loess* que suavice.
 
+Los siguientes datos muestran los premios ofrecidos y las ventas totales
+de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
+indexadas). Graficamos en escalas logarítmicas y agregamos una curva *loess*.
 
 Los siguientes datos muestran los premios ofrecidos y las ventas totales
 de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
 indexadas). Graficamos en escalas logarítmicas y agregamos una curva *loess*.
 
-```{r, fig.width=3.6, fig.height=3.3}
+```{r, fig.width=3.6, fig.height=3.3, fig.align ='center', warning = FALSE, message = FALSE}
 # cargamos los datos
 load(here::here("data", "ventas_sorteo.Rdata"))
 
@@ -934,23 +937,30 @@ diferencia, pero cuando los premios empiezan a crecer por encima de 20,000
 menores. Este efecto se conoce como *bola de nieve*, y es frecuente en este 
 tipo de loterías.
 
-Antes de adentrarnos a *loess* comenzamos explicando cómo se ajustan familias
-paramétricas de curvas a conjuntos de datos dados.
+Antes de adentrarnos a los modelos *loess* comenzamos explicando cómo se ajustan
+familias paramétricas de curvas a conjuntos de datos dados.
 
-**Ajustando familias paramétricas.** Supongamos que tenemos la familia 
-$f_{a,b}=ax+b$ y datos bivariados $(x_1,y_1), ..., (x_n, y_n)$. Buscamos 
-encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. El
-criterio de mínimos cuadrados consiste en encontrar $a$, $b$ que minimicen la
-suma de cuadrados:
+```{block loess, type='mathblock'}
 
-$$\sum_{i=1}^n(y_i-ax_i-b)^2$$
+**Ajustando familias paramétricas** El modelo de *regresion lineal* ajusta una recta 
+a un conjunto de datos. Por ejemplo, consideremos la familia 
+$$
+f_{a,b} = a x + b,
+$$
+para un conjunto de datos bivariados $\{ (x_1, y_1), \ldots, (x_N, y_N)\}$. Buscamos 
+encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. Para esto, se minimiza
+la suma de errores cuadráticos
+\begin{align}
+\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2. 
+\end{align}
+```
 
-En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando esta
-función objetivo. En este caso, estamos ajustando una recta a los datos, pero
-podemos repetir el argumento con otras familias de funciones (por ejemplo 
-cuadráticas). 
+**Observación:** Los modelos de regresión lineal, cuando se pueden ajustar de manera razonable, son altamente deseables por su simplicidad: los datos se describen con pocos parámetros y tenemos incrementos marginales constantes en todo el rango de la variable que juega como factor, de modo que la interpretación es simple. Por esta razón, muchas veces vale la pena transformar los datos con el fin de enderezar la relación de dos variables y poder ajustar una función lineal (lo veremos más adelante).
 
-```{r, fig.width=3.6, fig.height=3.3}
+
+En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando la función de mínimos cuadrados. Nótese que podemos repetir el argumento con otras familias de funciones (por ejemplo cuadráticas). 
+
+```{r, fig.width=3.6, fig.height=3.3, fig.align ='center', warning = FALSE, message = FALSE}
 ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
   geom_point() +
   geom_smooth(method = "lm")
@@ -972,10 +982,50 @@ sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
 tiempo sea robusto.
 
-### Ajustando curvas loess {-}
 
-La idea es producir ajustes locales de rectas o funciones cuadráticas. En estas
-familias es necesario especificar dos parámetros:
+```{block, type = 'mathblock'}
+**Curvas loess (regresión local):** Una manera de mejorar la flexibilidad de los modelos lineales es considerar rectas de manera local. Esto lo logramos al minimizar una suma de errores cuadráticos ponderados por pesos $w_n(x)$. Para esto minimizamos las $N$ funciones de error
+\begin{align}
+\sum_{n = 1}^N w_n(x_k) ( y_n - a x_n - b)^2,
+\end{align}
+donde $x_k \in \{x_1, \ldots, x_N\}$. 
+```
+
+
+```{block, type = 'mathblock'}
+**Observación:** Notemos que el ajuste tradicional por medio de mínimos cuadrados considera un ajuste *global*
+con pesos uniformes
+\begin{align}
+w_n(x) = \frac1N. 
+\end{align}
+```
+
+```{block, type = 'mathblock'}
+**Interpretación:** En la práctica, los pesos $w_n(\cdot)$ contienen a su vez un conjunto de parámetros 
+que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta 
+pesos Gaussianos
+\begin{align}
+w_n(x) = \text{exp}\left( -\frac{ (x - x_n)^2 }{2\sigma^2} \right),
+\end{align}
+el parámetro $\sigma$ dicta el efecto local de los puntos ancla $x_n$. Dicho de otro
+modo, dicta la vecindad de incidencia de los datos $x_n.$
+```
+
+```{block, type = 'mathblock'}
+**Rregresión polinomial:** Una generalización sencilla es considerar polinomios para el ajuste
+\begin{align}
+f_p(x) = b + a_1 x + \cdots + a_p x ^p,
+\end{align}
+donde $p$ es el máximo grado del polinomio. De esta forma, $p$ controla el suavizamiento
+de la curva. El caso de recta lineal claramente es para $p=1.$
+```
+
+
+
+
+### Ajustando curvas `loess` {-}
+
+La idea es producir ajustes locales de rectas o funciones cuadráticas. Consideremos especificar dos parámetros:
 
 * Parámetro de suavizamiento $\alpha$: cuando $\alpha$ es más grande, la curva
 ajustada es más suave.
@@ -983,13 +1033,13 @@ ajustada es más suave.
 * Grado de los polinomios locales que ajustamos $\lambda$: generalmente se 
 toma $\lambda=1,2$.
 
-Entonces, supongamos que los datos están dados por $(x_1,y_1), ..., (x_n, y_n)$,
+Entonces, supongamos que los datos están dados por $(x_1,y_1), ..., (x_N, y_N)$,
 y sean $\alpha$ un parámetro de suavizamiento fijo, y $\lambda=1$. Denotamos
-como $\hat{g}(x)$ la curva loess ajustada, y como $w_i(x)$ a una función de peso
-(que depende de x) para la observación $(x_i, y_i)$.
+como $\hat{g}(x)$ la curva `loess` ajustada, y como $w_n(x)$ a una función de peso
+(que depende de x) para la observación $(x_n, y_n)$.
 
-Para poder calcular $w_i(x)$ debemos comenzar calculando 
-$q=\lfloor{n\alpha}\rfloor$ que suponemos mayor que uno. Ahora definimos la 
+Para poder calcular $w_n(x)$ debemos comenzar calculando 
+$q=\lfloor{N\alpha}\rfloor$ que suponemos mayor que uno. Ahora definimos la 
 función *tricubo*:
 
 $$
@@ -1001,51 +1051,49 @@ $$
 \end{equation}
 $$
 
-entonces, para el punto $x$ definimos el peso correspondiente al dato $(x_i,y_i)$, 
-denotado por $w_i(x)$ como:
+entonces, para el punto $x$ definimos el peso correspondiente al dato $(x_n,y_n)$, 
+denotado por $w_n(x)$ como:
 
-$$w_i(x)=T\bigg(\frac{|x-x_i|}{d_q(x)}\bigg)$$
+$$w_n(x)=T\bigg(\frac{|x-x_n|}{d_q(x)}\bigg)$$
 
-donde $d_q(x)$ es el valor de la $q-ésima$ distancia más chica (la más grande 
-entre las $q$ más chicas) entre los valores $|x-x_j|$, $j=1,2,...,n$. De esta 
-forma, las observaciones $x_i$ reciben más peso cuanto más cerca estén de $x$. 
+donde $d_q(x)$ es el valor de la $q$-ésima distancia más chica (la más grande 
+entre las $q$ más chicas) entre los valores $|x-x_j|$, $j=1,\ldots,N$. De esta 
+forma, las observaciones $x_n$ reciben más peso cuanto más cerca estén de $x$. 
 
-En palabras, de $x_1,...,x_n$ tomamos los $q$ datos más cercanos a $x$, que 
+En palabras, de $x_1,...,x_N$ tomamos los $q$ datos más cercanos a $x$, que 
 denotamos $x_{i_1}(x) \leq x_{i_2}(x) \leq \cdots x_{i_q}(x) \leq$. Los 
 re-escalamos a $[0,1]$ haciendo corresponder $x$ a $0$ y el punto más alejado de
 $x$ (que es $x_{i_q}$) a 1.
 
 Aplicamos el tricubo (gráfica de abajo), para encontrar los pesos de cada punto.
 Los puntos que están a una distancia mayor a $d_q(x)$ reciben un peso de cero, y 
-los más cercanos un peso que depende de que tan cercanos están a $x$.
+los más cercanos un peso que depende de que tan cercanos están a $x$. Nótese que 
+$x$ es el punto ancla en dónde estamos ajustando la regresión local. 
 
-```{r, fig.width=3.4, fig.height=3.2}
+```{r, fig.width=3.4, fig.height=3.2, fig.align='center'}
 tricubo <- function(x) {
   ifelse(abs(x) < 1, (1 - abs(x) ^ 3) ^ 3, 0)
 }
 curve(tricubo, from = -1.5, to = 1.5)
 ```
 
-Finalmente ajustamos una recta de mínimos cuadrados ponderados por los pesos
-$w_i(x)$, es decir, minimizamos
+Finalmente, para cada valor de $x_k$ que está en el conjunto de datos 
+$\{x_1,...,x_n\}$, ajustamos una recta de mínimos cuadrados ponderados por los pesos
+$w_n(x)$, es decir, minimizamos
 
-$$\sum_{i=1}^nw_i(x)(y_i-ax_i-b)^2$$
-
-Hacemos esto para cada valor de $x$ que está en el rango de los datos 
-$x_1,...,x_n$.
+$$\sum_{i=1}^nw_n(x_k)(y_i-ax_n-b)^2.$$
 
 **Observaciones:** 
 
-1. Cualquier función con la forma de flan del tricubo (se 
-desvanece fuera de $(-1,1)$, es creciente en $(-1,0)$ y decreciente en $(0, 1)$,
-además de ser continua y quizás diferenciable) es un buen candidato para usar 
+1. Cualquier función (continua y quizás diferenciable) con la forma de flan del tricubo que se 
+desvanece fuera de $(-1,1),$ es creciente en $(-1,0)$ y decreciente en $(0, 1)$ es un buen candidato para usarse 
 en lugar del tricubo. La razón por la que escogemos precisamente esta forma 
 algebráica no tiene que ver con el análisis exploratorio, sino con las ventajas
 teóricas adicionales que tiene en la inferencia.
 
 2. El caso $\lambda=2$ es similar. La única diferencia es en el paso de ajuste, 
-donde usamos funciones cuadráticas, y obtendríamos entonces tres parámetros 
-$a(x), b(x), c(x)$.
+donde usamos funciones cuadráticas, y obtendríamos entonces tres familias de parámetros 
+$a(x_k), b_1(x_k), b_2(x_k),$ para cada $k \in \{1, \ldots, N\}$.
 
 **Escogiendo de los parámetros.** Los parámetros $\alpha$ y $\lambda$ se 
 encuentran por ensayo y error. La idea general es que debemos encontrar una 
@@ -1059,7 +1107,7 @@ de seleccionar un suavizamiento adecuado.
 Ejemplo de distintas selecciones de $\lambda$, en este ejemplo consideramos la 
 ventas semanales de un producto a lo largo de 5 años. 
 
-```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE} 
+```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE, fig.align='center'} 
 library(gganimate)
 library(broom)
 ventas <- readr::read_csv(here::here("data", "ventas_semanal.csv"))
@@ -1116,7 +1164,7 @@ más rapidamente, como variación quincenal, etc.).
 
 
 
-#### Caso de estudio: nacimientos en México {-}
+## Caso de estudio: nacimientos en México {-}
 
 Este caso de estudio esta basado en un análisis propuesto por [A. Vehtari y A. Gelman](https://statmodeling.stat.columbia.edu/2016/05/18/birthday-analysis-friday-the-13th-update/),
 junto con un análisis de serie de tiempo de @cleveland93.
@@ -1225,53 +1273,6 @@ g_1 + g_2
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.
 
-```{block loess, type='mathblock'}
-
-El modelo de *regresion lineal* ajusta una recta a un conjunto de datos. Por ejemplo, 
-consideremos la familia $f_{a,b} = a x + b$ para un conjunto de datos bivariados 
-$\{ (x_1, y_1), \ldots, (x_N, y_N)\}$. La recta se ajusta al minimizar
-la suma de errores cuadráticos
-\begin{align}
-\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2. 
-\end{align}
-
-Sin embargo, este modelo es muy *inflexible*. Una manera de mejorar su ajuste es 
-considerar rectas de manera local. Esto lo logramos al minimizar una suma de errores
-cuadráticos ponderados por los pesos $w_n(x)$. Para esto minimizamos las $N$ 
-funciones de error
-\begin{align}
-\sum_{n = 1}^N w_n(x_k) ( y_n - a x_n - b)^2,
-\end{align}
-donde $x_k \in \{x_1, \ldots, x_N\}$. 
-```
-
-```{block, type = 'mathblock'}
-Notemos que el ajuste tradicional por medio de mínimos cuadrados considera un ajuste
-con pesos 
-\begin{align}
-w_n(x) = \frac1N. 
-\end{align}
-```
-
-```{block, type = 'mathblock'}
-En la práctica, los pesos $w_n(\cdot)$ contienen a su vez un conjunto de parámetros 
-que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta 
-pesos Gaussianos
-\begin{align}
-w_n(x) = \text{exp}\left( -\frac{ (x - x_n)^2 }{2\sigma^2} \right),
-\end{align}
-el parámetro $\sigma$ dicta el efecto local de los puntos ancla $x_n$. Dicho de otro
-modo, dicta la vecindad de incidencia de los datos $x_n.$
-```
-
-```{block, type = 'mathblock'}
-Una generalización sencilla es considerar polinomios para el ajuste
-\begin{align}
-f_p(x) = b + a_1 x + \cdots + a_p x ^p,
-\end{align}
-donde $p$ es el máximo grado del polinomio. De esta forma, $p$ controla el suavizamiento
-de la curva. El caso de recta lineal claramente es para $p=1.$
-```
 
 ### Componente anual {-}
 
