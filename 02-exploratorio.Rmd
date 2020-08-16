@@ -1087,17 +1087,17 @@ if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
   # Crear gráfica de páneles con puntos que se mueven, ajustes locales lineales, 
   # y líneas verticales
   loess_spans <- ggplot(dat, aes(period, sales.kg)) +
-    geom_point(aes(alpha = weight, frame = center)) +
+    geom_point(aes(alpha = weight, frame = center), size = 1) +
     geom_smooth(aes(group = center, frame = center, weight = weight),
-                method = "lm", se = FALSE) +
+                method = "lm", color = "red", se = FALSE) +
     geom_vline(aes(xintercept = center, frame = center), lty = 2) +
     geom_point(shape = 1, data = ventas, alpha = .25) +
-    geom_line(aes(y = .fitted, frame = period, cumulative = TRUE), 
-              data = unnest(fits, cols = data_mod), color = "red") +
+    geom_line(aes(y = .fitted, frame = period, cumulative = TRUE), data = fits,
+              color = "blue") +
     facet_wrap(~span, ncol = 1) +
     ggtitle("x0 = ")
 
-  gganimate(loess_spans, filename = here::here("images", "02_loess-spans.gif"),
+    gganimate(loess_spans, filename = here::here("images", "02_loess-spans.gif"),
             interval= .1)
 }
 
