@@ -912,6 +912,31 @@ Las gráficas de dispersión son la herramienta básica para describir la relaci
 veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
 *loess* que suavice.
 
+
+Los siguientes datos muestran los premios ofrecidos y las ventas totales
+de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
+indexadas). Graficamos en escalas logarítmicas y agregamos una curva *loess*.
+
+```{r, fig.width=3.6, fig.height=3.3}
+# cargamos los datos
+load(here::here("data", "ventas_sorteo.Rdata"))
+
+ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
+  geom_point() +
+  geom_smooth(method = "loess", alpha = 0.5, degree = 1, se = FALSE)
+```
+
+El patrón no era difícil de ver en los datos originales, sin embargo, la curva 
+lo hace más claro, el logaritmo de las ventas tiene una relación no lineal con 
+el logaritmo del premio: para premios no muy grandes no parece haber gran 
+diferencia, pero cuando los premios empiezan a crecer por encima de 20,000
+(aproximadamente $e^{10}$), las ventas crecen más rápidamente que para premios
+menores. Este efecto se conoce como *bola de nieve*, y es frecuente en este 
+tipo de loterías.
+
+Antes de adentrarnos a *loess* comenzamos explicando cómo se ajustan familias
+paramétricas de curvas a conjuntos de datos dados.
+
 **Ajustando familias paramétricas.** Supongamos que tenemos la familia 
 $f_{a,b}=ax+b$ y datos bivariados $(x_1,y_1), ..., (x_n, y_n)$. Buscamos 
 encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. El
@@ -923,14 +948,9 @@ $$\sum_{i=1}^n(y_i-ax_i-b)^2$$
 En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando esta
 función objetivo. En este caso, estamos ajustando una recta a los datos, pero
 podemos repetir el argumento con otras familias de funciones (por ejemplo 
-cuadráticas). Para nuestro ejemplo obtenemos:
+cuadráticas). 
 
 ```{r, fig.width=3.6, fig.height=3.3}
-# cargamos los datos
-load(here::here("datos", "ventas_sorteo.Rdata"))
-# desplegamos las primeras lineas
-head(ventas.sorteo)
-
 ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
   geom_point() +
   geom_smooth(method = "lm")
@@ -951,12 +971,6 @@ familias (por ejemplo, una cuadrática o cúbica, potencias, exponenciales, etc.
 sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
 tiempo sea robusto.
-
-**Observación:** Los modelos lineales, cuando se pueden ajustar de manera 
-razonable, son altamente deseables por su simplicidad: los datos se describen 
-con pocos parámetros y tenemos incrementos marginales constantes en todo el 
-rango de la variable que juega como factor, de modo que la interpretación es 
-simple. 
 
 ### Ajustando curvas loess {-}
 
@@ -1005,7 +1019,7 @@ Aplicamos el tricubo (gráfica de abajo), para encontrar los pesos de cada punto
 Los puntos que están a una distancia mayor a $d_q(x)$ reciben un peso de cero, y 
 los más cercanos un peso que depende de que tan cercanos están a $x$.
 
-```{r, fig.width=3.4, fig.height=3.5}
+```{r, fig.width=3.4, fig.height=3.2}
 tricubo <- function(x) {
   ifelse(abs(x) < 1, (1 - abs(x) ^ 3) ^ 3, 0)
 }
@@ -1042,15 +1056,17 @@ ruido o errores de redondeo, por ejemplo). En el proceso de prueba y error
 iteramos el ajuste y en cada paso hacemos análisis de residuales, con el fin 
 de seleccionar un suavizamiento adecuado.
 
+Ejemplo de distintas selecciones de $\lambda$, en este ejemplo consideramos la 
+ventas semanales de un producto a lo largo de 5 años. 
 
-```{r binsmoother-animation, echo=FALSE, warning=FALSE} 
+```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE} 
 library(gganimate)
 library(broom)
 ventas <- readr::read_csv(here::here("data", "ventas_semanal.csv"))
 
 if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
   # spans a considerar
-  spans <- c(.06, .25, .5, 1)
+  spans <- c(.06, .10, .5, 1)
 
   # crear ajustes loess, uno por span
   fits <- crossing(ventas, span = spans) %>%
@@ -1085,7 +1101,7 @@ if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
             interval= .1)
 }
 
-knitr::include_graphics(here("images", "binsmoother-animation.gif"))
+knitr::include_graphics(here::here("images", "02_loess-spans.gif"))
 ```
 
 ### Series de tiempo {-}
@@ -1203,7 +1219,7 @@ g_2 <- ggplot(datos_dia, aes(x = fecha, y = n)) +
     geom_point(alpha = 0.2, size = 1) +
     geom_smooth(method = "loess", span = 0.075, method.args = list(degree = 1), se = FALSE) + xlab("") +
     labs(caption = "Requiere mayor suavizamiento")
-gridExtra::grid.arrange(g_1, g_2, ncol = 2)
+g_1 + g_2
 ```
 
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
@@ -1555,5 +1571,5 @@ ggplot(datos_pascua, aes(x = dias_para_pascua, y = res_6)) +
 ```
 
 
-Nótese un defecto de nuestro modelo: el patrón de "hombros" alrededor del Viernes Santo no es suficientemente
-fuerte para equilibrar los nacimientos faltantes. ¿Cómo podríamos mejorar nuestra descomposición?
+Nótese un defecto de nuestro modelo: el patrón de "hombros" alrededor del Viernes Santo no es suficientemente fuerte para equilibrar los nacimientos faltantes. 
+¿Cómo podríamos mejorar nuestra descomposición?
