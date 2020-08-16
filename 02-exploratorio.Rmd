@@ -270,7 +270,7 @@ g_1 + g_2 + g_3 + g_4 +
 ::: {.col data-latex="{0.50\textwidth}"}
 
 El diagrama de la derecha explica los elementos de la versión típica del
-diagrama de caja y brazos (*boxplot*). *RIC* se refiere al *Rango
+diagrama de caja y brazos (*boxplot*). *RIC* se refiere al **Rango
 Intercuantílico**, definido por la diferencia entre los cuantiles 25% y 75%.
 
 :::
@@ -910,15 +910,15 @@ del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
 Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas 
 veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
-*loess* que suavice.
+`loess` que suavice.
 
 Los siguientes datos muestran los premios ofrecidos y las ventas totales
 de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
-indexadas). Graficamos en escalas logarítmicas y agregamos una curva *loess*.
+indexadas). Graficamos en escalas logarítmicas y agregamos una curva `loess`.
 
 Los siguientes datos muestran los premios ofrecidos y las ventas totales
 de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
-indexadas). Graficamos en escalas logarítmicas y agregamos una curva *loess*.
+indexadas). Graficamos en escalas logarítmicas y agregamos una curva `loess`.
 
 ```{r, fig.width=3.6, fig.height=3.3, fig.align ='center', warning = FALSE, message = FALSE}
 # cargamos los datos
@@ -937,7 +937,7 @@ diferencia, pero cuando los premios empiezan a crecer por encima de 20,000
 menores. Este efecto se conoce como *bola de nieve*, y es frecuente en este 
 tipo de loterías.
 
-Antes de adentrarnos a los modelos *loess* comenzamos explicando cómo se ajustan
+Antes de adentrarnos a los modelos `loess` comenzamos explicando cómo se ajustan
 familias paramétricas de curvas a conjuntos de datos dados.
 
 ```{block loess, type='mathblock'}
@@ -1012,7 +1012,7 @@ modo, dicta la vecindad de incidencia de los datos $x_n.$
 ```
 
 ```{block, type = 'mathblock'}
-**Rregresión polinomial:** Una generalización sencilla es considerar polinomios para el ajuste
+**Regresión polinomial:** Una generalización sencilla es considerar polinomios para el ajuste
 \begin{align}
 f_p(x) = b + a_1 x + \cdots + a_p x ^p,
 \end{align}
@@ -1154,7 +1154,7 @@ knitr::include_graphics(here::here("images", "02_loess-spans.gif"))
 
 ### Series de tiempo {-}
 
-Podemos usar el suavizamiento loess para entender y describir el comportamiento 
+Podemos usar el suavizamiento `loess` para entender y describir el comportamiento 
 de series de tiempo, en las cuáles intentamos entender la dependencia de una 
 serie de mediciones indexadas por el tiempo. Típicamente es necesario utilizar
 distintas componentes para describir exitosamente una serie de tiempo, y para 
