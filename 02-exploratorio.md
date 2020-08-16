@@ -1,4 +1,4 @@
-# Analisis exploratorio
+# Análisis exploratorio
 
 
 > "Exploratory data analysis can never be the whole story, but nothing
@@ -82,16 +82,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        11.24|    1.76|Yes     |Sab |Cena    |            2|
-|        25.29|    4.71|No      |Dom |Cena    |            4|
-|        40.55|    3.00|Yes     |Dom |Cena    |            2|
-|        19.44|    3.00|Yes     |Jue |Comida  |            2|
+|        23.68|    3.31|No      |Dom |Cena    |            2|
+|        34.83|    5.17|No      |Jue |Comida  |            4|
+|        28.97|    3.00|Yes     |Vie |Cena    |            2|
+|         9.68|    1.32|No      |Dom |Cena    |            2|
 |        16.93|    3.07|No      |Sab |Cena    |            3|
-|        16.97|    3.50|No      |Dom |Cena    |            3|
-|         9.78|    1.73|No      |Jue |Comida  |            2|
-|        14.52|    2.00|No      |Jue |Comida  |            2|
-|         8.52|    1.48|No      |Jue |Comida  |            2|
-|        15.38|    3.00|Yes     |Vie |Cena    |            2|
+|        20.69|    5.00|No      |Dom |Cena    |            5|
+|        12.74|    2.01|Yes     |Jue |Comida  |            2|
+|        30.46|    2.00|Yes     |Dom |Cena    |            5|
+|        21.01|    3.00|Yes     |Vie |Cena    |            2|
+|        22.75|    3.25|No      |Vie |Cena    |            2|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
@@ -440,13 +440,6 @@ Sin embargo,
 comparaciones históricas o tradicionales ---pues análisis anteriores pudieran
 estar basados en éstas.
 
-<div class="ejercicio">
-<ol style="list-style-type: decimal">
-<li><p>Considera el caso de tener <span class="math inline">\(N\)</span> observaciones y asume que ya tienes calculado el promedio para dichas observaciones. Este promedio lo denotaremos por <span class="math inline">\(\bar x_N\)</span>. Ahora, considera que has obtenido <span class="math inline">\(M\)</span> observaciones más. Escribe una fórmula recursiva para la media del conjunto total de datos <span class="math inline">\(\bar x_{N+M}\)</span> en función de lo que ya tenías precalculado <span class="math inline">\(\bar x_N.\)</span></p></li>
-<li><p>¿En qué situaciones esta propiedad puede ser conveniente?</p></li>
-</ol>
-</div>
-
 ## Ejemplos {-}
 
 ### Precios de casas {-}
@@ -486,7 +479,7 @@ ggplot(casas, aes(x = nombre_zona, y = precio_miles)) +
   coord_flip()
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" />
 
 La primera pregunta que nos hacemos es cómo pueden variar las características de
 las casas dentro de cada zona. Para esto, podemos considerar el área de las
@@ -502,7 +495,7 @@ ggplot(casas, aes(x = nombre_zona, y = precio_m2)) +
   coord_flip()
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" />
 
 Podemos cuantificar la variación que observamos de zona a zona y la variación
 que hay dentro de cada una de las zonas. Una primera aproximación es observar
@@ -590,7 +583,7 @@ derecha es ligeramente más larga con algunos valores extremos.
 Podemos seguir con otro indicador importante: la calificación de calidad de los terminados
 de las casas. Como primer intento podríamos hacer:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-28-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-27-1.png" width="80%" style="display: block; margin: auto;" />
 
 Lo que indica que las calificaciones de calidad están distribuidas de manera
 muy distinta a lo largo de las zonas, y que probablemente no va ser simple
@@ -666,7 +659,7 @@ podemos utilizar nuevamente las gráficas de caja y brazos, así como graficar l
 percentiles. Nótese que en la gráfica 1 se utilizan los cuantiles 0.05, 0.25,
 0.5, 0.75 y 0.95:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-31-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-30-1.png" width="95%" style="display: block; margin: auto;" />
 
 Se puede discutir qué tan apropiada es cada gráfica con el objetivo de realizar
 comparaciones. Sin duda, graficar más cuantiles es más útil para hacer
@@ -689,7 +682,7 @@ municipio donde se encuentra la escuela.
 Para este objetivo, podemos usar páneles (pequeños múltiplos útiles para hacer
 comparaciones) y graficar:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-33-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-32-1.png" width="95%" style="display: block; margin: auto;" />
 
 
 
@@ -788,7 +781,7 @@ library(ggrepel)
   ylab("Calificación promedio en SAT")
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-34-1.png" width="95%" style="display: block; margin: auto;" />
 
 Estas comparaciones no son de alta calidad, solo estamos usando 2 variables
 ---que son muy pocas--- y no hay mucho que podamos decir en cuanto explicación.
@@ -813,7 +806,7 @@ SAT. Podemos agregar como sigue:
   ylab("Calificación en matemáticas")
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" />
 
 
 Esto nos permite entender por qué nuestra comparación inicial es relativamente
@@ -841,7 +834,7 @@ ggplot(sat, aes(x = rank_p, y = frac, label = state,
   geom_point(size = 2)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-37-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" />
 
 Estos resultados indican que es más probable que buenos alumnos decidan hacer el
 SAT. Lo interesante es que esto ocurre de manera diferente en cada estado. Por
@@ -850,7 +843,7 @@ ejemplo, en algunos estados era más común otro examen: el ACT.
 Si hacemos *clusters* de estados según el % de alumnos, empezamos a ver otra
 historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-38-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-37-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 Sin embargo, el resultado puede variar considerablemente si categorizamos de distintas maneras.
@@ -1019,7 +1012,7 @@ ggplot(tabla_cruzada %>% ungroup %>%
   geom_point() + coord_flip() + geom_line()
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-43-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-42-1.png" width="90%" style="display: block; margin: auto;" />
 
 En lugar de eso, calcularemos *perfiles columna*. Esto es, comparamos cada una
 de las columnas con la columna marginal (en la tabla de tipo de estilo de té):
@@ -1164,7 +1157,7 @@ g_perfil <- ggplot(tabla_graf,
 g_perfil
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-45-1.png" width="95%" style="display: block; margin: auto;" />
 
 **Observación**: hay dos maneras de construir la columna promedio: tomando los
 porcentajes sobre todos los datos, o promediando los porcentajes de las
@@ -1178,7 +1171,7 @@ comparaciones se vuelven vs este grupo particular. No siempre queremos hacer
 esto.
 
 
-## Interpretación {-}
+#### Interpretación {-}
 
 En el último ejemplo de tomadores de té utilizamos una muestra de personas, no
 toda la población de tomadores de té. Eso quiere decir que tenemos cierta
@@ -1195,7 +1188,7 @@ de todas las posibles muestras que pudimos haber extraido.
 En las siguiente secciones discutiremos estos aspectos, en los cuales pasamos
 del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
-## Loess
+## Loess {-}
 
 Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas 
 veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
@@ -1213,18 +1206,15 @@ load(here::here("data", "ventas_sorteo.Rdata"))
 
 ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
   geom_point() +
-  geom_smooth(method = "loess", alpha = 0.5, degree = 1, se = FALSE)
-```
-
-```
-## Warning: Ignoring unknown parameters: degree
+  geom_smooth(method = "loess", alpha = 0.5, method.args = list(degree = 1), 
+              se = FALSE)
 ```
 
 ```
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="345.6" />
 
 El patrón no era difícil de ver en los datos originales, sin embargo, la curva 
 lo hace más claro, el logaritmo de las ventas tiene una relación no lineal con 
@@ -1261,7 +1251,7 @@ ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) +
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-48-1.png" width="345.6" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" />
 
 Donde los parámetros $a$ y $b$ están dados por:
 
@@ -1284,6 +1274,8 @@ familias (por ejemplo, una cuadrática o cúbica, potencias, exponenciales, etc.
 sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
 tiempo sea robusto.
+
+
 
 ### Ajustando curvas loess {-}
 
@@ -1340,7 +1332,7 @@ tricubo <- function(x) {
 curve(tricubo, from = -1.5, to = 1.5)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-50-1.png" width="326.4" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-49-1.png" width="364.8" />
 
 Finalmente ajustamos una recta de mínimos cuadrados ponderados por los pesos
 $w_i(x)$, es decir, minimizamos
@@ -1375,7 +1367,7 @@ de seleccionar un suavizamiento adecuado.
 Ejemplo de distintas selecciones de $\lambda$, en este ejemplo consideramos la 
 ventas semanales de un producto a lo largo de 5 años. 
 
-![](/Users/runner/work/fundamentos/fundamentos/images/02_loess-spans.gif)<!-- -->
+<img src="/Users/runner/work/fundamentos/fundamentos/images/02_loess-spans.gif" width="70%" style="display: block; margin: auto;" />
 
 ### Series de tiempo {-}
 
@@ -1407,7 +1399,7 @@ primeros principios del diseño analítico? ¿Las comparaciones son útiles? ¿H
 aspectos multivariados? ¿Qué tan bien explica o sugiere estructura, mecanismos o
 causalidad?
 
-### Datos de natalidad para México {-}
+##### Datos de natalidad para México {-}
 
 
 ```r
@@ -1429,7 +1421,7 @@ Consideremos los *datos agregados* del número de nacimientos (registrados) por
 día desde 1999 hasta 2016. Un primer intento podría ser hacer una gráfica de la
 serie de tiempo. Sin embargo, vemos que no es muy útil:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-53-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-52-1.png" width="90%" style="display: block; margin: auto;" />
 
 Hay varias características que notamos. Primero, parece haber una tendencia
 ligeramente decreciente del número de nacimientos a lo largo de los años.
@@ -1456,7 +1448,7 @@ y(t) = f_{t}(t) + f_{e}(t) + f_{c}(t) + \varepsilon.
 </div>
 
 
-### Tendencia {-}
+##### Tendencia {-}
 
 Comenzamos por extraer la tendencia, haciendo promedios `loess` [@cleveland1979robust] 
 con vecindades relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
@@ -1471,39 +1463,12 @@ datos_dia <- natalidad %>% mutate(ajuste_1 = fitted(mod_1)) %>%
     mutate(res_1 = n - ajuste_1)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-56-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-55-1.png" width="95%" style="display: block; margin: auto;" />
 
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.
 
-<div class="mathblock">
-<p>El modelo de <em>regresion lineal</em> ajusta una recta a un conjunto de datos. Por ejemplo, consideremos la familia <span class="math inline">\(f_{a,b} = a x + b\)</span> para un conjunto de datos bivariados <span class="math inline">\(\{ (x_1, y_1), \ldots, (x_N, y_N)\}\)</span>. La recta se ajusta al minimizar la suma de errores cuadráticos <span class="math display">\[\begin{align}
-\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2. 
-\end{align}\]</span></p>
-<p>Sin embargo, este modelo es muy <em>inflexible</em>. Una manera de mejorar su ajuste es considerar rectas de manera local. Esto lo logramos al minimizar una suma de errores cuadráticos ponderados por los pesos <span class="math inline">\(w_n(x)\)</span>. Para esto minimizamos las <span class="math inline">\(N\)</span> funciones de error <span class="math display">\[\begin{align}
-\sum_{n = 1}^N w_n(x_k) ( y_n - a x_n - b)^2,
-\end{align}\]</span> donde <span class="math inline">\(x_k \in \{x_1, \ldots, x_N\}\)</span>.</p>
-</div>
-
-<div class="mathblock">
-<p>Notemos que el ajuste tradicional por medio de mínimos cuadrados considera un ajuste con pesos <span class="math display">\[\begin{align}
-w_n(x) = \frac1N. 
-\end{align}\]</span></p>
-</div>
-
-<div class="mathblock">
-<p>En la práctica, los pesos <span class="math inline">\(w_n(\cdot)\)</span> contienen a su vez un conjunto de parámetros que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta pesos Gaussianos <span class="math display">\[\begin{align}
-w_n(x) = \text{exp}\left( -\frac{ (x - x_n)^2 }{2\sigma^2} \right),
-\end{align}\]</span> el parámetro <span class="math inline">\(\sigma\)</span> dicta el efecto local de los puntos ancla <span class="math inline">\(x_n\)</span>. Dicho de otro modo, dicta la vecindad de incidencia de los datos <span class="math inline">\(x_n.\)</span></p>
-</div>
-
-<div class="mathblock">
-<p>Una generalización sencilla es considerar polinomios para el ajuste <span class="math display">\[\begin{align}
-f_p(x) = b + a_1 x + \cdots + a_p x ^p,
-\end{align}\]</span> donde <span class="math inline">\(p\)</span> es el máximo grado del polinomio. De esta forma, <span class="math inline">\(p\)</span> controla el suavizamiento de la curva. El caso de recta lineal claramente es para <span class="math inline">\(p=1.\)</span></p>
-</div>
-
-### Componente anual {-}
+##### Componente anual {-}
 
 Al obtener la tendencia podemos aislar el efecto a largo plazo y proceder a
 realizar mejores comparaciones (por ejemplo, comparar un día de 2000 y de 2015
@@ -1517,10 +1482,10 @@ datos_dia <- datos_dia %>% mutate(ajuste_2 = fitted(mod_anual)) %>%
     mutate(res_2 = res_1 - ajuste_2)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-61-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-57-1.png" width="90%" style="display: block; margin: auto;" />
 
 
-### Día de la semana {-}
+##### Día de la semana {-}
 
 Hasta ahora, hemos aislado los efectos por plazos largos de tiempo (tendencia) y
 hemos incorporado las variaciones estacionales (componente anual) de nuestra
@@ -1540,9 +1505,9 @@ datos_dia <- datos_dia %>%
     mutate(res_3 = res_2 - ajuste_3) %>% ungroup
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-63-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-59-1.png" width="90%" style="display: block; margin: auto;" />
 
-### Residuales {-}
+##### Residuales {-}
 
 Por último, examinamos los residuales finales quitando los efectos ajustados:
 
@@ -1551,16 +1516,16 @@ Por último, examinamos los residuales finales quitando los efectos ajustados:
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-64-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-60-1.png" width="90%" style="display: block; margin: auto;" />
 
 **Observación**: nótese que la distribución de estos residuales presenta
 irregularidades interesantes. La distribución es de *colas largas*, y no se debe
 a unos cuantos datos atípicos. Esto generalmente es indicación que hay factores
 importantes que hay que examinar mas a detalle en los residuales:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-65-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-61-1.png" width="90%" style="display: block; margin: auto;" />
 
-### Reestimación {-}
+##### Reestimación {-}
 
 Cuando hacemos este proceso secuencial de llevar el ajuste a los residual, a
 veces conviene iterarlo. La razón es que un una segunda o tercera pasada podemos
@@ -1579,24 +1544,24 @@ mod_1 <- loess(n_1 ~ as.numeric(fecha), data = datos_dia, span = 0.02, degree = 
                family = "symmetric")
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-67-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-63-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-69-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-65-1.png" width="90%" style="display: block; margin: auto;" />
 
 Y ahora repetimos con la componente de día de la semana:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-70-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-66-1.png" width="90%" style="display: block; margin: auto;" />
 
-### Análisis de componentes {-}
+##### Análisis de componentes {-}
 
 Ahora comparamos las componentes estimadas y los residuales en una misma
 gráfica. Por definición, la suma de todas estas componentes da los datos
 originales.
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-71-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-67-1.png" width="90%" style="display: block; margin: auto;" />
 
 Este último paso nos permite diversas comparaciones que explican la variación que vimos en
 los datos. Una gran parte de los residuales está entre $\pm 250$ nacimientos por
@@ -1617,21 +1582,21 @@ quantile(datos_dia$res_6, c(00, .01,0.05, 0.10, 0.90, 0.95, 0.99, 1)) %>% round
 
 
 
-#### Viernes 13? {-}
+##### Viernes 13? {-}
 
 Podemos empezar con una curosidad: en *viernes o martes 13*, ¿nacen menos niños?
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-74-1.png" width="1152" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-70-1.png" width="1152" />
 
 Nótese que fue útil agregar el indicador de Semana santa por el Viernes 13 de Semana Santa
 que se ve como un atípico en el panel de los viernes 13.
 
-### Residuales: antes y después de 2006 {-}
+##### Residuales: antes y después de 2006 {-}
 
 Veamos primero una agregación sobre los años de los residuales. Lo primero es
 observar un cambio que sucedió repentinamente en 2006:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-75-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-71-1.png" width="90%" style="display: block; margin: auto;" />
 
 La razón es un cambio en la ley acerca de cuándo pueden entrar los niños a la primaria. Antes era
 por edad y había poco margen. Ese exceso de nacimientos son reportes falsos para que los niños
@@ -1643,7 +1608,7 @@ Otras características que debemos investigar:
 - Semana santa: como la fecha cambia, vemos que los residuales negativos tienden a ocurrir dispersos
 alrededor del día 100 del año.
 
-###  Otros días especiales: más de residuales {-}
+#####  Otros días especiales: más de residuales {-}
 
 Ahora promediamos residuales (es posible agregar barras para indicar dispersión
 a lo largo de los años) para cada día del año. Podemos identificar ahora los
@@ -1655,10 +1620,10 @@ consecuencias adicionales que tienen en días ajuntos (excesos de nacimientos):
 ## `summarise()` regrouping output by 'dia_año_366', 'antes_2006' (override with `.groups` argument)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-76-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-72-1.png" width="90%" style="display: block; margin: auto;" />
 
 
-### Semana santa {-}
+##### Semana santa {-}
 
 Para Semana Santa tenemos que hacer unos cálculos. Si alineamos los datos por días antes de Domingo de Pascua,
 obtenemos un patrón de caída fuerte de nacimientos el Viernes de Semana Santa, y la característica forma
@@ -1669,7 +1634,7 @@ de "valle con hombros" en días anteriores y posteriores estos Viernes. ¿Por qu
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-77-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-73-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 Nótese un defecto de nuestro modelo: el patrón de "hombros" alrededor del Viernes Santo no es suficientemente fuerte para equilibrar los nacimientos faltantes. 
