@@ -9,7 +9,10 @@ Imports:
     ggthemes,
     ggrepel, 
     lubridate, 
-    gridExtra
+    gridExtra, 
+    here, 
+    broom, 
+    gganimate
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
 BugReports: https://github.com/tereom/fundamentos/issues
