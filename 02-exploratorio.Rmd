@@ -929,6 +929,7 @@ tipo de loterías.
 Antes de adentrarnos a *loess* comenzamos explicando cómo se ajustan familias
 paramétricas de curvas a conjuntos de datos dados.
 
+```{block loess, type='mathblock'}
 **Ajustando familias paramétricas.** Supongamos que tenemos la familia 
 $f_{a,b}=ax+b$ y datos bivariados $(x_1,y_1), ..., (x_n, y_n)$. Buscamos 
 encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. El
@@ -938,9 +939,11 @@ suma de cuadrados:
 $$\sum_{i=1}^n(y_i-ax_i-b)^2$$
 
 En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando esta
-función objetivo. En este caso, estamos ajustando una recta a los datos, pero
+función objetivo. Más aún, estamos ajustando una recta a los datos, pero
 podemos repetir el argumento con otras familias de funciones (por ejemplo 
 cuadráticas). 
+```
+
 
 ```{r, fig.width=3.6, fig.height=3.3}
 ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
@@ -964,6 +967,14 @@ sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
 tiempo sea robusto.
 
+
+**Observación:** Los modelos de regresión lineal, cuando se pueden ajustar de 
+manera razonable, son altamente deseables por su simplicidad: los datos se 
+describen con pocos parámetros y tenemos incrementos marginales constantes en 
+todo el rango de la variable que juega como factor, de modo que la 
+interpretación es simple. Por esta razón, muchas veces vale la pena transformar 
+los datos con el fin de enderezar la relación de dos variables y poder ajustar 
+una función lineal.
 
 
 ### Ajustando curvas loess {-}
