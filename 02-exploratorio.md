@@ -57,7 +57,7 @@ propinas <- tips %>%
          dia = day, momento = time,
          num_personas = size) %>%
   mutate(sexo = recode(sexo, Female = "Mujer", Male = "Hombre"),
-         fumador = recode(fumador, No = "No", Si = "Si"),
+         fumador = recode(fumador, No = "No", Yes = "Si"),
          dia = recode(dia, Sun = "Dom", Sat = "Sab", Thur = "Jue", Fri = "Vie"),
          momento = recode(momento, Dinner = "Cena", Lunch = "Comida")) %>%
   select(-sexo) %>%
@@ -82,16 +82,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        23.68|    3.31|No      |Dom |Cena    |            2|
-|        34.83|    5.17|No      |Jue |Comida  |            4|
-|        28.97|    3.00|Yes     |Vie |Cena    |            2|
-|         9.68|    1.32|No      |Dom |Cena    |            2|
-|        16.93|    3.07|No      |Sab |Cena    |            3|
-|        20.69|    5.00|No      |Dom |Cena    |            5|
-|        12.74|    2.01|Yes     |Jue |Comida  |            2|
-|        30.46|    2.00|Yes     |Dom |Cena    |            5|
-|        21.01|    3.00|Yes     |Vie |Cena    |            2|
-|        22.75|    3.25|No      |Vie |Cena    |            2|
+|        34.30|    6.70|No      |Jue |Comida  |            6|
+|        24.55|    2.00|No      |Dom |Cena    |            4|
+|        13.27|    2.50|Si      |Sab |Cena    |            2|
+|        18.43|    3.00|No      |Dom |Cena    |            4|
+|        16.04|    2.24|No      |Sab |Cena    |            3|
+|        16.32|    4.30|Si      |Vie |Cena    |            2|
+|         7.25|    5.15|Si      |Dom |Cena    |            2|
+|        18.29|    3.00|No      |Dom |Cena    |            2|
+|        15.95|    2.00|No      |Jue |Comida  |            2|
+|        26.86|    3.14|Si      |Sab |Cena    |            2|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
@@ -291,7 +291,6 @@ graficamos por medio de barras cuántos datos caen en cada cubeta:
 Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas
 particiones resaltan distintos aspectos de los datos.
 
-
 <div class="ejercicio">
 <p>¿Cómo se ve la gráfica de cuantiles de las propinas? ¿Cómo crees que esta gráfica se compara con distintos histogramas?</p>
 </div>
@@ -309,6 +308,9 @@ g_1
 el cuantil-$f$ con valor $q$ satisface que existe una proporción aproximada $f$ de los datos que están en el valor
 $q$ o por debajo de éste, pero no necesariamente exactamente una proporción $f$ de los datos estan en $q$ o por debajo.
 
+**Observación**. La definición de cuantiles muestrales no es única y distintos 
+programas utilizan diferentes acercamientos (incluso puede variar entre
+paquetes o funciones de un mismo programa), ver [Hyndman y Fan 2012](http://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/Sample%20Quantiles%20in%20Statistical%20Packages.pdf).
 
 Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
 histograma es el **diagrama de caja y brazos**. Mostramos dos versiones, la
@@ -438,7 +440,21 @@ Sin embargo,
 (bajo ciertos supuestos teóricos).
 - En muchas ocasiones conviene usar estas medidas pues permite hacer
 comparaciones históricas o tradicionales ---pues análisis anteriores pudieran
-estar basados en éstas.
+estar basados en éstas.  
+- **Medias recortadas**. Una medida intermedia entre la mediana y la media es la
+*media recortada*. Si denotamos $G$ al conjunto de datos original, y $p$ un 
+valor entre $0$ y $1$, entonces $G_p$ es el coonjunto de datos que resulta de
+$G$ cuando se excluye de $G$ la proporción $p$ de los datos más bajos y la 
+proporción $p$ de datos más altos. La media recortada-$p$ es el promedio de
+los valores en $G_p$.
+
+<div class="ejercicio">
+<ol style="list-style-type: decimal">
+<li>Considera el caso de tener <span class="math inline">\(N\)</span> observaciones y asume que ya tienes calculado el promedio para dichas observaciones. Este promedio lo denotaremos por <span class="math inline">\(\bar x_N\)</span>. Ahora, considera que has obtenido <span class="math inline">\(M\)</span> observaciones más. Escribe una fórmula recursiva para la media del conjunto total de datos <span class="math inline">\(\bar x_{N+M}\)</span> en función de lo que ya tenías precalculado <span class="math inline">\(\bar x_N.\)</span></li>
+<li>¿En qué situaciones esta propiedad puede ser conveniente?</li>
+</ol>
+</div>
+
 
 ## Ejemplos {-}
 
@@ -479,7 +495,7 @@ ggplot(casas, aes(x = nombre_zona, y = precio_miles)) +
   coord_flip()
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" />
 
 La primera pregunta que nos hacemos es cómo pueden variar las características de
 las casas dentro de cada zona. Para esto, podemos considerar el área de las
@@ -495,7 +511,7 @@ ggplot(casas, aes(x = nombre_zona, y = precio_m2)) +
   coord_flip()
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" />
 
 Podemos cuantificar la variación que observamos de zona a zona y la variación
 que hay dentro de cada una de las zonas. Una primera aproximación es observar
@@ -516,18 +532,6 @@ casas %>%
 ##   0%  25%  50%  75% 100% 
 ##  963 1219 1298 1420 1725
 ```
-
-<div class="mathblock">
-<p>Tratar con datos por segmento es una situación común en aplicaciones. Usualmente denotamos por <span class="math display">\[\begin{align}
-  x_{k, n}
-\end{align}\]</span> a la <span class="math inline">\(n\)</span>-ésima observación del <span class="math inline">\(k\)</span>-ésimo grupo. Usualmente tenemos un universo de <span class="math inline">\(K\)</span> posibles grupos y para cada grupo tenemos un total diferente de observaciones. Esto lo denotamos por <span class="math inline">\(N_k\)</span>, el número total de observaciones del grupo <span class="math inline">\(k\)</span> para cualquier <span class="math inline">\(k = 1, \ldots, K.\)</span> El número total de muestras lo denotamos por <span class="math inline">\(N\)</span>, donde <span class="math display">\[\begin{align}
-  N = \sum_{k=1}^K N_k.
-\end{align}\]</span> Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo <span class="math display">\[\begin{align}
-  \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n},
-\end{align}\]</span> y contrastar contra el promedio total <span class="math display">\[\begin{align}
-  \bar x = \frac1K \sum_{k = 1}^K \bar x_k = \frac1K \sum_{k = 1}^K \left( \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n} \right).
-\end{align}\]</span></p>
-</div>
 
 Por otro lado, las variaciones con respecto a las medianas **dentro** de cada
 zona, por grupo, se resume como:
@@ -550,8 +554,8 @@ en términos de precio por metro cuadrado, es similar. Esto no lo podríamos hab
 hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
 ajustar por su tamaño.
 
-Podemos resumir este primer análisis con un par de gráficas de cuantiles
-(@cleveland93):
+Podemos resumir este primer análisis de varianza con un par de gráficas de 
+cuantiles [@cleveland93]:
 
 
 ```r
@@ -574,7 +578,6 @@ ggplot(resumen, aes(sample = valor)) +
 
 <img src="02-exploratorio_files/figure-html/fig-1.png" width="90%" style="display: block; margin: auto;" />
 
-
 Vemos que la mayor parte de la variación del precio por metro cuadrado ocurre
 dentro de cada zona, una vez que controlamos por el tamaño de las casas. La
 variación dentro de cada zona es aproximadamente simétrica, aunque la cola
@@ -588,6 +591,19 @@ de las casas. Como primer intento podríamos hacer:
 Lo que indica que las calificaciones de calidad están distribuidas de manera
 muy distinta a lo largo de las zonas, y que probablemente no va ser simple
 desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
+
+<div class="mathblock">
+<p>Tratar con datos por segmento es una situación común en aplicaciones. Usualmente denotamos por <span class="math display">\[\begin{align}
+  x_{k, n}
+\end{align}\]</span> a la <span class="math inline">\(n\)</span>-ésima observación del <span class="math inline">\(k\)</span>-ésimo grupo. Usualmente tenemos un universo de <span class="math inline">\(K\)</span> posibles grupos y para cada grupo tenemos un total diferente de observaciones. Esto lo denotamos por <span class="math inline">\(N_k\)</span>, el número total de observaciones del grupo <span class="math inline">\(k\)</span> para cualquier <span class="math inline">\(k = 1, \ldots, K.\)</span> El número total de muestras lo denotamos por <span class="math inline">\(N\)</span>, donde <span class="math display">\[\begin{align}
+  N = \sum_{k=1}^K N_k.
+\end{align}\]</span> Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo <span class="math display">\[\begin{align}
+  \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n},
+\end{align}\]</span> y contrastar contra el promedio total <span class="math display">\[\begin{align}
+  \bar x = \frac1K \sum_{k = 1}^K \bar x_k = \frac1K \sum_{k = 1}^K \left( \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n} \right).
+\end{align}\]</span></p>
+</div>
+
 
 
 ### Prueba Enlace {-}
@@ -659,7 +675,7 @@ podemos utilizar nuevamente las gráficas de caja y brazos, así como graficar l
 percentiles. Nótese que en la gráfica 1 se utilizan los cuantiles 0.05, 0.25,
 0.5, 0.75 y 0.95:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-30-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-31-1.png" width="95%" style="display: block; margin: auto;" />
 
 Se puede discutir qué tan apropiada es cada gráfica con el objetivo de realizar
 comparaciones. Sin duda, graficar más cuantiles es más útil para hacer
@@ -682,7 +698,7 @@ municipio donde se encuentra la escuela.
 Para este objetivo, podemos usar páneles (pequeños múltiplos útiles para hacer
 comparaciones) y graficar:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-32-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-33-1.png" width="95%" style="display: block; margin: auto;" />
 
 
 
@@ -781,7 +797,7 @@ library(ggrepel)
   ylab("Calificación promedio en SAT")
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-34-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" />
 
 Estas comparaciones no son de alta calidad, solo estamos usando 2 variables
 ---que son muy pocas--- y no hay mucho que podamos decir en cuanto explicación.
@@ -806,7 +822,7 @@ SAT. Podemos agregar como sigue:
   ylab("Calificación en matemáticas")
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" />
 
 
 Esto nos permite entender por qué nuestra comparación inicial es relativamente
@@ -834,7 +850,7 @@ ggplot(sat, aes(x = rank_p, y = frac, label = state,
   geom_point(size = 2)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-37-1.png" width="95%" style="display: block; margin: auto;" />
 
 Estos resultados indican que es más probable que buenos alumnos decidan hacer el
 SAT. Lo interesante es que esto ocurre de manera diferente en cada estado. Por
@@ -843,7 +859,7 @@ ejemplo, en algunos estados era más común otro examen: el ACT.
 Si hacemos *clusters* de estados según el % de alumnos, empezamos a ver otra
 historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-37-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-38-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 Sin embargo, el resultado puede variar considerablemente si categorizamos de distintas maneras.
@@ -895,8 +911,9 @@ ver las proporciones que compran té según su empaque (en bolsita o suelto):
 
 
 ```r
-precio <- te %>% group_by(precio) %>%
-  tally() %>% mutate(prop = round(100 * n / sum(n))) %>%
+precio <- te %>% 
+  count(precio) %>%
+  mutate(prop = round(100 * n / sum(n))) %>%
   select(-n)
 tipo <- te %>% group_by(presentacion) %>% tally() %>%
   mutate(pct = round(100 * n / sum(n)))
@@ -937,10 +954,10 @@ presentación:
 
 
 ```r
-tipo <- tipo %>% select(presentacion, prop_presentacion = pct)
+tipo <- tipo %>% 
+  select(presentacion, prop_presentacion = pct)
 tabla_cruzada <- te %>%
-  group_by(presentacion, precio) %>%
-  tally() %>%
+  count(presentacion, precio) %>%
   # porcentajes por presentación
   group_by(presentacion) %>%
   mutate(prop = round(100 * n / sum(n))) %>%
@@ -1012,7 +1029,7 @@ ggplot(tabla_cruzada %>% ungroup %>%
   geom_point() + coord_flip() + geom_line()
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-42-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-43-1.png" width="90%" style="display: block; margin: auto;" />
 
 En lugar de eso, calcularemos *perfiles columna*. Esto es, comparamos cada una
 de las columnas con la columna marginal (en la tabla de tipo de estilo de té):
@@ -1021,8 +1038,7 @@ de las columnas con la columna marginal (en la tabla de tipo de estilo de té):
 ```r
 num_grupos <- n_distinct(te %>% select(presentacion))
 tabla <- te %>%
-  group_by(presentacion, precio) %>%
-  tally() %>%
+  count(presentacion, precio) %>%
   group_by(presentacion) %>%
   mutate(prop_precio = (100 * n / sum(n))) %>%
   group_by(precio) %>%
@@ -1069,8 +1085,10 @@ marcar <- marcar_tabla_fun(25, "red", "black")
 tab_out <- tabla_perfil %>%
   arrange(desc(bolsas)) %>%
   select(-pct, everything()) %>%
-  mutate_if(if_profile, marcar) %>%
-  knitr::kable(format_table_salida(), escape = FALSE, digits = 0, booktabs = T) %>%
+  mutate(across(where(is.numeric), round)) %>% 
+  mutate(across(where(if_profile), marcar)) %>%
+  knitr::kable(format_table_salida(), escape = FALSE,
+               booktabs = T) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"),
                             bootstrap_options = c( "hover", "condensed"),
                             full_width = FALSE)
@@ -1095,44 +1113,44 @@ if (knitr::is_latex_output()) {
 <tbody>
   <tr>
    <td style="text-align:left;"> desconocido </td>
-   <td style="text-align:left;"> <span style="     color: black !important;">157.641196013289</span> </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-57.641196013289</span> </td>
+   <td style="text-align:left;"> <span style="     color: black !important;">158</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-58</span> </td>
    <td style="text-align:left;"> <span style="     color: red !important;">-100</span> </td>
    <td style="text-align:right;"> 3 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> marca_propia </td>
-   <td style="text-align:left;"> <span style="     color: black !important;">71.6967570081604</span> </td>
-   <td style="text-align:left;"> <span style="     color: lightgray !important;">-22.3711470973743</span> </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-49.325609910786</span> </td>
+   <td style="text-align:left;"> <span style="     color: black !important;">72</span> </td>
+   <td style="text-align:left;"> <span style="     color: lightgray !important;">-22</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-49</span> </td>
    <td style="text-align:right;"> 5 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> marca </td>
-   <td style="text-align:left;"> <span style="     color: black !important;">61.8106471150781</span> </td>
-   <td style="text-align:left;"> <span style="     color: lightgray !important;">-16.389635229291</span> </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-45.4210118857871</span> </td>
+   <td style="text-align:left;"> <span style="     color: black !important;">62</span> </td>
+   <td style="text-align:left;"> <span style="     color: lightgray !important;">-16</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-45</span> </td>
    <td style="text-align:right;"> 25 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> barato </td>
-   <td style="text-align:left;"> <span style="     color: black !important;">30.0871348026653</span> </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-52.9472065607381</span> </td>
-   <td style="text-align:left;"> <span style="     color: lightgray !important;">22.8600717580728</span> </td>
+   <td style="text-align:left;"> <span style="     color: black !important;">30</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-53</span> </td>
+   <td style="text-align:left;"> <span style="     color: lightgray !important;">23</span> </td>
    <td style="text-align:right;"> 2 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> variable </td>
-   <td style="text-align:left;"> <span style="     color: lightgray !important;">-12.4877880581576</span> </td>
-   <td style="text-align:left;"> <span style="     color: black !important;">43.6124360668927</span> </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-31.1246480087351</span> </td>
+   <td style="text-align:left;"> <span style="     color: lightgray !important;">-12</span> </td>
+   <td style="text-align:left;"> <span style="     color: black !important;">44</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-31</span> </td>
    <td style="text-align:right;"> 36 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> fino </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-70.5895012167464</span> </td>
-   <td style="text-align:left;"> <span style="     color: red !important;">-27.8146572417104</span> </td>
-   <td style="text-align:left;"> <span style="     color: black !important;">98.4041584584568</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-71</span> </td>
+   <td style="text-align:left;"> <span style="     color: red !important;">-28</span> </td>
+   <td style="text-align:left;"> <span style="     color: black !important;">98</span> </td>
    <td style="text-align:right;"> 28 </td>
   </tr>
 </tbody>
@@ -1157,7 +1175,7 @@ g_perfil <- ggplot(tabla_graf,
 g_perfil
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-45-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="95%" style="display: block; margin: auto;" />
 
 **Observación**: hay dos maneras de construir la columna promedio: tomando los
 porcentajes sobre todos los datos, o promediando los porcentajes de las
@@ -1214,7 +1232,7 @@ ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) +
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="345.6" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" />
 
 El patrón no era difícil de ver en los datos originales, sin embargo, la curva 
 lo hace más claro, el logaritmo de las ventas tiene una relación no lineal con 
@@ -1227,18 +1245,12 @@ tipo de loterías.
 Antes de adentrarnos a *loess* comenzamos explicando cómo se ajustan familias
 paramétricas de curvas a conjuntos de datos dados.
 
-**Ajustando familias paramétricas.** Supongamos que tenemos la familia 
-$f_{a,b}=ax+b$ y datos bivariados $(x_1,y_1), ..., (x_n, y_n)$. Buscamos 
-encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. El
-criterio de mínimos cuadrados consiste en encontrar $a$, $b$ que minimicen la
-suma de cuadrados:
+<div class="mathblock">
+<p><strong>Ajustando familias paramétricas.</strong> Supongamos que tenemos la familia <span class="math inline">\(f_{a,b}=ax+b\)</span> y datos bivariados <span class="math inline">\((x_1,y_1), ..., (x_n, y_n)\)</span>. Buscamos encontrar <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> tales que <span class="math inline">\(f_{a,b}\)</span> de un ajuste <em>óptimo</em> a los datos. El criterio de mínimos cuadrados consiste en encontrar <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> que minimicen la suma de cuadrados:</p>
+<p><span class="math display">\[\sum_{i=1}^n(y_i-ax_i-b)^2\]</span></p>
+<p>En este caso, las constantes <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> se pueden encontrar diferenciando esta función objetivo. Más aún, estamos ajustando una recta a los datos, pero podemos repetir el argumento con otras familias de funciones (por ejemplo cuadráticas).</p>
+</div>
 
-$$\sum_{i=1}^n(y_i-ax_i-b)^2$$
-
-En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando esta
-función objetivo. En este caso, estamos ajustando una recta a los datos, pero
-podemos repetir el argumento con otras familias de funciones (por ejemplo 
-cuadráticas). 
 
 
 ```r
@@ -1251,7 +1263,7 @@ ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) +
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-48-1.png" width="345.6" />
 
 Donde los parámetros $a$ y $b$ están dados por:
 
@@ -1275,6 +1287,14 @@ sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
 tiempo sea robusto.
 
+
+**Observación:** Los modelos de regresión lineal, cuando se pueden ajustar de 
+manera razonable, son altamente deseables por su simplicidad: los datos se 
+describen con pocos parámetros y tenemos incrementos marginales constantes en 
+todo el rango de la variable que juega como factor, de modo que la 
+interpretación es simple. Por esta razón, muchas veces vale la pena transformar 
+los datos con el fin de enderezar la relación de dos variables y poder ajustar 
+una función lineal.
 
 
 ### Ajustando curvas loess {-}
@@ -1332,7 +1352,7 @@ tricubo <- function(x) {
 curve(tricubo, from = -1.5, to = 1.5)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-49-1.png" width="364.8" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-50-1.png" width="364.8" />
 
 Finalmente ajustamos una recta de mínimos cuadrados ponderados por los pesos
 $w_i(x)$, es decir, minimizamos
@@ -1421,7 +1441,7 @@ Consideremos los *datos agregados* del número de nacimientos (registrados) por
 día desde 1999 hasta 2016. Un primer intento podría ser hacer una gráfica de la
 serie de tiempo. Sin embargo, vemos que no es muy útil:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-52-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-53-1.png" width="90%" style="display: block; margin: auto;" />
 
 Hay varias características que notamos. Primero, parece haber una tendencia
 ligeramente decreciente del número de nacimientos a lo largo de los años.
@@ -1463,7 +1483,7 @@ datos_dia <- natalidad %>% mutate(ajuste_1 = fitted(mod_1)) %>%
     mutate(res_1 = n - ajuste_1)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-55-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-56-1.png" width="95%" style="display: block; margin: auto;" />
 
 Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.
@@ -1482,7 +1502,7 @@ datos_dia <- datos_dia %>% mutate(ajuste_2 = fitted(mod_anual)) %>%
     mutate(res_2 = res_1 - ajuste_2)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-57-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-58-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 ##### Día de la semana {-}
@@ -1490,7 +1510,7 @@ datos_dia <- datos_dia %>% mutate(ajuste_2 = fitted(mod_anual)) %>%
 Hasta ahora, hemos aislado los efectos por plazos largos de tiempo (tendencia) y
 hemos incorporado las variaciones estacionales (componente anual) de nuestra
 serie de tiempo. Ahora, veremos cómo capturar el efecto por día de la semana. En
-este caso, podemos hacer suavizamiento `loess` para cada serie de manera
+este caso, podemos hacer suavizamiento *loess* para cada serie de manera
 independiente
 
 
@@ -1505,7 +1525,7 @@ datos_dia <- datos_dia %>%
     mutate(res_3 = res_2 - ajuste_3) %>% ungroup
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-59-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-60-1.png" width="90%" style="display: block; margin: auto;" />
 
 ##### Residuales {-}
 
@@ -1516,14 +1536,14 @@ Por último, examinamos los residuales finales quitando los efectos ajustados:
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-60-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-61-1.png" width="90%" style="display: block; margin: auto;" />
 
 **Observación**: nótese que la distribución de estos residuales presenta
 irregularidades interesantes. La distribución es de *colas largas*, y no se debe
 a unos cuantos datos atípicos. Esto generalmente es indicación que hay factores
 importantes que hay que examinar mas a detalle en los residuales:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-61-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-62-1.png" width="90%" style="display: block; margin: auto;" />
 
 ##### Reestimación {-}
 
@@ -1544,16 +1564,16 @@ mod_1 <- loess(n_1 ~ as.numeric(fecha), data = datos_dia, span = 0.02, degree = 
                family = "symmetric")
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-63-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-64-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-65-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-66-1.png" width="90%" style="display: block; margin: auto;" />
 
 Y ahora repetimos con la componente de día de la semana:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-66-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-67-1.png" width="90%" style="display: block; margin: auto;" />
 
 ##### Análisis de componentes {-}
 
@@ -1561,7 +1581,7 @@ Ahora comparamos las componentes estimadas y los residuales en una misma
 gráfica. Por definición, la suma de todas estas componentes da los datos
 originales.
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-67-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-68-1.png" width="90%" style="display: block; margin: auto;" />
 
 Este último paso nos permite diversas comparaciones que explican la variación que vimos en
 los datos. Una gran parte de los residuales está entre $\pm 250$ nacimientos por
@@ -1586,7 +1606,7 @@ quantile(datos_dia$res_6, c(00, .01,0.05, 0.10, 0.90, 0.95, 0.99, 1)) %>% round
 
 Podemos empezar con una curosidad: en *viernes o martes 13*, ¿nacen menos niños?
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-70-1.png" width="1152" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-71-1.png" width="1152" />
 
 Nótese que fue útil agregar el indicador de Semana santa por el Viernes 13 de Semana Santa
 que se ve como un atípico en el panel de los viernes 13.
@@ -1596,7 +1616,7 @@ que se ve como un atípico en el panel de los viernes 13.
 Veamos primero una agregación sobre los años de los residuales. Lo primero es
 observar un cambio que sucedió repentinamente en 2006:
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-71-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-72-1.png" width="90%" style="display: block; margin: auto;" />
 
 La razón es un cambio en la ley acerca de cuándo pueden entrar los niños a la primaria. Antes era
 por edad y había poco margen. Ese exceso de nacimientos son reportes falsos para que los niños
@@ -1620,7 +1640,7 @@ consecuencias adicionales que tienen en días ajuntos (excesos de nacimientos):
 ## `summarise()` regrouping output by 'dia_año_366', 'antes_2006' (override with `.groups` argument)
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-72-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-73-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 ##### Semana santa {-}
@@ -1634,7 +1654,7 @@ de "valle con hombros" en días anteriores y posteriores estos Viernes. ¿Por qu
 ## `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="02-exploratorio_files/figure-html/unnamed-chunk-73-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="02-exploratorio_files/figure-html/unnamed-chunk-74-1.png" width="90%" style="display: block; margin: auto;" />
 
 
 Nótese un defecto de nuestro modelo: el patrón de "hombros" alrededor del Viernes Santo no es suficientemente fuerte para equilibrar los nacimientos faltantes. 

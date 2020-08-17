@@ -250,7 +250,7 @@ cuatro días consecutivos:</p>
 <span id="cb3-11"><a href="análisis-exploratorio.html#cb3-11"></a>         <span class="dt">dia =</span> day, <span class="dt">momento =</span> time,</span>
 <span id="cb3-12"><a href="análisis-exploratorio.html#cb3-12"></a>         <span class="dt">num_personas =</span> size) <span class="op">%&gt;%</span></span>
 <span id="cb3-13"><a href="análisis-exploratorio.html#cb3-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sexo =</span> <span class="kw">recode</span>(sexo, <span class="dt">Female =</span> <span class="st">&quot;Mujer&quot;</span>, <span class="dt">Male =</span> <span class="st">&quot;Hombre&quot;</span>),</span>
-<span id="cb3-14"><a href="análisis-exploratorio.html#cb3-14"></a>         <span class="dt">fumador =</span> <span class="kw">recode</span>(fumador, <span class="dt">No =</span> <span class="st">&quot;No&quot;</span>, <span class="dt">Si =</span> <span class="st">&quot;Si&quot;</span>),</span>
+<span id="cb3-14"><a href="análisis-exploratorio.html#cb3-14"></a>         <span class="dt">fumador =</span> <span class="kw">recode</span>(fumador, <span class="dt">No =</span> <span class="st">&quot;No&quot;</span>, <span class="dt">Yes =</span> <span class="st">&quot;Si&quot;</span>),</span>
 <span id="cb3-15"><a href="análisis-exploratorio.html#cb3-15"></a>         <span class="dt">dia =</span> <span class="kw">recode</span>(dia, <span class="dt">Sun =</span> <span class="st">&quot;Dom&quot;</span>, <span class="dt">Sat =</span> <span class="st">&quot;Sab&quot;</span>, <span class="dt">Thur =</span> <span class="st">&quot;Jue&quot;</span>, <span class="dt">Fri =</span> <span class="st">&quot;Vie&quot;</span>),</span>
 <span id="cb3-16"><a href="análisis-exploratorio.html#cb3-16"></a>         <span class="dt">momento =</span> <span class="kw">recode</span>(momento, <span class="dt">Dinner =</span> <span class="st">&quot;Cena&quot;</span>, <span class="dt">Lunch =</span> <span class="st">&quot;Comida&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb3-17"><a href="análisis-exploratorio.html#cb3-17"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>sexo) <span class="op">%&gt;%</span></span>
@@ -274,82 +274,82 @@ cuatro días consecutivos:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">23.68</td>
-<td align="right">3.31</td>
-<td align="left">No</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">34.83</td>
-<td align="right">5.17</td>
+<td align="right">34.30</td>
+<td align="right">6.70</td>
 <td align="left">No</td>
 <td align="left">Jue</td>
 <td align="left">Comida</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="right">24.55</td>
+<td align="right">2.00</td>
+<td align="left">No</td>
+<td align="left">Dom</td>
+<td align="left">Cena</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
-<td align="right">28.97</td>
-<td align="right">3.00</td>
-<td align="left">Yes</td>
-<td align="left">Vie</td>
+<td align="right">13.27</td>
+<td align="right">2.50</td>
+<td align="left">Si</td>
+<td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="right">9.68</td>
-<td align="right">1.32</td>
+<td align="right">18.43</td>
+<td align="right">3.00</td>
 <td align="left">No</td>
 <td align="left">Dom</td>
 <td align="left">Cena</td>
-<td align="right">2</td>
+<td align="right">4</td>
 </tr>
 <tr class="odd">
-<td align="right">16.93</td>
-<td align="right">3.07</td>
+<td align="right">16.04</td>
+<td align="right">2.24</td>
 <td align="left">No</td>
 <td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
-<td align="right">20.69</td>
-<td align="right">5.00</td>
+<td align="right">16.32</td>
+<td align="right">4.30</td>
+<td align="left">Si</td>
+<td align="left">Vie</td>
+<td align="left">Cena</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">7.25</td>
+<td align="right">5.15</td>
+<td align="left">Si</td>
+<td align="left">Dom</td>
+<td align="left">Cena</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">18.29</td>
+<td align="right">3.00</td>
 <td align="left">No</td>
 <td align="left">Dom</td>
 <td align="left">Cena</td>
-<td align="right">5</td>
+<td align="right">2</td>
 </tr>
 <tr class="odd">
-<td align="right">12.74</td>
-<td align="right">2.01</td>
-<td align="left">Yes</td>
+<td align="right">15.95</td>
+<td align="right">2.00</td>
+<td align="left">No</td>
 <td align="left">Jue</td>
 <td align="left">Comida</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="right">30.46</td>
-<td align="right">2.00</td>
-<td align="left">Yes</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">5</td>
-</tr>
-<tr class="odd">
-<td align="right">21.01</td>
-<td align="right">3.00</td>
-<td align="left">Yes</td>
-<td align="left">Vie</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">22.75</td>
-<td align="right">3.25</td>
-<td align="left">No</td>
-<td align="left">Vie</td>
+<td align="right">26.86</td>
+<td align="right">3.14</td>
+<td align="left">Si</td>
+<td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">2</td>
 </tr>
@@ -623,6 +623,9 @@ particiones resaltan distintos aspectos de los datos.</p>
 <p><strong>Observación</strong>. Cuando hay datos repetidos, los cuantiles tienen que interpretarse como sigue:
 el cuantil-<span class="math inline">\(f\)</span> con valor <span class="math inline">\(q\)</span> satisface que existe una proporción aproximada <span class="math inline">\(f\)</span> de los datos que están en el valor
 <span class="math inline">\(q\)</span> o por debajo de éste, pero no necesariamente exactamente una proporción <span class="math inline">\(f\)</span> de los datos estan en <span class="math inline">\(q\)</span> o por debajo.</p>
+<p><strong>Observación</strong>. La definición de cuantiles muestrales no es única y distintos
+programas utilizan diferentes acercamientos (incluso puede variar entre
+paquetes o funciones de un mismo programa), ver <a href="http://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/Sample%20Quantiles%20in%20Statistical%20Packages.pdf">Hyndman y Fan 2012</a>.</p>
 <p>Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
 histograma es el <strong>diagrama de caja y brazos</strong>. Mostramos dos versiones, la
 clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):</p>
@@ -750,8 +753,25 @@ La media, o promedio, se denota por <span class="math inline"><span class="math 
 (bajo ciertos supuestos teóricos).</li>
 <li>En muchas ocasiones conviene usar estas medidas pues permite hacer
 comparaciones históricas o tradicionales —pues análisis anteriores pudieran
-estar basados en éstas.</li>
+estar basados en éstas.<br />
+</li>
+<li><strong>Medias recortadas</strong>. Una medida intermedia entre la mediana y la media es la
+<em>media recortada</em>. Si denotamos <span class="math inline">\(G\)</span> al conjunto de datos original, y <span class="math inline">\(p\)</span> un
+valor entre <span class="math inline">\(0\)</span> y <span class="math inline">\(1\)</span>, entonces <span class="math inline">\(G_p\)</span> es el coonjunto de datos que resulta de
+<span class="math inline">\(G\)</span> cuando se excluye de <span class="math inline">\(G\)</span> la proporción <span class="math inline">\(p\)</span> de los datos más bajos y la
+proporción <span class="math inline">\(p\)</span> de datos más altos. La media recortada-<span class="math inline">\(p\)</span> es el promedio de
+los valores en <span class="math inline">\(G_p\)</span>.</li>
 </ul>
+<div class="ejercicio">
+<ol style="list-style-type: decimal">
+<li>
+Considera el caso de tener <span class="math inline"><span class="math inline">\(N\)</span></span> observaciones y asume que ya tienes calculado el promedio para dichas observaciones. Este promedio lo denotaremos por <span class="math inline"><span class="math inline">\(\bar x_N\)</span></span>. Ahora, considera que has obtenido <span class="math inline"><span class="math inline">\(M\)</span></span> observaciones más. Escribe una fórmula recursiva para la media del conjunto total de datos <span class="math inline"><span class="math inline">\(\bar x_{N+M}\)</span></span> en función de lo que ya tenías precalculado <span class="math inline"><span class="math inline">\(\bar x_N.\)</span></span>
+</li>
+<li>
+¿En qué situaciones esta propiedad puede ser conveniente?
+</li>
+</ol>
+</div>
 </div>
 </div>
 <div id="ejemplos" class="section level2 unnumbered">
@@ -778,7 +798,7 @@ zonas de la ciudad:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="análisis-exploratorio.html#cb13-1"></a><span class="kw">ggplot</span>(casas, <span class="kw">aes</span>(<span class="dt">x =</span> nombre_zona, <span class="dt">y =</span> precio_miles)) <span class="op">+</span></span>
 <span id="cb13-2"><a href="análisis-exploratorio.html#cb13-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
 <span id="cb13-3"><a href="análisis-exploratorio.html#cb13-3"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-21-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>La primera pregunta que nos hacemos es cómo pueden variar las características de
 las casas dentro de cada zona. Para esto, podemos considerar el área de las
 casas. En lugar de graficar el precio, graficamos el precio por metro cuadrado,
@@ -786,7 +806,7 @@ por ejemplo:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="análisis-exploratorio.html#cb14-1"></a><span class="kw">ggplot</span>(casas, <span class="kw">aes</span>(<span class="dt">x =</span> nombre_zona, <span class="dt">y =</span> precio_m2)) <span class="op">+</span></span>
 <span id="cb14-2"><a href="análisis-exploratorio.html#cb14-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
 <span id="cb14-3"><a href="análisis-exploratorio.html#cb14-3"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Podemos cuantificar la variación que observamos de zona a zona y la variación
 que hay dentro de cada una de las zonas. Una primera aproximación es observar
 las variación del precio al calcular la mediana dentro de cada zona, y después
@@ -799,19 +819,6 @@ cuantificar por medio de cuantiles cómo varía la mediana entre zonas:</p>
 <span id="cb15-6"><a href="análisis-exploratorio.html#cb15-6"></a><span class="st">  </span><span class="kw">round</span>()</span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ##  963 1219 1298 1420 1725</code></pre>
-<div class="mathblock">
-<p>
-Tratar con datos por segmento es una situación común en aplicaciones. Usualmente denotamos por <span class="math display"><span class="math display">\[\begin{align}
-  x_{k, n}
-\end{align}\]</span></span> a la <span class="math inline"><span class="math inline">\(n\)</span></span>-ésima observación del <span class="math inline"><span class="math inline">\(k\)</span></span>-ésimo grupo. Usualmente tenemos un universo de <span class="math inline"><span class="math inline">\(K\)</span></span> posibles grupos y para cada grupo tenemos un total diferente de observaciones. Esto lo denotamos por <span class="math inline"><span class="math inline">\(N_k\)</span></span>, el número total de observaciones del grupo <span class="math inline"><span class="math inline">\(k\)</span></span> para cualquier <span class="math inline"><span class="math inline">\(k = 1, \ldots, K.\)</span></span> El número total de muestras lo denotamos por <span class="math inline"><span class="math inline">\(N\)</span></span>, donde <span class="math display"><span class="math display">\[\begin{align}
-  N = \sum_{k=1}^K N_k.
-\end{align}\]</span></span> Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo <span class="math display"><span class="math display">\[\begin{align}
-  \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n},
-\end{align}\]</span></span> y contrastar contra el promedio total <span class="math display"><span class="math display">\[\begin{align}
-  \bar x = \frac1K \sum_{k = 1}^K \bar x_k = \frac1K \sum_{k = 1}^K \left( \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n} \right).
-\end{align}\]</span></span>
-</p>
-</div>
 <p>Por otro lado, las variaciones con respecto a las medianas <strong>dentro</strong> de cada
 zona, por grupo, se resume como:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="análisis-exploratorio.html#cb17-1"></a><span class="kw">quantile</span>(casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
@@ -824,8 +831,8 @@ zona, por grupo, se resume como:</p>
 en términos de precio por metro cuadrado, es similar. Esto no lo podríamos haber
 hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
 ajustar por su tamaño.</p>
-<p>Podemos resumir este primer análisis con un par de gráficas de cuantiles
-(<span class="citation">Cleveland (<a href="#ref-cleveland93" role="doc-biblioref">1993</a>)</span>):</p>
+<p>Podemos resumir este primer análisis de varianza con un par de gráficas de
+cuantiles <span class="citation">(Cleveland <a href="#ref-cleveland93" role="doc-biblioref">1993</a>)</span>:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="análisis-exploratorio.html#cb19-1"></a>mediana &lt;-<span class="st"> </span><span class="kw">median</span>(casas<span class="op">$</span>precio_m2)</span>
 <span id="cb19-2"><a href="análisis-exploratorio.html#cb19-2"></a>resumen &lt;-<span class="st"> </span>casas <span class="op">%&gt;%</span></span>
 <span id="cb19-3"><a href="análisis-exploratorio.html#cb19-3"></a><span class="st">  </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
@@ -852,6 +859,19 @@ de las casas. Como primer intento podríamos hacer:</p>
 <p>Lo que indica que las calificaciones de calidad están distribuidas de manera
 muy distinta a lo largo de las zonas, y que probablemente no va ser simple
 desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.</p>
+<div class="mathblock">
+<p>
+Tratar con datos por segmento es una situación común en aplicaciones. Usualmente denotamos por <span class="math display"><span class="math display">\[\begin{align}
+  x_{k, n}
+\end{align}\]</span></span> a la <span class="math inline"><span class="math inline">\(n\)</span></span>-ésima observación del <span class="math inline"><span class="math inline">\(k\)</span></span>-ésimo grupo. Usualmente tenemos un universo de <span class="math inline"><span class="math inline">\(K\)</span></span> posibles grupos y para cada grupo tenemos un total diferente de observaciones. Esto lo denotamos por <span class="math inline"><span class="math inline">\(N_k\)</span></span>, el número total de observaciones del grupo <span class="math inline"><span class="math inline">\(k\)</span></span> para cualquier <span class="math inline"><span class="math inline">\(k = 1, \ldots, K.\)</span></span> El número total de muestras lo denotamos por <span class="math inline"><span class="math inline">\(N\)</span></span>, donde <span class="math display"><span class="math display">\[\begin{align}
+  N = \sum_{k=1}^K N_k.
+\end{align}\]</span></span> Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo <span class="math display"><span class="math display">\[\begin{align}
+  \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n},
+\end{align}\]</span></span> y contrastar contra el promedio total <span class="math display"><span class="math display">\[\begin{align}
+  \bar x = \frac1K \sum_{k = 1}^K \bar x_k = \frac1K \sum_{k = 1}^K \left( \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n} \right).
+\end{align}\]</span></span>
+</p>
+</div>
 </div>
 <div id="prueba-enlace" class="section level3 unnumbered">
 <h3>Prueba Enlace</h3>
@@ -967,7 +987,7 @@ Particular
 podemos utilizar nuevamente las gráficas de caja y brazos, así como graficar los
 percentiles. Nótese que en la gráfica 1 se utilizan los cuantiles 0.05, 0.25,
 0.5, 0.75 y 0.95:</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-30-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-31-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Se puede discutir qué tan apropiada es cada gráfica con el objetivo de realizar
 comparaciones. Sin duda, graficar más cuantiles es más útil para hacer
 comparaciones. Por ejemplo, en la Gráfica 1 podemos ver que la mediana de las
@@ -983,7 +1003,7 @@ Podemos comenzar por agregar, por ejemplo, el nivel del marginación del
 municipio donde se encuentra la escuela.</p>
 <p>Para este objetivo, podemos usar páneles (pequeños múltiplos útiles para hacer
 comparaciones) y graficar:</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-32-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-33-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Esta gráfica pone en contexto la pregunta inicial, y permite evidenciar la dificultad
 de contestarla. En particular:</p>
 <ol style="list-style-type: decimal">
@@ -1099,7 +1119,7 @@ gráfica de dispersión:</p>
 <span id="cb22-3"><a href="análisis-exploratorio.html#cb22-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>(<span class="dt">colour =</span> <span class="st">&quot;gray50&quot;</span>) <span class="op">+</span></span>
 <span id="cb22-4"><a href="análisis-exploratorio.html#cb22-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Gasto por alumno (miles de dólares)&quot;</span>) <span class="op">+</span></span>
 <span id="cb22-5"><a href="análisis-exploratorio.html#cb22-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Calificación promedio en SAT&quot;</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-34-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Estas comparaciones no son de alta calidad, solo estamos usando 2 variables
 —que son muy pocas— y no hay mucho que podamos decir en cuanto explicación.
 Sin duda nos hace falta una imagen más completa. Necesitaríamos entender la
@@ -1116,7 +1136,7 @@ SAT. Podemos agregar como sigue:</p>
 <span id="cb23-2"><a href="análisis-exploratorio.html#cb23-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>() <span class="op">+</span></span>
 <span id="cb23-3"><a href="análisis-exploratorio.html#cb23-3"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Gasto por alumno (miles de dólares)&quot;</span>) <span class="op">+</span></span>
 <span id="cb23-4"><a href="análisis-exploratorio.html#cb23-4"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Calificación en matemáticas&quot;</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Esto nos permite entender por qué nuestra comparación inicial es relativamente
 pobre. Los estados con mejores resultados promedio en el SAT son aquellos donde
 una fracción relativamente baja de los estudiantes toma el examen. La diferencia
@@ -1136,13 +1156,13 @@ hacer grupos como sigue:</p>
 <span id="cb24-10"><a href="análisis-exploratorio.html#cb24-10"></a><span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> rank_p, <span class="dt">y =</span> frac, <span class="dt">label =</span> state,</span>
 <span id="cb24-11"><a href="análisis-exploratorio.html#cb24-11"></a>                <span class="dt">colour =</span> clase_media)) <span class="op">+</span></span>
 <span id="cb24-12"><a href="análisis-exploratorio.html#cb24-12"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">2</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-37-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Estos resultados indican que es más probable que buenos alumnos decidan hacer el
 SAT. Lo interesante es que esto ocurre de manera diferente en cada estado. Por
 ejemplo, en algunos estados era más común otro examen: el ACT.</p>
 <p>Si hacemos <em>clusters</em> de estados según el % de alumnos, empezamos a ver otra
 historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-37-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-38-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>Sin embargo, el resultado puede variar considerablemente si categorizamos de distintas maneras.</p>
 </div>
 <div id="tablas-de-conteos" class="section level3 unnumbered">
@@ -1176,12 +1196,13 @@ historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:</p>
 ## [90m10[39m mixto        marca    sin_azúcar</code></pre>
 <p>Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
 ver las proporciones que compran té según su empaque (en bolsita o suelto):</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="análisis-exploratorio.html#cb28-1"></a>precio &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(precio) <span class="op">%&gt;%</span></span>
-<span id="cb28-2"><a href="análisis-exploratorio.html#cb28-2"></a><span class="st">  </span><span class="kw">tally</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
-<span id="cb28-3"><a href="análisis-exploratorio.html#cb28-3"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</span>
-<span id="cb28-4"><a href="análisis-exploratorio.html#cb28-4"></a>tipo &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></span>
-<span id="cb28-5"><a href="análisis-exploratorio.html#cb28-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pct =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
-<span id="cb28-6"><a href="análisis-exploratorio.html#cb28-6"></a>tipo <span class="op">%&gt;%</span><span class="st"> </span>formatear_tabla</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="análisis-exploratorio.html#cb28-1"></a>precio &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="análisis-exploratorio.html#cb28-2"></a><span class="st">  </span><span class="kw">count</span>(precio) <span class="op">%&gt;%</span></span>
+<span id="cb28-3"><a href="análisis-exploratorio.html#cb28-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
+<span id="cb28-4"><a href="análisis-exploratorio.html#cb28-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</span>
+<span id="cb28-5"><a href="análisis-exploratorio.html#cb28-5"></a>tipo &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></span>
+<span id="cb28-6"><a href="análisis-exploratorio.html#cb28-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pct =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
+<span id="cb28-7"><a href="análisis-exploratorio.html#cb28-7"></a>tipo <span class="op">%&gt;%</span><span class="st"> </span>formatear_tabla</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1235,10 +1256,10 @@ suelto
 <p>La mayor parte de las personas toma té en bolsas. Sin embargo, el tipo de té
 (en términos de precio o marca) que compran es muy distinto dependiendo de la
 presentación:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="análisis-exploratorio.html#cb29-1"></a>tipo &lt;-<span class="st"> </span>tipo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(presentacion, <span class="dt">prop_presentacion =</span> pct)</span>
-<span id="cb29-2"><a href="análisis-exploratorio.html#cb29-2"></a>tabla_cruzada &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
-<span id="cb29-3"><a href="análisis-exploratorio.html#cb29-3"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
-<span id="cb29-4"><a href="análisis-exploratorio.html#cb29-4"></a><span class="st">  </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="análisis-exploratorio.html#cb29-1"></a>tipo &lt;-<span class="st"> </span>tipo <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb29-2"><a href="análisis-exploratorio.html#cb29-2"></a><span class="st">  </span><span class="kw">select</span>(presentacion, <span class="dt">prop_presentacion =</span> pct)</span>
+<span id="cb29-3"><a href="análisis-exploratorio.html#cb29-3"></a>tabla_cruzada &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
+<span id="cb29-4"><a href="análisis-exploratorio.html#cb29-4"></a><span class="st">  </span><span class="kw">count</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
 <span id="cb29-5"><a href="análisis-exploratorio.html#cb29-5"></a><span class="st">  </span><span class="co"># porcentajes por presentación</span></span>
 <span id="cb29-6"><a href="análisis-exploratorio.html#cb29-6"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
 <span id="cb29-7"><a href="análisis-exploratorio.html#cb29-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
@@ -1358,19 +1379,18 @@ gráficas como la siguiente:</p>
 <span id="cb30-2"><a href="análisis-exploratorio.html#cb30-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">price =</span> <span class="kw">fct_reorder</span>(precio, prop)),</span>
 <span id="cb30-3"><a href="análisis-exploratorio.html#cb30-3"></a>  <span class="kw">aes</span>(<span class="dt">x =</span> precio, <span class="dt">y =</span> prop, <span class="dt">group =</span> presentacion, <span class="dt">colour =</span> presentacion)) <span class="op">+</span></span>
 <span id="cb30-4"><a href="análisis-exploratorio.html#cb30-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-42-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-43-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>En lugar de eso, calcularemos <em>perfiles columna</em>. Esto es, comparamos cada una
 de las columnas con la columna marginal (en la tabla de tipo de estilo de té):</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="análisis-exploratorio.html#cb31-1"></a>num_grupos &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(presentacion))</span>
 <span id="cb31-2"><a href="análisis-exploratorio.html#cb31-2"></a>tabla &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
-<span id="cb31-3"><a href="análisis-exploratorio.html#cb31-3"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
-<span id="cb31-4"><a href="análisis-exploratorio.html#cb31-4"></a><span class="st">  </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></span>
-<span id="cb31-5"><a href="análisis-exploratorio.html#cb31-5"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
-<span id="cb31-6"><a href="análisis-exploratorio.html#cb31-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop_precio =</span> (<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
-<span id="cb31-7"><a href="análisis-exploratorio.html#cb31-7"></a><span class="st">  </span><span class="kw">group_by</span>(precio) <span class="op">%&gt;%</span></span>
-<span id="cb31-8"><a href="análisis-exploratorio.html#cb31-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prom_prop =</span> <span class="kw">sum</span>(prop_precio)<span class="op">/</span>num_grupos) <span class="op">%&gt;%</span></span>
-<span id="cb31-9"><a href="análisis-exploratorio.html#cb31-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(prop_precio <span class="op">/</span><span class="st"> </span>prom_prop <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb31-10"><a href="análisis-exploratorio.html#cb31-10"></a>tabla</span></code></pre></div>
+<span id="cb31-3"><a href="análisis-exploratorio.html#cb31-3"></a><span class="st">  </span><span class="kw">count</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
+<span id="cb31-4"><a href="análisis-exploratorio.html#cb31-4"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
+<span id="cb31-5"><a href="análisis-exploratorio.html#cb31-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop_precio =</span> (<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
+<span id="cb31-6"><a href="análisis-exploratorio.html#cb31-6"></a><span class="st">  </span><span class="kw">group_by</span>(precio) <span class="op">%&gt;%</span></span>
+<span id="cb31-7"><a href="análisis-exploratorio.html#cb31-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prom_prop =</span> <span class="kw">sum</span>(prop_precio)<span class="op">/</span>num_grupos) <span class="op">%&gt;%</span></span>
+<span id="cb31-8"><a href="análisis-exploratorio.html#cb31-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(prop_precio <span class="op">/</span><span class="st"> </span>prom_prop <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb31-9"><a href="análisis-exploratorio.html#cb31-9"></a>tabla</span></code></pre></div>
 <pre><code>## [90m# A tibble: 17 x 6[39m
 ## [90m# Groups:   precio [6][39m
 ##    presentacion precio           n prop_precio prom_prop perfil
@@ -1403,17 +1423,19 @@ de las columnas con la columna marginal (en la tabla de tipo de estilo de té):<
 <span id="cb33-9"><a href="análisis-exploratorio.html#cb33-9"></a>tab_out &lt;-<span class="st"> </span>tabla_perfil <span class="op">%&gt;%</span></span>
 <span id="cb33-10"><a href="análisis-exploratorio.html#cb33-10"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(bolsas)) <span class="op">%&gt;%</span></span>
 <span id="cb33-11"><a href="análisis-exploratorio.html#cb33-11"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb33-12"><a href="análisis-exploratorio.html#cb33-12"></a><span class="st">  </span><span class="kw">mutate_if</span>(if_profile, marcar) <span class="op">%&gt;%</span></span>
-<span id="cb33-13"><a href="análisis-exploratorio.html#cb33-13"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">format_table_salida</span>(), <span class="dt">escape =</span> <span class="ot">FALSE</span>, <span class="dt">digits =</span> <span class="dv">0</span>, <span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span></span>
-<span id="cb33-14"><a href="análisis-exploratorio.html#cb33-14"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;scale_down&quot;</span>),</span>
-<span id="cb33-15"><a href="análisis-exploratorio.html#cb33-15"></a>                            <span class="dt">bootstrap_options =</span> <span class="kw">c</span>( <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>),</span>
-<span id="cb33-16"><a href="análisis-exploratorio.html#cb33-16"></a>                            <span class="dt">full_width =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb33-17"><a href="análisis-exploratorio.html#cb33-17"></a></span>
-<span id="cb33-18"><a href="análisis-exploratorio.html#cb33-18"></a><span class="cf">if</span> (knitr<span class="op">::</span><span class="kw">is_latex_output</span>()) {</span>
-<span id="cb33-19"><a href="análisis-exploratorio.html#cb33-19"></a>  <span class="kw">gsub</span>(<span class="st">&quot;marca_propia&quot;</span>, <span class="st">&quot;marca-propia&quot;</span>, tab_out)</span>
-<span id="cb33-20"><a href="análisis-exploratorio.html#cb33-20"></a>} <span class="cf">else</span> {</span>
-<span id="cb33-21"><a href="análisis-exploratorio.html#cb33-21"></a>  tab_out</span>
-<span id="cb33-22"><a href="análisis-exploratorio.html#cb33-22"></a>}</span></code></pre></div>
+<span id="cb33-12"><a href="análisis-exploratorio.html#cb33-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb33-13"><a href="análisis-exploratorio.html#cb33-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(if_profile), marcar)) <span class="op">%&gt;%</span></span>
+<span id="cb33-14"><a href="análisis-exploratorio.html#cb33-14"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">format_table_salida</span>(), <span class="dt">escape =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb33-15"><a href="análisis-exploratorio.html#cb33-15"></a>               <span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span></span>
+<span id="cb33-16"><a href="análisis-exploratorio.html#cb33-16"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;scale_down&quot;</span>),</span>
+<span id="cb33-17"><a href="análisis-exploratorio.html#cb33-17"></a>                            <span class="dt">bootstrap_options =</span> <span class="kw">c</span>( <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>),</span>
+<span id="cb33-18"><a href="análisis-exploratorio.html#cb33-18"></a>                            <span class="dt">full_width =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb33-19"><a href="análisis-exploratorio.html#cb33-19"></a></span>
+<span id="cb33-20"><a href="análisis-exploratorio.html#cb33-20"></a><span class="cf">if</span> (knitr<span class="op">::</span><span class="kw">is_latex_output</span>()) {</span>
+<span id="cb33-21"><a href="análisis-exploratorio.html#cb33-21"></a>  <span class="kw">gsub</span>(<span class="st">&quot;marca_propia&quot;</span>, <span class="st">&quot;marca-propia&quot;</span>, tab_out)</span>
+<span id="cb33-22"><a href="análisis-exploratorio.html#cb33-22"></a>} <span class="cf">else</span> {</span>
+<span id="cb33-23"><a href="análisis-exploratorio.html#cb33-23"></a>  tab_out</span>
+<span id="cb33-24"><a href="análisis-exploratorio.html#cb33-24"></a>}</span></code></pre></div>
 <table class="table table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1440,10 +1462,10 @@ pct
 desconocido
 </td>
 <td style="text-align:left;">
-<span style="     color: black !important;">157.641196013289</span>
+<span style="     color: black !important;">158</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-57.641196013289</span>
+<span style="     color: red !important;">-58</span>
 </td>
 <td style="text-align:left;">
 <span style="     color: red !important;">-100</span>
@@ -1457,13 +1479,13 @@ desconocido
 marca_propia
 </td>
 <td style="text-align:left;">
-<span style="     color: black !important;">71.6967570081604</span>
+<span style="     color: black !important;">72</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: lightgray !important;">-22.3711470973743</span>
+<span style="     color: lightgray !important;">-22</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-49.325609910786</span>
+<span style="     color: red !important;">-49</span>
 </td>
 <td style="text-align:right;">
 5
@@ -1474,13 +1496,13 @@ marca_propia
 marca
 </td>
 <td style="text-align:left;">
-<span style="     color: black !important;">61.8106471150781</span>
+<span style="     color: black !important;">62</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: lightgray !important;">-16.389635229291</span>
+<span style="     color: lightgray !important;">-16</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-45.4210118857871</span>
+<span style="     color: red !important;">-45</span>
 </td>
 <td style="text-align:right;">
 25
@@ -1491,13 +1513,13 @@ marca
 barato
 </td>
 <td style="text-align:left;">
-<span style="     color: black !important;">30.0871348026653</span>
+<span style="     color: black !important;">30</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-52.9472065607381</span>
+<span style="     color: red !important;">-53</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: lightgray !important;">22.8600717580728</span>
+<span style="     color: lightgray !important;">23</span>
 </td>
 <td style="text-align:right;">
 2
@@ -1508,13 +1530,13 @@ barato
 variable
 </td>
 <td style="text-align:left;">
-<span style="     color: lightgray !important;">-12.4877880581576</span>
+<span style="     color: lightgray !important;">-12</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: black !important;">43.6124360668927</span>
+<span style="     color: black !important;">44</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-31.1246480087351</span>
+<span style="     color: red !important;">-31</span>
 </td>
 <td style="text-align:right;">
 36
@@ -1525,13 +1547,13 @@ variable
 fino
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-70.5895012167464</span>
+<span style="     color: red !important;">-71</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: red !important;">-27.8146572417104</span>
+<span style="     color: red !important;">-28</span>
 </td>
 <td style="text-align:left;">
-<span style="     color: black !important;">98.4041584584568</span>
+<span style="     color: black !important;">98</span>
 </td>
 <td style="text-align:right;">
 28
@@ -1552,7 +1574,7 @@ tasa casi el doble (98%) que el promedio.</p>
 <span id="cb34-8"><a href="análisis-exploratorio.html#cb34-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_segment</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>presentacion) <span class="op">+</span></span>
 <span id="cb34-9"><a href="análisis-exploratorio.html#cb34-9"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span> , <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()</span>
 <span id="cb34-10"><a href="análisis-exploratorio.html#cb34-10"></a>g_perfil</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-45-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p><strong>Observación</strong>: hay dos maneras de construir la columna promedio: tomando los
 porcentajes sobre todos los datos, o promediando los porcentajes de las
 columnas. Si los grupos de las columnas están desbalanceados, estos promedios
@@ -1597,7 +1619,7 @@ indexadas). Graficamos en escalas logarítmicas y agregamos una curva <em>loess<
 <span id="cb35-6"><a href="análisis-exploratorio.html#cb35-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
 <span id="cb35-7"><a href="análisis-exploratorio.html#cb35-7"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="345.6" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" /></p>
 <p>El patrón no era difícil de ver en los datos originales, sin embargo, la curva
 lo hace más claro, el logaritmo de las ventas tiene una relación no lineal con
 el logaritmo del premio: para premios no muy grandes no parece haber gran
@@ -1607,21 +1629,22 @@ menores. Este efecto se conoce como <em>bola de nieve</em>, y es frecuente en es
 tipo de loterías.</p>
 <p>Antes de adentrarnos a <em>loess</em> comenzamos explicando cómo se ajustan familias
 paramétricas de curvas a conjuntos de datos dados.</p>
-<p><strong>Ajustando familias paramétricas.</strong> Supongamos que tenemos la familia
-<span class="math inline">\(f_{a,b}=ax+b\)</span> y datos bivariados <span class="math inline">\((x_1,y_1), ..., (x_n, y_n)\)</span>. Buscamos
-encontrar <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> tales que <span class="math inline">\(f_{a,b}\)</span> de un ajuste <em>óptimo</em> a los datos. El
-criterio de mínimos cuadrados consiste en encontrar <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span> que minimicen la
-suma de cuadrados:</p>
-<p><span class="math display">\[\sum_{i=1}^n(y_i-ax_i-b)^2\]</span></p>
-<p>En este caso, las constantes <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> se pueden encontrar diferenciando esta
-función objetivo. En este caso, estamos ajustando una recta a los datos, pero
-podemos repetir el argumento con otras familias de funciones (por ejemplo
-cuadráticas).</p>
+<div class="mathblock">
+<p>
+<strong>Ajustando familias paramétricas.</strong> Supongamos que tenemos la familia <span class="math inline"><span class="math inline">\(f_{a,b}=ax+b\)</span></span> y datos bivariados <span class="math inline"><span class="math inline">\((x_1,y_1), ..., (x_n, y_n)\)</span></span>. Buscamos encontrar <span class="math inline"><span class="math inline">\(a\)</span></span> y <span class="math inline"><span class="math inline">\(b\)</span></span> tales que <span class="math inline"><span class="math inline">\(f_{a,b}\)</span></span> de un ajuste <em>óptimo</em> a los datos. El criterio de mínimos cuadrados consiste en encontrar <span class="math inline"><span class="math inline">\(a\)</span></span>, <span class="math inline"><span class="math inline">\(b\)</span></span> que minimicen la suma de cuadrados:
+</p>
+<p>
+<span class="math display"><span class="math display">\[\sum_{i=1}^n(y_i-ax_i-b)^2\]</span></span>
+</p>
+<p>
+En este caso, las constantes <span class="math inline"><span class="math inline">\(a\)</span></span> y <span class="math inline"><span class="math inline">\(b\)</span></span> se pueden encontrar diferenciando esta función objetivo. Más aún, estamos ajustando una recta a los datos, pero podemos repetir el argumento con otras familias de funciones (por ejemplo cuadráticas).
+</p>
+</div>
 <div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="análisis-exploratorio.html#cb37-1"></a><span class="kw">ggplot</span>(ventas.sorteo, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(premio), <span class="dt">y =</span> <span class="kw">log</span>(ventas.tot<span class="fl">.1</span>))) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb37-2"><a href="análisis-exploratorio.html#cb37-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
 <span id="cb37-3"><a href="análisis-exploratorio.html#cb37-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span></code></pre></div>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-48-1.png" width="345.6" /></p>
 <p>Donde los parámetros <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> están dados por:</p>
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="análisis-exploratorio.html#cb39-1"></a>mod_lineal &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(ventas.tot<span class="fl">.1</span>) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(premio), <span class="dt">data =</span> ventas.sorteo)</span>
 <span id="cb39-2"><a href="análisis-exploratorio.html#cb39-2"></a><span class="kw">round</span>(<span class="kw">coef</span>(mod_lineal), <span class="dv">2</span>)</span></code></pre></div>
@@ -1635,6 +1658,13 @@ familias (por ejemplo, una cuadrática o cúbica, potencias, exponenciales, etc.
 sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
 flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo
 tiempo sea robusto.</p>
+<p><strong>Observación:</strong> Los modelos de regresión lineal, cuando se pueden ajustar de
+manera razonable, son altamente deseables por su simplicidad: los datos se
+describen con pocos parámetros y tenemos incrementos marginales constantes en
+todo el rango de la variable que juega como factor, de modo que la
+interpretación es simple. Por esta razón, muchas veces vale la pena transformar
+los datos con el fin de enderezar la relación de dos variables y poder ajustar
+una función lineal.</p>
 <div id="ajustando-curvas-loess" class="section level3 unnumbered">
 <h3>Ajustando curvas loess</h3>
 <p>La idea es producir ajustes locales de rectas o funciones cuadráticas. En estas
@@ -1677,7 +1707,7 @@ los más cercanos un peso que depende de que tan cercanos están a <span class="
 <span id="cb41-2"><a href="análisis-exploratorio.html#cb41-2"></a>  <span class="kw">ifelse</span>(<span class="kw">abs</span>(x) <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>, (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">abs</span>(x) <span class="op">^</span><span class="st"> </span><span class="dv">3</span>) <span class="op">^</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>)</span>
 <span id="cb41-3"><a href="análisis-exploratorio.html#cb41-3"></a>}</span>
 <span id="cb41-4"><a href="análisis-exploratorio.html#cb41-4"></a><span class="kw">curve</span>(tricubo, <span class="dt">from =</span> <span class="fl">-1.5</span>, <span class="dt">to =</span> <span class="fl">1.5</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-49-1.png" width="364.8" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-50-1.png" width="364.8" /></p>
 <p>Finalmente ajustamos una recta de mínimos cuadrados ponderados por los pesos
 <span class="math inline">\(w_i(x)\)</span>, es decir, minimizamos</p>
 <p><span class="math display">\[\sum_{i=1}^nw_i(x)(y_i-ax_i-b)^2\]</span></p>
@@ -1746,7 +1776,7 @@ causalidad?</p>
 <p>Consideremos los <em>datos agregados</em> del número de nacimientos (registrados) por
 día desde 1999 hasta 2016. Un primer intento podría ser hacer una gráfica de la
 serie de tiempo. Sin embargo, vemos que no es muy útil:</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-52-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-53-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>Hay varias características que notamos. Primero, parece haber una tendencia
 ligeramente decreciente del número de nacimientos a lo largo de los años.
 Segundo, la gráfica sugiere un patrón anual. Y por último, encontramos que hay
@@ -1778,7 +1808,7 @@ de la componente anual:</p>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="análisis-exploratorio.html#cb43-1"></a>mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(n <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> natalidad, <span class="dt">span =</span> <span class="fl">0.2</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
 <span id="cb43-2"><a href="análisis-exploratorio.html#cb43-2"></a>datos_dia &lt;-<span class="st"> </span>natalidad <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ajuste_1 =</span> <span class="kw">fitted</span>(mod_<span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb43-3"><a href="análisis-exploratorio.html#cb43-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_1 =</span> n <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">1</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-55-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-56-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.</p>
 </div>
@@ -1791,14 +1821,14 @@ pero con menos suavizamiento. Así evitamos capturar tendencia:</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="análisis-exploratorio.html#cb44-1"></a>mod_anual &lt;-<span class="st"> </span><span class="kw">loess</span>(res_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> datos_dia, <span class="dt">degree =</span> <span class="dv">2</span>, <span class="dt">span =</span> <span class="fl">0.005</span>)</span>
 <span id="cb44-2"><a href="análisis-exploratorio.html#cb44-2"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ajuste_2 =</span> <span class="kw">fitted</span>(mod_anual)) <span class="op">%&gt;%</span></span>
 <span id="cb44-3"><a href="análisis-exploratorio.html#cb44-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_2 =</span> res_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">2</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-57-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-58-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="día-de-la-semana" class="section level5 unnumbered">
 <h5>Día de la semana</h5>
 <p>Hasta ahora, hemos aislado los efectos por plazos largos de tiempo (tendencia) y
 hemos incorporado las variaciones estacionales (componente anual) de nuestra
 serie de tiempo. Ahora, veremos cómo capturar el efecto por día de la semana. En
-este caso, podemos hacer suavizamiento <code>loess</code> para cada serie de manera
+este caso, podemos hacer suavizamiento <em>loess</em> para cada serie de manera
 independiente</p>
 <div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="análisis-exploratorio.html#cb45-1"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span></span>
 <span id="cb45-2"><a href="análisis-exploratorio.html#cb45-2"></a><span class="st">    </span><span class="kw">group_by</span>(dia_semana) <span class="op">%&gt;%</span></span>
@@ -1808,18 +1838,18 @@ independiente</p>
 <span id="cb45-6"><a href="análisis-exploratorio.html#cb45-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">ajuste_3 =</span>  <span class="kw">map</span>(ajuste_mod, fitted)) <span class="op">%&gt;%</span></span>
 <span id="cb45-7"><a href="análisis-exploratorio.html#cb45-7"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>ajuste_mod) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw">c</span>(data, ajuste_<span class="dv">3</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb45-8"><a href="análisis-exploratorio.html#cb45-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_3 =</span> res_<span class="dv">2</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-59-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-60-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="residuales" class="section level5 unnumbered">
 <h5>Residuales</h5>
 <p>Por último, examinamos los residuales finales quitando los efectos ajustados:</p>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-60-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-61-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p><strong>Observación</strong>: nótese que la distribución de estos residuales presenta
 irregularidades interesantes. La distribución es de <em>colas largas</em>, y no se debe
 a unos cuantos datos atípicos. Esto generalmente es indicación que hay factores
 importantes que hay que examinar mas a detalle en los residuales:</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-61-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-62-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="reestimación" class="section level5 unnumbered">
 <h5>Reestimación</h5>
@@ -1834,17 +1864,17 @@ más suavizadas:</p>
 <span id="cb47-3"><a href="análisis-exploratorio.html#cb47-3"></a><span class="co"># Reajustamos</span></span>
 <span id="cb47-4"><a href="análisis-exploratorio.html#cb47-4"></a>mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(n_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> datos_dia, <span class="dt">span =</span> <span class="fl">0.02</span>, <span class="dt">degree =</span> <span class="dv">2</span>,</span>
 <span id="cb47-5"><a href="análisis-exploratorio.html#cb47-5"></a>               <span class="dt">family =</span> <span class="st">&quot;symmetric&quot;</span>)</span></code></pre></div>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-63-1.png" width="90%" style="display: block; margin: auto;" /></p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-65-1.png" width="90%" style="display: block; margin: auto;" /></p>
-<p>Y ahora repetimos con la componente de día de la semana:</p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-64-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-66-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p>Y ahora repetimos con la componente de día de la semana:</p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-67-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="análisis-de-componentes" class="section level5 unnumbered">
 <h5>Análisis de componentes</h5>
 <p>Ahora comparamos las componentes estimadas y los residuales en una misma
 gráfica. Por definición, la suma de todas estas componentes da los datos
 originales.</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-67-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-68-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>Este último paso nos permite diversas comparaciones que explican la variación que vimos en
 los datos. Una gran parte de los residuales está entre <span class="math inline">\(\pm 250\)</span> nacimientos por
 día. Sin embargo, vemos que las colas tienen una dispersión mucho mayor:</p>
@@ -1856,7 +1886,7 @@ día. Sin embargo, vemos que las colas tienen una dispersión mucho mayor:</p>
 <div id="viernes-13" class="section level5 unnumbered">
 <h5>Viernes 13?</h5>
 <p>Podemos empezar con una curosidad: en <em>viernes o martes 13</em>, ¿nacen menos niños?</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-70-1.png" width="1152" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-71-1.png" width="1152" /></p>
 <p>Nótese que fue útil agregar el indicador de Semana santa por el Viernes 13 de Semana Santa
 que se ve como un atípico en el panel de los viernes 13.</p>
 </div>
@@ -1864,7 +1894,7 @@ que se ve como un atípico en el panel de los viernes 13.</p>
 <h5>Residuales: antes y después de 2006</h5>
 <p>Veamos primero una agregación sobre los años de los residuales. Lo primero es
 observar un cambio que sucedió repentinamente en 2006:</p>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-71-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-72-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>La razón es un cambio en la ley acerca de cuándo pueden entrar los niños a la primaria. Antes era
 por edad y había poco margen. Ese exceso de nacimientos son reportes falsos para que los niños
 no tuvieran que esperar un año completo por haber nacido unos cuantos días antes de la fecha límite.</p>
@@ -1882,7 +1912,7 @@ a lo largo de los años) para cada día del año. Podemos identificar ahora los
 residuales más grandes: se deben, por ejemplo, a días feriados, con
 consecuencias adicionales que tienen en días ajuntos (excesos de nacimientos):</p>
 <pre><code>## `summarise()` regrouping output by &#39;dia_año_366&#39;, &#39;antes_2006&#39; (override with `.groups` argument)</code></pre>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-72-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-73-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="semana-santa" class="section level5 unnumbered">
 <h5>Semana santa</h5>
@@ -1890,7 +1920,7 @@ consecuencias adicionales que tienen en días ajuntos (excesos de nacimientos):<
 obtenemos un patrón de caída fuerte de nacimientos el Viernes de Semana Santa, y la característica forma
 de “valle con hombros” en días anteriores y posteriores estos Viernes. ¿Por qué ocurre este patrón?</p>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
-<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-73-1.png" width="90%" style="display: block; margin: auto;" /></p>
+<p><img src="02-exploratorio_files/figure-html/unnamed-chunk-74-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>Nótese un defecto de nuestro modelo: el patrón de “hombros” alrededor del Viernes Santo no es suficientemente fuerte para equilibrar los nacimientos faltantes.
 ¿Cómo podríamos mejorar nuestra descomposición?</p>
 
