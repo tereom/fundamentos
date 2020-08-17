@@ -61,7 +61,7 @@ propinas <- tips %>%
          dia = day, momento = time,
          num_personas = size) %>%
   mutate(sexo = recode(sexo, Female = "Mujer", Male = "Hombre"),
-         fumador = recode(fumador, No = "No", Si = "Si"),
+         fumador = recode(fumador, No = "No", Yes = "Si"),
          dia = recode(dia, Sun = "Dom", Sat = "Sab", Thur = "Jue", Fri = "Vie"),
          momento = recode(momento, Dinner = "Cena", Lunch = "Comida")) %>%
   select(-sexo) %>%
@@ -219,7 +219,6 @@ g_1 + g_2 + g_3
 Es una gráfica más popular, pero perdemos cierto nivel de detalle, y distintas
 particiones resaltan distintos aspectos de los datos.
 
-
 ```{block, type='ejercicio'}
 ¿Cómo se ve la gráfica de cuantiles de las propinas? ¿Cómo crees que esta gráfica se
 compara con distintos histogramas?
@@ -235,6 +234,9 @@ g_1
 el cuantil-$f$ con valor $q$ satisface que existe una proporción aproximada $f$ de los datos que están en el valor
 $q$ o por debajo de éste, pero no necesariamente exactamente una proporción $f$ de los datos estan en $q$ o por debajo.
 
+**Observación**. La definición de cuantiles muestrales no es única y distintos 
+programas utilizan diferentes acercamientos (incluso puede variar entre
+paquetes o funciones de un mismo programa), ver [Hyndman y Fan 2012](http://www.maths.usyd.edu.au/u/UG/SM/STAT3022/r/current/Misc/Sample%20Quantiles%20in%20Statistical%20Packages.pdf).
 
 Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
 histograma es el **diagrama de caja y brazos**. Mostramos dos versiones, la
@@ -345,7 +347,23 @@ Sin embargo,
 (bajo ciertos supuestos teóricos).
 - En muchas ocasiones conviene usar estas medidas pues permite hacer
 comparaciones históricas o tradicionales ---pues análisis anteriores pudieran
-estar basados en éstas.
+estar basados en éstas.  
+- **Medias recortadas**. Una medida intermedia entre la mediana y la media es la
+*media recortada*. Si denotamos $G$ al conjunto de datos original, y $p$ un 
+valor entre $0$ y $1$, entonces $G_p$ es el coonjunto de datos que resulta de
+$G$ cuando se excluye de $G$ la proporción $p$ de los datos más bajos y la 
+proporción $p$ de datos más altos. La media recortada-$p$ es el promedio de
+los valores en $G_p$.
+
+```{block , type='ejercicio'}
+1. Considera el caso de tener $N$ observaciones y asume que ya tienes calculado el
+promedio para dichas observaciones. Este promedio lo denotaremos por $\bar x_N$.
+Ahora, considera que has obtenido $M$ observaciones más. Escribe una fórmula
+recursiva para la media del conjunto total de datos $\bar x_{N+M}$ en función
+de lo que ya tenías precalculado $\bar x_N.$
+2. ¿En qué situaciones esta propiedad puede ser conveniente?
+```
+
 
 ## Ejemplos {-}
 
@@ -423,6 +441,65 @@ casas %>%
   round()
 ```
 
+Por otro lado, las variaciones con respecto a las medianas **dentro** de cada
+zona, por grupo, se resume como:
+
+```{r}
+quantile(casas %>% group_by(nombre_zona) %>%
+  mutate(residual = precio_m2 - median(precio_m2)) %>%
+  pull(residual)) %>%
+  round()
+```
+
+Nótese que este último paso tiene sentido pues la variación dentro de las zonas,
+en términos de precio por metro cuadrado, es similar. Esto no lo podríamos haber
+hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
+ajustar por su tamaño.
+
+Podemos resumir este primer análisis de varianza con un par de gráficas de 
+cuantiles [@cleveland93]:
+
+```{r, out.width = '90%', fig.align= 'center', cache=TRUE, fig,height = 5, fig.asp = 0.55}
+mediana <- median(casas$precio_m2)
+resumen <- casas %>%
+  group_by(nombre_zona) %>%
+  mutate(mediana_zona = median(precio_m2)) %>%
+  mutate(residual = precio_m2 - mediana_zona) %>%
+  ungroup() %>%
+  mutate(mediana_zona = mediana_zona - mediana) %>%
+  select(nombre_zona, mediana_zona, residual) %>%
+  pivot_longer(mediana_zona:residual, names_to = "tipo", values_to = "valor")
+ggplot(resumen, aes(sample = valor)) + 
+  geom_qq(distribution = stats::qunif) +
+  facet_wrap(~ tipo) + 
+  ylab("Precio por m2") + xlab("f") +
+  labs(subtitle = "Precio por m2 por zona",
+       caption = paste0("Mediana total de ", round(mediana)))
+```
+
+Vemos que la mayor parte de la variación del precio por metro cuadrado ocurre
+dentro de cada zona, una vez que controlamos por el tamaño de las casas. La
+variación dentro de cada zona es aproximadamente simétrica, aunque la cola
+derecha es ligeramente más larga con algunos valores extremos.
+
+Podemos seguir con otro indicador importante: la calificación de calidad de los terminados
+de las casas. Como primer intento podríamos hacer:
+
+```{r, echo = FALSE, fig.asp = 0.7, fig.align = 'center', out.width = '80%', echo = FALSE}
+casas %>%
+  mutate(ind_calidad = cut(calidad_gral, c(0, 5, 8,10))) %>%
+  ggplot(aes(y = precio_m2, x = nombre_zona, colour = factor(ind_calidad))) +
+  geom_hline(yintercept = c(1000, 2000), colour = "gray") +
+  geom_jitter(width = 0.2, height = 0, alpha = 0.5) +
+  coord_flip() +
+  scale_colour_colorblind("Índice calidad") +
+  facet_wrap(~ind_calidad)
+```
+
+Lo que indica que las calificaciones de calidad están distribuidas de manera
+muy distinta a lo largo de las zonas, y que probablemente no va ser simple
+desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
+
 ```{block, type='mathblock'}
 Tratar con datos por segmento es una situación común en aplicaciones. Usualmente
 denotamos por
@@ -447,65 +524,6 @@ y contrastar contra el promedio total
 \end{align}
 ```
 
-Por otro lado, las variaciones con respecto a las medianas **dentro** de cada
-zona, por grupo, se resume como:
-
-```{r}
-quantile(casas %>% group_by(nombre_zona) %>%
-  mutate(residual = precio_m2 - median(precio_m2)) %>%
-  pull(residual)) %>%
-  round()
-```
-
-Nótese que este último paso tiene sentido pues la variación dentro de las zonas,
-en términos de precio por metro cuadrado, es similar. Esto no lo podríamos haber
-hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
-ajustar por su tamaño.
-
-Podemos resumir este primer análisis con un par de gráficas de cuantiles
-(@cleveland93):
-
-```{r, out.width = '90%', fig.align= 'center', cache=TRUE, fig,height = 5, fig.asp = 0.55}
-mediana <- median(casas$precio_m2)
-resumen <- casas %>%
-  group_by(nombre_zona) %>%
-  mutate(mediana_zona = median(precio_m2)) %>%
-  mutate(residual = precio_m2 - mediana_zona) %>%
-  ungroup() %>%
-  mutate(mediana_zona = mediana_zona - mediana) %>%
-  select(nombre_zona, mediana_zona, residual) %>%
-  pivot_longer(mediana_zona:residual, names_to = "tipo", values_to = "valor")
-ggplot(resumen, aes(sample = valor)) + 
-  geom_qq(distribution = stats::qunif) +
-  facet_wrap(~ tipo) + 
-  ylab("Precio por m2") + xlab("f") +
-  labs(subtitle = "Precio por m2 por zona",
-       caption = paste0("Mediana total de ", round(mediana)))
-```
-
-
-Vemos que la mayor parte de la variación del precio por metro cuadrado ocurre
-dentro de cada zona, una vez que controlamos por el tamaño de las casas. La
-variación dentro de cada zona es aproximadamente simétrica, aunque la cola
-derecha es ligeramente más larga con algunos valores extremos.
-
-Podemos seguir con otro indicador importante: la calificación de calidad de los terminados
-de las casas. Como primer intento podríamos hacer:
-
-```{r, echo = FALSE, fig.asp = 0.7, fig.align = 'center', out.width = '80%', echo = FALSE}
-casas %>%
-  mutate(ind_calidad = cut(calidad_gral, c(0, 5, 8,10))) %>%
-  ggplot(aes(y = precio_m2, x = nombre_zona, colour = factor(ind_calidad))) +
-  geom_hline(yintercept = c(1000, 2000), colour = "gray") +
-  geom_jitter(width = 0.2, height = 0, alpha = 0.5) +
-  coord_flip() +
-  scale_colour_colorblind("Índice calidad") +
-  facet_wrap(~ind_calidad)
-```
-
-Lo que indica que las calificaciones de calidad están distribuidas de manera
-muy distinta a lo largo de las zonas, y que probablemente no va ser simple
-desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
 
 
 ### Prueba Enlace {-}
@@ -769,8 +787,9 @@ Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
 ver las proporciones que compran té según su empaque (en bolsita o suelto):
 
 ```{r}
-precio <- te %>% group_by(precio) %>%
-  tally() %>% mutate(prop = round(100 * n / sum(n))) %>%
+precio <- te %>% 
+  count(precio) %>%
+  mutate(prop = round(100 * n / sum(n))) %>%
   select(-n)
 tipo <- te %>% group_by(presentacion) %>% tally() %>%
   mutate(pct = round(100 * n / sum(n)))
@@ -783,10 +802,10 @@ presentación:
 
 
 ```{r}
-tipo <- tipo %>% select(presentacion, prop_presentacion = pct)
+tipo <- tipo %>% 
+  select(presentacion, prop_presentacion = pct)
 tabla_cruzada <- te %>%
-  group_by(presentacion, precio) %>%
-  tally() %>%
+  count(presentacion, precio) %>%
   # porcentajes por presentación
   group_by(presentacion) %>%
   mutate(prop = round(100 * n / sum(n))) %>%
@@ -814,8 +833,7 @@ de las columnas con la columna marginal (en la tabla de tipo de estilo de té):
 ```{r, message = FALSE}
 num_grupos <- n_distinct(te %>% select(presentacion))
 tabla <- te %>%
-  group_by(presentacion, precio) %>%
-  tally() %>%
+  count(presentacion, precio) %>%
   group_by(presentacion) %>%
   mutate(prop_precio = (100 * n / sum(n))) %>%
   group_by(precio) %>%
@@ -837,8 +855,10 @@ marcar <- marcar_tabla_fun(25, "red", "black")
 tab_out <- tabla_perfil %>%
   arrange(desc(bolsas)) %>%
   select(-pct, everything()) %>%
-  mutate_if(if_profile, marcar) %>%
-  knitr::kable(format_table_salida(), escape = FALSE, digits = 0, booktabs = T) %>%
+  mutate(across(where(is.numeric), round)) %>% 
+  mutate(across(where(if_profile), marcar)) %>%
+  knitr::kable(format_table_salida(), escape = FALSE,
+               booktabs = T) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"),
                             bootstrap_options = c( "hover", "condensed"),
                             full_width = FALSE)
@@ -1254,7 +1274,7 @@ ggplot(datos_dia, aes(x = fecha)) +
 Hasta ahora, hemos aislado los efectos por plazos largos de tiempo (tendencia) y
 hemos incorporado las variaciones estacionales (componente anual) de nuestra
 serie de tiempo. Ahora, veremos cómo capturar el efecto por día de la semana. En
-este caso, podemos hacer suavizamiento `loess` para cada serie de manera
+este caso, podemos hacer suavizamiento *loess* para cada serie de manera
 independiente
 
 ```{r}
