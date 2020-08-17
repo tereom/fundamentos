@@ -1,12 +1,79 @@
 # Tipos de estudio y experimentos
 
-El contexto es el de  **dos muestras**. Es una práctica común en estudios
-estadísticos pues permite contrastar el efecto de un diseño o prueba. Ejemplos
-de esto se da en medir la tasa de captura en diseño de páginas *web*, la prueba
-de una nueva medicina, o simple contraste entre dos poblaciones con
-características distintas.
+### Motivación {-}
 
-Una *respuesta* a una pregunta de interés
+```{block, type='ejercicio'}
+  **Pregunta de entrevista de Google [@Chihara]**  
+  Imagina que eres consultor y te preguntan lo siguiente (ver siguiente figura):  
+  Estoy haciendo una comparación de antes y después donde la hipótesis alternativa
+  es pre.media.error > post.media.error. La distribución de ambas muestras es 
+  sesgada a la derecha. ¿Qué prueba me recomiendas para ésta situación?
+```
+
+```{r grafica-pcr, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Error CPR, gráfica de densidad.", fig.height = 3.2, fig.width = 4.2}
+library(tidyverse)
+theme_set(theme_minimal())
+pre <- tibble(group = "Pre", y = rgamma(10000, 2, 0.8)-0.2)
+post <- tibble(group = "Post", y = rgamma(10000, 1.7, 0.8)-0.2)
+ggplot(bind_rows(pre, post), aes(x = y, color = group)) +
+  geom_density() +
+  xlab("CPR error") + labs(color = "")
+```
+
+
+La siguiente imagen [Roger Peng](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/) 
+representa una situación común a la que se enfrenta el analista de datos, y se
+desarrolló en el contexto de preguntas vagas. En el esquema hay tres caminos: 
+uno es uno ideal que pocas veces sucede,
+otro produce respuestas poco útiles pero es fácil, y otro es tortuoso pero que 
+caracteriza el mejor trabajo de análisis de datos:
+
+
+```{r, echo = FALSE, message = FALSE, fig.cap = "Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)", warning=FALSE}
+library(tidyverse)
+theme_set(theme_minimal())
+puntos <- tibble(x = c(0.5, 1.2, 4, 4), y = c(0.5, 4, 0.5, 5),
+                 etiqueta = c("dónde\ncomenzamos\nrealmente", "Análisis de datos \n poco útil, de bajo impacto", 
+                              "dónde creeemos\nque comenzamos", "Nuestra \n Meta "))
+set.seed(211)
+browniano <- tibble(x = 0.5 +  cumsum(c(0,rnorm(50, 0.03, 0.1))) ,
+                    y = 0.5 +  cumsum(c(0, rnorm(50, 0.02, 0.2))))
+puntos <- bind_rows(puntos, tail(browniano, 1) %>% mutate(etiqueta = "Terminamos?!?"))
+flechas <- tibble(x = c(0.5, 4), y = c(0.5, 0.5), xend = c(1.2, 4), yend = c(4, 5))
+
+ggplot(puntos, aes(x = x, y = y)) + 
+    xlab("Calidad de la pregunta") +
+    ylab("Peso de la evidencia") +
+    theme(axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+    geom_segment(data = flechas, aes(xend=xend, yend=yend),
+                 arrow = arrow(length = unit(0.3, "inches"))) +
+    geom_path(data = browniano) +
+    geom_point(data = browniano) +
+    geom_point(colour="red", size = 5) +
+    geom_text(aes(label = etiqueta), vjust = -0.5, hjust = 1.1, size = 4.2) +
+    #labs(caption = "Adaptado de R. Peng: Tukey, design thinking and better questions.") +
+    xlim(c(-0.1 , 4)) + ylim(c(0,6))
+    
+```
+
+
+Ejemplos: Alguien nos pregunta cuáles son las tiendas que mas venden de una 
+cadena. Podríamos consultar bases de datos, hacer extracciones, definir 
+periodos, etc. y dar una respuesta que probablemente es poco útil. Nos damos 
+cuenta, por ejemplo, porque la
+peor tienda es una que abrió hace relativamente poco, y la mejor es una de las tiendas
+más grandes que está en una zona de tráfico de alto costo. Una pregunta más interesante
+es, ¿qué equipos de ventas tienen mejor desempeño? ¿Cuánto aporta tener una cafetería dentro
+de la tienda en términos de ventas?, etc.  
+
+Entre las preguntas que se debe hacer el analista de datos cuando se le consulta 
+es el proceso que generó los datos, pues esto determinará que preguntas son 
+relevantes, tanto en términos prácticos como estadísticos.
+La interpretación de los resultados estadísticos esta ligado al diseño del 
+estudio. Una *respuesta* a una pregunta de interés
 viene acomapañada de una *medida de incertidumbre*, la cual se basa en una
 *modelo de probabilidad*. Hay veces en el que el modelo de probabilidad está
 bien justificado, pues hay un *mecanismo aleatorio* detrás ---pensemos en el
@@ -18,6 +85,28 @@ Para entender y comunicar las conclusiones de un modelo hay que estar
 conscientes del mecanismo aleatorio que se utilizó, por ejemplo, en la selección
 de unidades muestrales, o del grupo al que pertenecen.
 
+### Ejemplo: Prevalencia de anemia (1) {-}
+
+Supongamos que nos interesa conocer el porcentaje de menores de edad con 
+anemia en México. La fuente de datos disponible corresponde a registros de 
+del IMSS donde en hospitalizaciones de menores, ya sea por anemia o 
+que por otra causa (apendicitis, tratamiento de leucemia, ...), se registró 
+si el menor tenía anemia. Utilizando esta fuente de datos calculamos que el
+30% de los menores del país tiene anemia.
+
+### Ejemplo: Policías en semáforos (1) {-}
+
+
+
+
+El contexto es el de  **dos muestras**. Es una práctica común en estudios
+estadísticos pues permite contrastar el efecto de un diseño o prueba. Ejemplos
+de esto se da en medir la tasa de captura en diseño de páginas *web*, la prueba
+de una nueva medicina, o simple contraste entre dos poblaciones con
+características distintas.
+
+
+
 ### Ejemplos {-}
 
 #### Retroalimentacion y creatividad {-}
@@ -26,7 +115,7 @@ de unidades muestrales, o del grupo al que pertenecen.
 
 ## Muestras diseñadas y muestras naturales {-}
 
-Hay dos formas de inferencia. La **inferencia causal** y la **inferencia a
+Hay dos formas de inferencia: la **inferencia causal** y la **inferencia a
 poblaciones**. Saber los mecanismos que generaron los datos nos permite saber
 qué tipo de inferencia es más adecuada para el estudio en cuestión.
 
@@ -43,8 +132,8 @@ Es natural cuestionar si por medio de análisis estadísticos podemos concluir
 relaciones causales. La respuesta es: 
 
 ```{block, type='comentario'}
-Las relaciones de causa y efecto se pueden inferir sólo si se utiliza un estudio aleatorizado, 
-pero no por medio de estudios observacionales. 
+Las relaciones de causa y efecto se pueden **inferir estadísticamente** sólo si 
+se utiliza un estudio aleatorizado, pero no por medio de estudios observacionales. 
 ```
 
 El componente aleatorio asegura que las unidades observacionales con diferentes
@@ -77,4 +166,4 @@ poseen valor en un estudio formal. Las ventajas se pueden resumir en:
 
 ## Experimentos y datos observacionales {-}
 
-
+![Inferencia estadística de acuerdo al tipo del diseño [@ramsey]](images/03_inferencia-estudio.png)
