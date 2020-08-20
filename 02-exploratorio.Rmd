@@ -143,7 +143,7 @@ observamos los datos según el orden que ocupan.
 ```{block, type='mathblock'}
 La función de cuantiles muestral esta definida por
 \begin{align}
-\hat{F}(x) = \frac1N \sum_{n = 1}^N \mathbb{1}\{x_n \leq x\},
+\hat{F}(x) = \frac1N \sum_{n = 1}^N 1\{x_n \leq x\},
 \end{align}
 donde la funcion indicadora está definida por
 \begin{align}
