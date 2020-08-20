@@ -156,12 +156,36 @@ donde la funcion indicadora está definida por
 ```
 
 ```{block, type='mathblock'}
-El cuantil $p$ es el valor $x = x(p)$, esta notación sirve para definir $x$ como una función de $p,$ tal que
+**Observación:** la función de cuantiles definida arriba también es conocida como la *función de acumulación empírica*. Se puede encontrar la siguiente notación en la literatura
 \begin{align}
-  \hat F(x) = p.
+\hat F(x) = F_N(x) = \text{Pr}_N(X \leq x),
 \end{align}
-Es decir, $x$ acumula el $p$-\% de los casos.
+asi como 
+\begin{align}
+\text{Pr}_N(X \geq x) = 1 - \hat F(x).
+\end{align}
+
 ```
+
+
+```{block, type='mathblock'}
+**Observación:** Para  mediciones continuas y $0 \leq q \leq 1,$ el cuantil $q$ es el valor $x = x(q)$---esta notación sirve para definir $x$ como una función de $q$--- tal que 
+\begin{align}
+  \hat F(x) \geq q \quad \text{y} \quad 1 - \hat F(x) \geq 1- q
+\end{align}
+Es decir, $x$ acumula el $q$-\% de los casos.
+```
+
+```{block, type='mathblock'}
+**Observación:** Si $N  \times q$ no es un número entero, entonces el cuantil $q$ es único y es igual a la $\sigma(\lceil N q \rceil)-$ésima observación.
+
+Si  $N q$ es un número entero, entonces el cuantil $q$ no es único y es igual a cualquier $x$ tal que 
+\begin{align}
+x_{\sigma(N q)} \leq x \leq x_{\sigma(N q + 1)}.
+\end{align}
+```
+
+
 
 ```{block, type='ejercicio'}
   Para una medición de interés $x$ con posibles valores en el intervalo $[a, b]$.
