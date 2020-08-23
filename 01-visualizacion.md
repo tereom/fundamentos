@@ -46,7 +46,9 @@ las dos variables.
 
 
 
-![](images/datasaurus.gif)
+![](images/datasaurus.gif)<!-- -->
+
+
 
 </div>
 
@@ -243,7 +245,7 @@ ggplot(airquality, aes(x=Solar.R, y=Ozone)) + geom_point() +
     geom_smooth(method = "loess", span = 1)
 ```
 
-<img src="01-visualizacion_files/figure-html/unnamed-chunk-9-1.png" width="45%" style="display: block; margin: auto;" />
+<img src="01-visualizacion_files/figure-html/unnamed-chunk-10-1.png" width="45%" style="display: block; margin: auto;" />
 
 En el ejemplo anterior incluyendo
 una variable adicional (velocidad del viento) podemos entender más
@@ -260,7 +262,7 @@ ggplot(airquality, aes(x=Solar.R, y=Ozone)) + geom_point() +
                 method.args = list(degree = 1, family="symmetric"))
 ```
 
-<img src="01-visualizacion_files/figure-html/unnamed-chunk-10-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="01-visualizacion_files/figure-html/unnamed-chunk-11-1.png" width="95%" style="display: block; margin: auto;" />
 
 
 ### Tinta de datos {-}

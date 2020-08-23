@@ -51,10 +51,6 @@
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
-integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous">
-  </script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fnaufel/smartify/smartify.min.js"></script>
 
 
 <style type="text/css">
@@ -237,7 +233,7 @@ las dos variables.</p>
 
 </div>
 <div style="float:right;padding=10px; top:-10px; width:350px">
-<p><img src="images/datasaurus.gif" /></p>
+<p><img src="images/datasaurus.gif" /><!-- --></p>
 </div>
 <p>El cuarteto de Ascombe inspiró una técnica reciente para crear datos que comparten las
 mismas propiedades estadísticas al igual que en el cuarteto, pero que producen gráficas
@@ -407,7 +403,7 @@ de nuestro problema de interés. Consideramos por ejemplo la relación
 de radiación solar y niveles de ozono:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="principios-de-visualización.html#cb1-1"></a><span class="kw">ggplot</span>(airquality, <span class="kw">aes</span>(<span class="dt">x=</span>Solar.R, <span class="dt">y=</span>Ozone)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
 <span id="cb1-2"><a href="principios-de-visualización.html#cb1-2"></a><span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p><img src="01-visualizacion_files/figure-html/unnamed-chunk-9-1.png" width="45%" style="display: block; margin: auto;" /></p>
+<p><img src="01-visualizacion_files/figure-html/unnamed-chunk-10-1.png" width="45%" style="display: block; margin: auto;" /></p>
 <p>En el ejemplo anterior incluyendo
 una variable adicional (velocidad del viento) podemos entender más
 acerca de la relación de radiación solar y niveles de ozono:</p>
@@ -418,7 +414,7 @@ acerca de la relación de radiación solar y niveles de ozono:</p>
 <span id="cb2-5"><a href="principios-de-visualización.html#cb2-5"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>Wind_cat) <span class="op">+</span></span>
 <span id="cb2-6"><a href="principios-de-visualización.html#cb2-6"></a><span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.8</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>,</span>
 <span id="cb2-7"><a href="principios-de-visualización.html#cb2-7"></a>                <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>, <span class="dt">family=</span><span class="st">&quot;symmetric&quot;</span>))</span></code></pre></div>
-<p><img src="01-visualizacion_files/figure-html/unnamed-chunk-10-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p><img src="01-visualizacion_files/figure-html/unnamed-chunk-11-1.png" width="95%" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="tinta-de-datos" class="section level3 unnumbered">
@@ -539,7 +535,6 @@ tan sólo representar un número rebotando a lo largo del tiempo.</p>
 <p>Tukey, J. W. 1977. <em>Exploratory Data Analysis</em>. Addison-Wesley Series in Behavioral Science. Addison-Wesley Publishing Company. <a href="https://books.google.com.mx/books?id=UT9dAAAAIAAJ">https://books.google.com.mx/books?id=UT9dAAAAIAAJ</a>.</p>
 </div>
 </div>
-<script type="text/javascript">smartify();</script>
             </section>
 
           </div>
@@ -564,7 +559,7 @@ gitbook.start({
 "sharing": {
 "github": true,
 "facebook": false,
-"twitter": true,
+"twitter": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
@@ -577,7 +572,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/01-visualizacion.Rmd",
+"link": "https://github.com/tereom/fundamentos/edit/master/01-visualizacion.Rmd",
 "text": "Edit"
 },
 "history": {
