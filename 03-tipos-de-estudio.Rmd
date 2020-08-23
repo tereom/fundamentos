@@ -60,9 +60,17 @@ nastal %>%
 ¿Cómo podemos generalizar a la población después de haber observado dichos resultados en la encuesta? 
 Podemos seguir el siguiente tren de pensamiento:   
 1. El *número registrado* de parejas sexuales de los participantes nos habla acerca de ...  
-2. El *número real* de parejas en nuestra *muestra*, lo que nos habla acerca de ...   
+2. El *número real* de parejas sexuales en nuestra *muestra*, lo que nos habla acerca de ...   
 3. El número de parejas en la *población de estudio*, lo que nos habla acerca de ...   
 4. El número de parejas sexuales en el Reino Unido, lo cual es la *población objetivo*.
+
+Los puntos más débiles en la generalización son los siguientes:  
+1. ¿Podemos asumir que los encuestados responderán de manear exacta la pregunta? Observa los *picos* en el eje horizontal.  
+2. ¿Podemos esperar que los encuestados hayan sido escogidos de manera aleatoria de aquellos que son elegibles?  Posiblemente, pero ¿podemos esperar los que aceptaron la encuesta son representativos?  
+3. ¿Podemos asegurar que la muestra de encuestados representa la población adulta del país?  
+
+## Considerando tomar el papel de **Juez** {-}
+
 
 
 **Seguire incorporando el capitulo 3 del Art of Statistics...**
