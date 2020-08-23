@@ -1,5 +1,72 @@
 # Tipos de estudio y experimentos
 
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+source("R/funciones_auxiliares.R")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
+## De datos y poblaciones {-}
+
+Los datos no son el fin último de un estudio. Son el mecanismo que podemos utilizar para poder contestar
+preguntas acerca de la población que no vemos. Pensemos en la encuesta realizada en el Reino Unido 
+sobre parejas sexuales del sexo opuesto 
+que una persona en el rango de edad de 35-44 años declara tener. Este estudio está tomado de @spiegelhalter2019art. 
+Los datos están reportados en la encuesta Natsal-3 que puede encontrarse en [C.H. Mercer et al., ‘Changes in Sexual Attitudes and Lifestyles in Britain through the Life Course and Over Time: Findings from the National Surveys of Sexual Attitudes and Lifestyles (Natsal)’, 2013](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(13)62035-8/fulltext).
+
+Estos datos corresponden a un total de 796 hombres y 1,193 mujeres encuestadas, y están ponderados por el diseño 
+estratificado de la encuesta.
+
+```{r, echo  = FALSE}
+library(ggplot2)
+nastal <-read.csv("data/nastal.csv", header=TRUE)
+nastal <- nastal %>%
+  rename(NumParejas = NumPartners, ConteoH = MenCount, ConteoM = WomenCount)
+sample_n(nastal, 10)
+```
+
+Como en los ejemplos anteriores, podemos calcular un resumen rápido para hombres:
+
+```{r, echo  = FALSE}
+nastal %>% 
+  summarise(Datos = rep(NumParejas,ConteoH)) %>%
+  pull(Datos) %>% 
+  summary()
+```
+
+así como un resumen rápido para las mujeres encuestadas:
+
+```{r, echo  = FALSE}
+nastal %>% 
+  summarise(Datos = rep(NumParejas,ConteoM)) %>%
+  pull(Datos) %>% 
+  summary()
+```
+
+Un gráfico sencillo nos ayudará a ilustrar la distirbución de las respuestas por género:
+```{r, fig.align ='center', out.width='95%', fig.height = 3, fig.width = 5}
+nastal %>% 
+  select(NumParejas, ConteoH, ConteoM) %>% 
+  rename(Hombres = ConteoH, Mujeres = ConteoM) %>% 
+  gather('Hombres', 'Mujeres', key='Género', value = 'Conteo') %>% 
+  ggplot(aes(x = NumParejas)) + 
+    geom_bar(aes(y = Conteo, fill = Género), stat = 'identity', position = 'dodge') + 
+    scale_x_continuous(breaks = c(0,5,10,15,20,25,30,35,40,45,50), limits=c(0,50)) + 
+    scale_colour_brewer(palette = "Set1") +
+    labs(x="Número reportado de parejas sexuales del genero opuesto")
+```
+¿Cómo podemos generalizar a la población después de haber observado dichos resultados en la encuesta? 
+Podemos seguir el siguiente tren de pensamiento:   
+1. El *número registrado* de parejas sexuales de los participantes nos habla acerca de ...  
+2. El *número real* de parejas en nuestra *muestra*, lo que nos habla acerca de ...   
+3. El número de parejas en la *población de estudio*, lo que nos habla acerca de ...   
+4. El número de parejas sexuales en el Reino Unido, lo cual es la *población objetivo*.
+
+
+**Seguire incorporando el capitulo 3 del Art of Statistics...**
+
 El contexto es el de  **dos muestras**. Es una práctica común en estudios
 estadísticos pues permite contrastar el efecto de un diseño o prueba. Ejemplos
 de esto se da en medir la tasa de captura en diseño de páginas *web*, la prueba
