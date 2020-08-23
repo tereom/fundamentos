@@ -81,7 +81,15 @@ ggplot(datasaurus_dozen %>% filter(dataset %in% datasets_plot),
 anim_save("imges/datasaurus.gif")
 ```
 
-![](images/datasaurus.gif)
+```{r, echo = FALSE}
+if(knitr::opts_knit$get("rmarkdown.pandoc.to") == 'html') {
+  knitr::include_graphics("images/datasaurus.gif")
+} else {
+  knitr::include_graphics("images/datasaurus.png")
+}
+```
+
+
 
 </div>
 

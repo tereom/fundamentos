@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Análisis exploratorio
 
 
@@ -156,11 +161,14 @@ donde la funcion indicadora está definida por
 ```
 
 ```{block, type='mathblock'}
-El cuantil $p$ es el valor $x = x(p)$, esta notación sirve para definir $x$ como una función de $p,$ tal que
+**Observación:** la función de cuantiles definida arriba también es conocida como la *función de acumulación empírica*. Se puede encontrar la siguiente notación en la literatura
 \begin{align}
-  \hat F(x) = p.
+  \hat F(x) = F_N(x) = \text{Pr}_N(X \leq x),
 \end{align}
-Es decir, $x$ acumula el $p$-\% de los casos.
+así como 
+\begin{align}
+  \text{Pr}_N(X \geq x) = 1 - \hat F(x).
+\end{align}
 ```
 
 ```{block, type='ejercicio'}
@@ -499,31 +507,6 @@ casas %>%
 Lo que indica que las calificaciones de calidad están distribuidas de manera
 muy distinta a lo largo de las zonas, y que probablemente no va ser simple
 desentrañar qué variación del precio se debe a la zona y cuál se debe a la calidad.
-
-```{block, type='mathblock'}
-Tratar con datos por segmento es una situación común en aplicaciones. Usualmente
-denotamos por
-\begin{align}
-  x_{k, n}
-\end{align}
-a la $n$-ésima observación del $k$-ésimo grupo. Usualmente tenemos un universo
-de $K$ posibles grupos y para cada grupo tenemos un total diferente de
-observaciones. Esto lo denotamos por $N_k$, el número total de observaciones del
-grupo $k$ para cualquier $k = 1, \ldots, K.$ El número total de muestras lo
-denotamos por $N$, donde
-\begin{align}
-  N = \sum_{k=1}^K N_k.
-\end{align}
-Finalmente, nos puede interesar, como en el ejemplo, los promedios por grupo
-\begin{align}
-  \bar x_k = \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n},
-\end{align}
-y contrastar contra el promedio total
-\begin{align}
-  \bar x = \frac1K \sum_{k = 1}^K \bar x_k = \frac1K \sum_{k = 1}^K \left( \frac{1}{N_k} \sum_{n = 1}^{N_k} x_{k, n} \right).
-\end{align}
-```
-
 
 
 ### Prueba Enlace {-}
@@ -1126,7 +1109,12 @@ if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
     #                      interval= .1)
 }
 
-knitr::include_graphics(here::here("images", "02_loess-spans.gif"))
+if(knitr::opts_knit$get("rmarkdown.pandoc.to") == 'html') {
+  knitr::include_graphics("images/02_loess-spans.gif")
+} else {
+  knitr::include_graphics("images/02_loess-spans.png")
+}
+
 ```
 
 ### Series de tiempo {-}
@@ -1532,7 +1520,7 @@ Para Semana Santa tenemos que hacer unos cálculos. Si alineamos los datos por d
 obtenemos un patrón de caída fuerte de nacimientos el Viernes de Semana Santa, y la característica forma
 de "valle con hombros" en días anteriores y posteriores estos Viernes. ¿Por qué ocurre este patrón?
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.55}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', fig.asp = 0.55}
 pascuas <- tibble(pascua_dia = ymd(as.character(timeDate::Easter(1999:2017)))) %>%
     mutate(año = year(pascua_dia))
 datos_dia <- left_join(datos_dia, pascuas, by = "año") %>%

@@ -1,7 +1,5 @@
 bookdown::gitbook:
   includes:
-    in_header: html/in_header.html
-    after_body: html/after_body.html
   css: [css/style.css, css/toc.css]
   config:
     toc:
@@ -9,11 +7,12 @@ bookdown::gitbook:
         <li><a href="./">Fundamentos de Estadística con Remuestreo</a></li>
       after: |
         <li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
-    edit: https://github.com/rstudio/bookdown-demo/edit/master/%s
+    edit: https://github.com/tereom/fundamentos/edit/master/%s
     download: ["pdf"]
     sharing:
       github: yes
       facebook: no
+      twitter: no
 bookdown::pdf_book:
   includes:
     in_header: latex/preamble.tex
@@ -21,7 +20,7 @@ bookdown::pdf_book:
     after_body: latex/after_body.tex
   keep_tex: yes
   dev: "cairo_pdf"
-  latex_engine: pdflatex
+  latex_engine: xelatex
   citation_package: natbib
   pandoc_args: --top-level-division=chapter
   toc_depth: 3
