@@ -4,7 +4,7 @@ author: "Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
-bibliography: [book.bib, packages.bib]
+bibliography: [bibs/book.bib, bibs/packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: tereom/fundamentos
