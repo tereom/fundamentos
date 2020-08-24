@@ -58,20 +58,45 @@ nastal %>%
     labs(x="Número reportado de parejas sexuales del genero opuesto")
 ```
 ¿Cómo podemos generalizar a la población después de haber observado dichos resultados en la encuesta? 
-Podemos seguir el siguiente tren de pensamiento:   
+Podemos seguir el siguiente tren de pensamiento:  
+```{block, type = 'comentario'}
 1. El *número registrado* de parejas sexuales de los participantes nos habla acerca de ...  
 2. El *número real* de parejas sexuales en nuestra *muestra*, lo que nos habla acerca de ...   
 3. El número de parejas en la *población de estudio*, lo que nos habla acerca de ...   
 4. El número de parejas sexuales en el Reino Unido, lo cual es la *población objetivo*.
+```
 
 Los puntos más débiles en la generalización son los siguientes:  
+```{block, type = 'comentario'}
 1. ¿Podemos asumir que los encuestados responderán de manear exacta la pregunta? Observa los *picos* en el eje horizontal.  
 2. ¿Podemos esperar que los encuestados hayan sido escogidos de manera aleatoria de aquellos que son elegibles?  Posiblemente, pero ¿podemos esperar los que aceptaron la encuesta son representativos?  
 3. ¿Podemos asegurar que la muestra de encuestados representa la población adulta del país?  
+```
 
 ## Considerando tomar el papel de **Juez** {-}
 
+Este papel lo tomamos cuando queremos describir algo más allá de los datos que observamos. 
+Para esto necesitamos realizar *inferencia inductiva.* El peligro es que la inducción es un proceso 
+generalmente lleno con incertidumbre, pues implica tomar instancias muy particulares para poder emitir 
+juicios generales. En cambio, el trabajo *deductivo* considera una secuencia de 
+implicaciones lógicas que nos llevan de generalidades a casos particulares. 
 
+Posiblemente, a lo largo de su preparación, o en cursos anteriores de estadística, han 
+considerado los casos cuando los datos que observamos son seleccionados al azar de la población
+objetivo. Sin embargo, esto raramente sucede en la vida real, y es por esto que es necesario considerar 
+el proceso desde la captura de datos hasta la población objetivo. Por ejemplo, la población de adultos
+en Reino Unido con una vida sexual activa. 
+
+En general nos interesa que nuestros datos sean:   
+* Confiables, es decir, con poca variabilidad y que sea un evento repetible.   
+* Válidos, en el sentido que en verdad se esté midiendo lo que queremos medir, y que no haya sesgos.   
+
+Por otro lado, para poder asegurar que la muestra sea adecuada y nos permita observar 
+de manera fiable la población necesitamos que el estudio tenga *validez interna.* La forma
+más efectiva de reducir el sesgo es por medio de **muestreo aleatorio.**
+
+Por último, nos interesa que haya *validez externa*, lo cual significa que en verdad 
+nuestras unidades de observación, representen la poblacion de interés.
 
 **Seguire incorporando el capitulo 3 del Art of Statistics...**
 
