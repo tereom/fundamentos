@@ -16,7 +16,7 @@ otro produce respuestas poco útiles pero es fácil, y otro es tortuoso pero que
 caracteriza el mejor trabajo de análisis de datos:
   
   
-  ```{r, echo = FALSE, message = FALSE, fig.cap = "Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)", warning=FALSE}
+```{r, echo = FALSE, message = FALSE, fig.cap = "Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)", warning=FALSE}
 library(tidyverse)
 theme_set(theme_minimal())
 puntos <- tibble(x = c(0.5, 1.2, 4, 4), y = c(0.5, 4, 0.5, 5),
@@ -53,7 +53,7 @@ Los datos no son el fin último de un estudio. Son el mecanismo que podemos util
 preguntas acerca de la población que no vemos. Pensemos en la encuesta realizada en el Reino Unido 
 sobre parejas sexuales del sexo opuesto 
 que una persona en el rango de edad de 35-44 años declara tener. Este estudio está tomado de @spiegelhalter2019art. 
-Los datos están reportados en la encuesta Natsal-3 que puede encontrarse en [C.H. Mercer et al., ‘Changes in Sexual Attitudes and Lifestyles in Britain through the Life Course and Over Time: Findings from the National Surveys of Sexual Attitudes and Lifestyles (Natsal)’, 2013](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(13)62035-8/fulltext).
+Los datos están reportados en la encuesta Natsal-3 que puede encontrarse en [C.H. Mercer et al., ‘Changes in Sexual Attitudes and Lifestyles in Britain through the Life Course and Over Time: Findings from the National Surveys of Sexual Attitudes and Lifestyles (Natsal)’, 2013](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(13)62035-8/fulltext).
 
 Estos datos corresponden a un total de 796 hombres y 1,193 mujeres encuestadas, y están ponderados por el diseño 
 estratificado de la encuesta.
@@ -97,19 +97,22 @@ nastal %>%
     labs(x="Número reportado de parejas sexuales del genero opuesto")
 ```
 ¿Cómo podemos generalizar a la población después de haber observado dichos resultados en la encuesta? 
-Podemos seguir el siguiente tren de pensamiento:  
+
 ```{block, type = 'comentario'}
-1. El *número registrado* de parejas sexuales de los participantes nos habla acerca de ...  
-2. El *número real* de parejas sexuales en nuestra *muestra*, lo que nos habla acerca de ...   
-3. El número de parejas en la *población de estudio*, lo que nos habla acerca de ...   
-4. El número de parejas sexuales en el Reino Unido, lo cual es la *población objetivo*.
+Podemos seguir el siguiente tren de pensamiento:  
+
+* El *número registrado* de parejas sexuales de los participantes nos habla acerca de ...  
+* El *número real* de parejas sexuales en nuestra *muestra*, lo que nos habla acerca de ...   
+* El número de parejas en la *población de estudio*, lo que nos habla acerca de ...   
+* El número de parejas sexuales en el Reino Unido, lo cual es la *población objetivo*.
 ```
 
-Los puntos más débiles en la generalización son los siguientes:  
 ```{block, type = 'comentario'}
-1. ¿Podemos asumir que los encuestados responderán de manera exacta la pregunta? Observa los *picos* en el eje horizontal.  
-2. ¿Podemos esperar que los encuestados hayan sido escogidos de manera aleatoria de aquellos que son elegibles?  Posiblemente, pero ¿podemos esperar los que aceptaron la encuesta son representativos?  
-3. ¿Podemos asegurar que la muestra de encuestados representa la población adulta del país?  
+Los puntos más débiles en la generalización son los siguientes:   
+
+* ¿Podemos asumir que los encuestados responderán de manera exacta la pregunta? Observa los *picos* en el eje horizontal.  
+* ¿Podemos esperar que los encuestados hayan sido escogidos de manera aleatoria de aquellos que son elegibles?  Posiblemente, pero ¿podemos esperar los que aceptaron la encuesta son representativos?  
+* ¿Podemos asegurar que la muestra de encuestados representa la población adulta del país?  
 ```
 
 ## Hacia el trabajo como **Juez** {-}
@@ -518,7 +521,7 @@ Para juzgar este argumento desde el punto de vista causal, nos preguntamos prime
     hecho otra cosa que la que efectivamente hicimos) 
     de las observaciones? 
 
-##### El estimador estándar {-}
+#### El estimador estándar {-}
   
 A la comparación anterior ---la diferencia de medias de tratados y no tratados--- le llamamos usualmente el _estimador estándar_ del efecto causal. Muchas veces este es un estimador malo del efecto causal.
 
@@ -545,7 +548,7 @@ se envían policías a lugares donde no hay tráfico.
 - ¿Cómo producir contrafactuales hacer la comparación correcta?
 
 
-##### Experimentos tradicionales {-}
+#### Experimentos tradicionales {-}
   
 Idealmente, quisiéramos observar un mismo crucero en las dos condiciones: con y sin policías. Esto no es posible.
 
@@ -566,7 +569,7 @@ más pesado que otro, prepararíamos dos pesos con el mismo tamaño pero de peso
 En nuestro caso, como es usual en problemas de negocio o sociales, hacer esto es considerablemente más difícil. No podemos "preparar" cruceros con condiciones idénticas. Sin embargo, podríamos intentar bloquear los cruceros
 según información que tenemos acerca de ellos, para hacer más comparaciones e peras con peras.
 
-##### Bloqueo {-}
+#### Bloqueo {-}
 
 Podemos acercanos en lo posible a este ideal de experimentación usando
 información existente.
@@ -611,7 +614,7 @@ espera ligeramente más cortos.
 es beneficiosos pero considerablemente chico? ¿Qué problemas
 puede haber con este análisis?
   
-##### Variables desconocidas {-}
+#### Variables desconocidas {-}
   
 El problema con el análisis anterior es que controlamos por una
 variable que conocemos, pero muchas otras variables pueden estar
@@ -643,7 +646,7 @@ están haciendo el mejor uso de los recursos que tienen. El problema
 es que por esa misma razón no podemos saber el resultado de sus esfuerzos,
 y si hay maneras de optimizar la asignación que hacen actualmente.
 
-##### Aleatorizando el tratamiento {-}
+#### Aleatorizando el tratamiento {-}
 
 Tomamos la decisión entonces de hacer un experimento que incluya 
 aletorización.
