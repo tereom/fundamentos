@@ -95,8 +95,20 @@ Por otro lado, para poder asegurar que la muestra sea adecuada y nos permita obs
 de manera fiable la población necesitamos que el estudio tenga *validez interna.* La forma
 más efectiva de reducir el sesgo es por medio de **muestreo aleatorio.**
 
-Por último, nos interesa que haya *validez externa*, lo cual significa que en verdad 
-nuestras unidades de observación, representen la poblacion de interés.
+Por último, nos interesa que haya *validez externa* en los datos, lo cual significa que en verdad 
+nuestras unidades de observación representen la poblacion de interés.
+
+### Población {-}
+
+Hasta ahora hemos hablado de muestras de datos. Es un caso muy común en las encuestas. Sin embargo, 
+también es posible econtrar casos dónde tengamos acceso a todo conjunto de datos de interés. Ejemplos
+de esto son los casos de donde los casos se registran de manera continua como estudios de compras en línea o 
+históricos transaccionales en un banco. 
+
+Aún en estas situaciones hay que considerar evaluar si en verdad todo lo que nos interesa se registra. 
+Por ejemplo, las carpetas de investigación de crímenes: ¿contienen el reporte de todos los crímenes en la ciudad? 
+
+
 
 **Seguire incorporando el capitulo 3 del Art of Statistics...**
 
