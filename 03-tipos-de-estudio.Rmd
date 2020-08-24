@@ -219,19 +219,22 @@ de población es valiosa. Pero, ¿cómo definimos una población?
 
 
 ```{block, type='comentario'}
-Existen tres tipos de población de la cual podemos extraer una muestra de forma aleatoria  
-  * Población *literal.* Cuando podemos identificar a un grupo de dónde extraer muestras aleatorias.  
-  * Población *virtual.* Cuando tomamos observaciones del ambiente, por ejemplo tomar mediciones de la calidad de aire.  
-  * Población *metafórica.* Cuando no hay grupo de individuos mas grande. Pero aún asi podemos pensar como si los datos provienen de un espacio imaginario de posibilidades.
+Existen tres tipos de población de la cual podemos extraer una muestra de forma aleatoria:  
+  - Población *literal.* Cuando podemos identificar a un grupo de dónde extraer muestras aleatorias.  
+  - Población *virtual.* Cuando tomamos observaciones del ambiente, por ejemplo tomar mediciones de la calidad de aire. Los datos generados por en este escenario se denominan **muestras observacionales.**  
+  - Población *metafórica.* Cuando no hay grupo de individuos mas grande. Pero aún asi podemos pensar como si los datos provienen de un espacio imaginario de posibilidades. Los datos geberados en este escenario se denominan **muestras naturales.**  
 ```
 
-## Selección de muestras {-}
+## Trabajando como **Juez** {-}
 
-El contexto es el de  **dos muestras**. Es una práctica común en estudios
-estadísticos pues permite contrastar el efecto de un diseño o prueba. Ejemplos
-de esto se da en medir la tasa de captura en diseño de páginas *web*, la prueba
+Ahora nos enfocaremos en interpretar resultados estadísticos. Para esto 
+consideraremos el contexto de  **dos muestras**. Es una práctica común en el análisis
+estadístico pues permite contrastar el efecto de un diseño o prueba. Ejemplos
+de esto los vemos al medir la tasa de captura en diseño de páginas *web*, pruebas
 de una nueva medicina, o simple contraste entre dos poblaciones con
 características distintas.
+
+
 
 Una *respuesta* a una pregunta de interés
 viene acomapañada de una *medida de incertidumbre*, la cual se basa en una
@@ -245,21 +248,13 @@ Para entender y comunicar las conclusiones de un modelo hay que estar
 conscientes del mecanismo aleatorio que se utilizó, por ejemplo, en la selección
 de unidades muestrales, o del grupo al que pertenecen.
 
-### Ejemplos {-}
-
-#### Retroalimentacion y creatividad {-}
-
-#### Discriminación {-}
-
-## Muestras diseñadas y muestras naturales {-}
-
-Hay dos formas de inferencia. La **inferencia causal** y la **inferencia a
+Hay dos formas de hacer inferencia. La **inferencia causal** y la **inferencia a
 poblaciones**. Saber los mecanismos que generaron los datos nos permite saber
 qué tipo de inferencia es más adecuada para el estudio en cuestión.
 
 ### Inferencia Causal {-}
 
-En un **experimento aleatorizado** el investigador asume el control de
+En un **experimento aleatorizado** la investigadora asume el control de
 asignación de cada unidad experimental a los distintos grupos de estudio por
 medio de un mecanismo aleatorio, por ejemplo, una moneda. 
 
@@ -276,9 +271,9 @@ pero no por medio de estudios observacionales.
 
 El componente aleatorio asegura que las unidades observacionales con diferentes
 características se mezclen, y cualquier evidencia de dicha relación se muestra
-por medio del estudio. Aún asi, no hay certeza absoluta de la presencia de la
-relación causal. Dicha incertidumbre es la que usualement se pretende inculuir
-en el modelo a través de las técnicas estadísticas.
+en el estudio. Aún asi, no hay certeza absoluta de la presencia de la
+relación causal. Dicha incertidumbre es la que usualemente se pretende inculuir
+en el modelo a través de técnicas estadísticas.
 
 En un estudio observacional es imposible concluir una relación causal por medio
 de un análisis estadístico. La analista no puede asegurar la ausencia de algún
@@ -291,17 +286,26 @@ como al resultado del estudio mismo. La presencia de un factor de confusión no 
 relacionar de manera directa la consecuencia con la pertenencia al grupo. 
 ```
 
-### El valor de estudios observacionales {-}
+#### El valor de estudios observacionales {-}
 
 Incluso aunque no podamos establecer relaciones causa-efecto, los estudios observacionales 
 poseen valor en un estudio formal. Las ventajas se pueden resumir en: 
 
-1. El objetivo del estudio. 
+1. El objetivo del estudio. A veces establecer relaciones de causa-efecto no es el objetivo
 2. Establecer la relacion causa-efecto se puede hacer por medio de otras rutas. 
 3. Datos observacionales pueden sugerir nuevas direcciones de investigación a través de *evidencia*.
 
+### Inferencia de poblaciones {-}
+
+La situación es bastante clara. Inferir características de una poblacion **sólo** se puede realizar por 
+medio de muestreo aleatorio,  no de otra forma.  
+
+Seleccionar de manera aleatoria significa que cualquier conjunto de tamaño $N$ que escojamos tiene 
+la misma probabilidad de ser escogido que cualquier otro conjunto del mismo tamaño. 
 
 
-## Experimentos y datos observacionales {-}
+
+
+### Experimentos y datos observacionales {-}
 
 
