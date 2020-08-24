@@ -56,8 +56,10 @@ cuatro días consecutivos:
 library(tidyverse)
 library(patchwork)
 source("R/funciones_auxiliares.R")
+
 # usamos los datos tips del paquete reshape2
 tips <- reshape2::tips
+
 # renombramos variables y niveles
 propinas <- tips %>%
   rename(cuenta_total = total_bill,

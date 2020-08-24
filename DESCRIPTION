@@ -12,6 +12,7 @@ Imports:
     gridExtra, 
     here, 
     broom, 
+    nullabor
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
 BugReports: https://github.com/tereom/fundamentos/issues
