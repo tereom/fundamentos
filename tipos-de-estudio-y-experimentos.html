@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Sección 3 Tipos de estudio y experimentos | EST-46111: Fundamentos de Estadística con Remuestreo</title>
+  <meta name="description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Sección 3 Tipos de estudio y experimentos | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="github-repo" content="tereom/fundamentos" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Sección 3 Tipos de estudio y experimentos | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  
+  <meta name="twitter:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  
+
+<meta name="author" content="Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="análisis-exploratorio.html"/>
+<link rel="next" href="pruebas-de-hipótesis.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/toc.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Fundamentos de Estadística con Remuestreo</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Información del curso</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#temario"><i class="fa fa-check"></i>Temario</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluación"><i class="fa fa-check"></i>Evaluación</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html"><i class="fa fa-check"></i><b>1</b> Principios de visualización</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#el-cuarteto-de-ascombe"><i class="fa fa-check"></i>El cuarteto de Ascombe</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#visualización-popular-de-datos"><i class="fa fa-check"></i>Visualización popular de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#teoría-de-visualización-de-datos"><i class="fa fa-check"></i>Teoría de visualización de datos</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#principios-generales-del-diseño-analítico"><i class="fa fa-check"></i>Principios generales del diseño analítico</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#técnicas-de-visualización"><i class="fa fa-check"></i>Técnicas de visualización</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#indicadores-de-calidad-gráfica"><i class="fa fa-check"></i>Indicadores de calidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#factor-de-engaño-y-chartjunk"><i class="fa fa-check"></i>Factor de engaño y Chartjunk</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#pequeños-múltiplos-y-densidad-gráfica"><i class="fa fa-check"></i>Pequeños múltiplos y densidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#tinta-de-datos"><i class="fa fa-check"></i>Tinta de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#decoración"><i class="fa fa-check"></i>Decoración</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#percepción-de-escala"><i class="fa fa-check"></i>Percepción de escala</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#ejemplo-gráfica-de-minard"><i class="fa fa-check"></i>Ejemplo: gráfica de Minard</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html"><i class="fa fa-check"></i><b>2</b> Análisis exploratorio</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#el-papel-de-la-exploración-en-el-análisis-de-datos"><i class="fa fa-check"></i>El papel de la exploración en el análisis de datos</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#algunos-conceptos-básicos"><i class="fa fa-check"></i>Algunos conceptos básicos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#media-y-desviación-estándar"><i class="fa fa-check"></i>Media y desviación estándar</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ejemplos"><i class="fa fa-check"></i>Ejemplos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#precios-de-casas"><i class="fa fa-check"></i>Precios de casas</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#prueba-enlace"><i class="fa fa-check"></i>Prueba Enlace</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#estados-y-calificaciones-en-sat"><i class="fa fa-check"></i>Estados y calificaciones en SAT</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#tablas-de-conteos"><i class="fa fa-check"></i>Tablas de conteos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>Loess</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ajustando-curvas-loess"><i class="fa fa-check"></i>Ajustando curvas loess</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#series-de-tiempo"><i class="fa fa-check"></i>Series de tiempo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html"><i class="fa fa-check"></i><b>3</b> Tipos de estudio y experimentos</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#motivación"><i class="fa fa-check"></i>Motivación</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#proceso-generador-de-datos"><i class="fa fa-check"></i>Proceso Generador de Datos</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-prevalencia-de-anemia"><i class="fa fa-check"></i>Ejemplo: Prevalencia de anemia</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#muestreo-aleatorio"><i class="fa fa-check"></i>Muestreo aleatorio</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#pero-si-no-podemos-hacer-muestreo-aleatorio"><i class="fa fa-check"></i>Pero si no podemos hacer muestreo aleatorio?</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-policías-y-tráfico"><i class="fa fa-check"></i>Ejemplo: Policías y tráfico</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#el-estimador-estándar"><i class="fa fa-check"></i>El estimador estándar</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#experimentos-tradicionales"><i class="fa fa-check"></i>Experimentos tradicionales</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#bloqueo"><i class="fa fa-check"></i>Bloqueo</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#variables-desconocidas"><i class="fa fa-check"></i>Variables desconocidas</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#aleatorizando-el-tratamiento"><i class="fa fa-check"></i>Aleatorizando el tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#resumen-selección-de-unidades-y-tratamiento"><i class="fa fa-check"></i>Resumen: selección de unidades y tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#asignación-natural-del-tratamiento"><i class="fa fa-check"></i>Asignación natural del tratamiento</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html"><i class="fa fa-check"></i><b>4</b> Pruebas de hipótesis</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparación-con-poblaciones-de-referencia"><i class="fa fa-check"></i>Comparación con poblaciones de referencia</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparando-distribuciones"><i class="fa fa-check"></i>Comparando distribuciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#permutaciones-y-el-lineup"><i class="fa fa-check"></i>Permutaciones y el lineup</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparaciones-con-lineup-2"><i class="fa fa-check"></i>Comparaciones con lineup 2</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-2"><i class="fa fa-check"></i>Tomadores de té 2</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-2"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión 2</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ojo-otros-tipos-de-hipótesis-nulas"><i class="fa fa-check"></i>Ojo: otros tipos de hipótesis nulas</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#avispas-opcional"><i class="fa fa-check"></i>Avispas (opcional)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#la-crisis-de-replicabilidad"><i class="fa fa-check"></i>La “crisis de replicabilidad”</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#el-jardín-de-los-senderos-que-se-bifurcan"><i class="fa fa-check"></i>El jardín de los senderos que se bifurcan</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-decisiones-de-análisis-y-valores-p"><i class="fa fa-check"></i>Ejemplo: decisiones de análisis y valores p</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#alternativas-o-soluciones"><i class="fa fa-check"></i>Alternativas o soluciones</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>2. Loess</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">EST-46111: Fundamentos de Estadística con Remuestreo</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="tipos-de-estudio-y-experimentos" class="section level1">
+<h1><span class="header-section-number">Sección 3</span> Tipos de estudio y experimentos</h1>
+<div id="motivación" class="section level3 unnumbered">
+<h3>Motivación</h3>
+<div class="ejercicio">
+<p>
+<strong>Pregunta de entrevista de Google <span class="citation"><span class="citation">(Chihara and Hesterberg <a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span></span></strong><br />
+Imagina que eres consultor y te preguntan lo siguiente (ver siguiente figura):<br />
+Estoy haciendo una comparación de antes y después donde la hipótesis alternativa es pre.media.error &gt; post.media.error. La distribución de ambas muestras es sesgada a la derecha. ¿Qué prueba me recomiendas para ésta situación?
+</p>
+</div>
+<div class="figure"><span id="fig:grafica-pcr"></span>
+<img src="03-tipos-de-estudio_files/figure-html/grafica-pcr-1.png" alt="Error CPR, gráfica de densidad." width="403.2" />
+<p class="caption">
+Figure 3.1: Error CPR, gráfica de densidad.
+</p>
+</div>
+<p>La siguiente imagen <a href="https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/">Roger Peng</a>
+representa una situación común a la que se enfrenta el analista de datos, y se
+desarrolló en el contexto de preguntas vagas. En el esquema hay tres caminos:
+uno es uno ideal que pocas veces sucede,
+otro produce respuestas poco útiles pero es fácil, y otro es tortuoso pero que
+caracteriza el mejor trabajo de análisis de datos:</p>
+<div class="figure"><span id="fig:unnamed-chunk-2"></span>
+<img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-2-1.png" alt="Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)" width="672" />
+<p class="caption">
+Figure 3.2: Adaptado de R. Peng: <a href="https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/">Tukey, design thinking and better questions.</a>
+</p>
+</div>
+<p>Ejemplos: Alguien nos pregunta cuáles son las tiendas que mas venden de una
+cadena. Podríamos consultar bases de datos, hacer extracciones, definir
+periodos, etc. y dar una respuesta que probablemente es poco útil. Nos damos
+cuenta, por ejemplo, porque la
+peor tienda es una que abrió hace relativamente poco, y la mejor es una de las tiendas
+más grandes que está en una zona de tráfico de alto costo. Una pregunta más interesante
+es, ¿qué equipos de ventas tienen mejor desempeño? ¿Cuánto aporta tener una cafetería dentro
+de la tienda en términos de ventas?, etc.</p>
+</div>
+<div id="proceso-generador-de-datos" class="section level3 unnumbered">
+<h3>Proceso Generador de Datos</h3>
+<p>Entre las preguntas que se debe hacer el analista de datos una fundamental es
+en entender el <strong>proceso que generador de datos</strong>, pues esto determinará que
+otras preguntas son relevantes, tanto en términos prácticos como estadísticos.</p>
+<ul>
+<li><p>La <strong>inferencia estadística</strong> busca hacer afirmaciones, cuantificadas de
+manera probabilista, acerca de datos que no tenemos, usando regularidades y
+conocimiento de datos que sí tenemos disponibles y métodos cuantitativos.</p></li>
+<li><p>Para hacer afirmaciones inferenciales <strong>eficientes y bien calibradas</strong> (con
+garantías estadísticas de calibración) a preguntas donde queremos generalizar de
+muestra a población, se requiere conocer con precisión el proceso que genera los
+datos muestrales.</p></li>
+<li><p>Esto incluye saber con detalle cómo se seleccionaron los datos a partir de
+los que se quiere hacer inferencia.</p></li>
+</ul>
+<p>En este caso, eficiente quiere decir que aprovechamos toda la información que
+está en los datos observados de manera que nuestros rangos de incertidumbre son
+lo más chico posibles (además de estar correctamente calibrados).</p>
+<p>Por su parte, probabilísticamente bien calibrados se refiere a que, lo que
+decimos que puede ocurrir con 10% de probabilidad ocurre efectivamente 1 de cada
+10 veces, si decimos 20% entonces ocurre 2 de 20, etc.</p>
+<p>Veremos que para muestras dadas naturalmente, a veces es muy difiícil entender a
+fondo el proceso generación de la muestra.</p>
+</div>
+<div id="ejemplo-prevalencia-de-anemia" class="section level3 unnumbered">
+<h3>Ejemplo: Prevalencia de anemia</h3>
+<p>Supongamos que nos interesa conocer el porcentaje de menores en edad escolar,
+(entre 6 y 15 años), con
+anemia en México. La fuente de datos disponible corresponde a registros de
+del IMSS de hospitalizaciones de menores, ya sea por anemia o
+que por otra causa (infecciones gastrointestinales, apendicitis, tratamiento de
+leucemia, …), se registró
+si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="tipos-de-estudio-y-experimentos.html#cb52-1"></a><span class="kw">head</span>(paciente)</span></code></pre></div>
+<pre><code>## [90m# A tibble: 6 x 4[39m
+##    edad padecimiento         sexo   anemia
+##   [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;chr&gt;[39m[23m                [3m[90m&lt;chr&gt;[39m[23m   [3m[90m&lt;int&gt;[39m[23m
+## [90m1[39m     8 picadura alacrán     mujer       0
+## [90m2[39m    10 infección intestinal hombre      1
+## [90m3[39m     7 mordedura de perro   hombre      1
+## [90m4[39m     8 asma                 hombre      1
+## [90m5[39m    13 infección intestinal mujer       0
+## [90m6[39m     7 picadura alacrán     hombre      0</code></pre>
+<ul>
+<li>¿Qué nos dice esta cantidad acerca de la anemia en la población?<br />
+</li>
+<li>¿Podemos hacer inferencia estadística?<br />
+</li>
+<li>¿Cómo calculamos intervalos de confianza?</li>
+</ul>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tipos-de-estudio-y-experimentos.html#cb54-1"></a><span class="co"># Si calculo el error estándar de la p estimada como sigue, es correcto?</span></span>
+<span id="cb54-2"><a href="tipos-de-estudio-y-experimentos.html#cb54-2"></a>p &lt;-<span class="st"> </span><span class="kw">mean</span>(paciente<span class="op">$</span>anemia)</span>
+<span id="cb54-3"><a href="tipos-de-estudio-y-experimentos.html#cb54-3"></a><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span><span class="dv">5000</span>)</span></code></pre></div>
+<pre><code>## [1] 0.007060751</code></pre>
+</div>
+<div id="muestreo-aleatorio" class="section level2 unnumbered">
+<h2>Muestreo aleatorio</h2>
+<p>En la situación ideal diseñaríamos una muestra aleatoria de menores de edad,
+por ejemplo, utilizando el registro en educación primaria de la SEP, y
+mediríamos la prevalencia de anemia en la muestra, usaríamos esta muestra para
+estimar la prevalencia en la población y tendríamos además las herramientas
+para medir la incertidumbre de nuestra estimación (reportar intervalos,
+o errores estándar).</p>
+</div>
+<div id="pero-si-no-podemos-hacer-muestreo-aleatorio" class="section level2 unnumbered">
+<h2>Pero si no podemos hacer muestreo aleatorio?</h2>
+<p>En el caso de prevalencia de anemia, discutiendo con médicos e investigadores
+nos informan que la anemia se presenta en tasas más altas en niños más chicos.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="tipos-de-estudio-y-experimentos.html#cb56-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-2"><a href="tipos-de-estudio-y-experimentos.html#cb56-2"></a><span class="st">  </span><span class="kw">count</span>(edad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb56-3"><a href="tipos-de-estudio-y-experimentos.html#cb56-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span></code></pre></div>
+<pre><code>## [90m# A tibble: 10 x 3[39m
+##     edad     n  prop
+##    [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m
+## [90m 1[39m     6  [4m1[24m001    20
+## [90m 2[39m     7   931    19
+## [90m 3[39m     8   980    20
+## [90m 4[39m     9   445     9
+## [90m 5[39m    10   484    10
+## [90m 6[39m    11   489    10
+## [90m 7[39m    12   246     5
+## [90m 8[39m    13   239     5
+## [90m 9[39m    14    90     2
+## [90m10[39m    15    95     2</code></pre>
+<p>Y consultando con las proyecciones de población notamos que los niños chicos
+están sobrerepresentados en la muestra. Lo que nos hace considerar que debemos
+buscar una manera de ponderar nuestras observaciones para que reflejen a la
+población.</p>
+<p>Más aún, investigamos que algunas enfermedades están asociadas a mayor
+prevalencia de anemia:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="tipos-de-estudio-y-experimentos.html#cb58-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-2"><a href="tipos-de-estudio-y-experimentos.html#cb58-2"></a><span class="st">  </span><span class="kw">count</span>(padecimiento) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-3"><a href="tipos-de-estudio-y-experimentos.html#cb58-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span></code></pre></div>
+<pre><code>## [90m# A tibble: 7 x 2[39m
+##   padecimiento               n
+##   [3m[90m&lt;chr&gt;[39m[23m                  [3m[90m&lt;int&gt;[39m[23m
+## [90m1[39m infección respiratoria   745
+## [90m2[39m mordedura de perro       723
+## [90m3[39m úlcera                   723
+## [90m4[39m asma                     713
+## [90m5[39m apendcitis               704
+## [90m6[39m picadura alacrán         701
+## [90m7[39m infección intestinal     691</code></pre>
+<p>Utilizamos esta información para modelar y <em>corregir</em> nuestra estimación
+original. Por ejemplo con modelos de regresión. Sin embargo,
+debemos preguntarnos:</p>
+<ul>
+<li>¿Hay más variables qué nos falta considerar?<br />
+</li>
+<li>Nuestras estimaciones están bien calibradas?</li>
+</ul>
+<div id="ejemplo-policías-y-tráfico" class="section level3 unnumbered">
+<h3>Ejemplo: Policías y tráfico</h3>
+<p>Supongamos que nos preguntan en cuánto reduce un policía el tráfico en
+un crucero grande de la ciudad. La cultura popular
+ha establecido que los policías en cruceros hacen más tráfico porque
+no saben mover los semáforos.</p>
+<p>Nosotros decidimos buscar unos datos para entender esto. Escogemos
+entonces un grupo de cruceros problemáticos, registramos el tráfico
+cuando visitamos, y si había un policía o no.</p>
+<p>Después de este esfuerzo, obtenemos los siguientes datos:</p>
+<pre><code>## [90m# A tibble: 10 x 2[39m
+## [90m# Groups:   policia [2][39m
+##    policia tiempo_espera_min
+##      [3m[90m&lt;int&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m
+## [90m 1[39m       0              2.27
+## [90m 2[39m       0              2.65
+## [90m 3[39m       0              3.4 
+## [90m 4[39m       0              0.39
+## [90m 5[39m       0              1.1 
+## [90m 6[39m       1             10.8 
+## [90m 7[39m       1              4.67
+## [90m 8[39m       1              7.77
+## [90m 9[39m       1              6.3 
+## [90m10[39m       1              6.99</code></pre>
+<p>Lo que sabemos ahora es que la presencia de un policía es indicador
+de tráfico alto. El análisis prosiguiría calculando medias y medidas de error
+(escogimos una muestra aleatoria):</p>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<p><img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Si somos ingenuos, entonces podríamos concluir que los policías efectivamente
+empeoran la situación cuando manipulan los semáforos, y confirmaríamos la
+sabiduría popular.</p>
+<p>Para juzgar este argumento desde el punto de vista causal, nos preguntamos primero:</p>
+<ul>
+<li>¿Cuáles son los contrafactuales (los contrafactuales explican que pasaría si hubiéramos
+hecho otra cosa que la que efectivamente hicimos) de las observaciones?</li>
+</ul>
+</div>
+</div>
+<div id="el-estimador-estándar" class="section level2 unnumbered">
+<h2>El estimador estándar</h2>
+<p>A la comparación anterior - la diferencia de medias de tratados y no tratados - le llamamos usualmente el <em>estimador estándar</em> del efecto causal. Muchas veces este es un estimador malo del efecto causal.</p>
+<p>En nuestro ejemplo, para llegar a la conclusión errónea que confirma la sabiduría popular, hicimos un supuesto importante:</p>
+<ul>
+<li>En nuestra muestra, los casos con policía actúan como contrafactuales de los casos sin policía.</li>
+<li>Asi que asumimos que los casos con policía y sin policía son similares, excepto por la existencia o no de policía.</li>
+</ul>
+<p>En nuestro ejemplo, quizá un analista más astuto nota que tienen
+categorías históricas de qué tan complicado es cada crucero. Junta a sus datos, y obtiene:</p>
+<pre><code>## [90m# A tibble: 10 x 3[39m
+## [90m# Groups:   policia [2][39m
+##    policia tiempo_espera_min categoria 
+##      [3m[90m&lt;int&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;fct&gt;[39m[23m     
+## [90m 1[39m       0              2.27 Fluido    
+## [90m 2[39m       0              2.65 Fluido    
+## [90m 3[39m       0              3.4  Típico    
+## [90m 4[39m       0              0.39 Fluido    
+## [90m 5[39m       0              1.1  Fluido    
+## [90m 6[39m       1             10.8  Complicado
+## [90m 7[39m       1              4.67 Típico    
+## [90m 8[39m       1              7.77 Complicado
+## [90m 9[39m       1              6.3  Complicado
+## [90m10[39m       1              6.99 Típico</code></pre>
+<p>El analista argumenta entonces qu los policías se enviaron principalmente a cruceros que
+se consideran <em>Complicados</em> según datos históricos. Esto resta credibilidad a la
+comparación que hicimos inicialmente:</p>
+<ul>
+<li>La comparación del estimador estándar no es de peras con peras: estamos comparando qué efecto tienen los
+policías en cruceros difíciles con cruceros no difíciles donde no hay policía.</li>
+<li>La razón de esto es que el proceso generador de los datos incluye el hecho de que no
+se envían policías a lugares donde no hay tráfico.</li>
+<li>¿Cómo producir contrafactuales hacer la comparación correcta?</li>
+</ul>
+</div>
+<div id="experimentos-tradicionales" class="section level2 unnumbered">
+<h2>Experimentos tradicionales</h2>
+<p>Idealmente, quisiéramos observar un mismo crucero en las dos condiciones: con y sin policías. Esto no es posible.</p>
+<p>En un experimento “tradicional”, como nos lo explicaron en la escuela, nos
+aproximamos a esto preparando dos condiciones idénticas, y luego alteramos cada una de ellas
+con nuestra intervención. Si el experimento está bien hecho, esto nos da observaciones
+en pares, y cada quien tiene su contrafactual.</p>
+<p>La idea del experimiento tradicional es <em>controlar</em> todos los factores
+que intervienen en los resultados, y sólo mover el tratamiento para producir
+los contrafactuales. Más en general, esta estrategia consiste en hacer
+<em>bloques</em> de condiciones, donde las condiciones son prácticamente idénticas dentro e cada bloque. Comparamos entonces unidades tratadas y no tratadas
+dentro de cada bloque.</p>
+<p>Por ejemplo, si queremos saber si el tiempo de caída libre es diferente para un objeto
+más pesado que otro, prepararíamos dos pesos con el mismo tamaño pero de peso distinto. Soltaríamos los dos al mismo tiempo y compararíamos el tiempo de caída de cada uno.</p>
+<p>En nuestro caso, como es usual en problemas de negocio o sociales, hacer esto es considerablemente más difícil. No podemos “preparar” cruceros con condiciones idénticas. Sin embargo, podríamos intentar bloquear los cruceros
+según información que tenemos acerca de ellos, para hacer más comparaciones e peras con peras.</p>
+</div>
+<div id="bloqueo" class="section level2 unnumbered">
+<h2>Bloqueo</h2>
+<p>Podemos acercanos en lo posible a este ideal de experimentación usando
+información existente.</p>
+<p>En lugar de hacer comparaciones directas entre unidades que recibieron
+el tratamiento y las que no (que pueden ser diferentes en otros
+aspectos, como vimos arriba),
+podemos refinar nuestras comparaciones <em>bloquéandolas</em> con variables
+conocidas.</p>
+<p>En el ejemplo de los policías, podemos hacer lo siguiente: dentro de
+<em>cada categoría de cruceros</em> (fluido, típico o complicado), tomaremos una muestra de cruceros, algunos con
+policía y otros sin. Haremos comparaciones dentro de cada categoría.</p>
+<p>Obtenemos un muestra con estas características (6 casos en cada categoría
+de crucero, 3 con policía y 3 sin policía):</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">categoria</th>
+<th align="right">policia</th>
+<th align="right">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Fluido</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Fluido</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Típico</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Típico</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">Complicado</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Complicado</td>
+<td align="right">1</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+<p>Y ahora hacemos comparaciones dentro de cada bloque creado por categoría:</p>
+<pre><code>## [90m# A tibble: 3 x 3[39m
+## [90m# Groups:   categoria [3][39m
+##   categoria  `policia =0` `policia =1`
+##   [3m[90m&lt;fct&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m        [3m[90m&lt;dbl&gt;[39m[23m
+## [90m1[39m Fluido              2.1          0.8
+## [90m2[39m Típico              5.6          4.2
+## [90m3[39m Complicado         10.4          8.6</code></pre>
+<p>Y empezamos a ver otra imagen en estos datos: comparando tipos
+e cruceros similares, los que tienen policía tienen tiempos de
+espera ligeramente más cortos.</p>
+<p>¿Hemos termniado? ¿Podemos concluir que el efecto de un policía
+es beneficiosos pero considerablemente chico? ¿Qué problemas
+puede haber con este análisis?</p>
+</div>
+<div id="variables-desconocidas" class="section level2 unnumbered">
+<h2>Variables desconocidas</h2>
+<p>El problema con el análisis anterior es que controlamos por una
+variable que conocemos, pero muchas otras variables pueden estar
+ligadas con el proceso de selección de cruceros para enviar policías.</p>
+<ul>
+<li>Por ejemplo, envían o policías a cruceros <em>Típicos</em> solo cuando
+reportan mucho tráfico.</li>
+<li>No envían a un polícia a un crucero <em>Complicado</em> si no presenta demasiado
+tráfico.</li>
+<li>Existen otras variables desconocidas que los tomadores de decisiones
+usan para enviar a los policías.</li>
+</ul>
+<p>En este caso, por ejemplo, los expertos hipotéticos
+nos señalan que hay algunos
+cruceros que aunque problemáticos a veces, su tráfico se resuelve
+rápidamente, mientras que otros tienen tráfico más persistente, y
+prefieren enviar policías a los de tráfico persistente. La lista
+de cruceros persistentes están en una hoja de excel que se comparte
+de manera informal.</p>
+<p>En resumen, no tenemos conocimiento detallado del <strong>proceso generador
+de datos</strong> en cuanto a cómo se asignan los policías a los cruceros.</p>
+<p>Igual que en la sección anterior, podemos cortar esta complejidad
+usando <strong>aleatorización</strong>.</p>
+<p>Nótese que los expertos no están haciendo nada malo: en su trabajo
+están haciendo el mejor uso de los recursos que tienen. El problema
+es que por esa misma razón no podemos saber el resultado de sus esfuerzos,
+y si hay maneras de optimizar la asignación que hacen actualmente.</p>
+</div>
+<div id="aleatorizando-el-tratamiento" class="section level2 unnumbered">
+<h2>Aleatorizando el tratamiento</h2>
+<p>Tomamos la decisión entonces de hacer un experimento que incluya
+aletorización.</p>
+<p>En un dia
+particular, escogeremos algunos cruceros.
+Dicidimos usar solamente cruceros de la categoría <em>Complicada</em> y
+<em>Típica</em>, pues
+esos son los más interesantes para hacer intervenciones.</p>
+<p>Usaremos un poco de código para entener el detalle: en estos datos,
+tenemos para cada caso los dos posibles resultados ipotéticos
+<span class="math inline">\(y_0\)</span> y <span class="math inline">\(y_1\)</span> (con
+policia y sin policia). En el experimento asignamos el
+tratamiento al azar:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="tipos-de-estudio-y-experimentos.html#cb64-1"></a>muestra_exp &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb64-2"><a href="tipos-de-estudio-y-experimentos.html#cb64-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb64-3"><a href="tipos-de-estudio-y-experimentos.html#cb64-3"></a><span class="st">  </span><span class="co"># asignar tratamiento al azar, esta es nuestra intervención:</span></span>
+<span id="cb64-4"><a href="tipos-de-estudio-y-experimentos.html#cb64-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tratamiento_policia =</span> <span class="kw">rbernoulli</span>(<span class="kw">length</span>(y_<span class="dv">0</span>), <span class="fl">0.5</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb64-5"><a href="tipos-de-estudio-y-experimentos.html#cb64-5"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
+<span id="cb64-6"><a href="tipos-de-estudio-y-experimentos.html#cb64-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_exp =</span> <span class="kw">ifelse</span>(tratamiento_policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
+<p>Nótese la diferencia si tomamos la asignación natural del tratamiento (policía o no):</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="tipos-de-estudio-y-experimentos.html#cb65-1"></a><span class="kw">set.seed</span>(<span class="dv">134</span>)</span>
+<span id="cb65-2"><a href="tipos-de-estudio-y-experimentos.html#cb65-2"></a>muestra_natural &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb65-3"><a href="tipos-de-estudio-y-experimentos.html#cb65-3"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb65-4"><a href="tipos-de-estudio-y-experimentos.html#cb65-4"></a><span class="st">  </span><span class="co"># usamos el tratamiento que se asignó</span></span>
+<span id="cb65-5"><a href="tipos-de-estudio-y-experimentos.html#cb65-5"></a><span class="st">  </span><span class="co"># policia indica si hubo o no policía en ese crucero</span></span>
+<span id="cb65-6"><a href="tipos-de-estudio-y-experimentos.html#cb65-6"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
+<span id="cb65-7"><a href="tipos-de-estudio-y-experimentos.html#cb65-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_obs =</span> <span class="kw">ifelse</span>(policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
+<p>Resumimos nuestros resultados del experimento son:</p>
+<pre><code>## `summarise()` regrouping output by &#39;categoria&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## [90m# A tibble: 2 x 3[39m
+## [90m# Groups:   categoria [2][39m
+##   categoria  `policia=0` `policia=1`
+##   [3m[90m&lt;fct&gt;[39m[23m            [3m[90m&lt;dbl&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m
+## [90m1[39m Típico            6.24        4.97
+## [90m2[39m Complicado       15.8         8.47</code></pre>
+<p>Sin embargo, la muestra natural da:</p>
+<pre><code>## `summarise()` regrouping output by &#39;categoria&#39; (override with `.groups` argument)</code></pre>
+<pre><code>## [90m# A tibble: 2 x 3[39m
+## [90m# Groups:   categoria [2][39m
+##   categoria  `policia=0` `policia=1`
+##   [3m[90m&lt;fct&gt;[39m[23m            [3m[90m&lt;dbl&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m
+## [90m1[39m Típico            5.49        4.35
+## [90m2[39m Complicado       10.8         8.93</code></pre>
+<p><strong>¿Cuál de los dos análisis da la respuesta correcta a la pregunta:
+ayudan o no los policías a reducir el tráfico en los cruceros
+problemáticos?</strong> El experimento establece que un policía en promedio
+reduce a la mitad el tiempo de espera en un crucero complicado</p>
+</div>
+<div id="resumen-selección-de-unidades-y-tratamiento" class="section level2 unnumbered">
+<h2>Resumen: selección de unidades y tratamiento</h2>
+<p>Vimos dos tipos de inferencia que requieren distintos diseños de estudio,
+en particual debemos considerar el mecanismo de aleatorización para
+entender las inferencias que podemos hacer: casual o a poblaciones.</p>
+<p>El punto crucial para entender las medidas de incertidumbre estadística es
+visualizar de manera hipotética, replicaciones del estudio y las condiciones
+que llevaron a la selección de la muestra. Esto es, entender el proceso
+generador de datos e imaginar replicarlo.</p>
+<div class="figure">
+<img src="images/03_inferencia-muestra.png" alt="" />
+<p class="caption">Inferencia estadística de acuerdo al tipo del diseño <span class="citation">(<span class="citeproc-not-found" data-reference-id="ramsey"><strong>???</strong></span>)</span></p>
+</div>
+<ul>
+<li><p>El cuadro arriba a la izquierda es donde el análisis es más simple y los
+resultados son más fáciles de interpretar.</p></li>
+<li><p>Es posible hacer análisis fuera de este cuadro, pero el proceso es más
+complicado, requieren más supuestos, conocimiento del dominio y habilidades
+de análisis. En general resultan conclusiones menos sólidas. Muchas veces no
+nos queda otra más que trabajar fuera del cuadro ideal.</p></li>
+</ul>
+<div class="ejercicio">
+<p>
+Ubica los siguientes tipos de análisis:
+</p>
+<ul>
+<li>
+Pruebas clínicas para medicinas
+</li>
+<li>
+Analizar cómo afecta tener seguro médico a los ingresos, usando datos del ENIGH.
+</li>
+<li>
+Estimación de retorno sobre inversión en modelos de marketing mix.
+</li>
+</ul>
+</div>
+</div>
+<div id="asignación-natural-del-tratamiento" class="section level2 unnumbered">
+<h2>Asignación natural del tratamiento</h2>
+<ul>
+<li><p>Cuando consideramos un sistema donde se “asignan” tratamientos,
+generalmente los tratamientos se asignan bajo un criterio de
+optimización o conveniencia.</p></li>
+<li><p>La cara buena de este hecho es que de alguna forma los resultados
+están intentando optimizarse, y la gente está haciendo su trabajo.</p></li>
+<li><p>La cara mala de este hecho es que no podemos evaluar de manera simple la
+efectividad de los tratamientos. Y esto hace difícil <strong>optimizar</strong> de forma
+cuantificable los procesos, o <strong>entender</strong> qué funciona y qué no.</p></li>
+</ul>
+
+</div>
+</div>
+<h3>Referencias</h3>
+<div id="refs" class="references">
+<div id="ref-Chihara">
+<p>Chihara, Laura M., and Tim C. Hesterberg. 2018. <em>Mathematical Statistics with Resampling and R</em>. 2nd ed. Hoboken, NJ: John Wiley &amp; Sons. <a href="https://sites.google.com/site/chiharahesterberg/home">https://sites.google.com/site/chiharahesterberg/home</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="análisis-exploratorio.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="pruebas-de-hipótesis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/tereom/fundamentos/edit/master/03-tipos-de-estudio.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["fundamentos-estadistica.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

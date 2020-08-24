@@ -52,8 +52,10 @@ cuatro días consecutivos:
 library(tidyverse)
 library(patchwork)
 source("R/funciones_auxiliares.R")
+
 # usamos los datos tips del paquete reshape2
 tips <- reshape2::tips
+
 # renombramos variables y niveles
 propinas <- tips %>%
   rename(cuenta_total = total_bill,
@@ -87,16 +89,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        23.33|    5.65|Si      |Dom |Cena    |            2|
-|        26.41|    1.50|No      |Sab |Cena    |            2|
-|         9.68|    1.32|No      |Dom |Cena    |            2|
-|        25.29|    4.71|No      |Dom |Cena    |            4|
-|        22.75|    3.25|No      |Vie |Cena    |            2|
-|        17.07|    3.00|No      |Sab |Cena    |            3|
-|        25.28|    5.00|Si      |Sab |Cena    |            2|
-|        12.69|    2.00|No      |Sab |Cena    |            2|
-|         9.60|    4.00|Si      |Dom |Cena    |            2|
-|        11.35|    2.50|Si      |Vie |Cena    |            2|
+|        17.82|    1.75|No      |Sab |Cena    |            2|
+|        30.06|    2.00|Si      |Sab |Cena    |            3|
+|        29.85|    5.14|No      |Dom |Cena    |            5|
+|        17.92|    3.08|Si      |Sab |Cena    |            2|
+|        16.29|    3.71|No      |Dom |Cena    |            3|
+|        28.44|    2.56|Si      |Jue |Comida  |            2|
+|        12.90|    1.10|Si      |Sab |Cena    |            2|
+|        19.77|    2.00|No      |Dom |Cena    |            4|
+|        18.78|    3.00|No      |Jue |Cena    |            2|
+|        10.51|    1.25|No      |Sab |Cena    |            2|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
