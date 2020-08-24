@@ -304,8 +304,6 @@ Seleccionar de manera aleatoria significa que cualquier conjunto de tamaño $N$ 
 la misma probabilidad de ser escogido que cualquier otro conjunto del mismo tamaño. 
 
 
-
-
-### Experimentos y datos observacionales {-}
+<!-- ### Experimentos y datos observacionales {-} -->
 
 
