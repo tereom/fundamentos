@@ -8,23 +8,23 @@ comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
 
-<!-- ```{block, type='ejercicio'}
-  **Pregunta de entrevista de Google [@Chihara]**  
-  Imagina que eres consultor y te preguntan lo siguiente (ver siguiente figura):  
-  Estoy haciendo una comparación de antes y después donde la hipótesis alternativa
-  es pre.media.error > post.media.error. La distribución de ambas muestras es
-  sesgada a la derecha. ¿Qué prueba me recomiendas para ésta situación?
-```
+<!-- ```{block, type='ejercicio'} -->
+<!--   **Pregunta de entrevista de Google [@Chihara]**   -->
+<!--   Imagina que eres consultor y te preguntan lo siguiente (ver siguiente figura):   -->
+<!--   Estoy haciendo una comparación de antes y después donde la hipótesis alternativa -->
+<!--   es pre.media.error > post.media.error. La distribución de ambas muestras es -->
+<!--   sesgada a la derecha. ¿Qué prueba me recomiendas para ésta situación? -->
+<!-- ``` -->
 
-```{r grafica-pcr, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Error CPR, gráfica de densidad.", fig.height = 3.2, fig.width = 4.2}
-library(tidyverse)
-theme_set(theme_minimal())
-pre <- tibble(group = "Pre", y = rgamma(10000, 2, 0.8)-0.2)
-post <- tibble(group = "Post", y = rgamma(10000, 1.7, 0.8)-0.2)
-ggplot(bind_rows(pre, post), aes(x = y, color = group)) +
-  geom_density() +
-  xlab("CPR error") + labs(color = "")
-``` -->
+<!-- ```{r grafica-pcr, echo=FALSE, warning=FALSE, message=FALSE, fig.cap = "Error CPR, gráfica de densidad.", fig.height = 3.2, fig.width = 4.2} -->
+<!-- library(tidyverse) -->
+<!-- theme_set(theme_minimal()) -->
+<!-- pre <- tibble(group = "Pre", y = rgamma(10000, 2, 0.8)-0.2) -->
+<!-- post <- tibble(group = "Post", y = rgamma(10000, 1.7, 0.8)-0.2) -->
+<!-- ggplot(bind_rows(pre, post), aes(x = y, color = group)) + -->
+<!--   geom_density() + -->
+<!--   xlab("CPR error") + labs(color = "") -->
+<!-- ``` -->
 
 
 La siguiente imagen de [Roger Peng](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)
