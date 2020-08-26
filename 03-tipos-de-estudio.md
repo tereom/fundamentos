@@ -40,7 +40,7 @@ de la tienda en términos de ventas?, etc.
 ### Proceso Generador de Datos {-}
 
 Entre las preguntas que se debe hacer el analista de datos una fundamental es
-en entender el **proceso que generador de datos**, pues esto determinará que 
+entender el **proceso generador de datos**, pues esto determinará que 
 otras preguntas son relevantes, tanto en términos prácticos como estadísticos.
 
 * La **inferencia estadística** busca hacer afirmaciones, cuantificadas de 
@@ -392,7 +392,7 @@ _Típica_, pues
 esos son los más interesantes para hacer intervenciones. 
 
 Usaremos un poco de código para entener el detalle: en estos datos,
-tenemos para cada caso los dos posibles resultados ipotéticos 
+tenemos para cada caso los dos posibles resultados hipotéticos 
 $y_0$ y $y_1$ (con
 policia y sin policia). En el experimento asignamos el 
 tratamiento al azar:
