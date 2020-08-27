@@ -34,7 +34,8 @@ grupo de control, que no recibía suplementos alimenticios. Se registraron peso 
 talla antes y después del experimento. El estudio descubrió que los niños que
 recibieron la leche ganaron más en peso en el lapso del estudio. Una 
 investigación posterior descubrió que los niños del grupo control eran de mayor 
-peso y talla que los del grupo control. ¿Qué pudo haber ocurrido? ¿Podemos 
+peso y talla que los del grupo control, antes de iniciar el tratamiento. 
+¿Qué pudo haber ocurrido? ¿Podemos 
 utilizar los resultados del estudio para inferir causalidad?
 
 1. Supongamos que de los registros de un conjunto de doctores se slecciona una 
