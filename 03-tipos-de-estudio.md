@@ -469,8 +469,7 @@ visualizar de manera hipotética, replicaciones del estudio y las condiciones
 que llevaron a la selección de la muestra. Esto es, entender el proceso 
 generador de datos e imaginar replicarlo.
 
-![Inferencia estadística de acuerdo al tipo del diseño [@ramsey]](images/03_inferencia-muestra.png)
-
+![Inferencia estadística de acuerdo al tipo del diseño [@ramsey].](images/03_inferencia-muestra.png)
 
 * El cuadro arriba a la izquierda es donde el análisis es más simple y los 
 resultados son más fáciles de interpretar.
