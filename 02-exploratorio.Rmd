@@ -871,6 +871,7 @@ marcar <- marcar_tabla_fun(25, "red", "black")
 tab_out <- tabla_perfil %>%
   arrange(desc(bolsas)) %>%
   select(-pct, everything()) %>%
+  mutate(across(where(is.numeric), round, 2)) %>% 
   mutate_if(if_profile, marcar) %>%
   knitr::kable(format_table_salida(), escape = FALSE, digits = 0, booktabs = T) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"),

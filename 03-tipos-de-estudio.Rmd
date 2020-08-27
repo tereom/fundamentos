@@ -1,0 +1,776 @@
+# Tipos de estudio y experimentos
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+source("R/funciones_auxiliares.R")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
+La siguiente imagen de [Roger Peng](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/) 
+representa una situación común a la que se enfrenta el analista de datos, y se
+desarrolló en el contexto de preguntas vagas. En el esquema hay tres caminos: 
+  uno es ideal que pocas veces sucede,
+otro produce respuestas poco útiles pero es fácil, y otro es tortuoso pero que 
+caracteriza el mejor trabajo de análisis de datos:
+  
+  
+```{r, echo = FALSE, message = FALSE, fig.cap = "Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)", warning=FALSE}
+library(tidyverse)
+theme_set(theme_minimal())
+puntos <- tibble(x = c(0.5, 1.2, 4, 4), y = c(0.5, 4, 0.5, 5),
+                 etiqueta = c("dónde\ncomenzamos\nrealmente", "Análisis de datos \n poco útil, de bajo impacto", 
+                              "dónde creeemos\nque comenzamos", "Nuestra \n Meta "))
+set.seed(211)
+browniano <- tibble(x = 0.5 +  cumsum(c(0,rnorm(50, 0.03, 0.1))) ,
+                    y = 0.5 +  cumsum(c(0, rnorm(50, 0.02, 0.2))))
+puntos <- bind_rows(puntos, tail(browniano, 1) %>% mutate(etiqueta = "Terminamos?!?"))
+flechas <- tibble(x = c(0.5, 4), y = c(0.5, 0.5), xend = c(1.2, 4), yend = c(4, 5))
+
+ggplot(puntos, aes(x = x, y = y)) + 
+  xlab("Calidad de la regunta") +
+  ylab("Peso de la evidencia") +
+  theme(axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  geom_segment(data = flechas, aes(xend=xend, yend=yend),
+               arrow = arrow(length = unit(0.3, "inches"))) +
+  geom_path(data = browniano) +
+  geom_point(data = browniano) +
+  geom_point(colour="red", size = 5) +
+  geom_text(aes(label = etiqueta), vjust = -0.5, hjust = 1.1, size = 4.2) +
+  #labs(caption = "Adaptado de R. Peng: Tukey, design thinking and better questions.") +
+  xlim(c(-0.1 , 4)) + ylim(c(0,6))
+
+```
+
+
+## De datos y poblaciones {-}
+
+Los datos no son el fin último de un estudio. Son el mecanismo que podemos utilizar para poder contestar
+preguntas acerca de la población que no vemos. Pensemos en la encuesta realizada en el Reino Unido 
+sobre parejas sexuales del sexo opuesto 
+que una persona en el rango de edad de 35-44 años declara tener. Este estudio está tomado de @spiegelhalter2019art. 
+Los datos están reportados en la encuesta Natsal-3 que puede encontrarse en [C.H. Mercer et al., ‘Changes in Sexual Attitudes and Lifestyles in Britain through the Life Course and Over Time: Findings from the National Surveys of Sexual Attitudes and Lifestyles (Natsal)’, 2013](https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(13)62035-8/fulltext).
+
+Estos datos corresponden a un total de 796 hombres y 1,193 mujeres encuestadas, y están ponderados por el diseño 
+estratificado de la encuesta.
+
+```{r, echo  = FALSE}
+library(ggplot2)
+nastal <-read.csv("data/nastal.csv", header=TRUE)
+nastal <- nastal %>%
+  rename(NumParejas = NumPartners, ConteoH = MenCount, ConteoM = WomenCount)
+sample_n(nastal, 10)
+```
+
+Como en los ejemplos anteriores, podemos calcular un resumen rápido para hombres:
+
+```{r, echo  = FALSE}
+nastal %>% 
+  summarise(Datos = rep(NumParejas,ConteoH)) %>%
+  pull(Datos) %>% 
+  summary()
+```
+
+así como un resumen rápido para las mujeres encuestadas:
+
+```{r, echo  = FALSE}
+nastal %>% 
+  summarise(Datos = rep(NumParejas,ConteoM)) %>%
+  pull(Datos) %>% 
+  summary()
+```
+
+Un gráfico sencillo nos ayudará a ilustrar la distirbución de las respuestas por género:
+```{r, fig.align ='center', out.width='95%', fig.height = 3, fig.width = 5}
+nastal %>% 
+  select(NumParejas, ConteoH, ConteoM) %>% 
+  rename(Hombres = ConteoH, Mujeres = ConteoM) %>% 
+  gather('Hombres', 'Mujeres', key='Género', value = 'Conteo') %>% 
+  ggplot(aes(x = NumParejas)) + 
+    geom_bar(aes(y = Conteo, fill = Género), stat = 'identity', position = 'dodge') + 
+    scale_x_continuous(breaks = c(0,5,10,15,20,25,30,35,40,45,50), limits=c(0,50)) + 
+    scale_colour_brewer(palette = "Set1") +
+    labs(x="Número reportado de parejas sexuales del genero opuesto")
+```
+¿Cómo podemos generalizar a la población después de haber observado dichos resultados en la encuesta? 
+
+```{block, type = 'comentario'}
+Podemos seguir el siguiente tren de pensamiento:  
+
+* El *número registrado* de parejas sexuales de los participantes nos habla acerca de ...  
+* El *número real* de parejas sexuales en nuestra *muestra*, lo que nos habla acerca de ...   
+* El número de parejas en la *población de estudio*, lo que nos habla acerca de ...   
+* El número de parejas sexuales en el Reino Unido, lo cual es la *población objetivo*.
+```
+
+```{block, type = 'comentario'}
+Los puntos más débiles en la generalización son los siguientes:   
+
+* ¿Podemos asumir que los encuestados responderán de manera exacta la pregunta? Observa los *picos* en el eje horizontal.  
+* ¿Podemos esperar que los encuestados hayan sido escogidos de manera aleatoria de aquellos que son elegibles?  Posiblemente, pero ¿podemos esperar los que aceptaron la encuesta son representativos?  
+* ¿Podemos asegurar que la muestra de encuestados representa la población adulta del país?  
+```
+
+## Hacia el trabajo como **Juez** {-}
+
+Este papel lo tomamos cuando queremos describir algo más allá de los datos que observamos. 
+Para esto necesitamos realizar *inferencia inductiva.* El peligro es que la inducción es un proceso 
+generalmente lleno con incertidumbre, pues implica tomar instancias muy particulares para poder emitir 
+juicios generales. En cambio, el trabajo *deductivo* considera una secuencia de 
+implicaciones lógicas que nos llevan de generalidades a casos particulares. 
+
+Posiblemente, a lo largo de su preparación, o en cursos anteriores de estadística, han 
+considerado los casos cuando los datos que observamos son seleccionados al azar de la población
+objetivo. Sin embargo, esto raramente sucede en la vida real, y es por esto que es necesario considerar 
+el proceso desde la captura de datos hasta la población objetivo. Por ejemplo, la población de adultos
+en Reino Unido con una vida sexual activa. 
+
+En general nos interesa que nuestros datos sean:   
+
+- Confiables, es decir, con poca variabilidad y que sea un evento repetible.   
+- Válidos, en el sentido que en verdad se esté midiendo lo que queremos medir, y que no haya sesgos.   
+
+Por otro lado, para poder asegurar que la muestra sea adecuada y nos permita observar 
+de manera fiable la población necesitamos que el estudio tenga *validez interna.* La forma
+más efectiva de reducir el sesgo es por medio de **muestreo aleatorio.**
+
+Por último, nos interesa que haya *validez externa* en los datos, lo cual significa que en verdad 
+nuestras unidades de observación representen la poblacion de interés.
+
+#### Proceso generador de datos {-}
+
+Es por esto que entre las preguntas que se debe hacer el analista de datos una fundamental es
+en entender el **proceso generador de datos**, pues esto determinará qué 
+otras preguntas son relevantes, tanto en términos prácticos como estadísticos.
+
+* La **inferencia estadística** busca hacer afirmaciones, cuantificadas de 
+manera probabilista, acerca de datos que no tenemos, usando regularidades y 
+conocimiento de datos que sí tenemos disponibles y métodos cuantitativos.
+
+* Para hacer afirmaciones inferenciales **eficientes y bien calibradas** (con 
+  garantías estadísticas de calibración) a preguntas donde queremos generalizar de 
+muestra a población, se requiere conocer con precisión el proceso que genera los 
+datos muestrales. 
+
+* Esto incluye saber con detalle cómo se seleccionaron los datos a partir de 
+los que se quiere hacer inferencia.
+
+En este caso, eficiente quiere decir que aprovechamos toda la información que 
+está en los datos observados de manera que nuestros rangos de incertidumbre son 
+lo más chico posibles (además de estar correctamente calibrados).
+
+Por su parte, probabilísticamente bien calibrados se refiere a que, lo que 
+decimos que puede ocurrir con 10% de probabilidad ocurre efectivamente 1 de cada 
+10 veces, si decimos 20% entonces ocurre 2 de 20, etc.
+
+Veremos que para muestras dadas naturalmente, a veces es muy difiícil entender a 
+fondo el proceso generación de la muestra.
+
+#### Ejemplo: Prevalencia de anemia {-}
+
+```{r simular-datos-anemia, echo = FALSE}
+# 5-9: 11,063,000
+# 10-14: 11,143,000
+paciente <- tibble(edad = sample(6:15, 5000, prob = c(2, 2, 2, 1, 1, 1, 0.5, 0.5, 
+                                                      0.2, 0.2), replace = TRUE), 
+                   padecimiento = sample(c("infección respiratoria", 
+                                           "infección intestinal", "asma", "úlcera", 
+                                           "picadura alacrán", "mordedura de perro", 
+                                           "apendcitis"), 5000, replace = TRUE),
+                   sexo = sample(c("hombre", "mujer"), 5000, replace = TRUE)
+)
+
+paciente <- paciente %>% 
+  mutate(z = 1 - 0.15 * edad + case_when(padecimiento == "infección respiratoria" ~ 0.3, 
+                                         padecimiento == "infección intestinal" ~ 0.7, 
+                                         padecimiento == "infección respiratoria" ~ 0.2, 
+                                         padecimiento == "infección respiratoria" ~ 0.9,
+                                         TRUE ~ 0), 
+         anemia = rbinom(5000, 1, prob = exp(z) / (1 + exp(z)))
+  ) %>% 
+  select(-z)
+```
+
+Supongamos que nos interesa conocer el porcentaje de menores en edad escolar, 
+(entre 6 y 15 años), con 
+anemia en México. La fuente de datos disponible corresponde a registros del IMSS
+de hospitalizaciones de menores, ya sea por anemia o 
+que por otra causa (infecciones gastrointestinales, apendicitis, tratamiento de 
+                    leucemia, ...), se registró 
+si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.
+
+```{r}
+head(paciente)
+```
+
+
+- ¿Qué nos dice esta cantidad acerca de la anemia en la población de menores de edad en la república mexicana?  
+  - ¿Podemos hacer inferencia estadística?  
+  - ¿Cómo calculamos intervalos de confianza?  
+  
+```{r}
+# Si calculo el error estándar de la p estimada como sigue, es correcto?
+p <- mean(paciente$anemia)
+sqrt(p * (1 - p) / 5000)
+```
+
+
+En la situación ideal diseñaríamos una muestra aleatoria de menores de edad, 
+por ejemplo, utilizando el registro en educación primaria de la SEP, y 
+mediríamos la prevalencia de anemia en la muestra, usaríamos esta muestra para
+estimar la prevalencia en la población y tendríamos además las herramientas 
+para medir la incertidumbre de nuestra estimación (reportar intervalos, 
+                                                   o errores estándar).
+
+
+En el caso de prevalencia de anemia, discutiendo con médicos e investigadores
+nos informan que la anemia se presenta en tasas más altas en niños más chicos.
+
+```{r}
+paciente %>% 
+  count(edad) %>% 
+  mutate(prop = round(100 * n / sum(n)))
+```
+
+Y consultando con las proyecciones de población notamos que los niños chicos 
+están sobre-representados en la muestra. Lo que nos hace considerar que debemos
+buscar una manera de ponderar nuestras observaciones para que reflejen a la
+población de niños en el país.
+
+Más aún, investigamos que algunas enfermedades están asociadas a mayor 
+prevalencia de anemia:
+  
+```{r}
+paciente %>% 
+  count(padecimiento) %>% 
+  arrange(-n)
+```
+
+Utilizamos esta información para modelar y *corregir* nuestra estimación 
+original. Por ejemplo con modelos de regresión. Sin embargo, 
+debemos preguntarnos:
+  
+  - ¿Hay más variables qué nos falta considerar?  
+  - Nuestras estimaciones están bien calibradas?
+
+#### Población {-}
+
+Hasta ahora hemos hablado de muestras de datos. Es un caso muy común en las encuestas. Sin embargo, 
+también es posible econtrar casos dónde tengamos acceso a todo el conjunto de datos de interés. Ejemplos
+de esto son los casos de donde los casos se registran de manera continua como estudios de compras en línea, o 
+históricos transaccionales en un banco. 
+
+Aún en estas situaciones hay que considerar evaluar si en verdad todo lo que nos interesa se registra. 
+Por ejemplo, las carpetas de investigación de crímenes en la ciudad de México: ¿contienen el reporte de 
+todos los posibles crímenes en la ciudad? 
+
+#### Distribuciones {-} 
+
+Hasta ahora hemos mencionado el concepto de distribución como el patrón que presentan los datos 
+(valores centrales, dispersión, rango, etc.). A esta distribución le llamamos **distribución muestral** 
+o **empírica**. En general, esperamos que nuestros datos tengan las mismas características (estadísticas) 
+que la población de donde provienen. Por ejemplo, cuando un fenómeno es generado por pequeñas influencias 
+hablamos de la distribución Normal o Gaussiana a nivel teórico. El siguiente ejemplo es tomado del libro de 
+@spiegelhalter2019art, y es sobre el peso de los bebés al nacer para poblaciones caucásicas. 
+
+
+```{r, echo = FALSE, fig.align = 'center', out.width = '95%', message = FALSE}
+weights=c(1500, 2000, 2500, 3000, 3500, 4000, 4500,5000)
+mids=weights+250
+n=c(5+48+308+1130, 12679, 124209, 442891, 389275, 108886, 14936,1345) # numbers in each bin
+N=sum(n)  # total number of babies
+area=N*500  # number * binwidth = total area of histogram
+lbw   = sum(n[1:2])   # number with low birth weight (less than 2500)
+lbw.percent=100*lbw/N  # % low birth weight
+# 1.3%
+#calculate mean and sd of population
+# could use sheppard's correction
+birth.mean=sum(n*mids/N)
+birth.sd=sqrt( sum(n*(mids-birth.mean)^2)/N)
+# per cent less than 2500 from normal approximation
+lbw.est = 100 * pnorm(2500,birth.mean, birth.sd)
+# 1.7%, good approxmation
+#25th and 75th percentiles of population
+# qnorm(0.25, birth.mean,birth.sd)
+# qnorm(0.75, birth.mean,birth.sd)
+# percentile of baby weighing 2910
+xw = 2910  
+# pnorm(xw, birth.mean,birth.sd)
+par(mfrow=c(2,2))
+# setup plot ranges noting max of normal density is at mean
+xrange <- c(1500,5500)
+yrange <- range( c(n, area*dnorm(birth.mean, birth.mean, birth.sd), 0))
+scale=0.6
+par(mar=c(5,0,1,0)+0.1)
+# (a) empirical distribution and fitted normal
+plot(xrange, yrange, type = "n", xlab = "", ylab = "",
+     bty="n",axes=F,main="(a) Distribution of birthweights", cex=scale)
+axis(1,cex=scale) 
+# draw bars using rect and density using curve
+rect(weights, 0, weights + 500, n, col = "lightblue")
+curve(area*dnorm(x, birth.mean, birth.sd), min(xrange), max(xrange), add = TRUE, 
+      lwd=3, col="blue")
+lines(c(xw,xw),yrange,col="red",lwd=2)
+# (b)   plot with sds  
+plot(xrange, yrange, type = "n", xlab = "", ylab = "",
+     bty="n",axes=F,,main="(b) Mean +/- 1, 2, 3 SDs" )
+axis(1)
+curve(area*dnorm(x, birth.mean, birth.sd), min(xrange), max(xrange), add = TRUE, lwd=3, col="blue")
+I=-3:3
+x1=birth.mean+I*birth.sd
+y1=area*dnorm(x1,birth.mean, birth.sd)
+label=c("-3 SDs", "-2 SDs", "-1 SD", "mean", "+1 SD","+2 SDs", "+3 SDs")
+bit=10000
+xx=250
+shift=c(-xx,-xx,-xx,0,xx,xx,xx)
+for(i in 1:7){
+  lines(c(x1[i],x1[i]), c(0,y1[i]),lwd=2)
+  text(x1[i]+shift[i],y1[i]+bit,label[i],cex=0.75)
+}
+lines(c(xw,xw),yrange,col="red",lwd=2)
+# (c)  Percentiles  
+plot(xrange, yrange, type = "n", xlab = "Birthweight (gms)", ylab = "",
+     bty="n",axes=F,,main="(c) Percentiles" )
+axis(1)
+curve(area*dnorm(x, birth.mean, birth.sd), min(xrange), max(xrange), add = TRUE,
+      lwd=3, col="blue")
+I=c(1,5,25,50,75,95,99)
+x1=qnorm(I/100, birth.mean,birth.sd)
+y1=area*dnorm(x1,birth.mean, birth.sd)
+label=c("1%", "5%", "25%", "50%","75%","95%","99%")
+bit=5000
+for(i in 1:7){
+  lines(c(x1[i],x1[i]), c(0,y1[i]),lwd=2,lty=2)
+  text(x1[i],-bit,label[i],cex=0.6)
+}
+lines(c(xw,xw),yrange,col="red",lwd=2)
+# (d)  Low birth weight  
+plot(xrange, yrange, type = "n", xlab = "Birthweight (gms)", ylab = "",
+     bty="n",axes=F,,main="(d) Low birth weight" )
+axis(1)
+curve(area*dnorm(x, birth.mean, birth.sd), min(xrange), max(xrange), add = TRUE,
+      lwd=3, col="blue")
+x1=seq(1500,2500,10)
+y1=area*dnorm(x1,birth.mean, birth.sd)
+polygon(c(x1,x1[101:1]),c(rep(0,101), y1[101:1]),col="lightblue")
+lines(c(xw,xw),yrange,col="red",lwd=2)
+x1=seq(1500,xw,10)
+nx=length(x1)
+y1=area*dnorm(x1,birth.mean, birth.sd)
+polygon(c(x1,x1[nx:1]),c(rep(0,nx), y1[nx:1]),col="red",density=10)
+text(2000,70000,"Proportion\n below\n 2500 gms\n = 1.7%",cex=0.75)
+text(3400,70000,"Proportion\n below\n 2910 gms\n = 11%",cex=0.75)
+```
+
+Entonces, podemos pensar en la población como un conjunto de individuos que provee
+la distirbución de probabilidad de una observación aleatoria. Esto será muy útil 
+cuando lleguemos al momento de hacer *inferencia estadística.* Cuyo objetivo es 
+poder hacer afirmaciones sobre las características como media, moda, o dispersión que
+en general no sabemos de antemano. 
+
+En los casos donde no hay muestreo (análisis de crímenes en una ciudad, o estudios 
+censales) la diferencia entre población y muestra no existe. Sin embargo, la noción
+de población es valiosa. Pero, ¿cómo definimos una población?
+
+
+```{block, type='comentario'}
+Existen tres tipos de población de la cual podemos extraer una muestra de forma aleatoria:  
+
+  - Población *literal.* Cuando podemos identificar a un grupo de dónde extraer muestras aleatorias.  
+  - Población *virtual.* Cuando tomamos observaciones del ambiente, por ejemplo tomar mediciones de la calidad de aire. Los datos generados por en este escenario se denominan **muestras observacionales.**  
+  - Población *metafórica.* Cuando no hay grupo de individuos mas grande. Pero aún asi podemos pensar como si los datos provienen de un espacio imaginario de posibilidades. Los datos geberados en este escenario se denominan **muestras naturales.**  
+```
+
+## Trabajando como **Juez** {-}
+
+Ahora nos enfocaremos en interpretar resultados estadísticos. Para esto 
+consideraremos el contexto de  **dos muestras**. Es una práctica común en el análisis
+estadístico pues permite contrastar el efecto de un diseño o prueba. Ejemplos
+de esto los vemos al medir la tasa de captura en diseño de páginas *web*, pruebas
+de una nueva medicina, o simple contraste entre dos poblaciones con
+características distintas.
+
+
+
+Una *respuesta* a una pregunta de interés
+viene acomapañada de una *medida de incertidumbre*, la cual se basa en una
+*modelo de probabilidad*. Hay veces en el que el modelo de probabilidad está
+bien justificado, pues hay un *mecanismo aleatorio* detrás ---pensemos en el
+lanzamiento de una moneda. En otras ocasiones el modelo de probabilidad es un
+*artefacto* matemático que asemeja la realidad y permite aplicar
+*modelos estadísticos*.
+
+Para entender y comunicar las conclusiones de un modelo hay que estar
+conscientes del mecanismo aleatorio que se utilizó, por ejemplo, en la selección
+de unidades muestrales, o del grupo al que pertenecen.
+
+Hay dos formas de hacer inferencia. La **inferencia causal** y la **inferencia a
+poblaciones**. Saber los mecanismos que generaron los datos nos permite saber
+qué tipo de inferencia es más adecuada para el estudio en cuestión.
+
+### Inferencia Causal {-}
+
+En un **experimento aleatorizado** la investigadora asume el control de
+asignación de cada unidad experimental a los distintos grupos de estudio por
+medio de un mecanismo aleatorio, por ejemplo, una moneda. 
+
+En un **estudio observacional** la asignación a los grupos se encuentra fuera del 
+control de la investigadora. 
+
+Es natural cuestionar si por medio de análisis estadísticos podemos concluir
+relaciones causales. La respuesta es: 
+
+```{block, type='comentario'}
+Las relaciones de causa y efecto se pueden inferir sólo si se utiliza un estudio aleatorizado, 
+pero no por medio de estudios observacionales. 
+```
+
+El componente aleatorio asegura que las unidades observacionales con diferentes
+características se mezclen, y cualquier evidencia de dicha relación se muestra
+en el estudio. Aún asi, no hay certeza absoluta de la presencia de la
+relación causal. Dicha incertidumbre es la que usualemente se pretende inculuir
+en el modelo a través de técnicas estadísticas.
+
+En un estudio observacional es imposible concluir una relación causal por medio
+de un análisis estadístico. La analista no puede asegurar la ausencia de algún
+factor de confusión (*confounding variable*) que sea responsable de distorsionar
+las conclusiones.
+
+```{block, type='comentario'}
+Un factor de confusión está asociado tanto a la pertenencia de un grupo de estudio 
+como al resultado del estudio mismo. La presencia de un factor de confusión no permite
+relacionar de manera directa la consecuencia con la pertenencia al grupo. 
+```
+
+#### El valor de estudios observacionales {-}
+
+Incluso aunque no podamos establecer relaciones causa-efecto, los estudios observacionales 
+poseen valor en un estudio formal. Las ventajas se pueden resumir en: 
+
+1. El objetivo del estudio. A veces establecer relaciones de causa-efecto no es el objetivo
+2. Establecer la relacion causa-efecto se puede hacer por medio de otras rutas. 
+3. Datos observacionales pueden sugerir nuevas direcciones de investigación a través de *evidencia*.
+
+#### Ejemplo: Policías y tráfico {-}
+  
+Supongamos que nos preguntan en cuánto reduce un policía el tráfico en
+un crucero grande de la ciudad. La cultura popular 
+ha establecido que los policías en cruceros hacen más tráfico porque
+no saben mover los semáforos. 
+
+Nosotros decidimos buscar datos para entender esto. Escogemos
+entonces un grupo de cruceros problemáticos, registramos el tráfico
+cuando visitamos, y si había un policía o no.
+
+Después de este esfuerzo, obtenemos los siguientes datos:
+  
+```{r, message = FALSE, echo=FALSE}
+library(tidyverse)
+source("R/funciones_auxiliares.R")
+n <- 5000
+set.seed(881)
+trafico_tbl <- tibble(x_inicial = rexp(n, 1 / 5), persistencia = runif(n)) %>%
+  mutate(dia_sem = sample(1:3, n, replace = T)) %>% 
+  mutate(z = x_inicial + 10*persistencia - 15) %>% 
+  mutate(policia = rbinom(n, 1, prob = exp(z) / (1 + exp(z)))) %>% 
+  mutate(e = 0.2*rnorm(n)) %>% 
+  mutate(y_0 = 1* x_inicial*exp(1.2 * persistencia - 1 + e)) %>% 
+  mutate(y_1 =  1*x_inicial*exp(1.2 * persistencia - 1 - 0.6 * policia + e)) %>% 
+  #mutate(y_0 = round(y_0, 3), y_1 = round(y_1)) %>% 
+  mutate(tiempo_espera_min = round(ifelse(policia == 1, y_1, y_0), 2)) %>%
+  mutate(factor = x_inicial*exp(1.2 * persistencia - 1)) %>% 
+  mutate(categoria = cut(factor, breaks = c(0, 4, 10, Inf),
+                         labels = c("Fluido", "Típico", "Complicado"),
+                         include.lowest = TRUE)) %>% 
+  mutate(efecto = y_1 - y_0) 
+muestra_policias <- sample_n(trafico_tbl, 200) %>% 
+  select(policia, tiempo_espera_min, categoria)
+muestra <- muestra_policias %>% group_by(policia) %>% sample_n(5)
+muestra %>% select(-categoria)
+```
+
+Lo que sabemos ahora es que la presencia de un policía es indicador
+de tráfico alto. El análisis prosiguiría calculando medias y medidas de error
+(escogimos una muestra aleatoria):
+  
+```{r, echo = FALSE, out.width ='70%', fig.align='center', fig.height =4, fig.asp =.45}
+muestra %>% group_by(policia) %>% 
+  summarise(media = mean(tiempo_espera_min), des_est = sd(tiempo_espera_min),
+            error = 2 * des_est / sqrt(n())) %>% 
+  select(policia, media, error) %>% 
+  mutate(policia = factor(policia)) %>% 
+  mutate_if(is.numeric, round) %>% 
+  ggplot(aes(x = policia, y = media, ymin = media - error, ymax = media + error)) +
+  geom_linerange() + coord_flip() + geom_point() +
+  ylab("Tiempo de espera promedio, minutos") +
+  labs(title = "Comparativo de tiempo de espera (mins)", 
+       subtitle = "Intervalos de 95%" )
+```
+
+Si somos ingenuos, entonces podríamos concluir que los policías efectivamente
+empeoran la situación cuando manipulan los semáforos, y confirmaríamos la
+sabiduría popular. 
+
+Para juzgar este argumento desde el punto de vista causal, nos preguntamos primero:
+
+  - ¿Cuáles son los contrafactuales (los contrafactuales explican qué pasaría si hubiéramos 
+    hecho otra cosa que la que efectivamente hicimos) 
+    de las observaciones? 
+
+#### El estimador estándar {-}
+  
+A la comparación anterior ---la diferencia de medias de tratados y no tratados--- le llamamos usualmente el _estimador estándar_ del efecto causal. Muchas veces este es un estimador malo del efecto causal.
+
+En nuestro ejemplo, para llegar a la conclusión errónea que confirma la sabiduría popular, hicimos un supuesto importante:
+  
+- En nuestra muestra, los casos con policía actúan como contrafactuales de los casos sin policía.
+- Asi que asumimos que los casos con policía y sin policía son similares, excepto por la existencia o no de policía.
+
+En nuestro ejemplo, quizá un analista más astuto nota que tienen
+categorías históricas de qué tan complicado es cada crucero. Con esos datos obtiene:
+  
+```{r, echo = FALSE}
+muestra
+```
+
+El analista argumenta entonces que los policías se enviaron principalmente a cruceros que 
+se consideran _complicados_ según datos históricos. Esto resta credibilidad a la 
+comparación que hicimos inicialmente:
+  
+- La comparación del estimador estándar no es de peras con peras: estamos comparando qué efecto tienen los
+policías en cruceros difíciles con cruceros no difíciles donde no hay policía.
+- La razón de esto es que el proceso generador de los datos incluye el hecho de que no
+se envían policías a lugares donde no hay tráfico.
+- ¿Cómo producir contrafactuales hacer la comparación correcta?
+
+
+#### Experimentos tradicionales {-}
+  
+Idealmente, quisiéramos observar un mismo crucero en las dos condiciones: con y sin policías. Esto no es posible.
+
+En un experimento "tradicional", como nos lo explicaron en la escuela, nos 
+aproximamos a esto preparando dos condiciones idénticas, y luego alteramos cada una de ellas 
+con nuestra intervención. Si el experimento está bien hecho, esto nos da observaciones
+en pares, y cada quien tiene su contrafactual.
+
+La idea del experimiento tradicional es _controlar_ todos los factores
+que intervienen en los resultados, y sólo mover el tratamiento para producir
+los contrafactuales. Más en general, esta estrategia consiste en hacer
+_bloques_ de condiciones, donde las condiciones son prácticamente idénticas dentro e cada bloque. Comparamos entonces unidades tratadas y no tratadas
+dentro de cada bloque.
+
+Por ejemplo, si queremos saber si el tiempo de caída libre es diferente para un objeto
+más pesado que otro, prepararíamos dos pesos con el mismo tamaño pero de peso distinto. Soltaríamos los dos al mismo tiempo y compararíamos el tiempo de caída de cada uno.
+
+En nuestro caso, como es usual en problemas de negocio o sociales, hacer esto es considerablemente más difícil. No podemos "preparar" cruceros con condiciones idénticas. Sin embargo, podríamos intentar bloquear los cruceros
+según información que tenemos acerca de ellos, para hacer más comparaciones e peras con peras.
+
+#### Bloqueo {-}
+
+Podemos acercanos en lo posible a este ideal de experimentación usando
+información existente.
+
+En lugar de hacer comparaciones directas entre unidades que recibieron
+el tratamiento y las que no (que pueden ser diferentes en otros
+                             aspectos, como vimos arriba),
+podemos refinar nuestras comparaciones _bloquéandolas_ con variables
+conocidas.
+
+En el ejemplo de los policías, podemos hacer lo siguiente: dentro de
+_cada categoría de cruceros_ (fluido, típico o complicado), tomaremos una muestra de cruceros, algunos con
+policía y otros sin. Haremos comparaciones dentro de cada categoría.
+
+Obtenemos un muestra con estas características (6 casos en cada categoría
+                                                de crucero, 3 con policía y 3 sin policía):
+```{r, echo = FALSE}
+muestra_bloqueada <- trafico_tbl %>% group_by(categoria, policia) %>% 
+  sample_n(3) %>% 
+  select(policia, tiempo_espera_min, categoria)
+knitr::kable(muestra_bloqueada %>% group_by(categoria, policia) %>% tally())
+```
+
+
+Y ahora hacemos comparaciones dentro de cada bloque creado por categoría:
+
+```{r, message = FALSE, echo = FALSE}
+muestra_bloqueada %>% 
+  group_by(categoria, policia) %>% 
+  summarise(tiempo_espera = mean(tiempo_espera_min)) %>%
+  mutate_if(is.numeric,  ~ round(.x, 1)) %>% 
+  pivot_wider(names_from = policia, 
+              values_from = tiempo_espera,
+              names_prefix = "policia =")
+```
+
+Y empezamos a ver otra imagen en estos datos: comparando tipos
+e cruceros similares, los que tienen policía tienen tiempos de
+espera ligeramente más cortos.
+
+¿Hemos termniado? ¿Podemos concluir que el efecto de un policía 
+es beneficiosos pero considerablemente chico? ¿Qué problemas
+puede haber con este análisis?
+  
+#### Variables desconocidas {-}
+  
+El problema con el análisis anterior es que controlamos por una
+variable que conocemos, pero muchas otras variables pueden estar
+ligadas con el proceso de selección de cruceros para enviar policías.
+
+- Por ejemplo, envían o policías a cruceros _Típicos_ solo cuando
+reportan mucho tráfico.
+- No envían a un polícia a un crucero _Complicado_ si no presenta demasiado 
+tráfico.
+- Existen otras variables desconocidas que los tomadores de decisiones
+usan para enviar a los policías.
+
+En este caso, por ejemplo, los expertos hipotéticos 
+nos señalan que hay algunos
+cruceros que aunque problemáticos a veces, su tráfico se resuelve 
+rápidamente, mientras que otros tienen tráfico más persistente, y 
+prefieren enviar policías a los de tráfico persistente. La lista
+de cruceros persistentes están en una hoja de excel que se comparte
+de manera informal.
+
+En resumen, no tenemos conocimiento detallado del **proceso generador
+de datos** en cuanto a cómo se asignan los policías a los cruceros. 
+
+Igual que en la sección anterior, podemos cortar esta complejidad
+usando **aleatorización**.
+
+Nótese que los expertos no están haciendo nada malo: en su trabajo
+están haciendo el mejor uso de los recursos que tienen. El problema
+es que por esa misma razón no podemos saber el resultado de sus esfuerzos,
+y si hay maneras de optimizar la asignación que hacen actualmente.
+
+#### Aleatorizando el tratamiento {-}
+
+Tomamos la decisión entonces de hacer un experimento que incluya 
+aletorización.
+
+En un día
+particular, escogeremos algunos cruceros.
+Dicidimos usar solamente cruceros de la categoría _Complicada_ y
+_Típica_, pues
+esos son los más interesantes para hacer intervenciones. 
+
+Usaremos un poco de código para entener el detalle: en estos datos,
+tenemos para cada caso los dos posibles resultados ipotéticos 
+$y_0$ y $y_1$ (con
+               policia y sin policia). En el experimento asignamos el 
+tratamiento al azar:
+  
+```{r}
+muestra_exp <- trafico_tbl %>% filter(categoria != "Fluido") %>% 
+  sample_n(200) %>% 
+  # asignar tratamiento al azar, esta es nuestra intervención:
+  mutate(tratamiento_policia = rbernoulli(length(y_0), 0.5)) %>%
+  # observar resultado
+  mutate(tiempo_espera_exp = ifelse(tratamiento_policia ==1, y_1, y_0))
+```
+
+Nótese la diferencia si tomamos la asignación natural del tratamiento (policía o no):
+  
+```{r}
+set.seed(134)
+muestra_natural <- trafico_tbl %>% filter(categoria != "Fluido") %>%  
+  sample_n(200) %>% 
+  # usamos el tratamiento que se asignó
+  # policia indica si hubo o no policía en ese crucero
+  # observar resultado
+  mutate(tiempo_espera_obs = ifelse(policia ==1, y_1, y_0))
+```
+
+
+Resumimos nuestros resultados del experimento son:
+  
+```{r, echo = FALSE}
+muestra_exp %>% 
+  mutate(tratamiento_policia = as.numeric(tratamiento_policia)) %>% 
+  group_by(categoria, tratamiento_policia) %>% 
+  summarise(tiempo_espera = mean(tiempo_espera_exp)) %>% 
+  pivot_wider(names_from = tratamiento_policia, 
+              values_from = tiempo_espera,
+              names_prefix = "policia=")
+```
+
+Sin embargo, la muestra natural da:
+  
+```{r, echo = FALSE}
+muestra_natural %>% group_by(categoria, policia) %>% 
+  summarise(tiempo_espera = mean(tiempo_espera_obs)) %>% 
+  pivot_wider(names_from = policia, 
+              values_from = tiempo_espera,
+              names_prefix = "policia=")
+```
+
+**¿Cuál de los dos análisis da la respuesta correcta a la pregunta:
+  ayudan o no los policías a reducir el tráfico en los cruceros
+problemáticos?** El experimento establece que un policía en promedio
+reduce a la mitad el tiempo de espera en un crucero complicado.
+
+### Inferencia a poblaciones {-}
+
+La situación es bastante clara. Inferir características de una poblacion **sólo** se puede realizar por 
+medio de muestreo aleatorio, no de otra forma.  
+
+Seleccionar de manera aleatoria significa que cualquier conjunto de tamaño $N$ que escojamos tiene 
+la misma probabilidad de ser escogido que cualquier otro conjunto del mismo tamaño. 
+
+
+### Resumen: selección de unidades y tratamiento {-}
+
+Vimos dos tipos de inferencia que requieren distintos diseños de estudio, 
+en particular debemos considerar el mecanismo de aleatorización para 
+entender las inferencias que podemos hacer: causal o a poblaciones.
+
+El punto crucial para entender las medidas de incertidumbre estadística es
+visualizar de manera hipotética, replicaciones del estudio y las condiciones
+que llevaron a la selección de la muestra. Esto es, entender el proceso 
+generador de datos e imaginar replicarlo.
+
+![Inferencia estadística de acuerdo al tipo del diseño [@ramsey]](images/03_inferencia-estudio.png)
+
+* El cuadro en la esquina superior izquierda es donde el análisis es más simple y los 
+resultados son más fáciles de interpretar.
+
+* Es posible hacer análisis fuera de este cuadro, pero el proceso es más 
+complicado, requieren más supuestos, conocimiento del dominio y habilidades 
+de análisis. En general resultan conclusiones menos sólidas. Muchas veces no 
+nos queda otra opción más que trabajar fuera del cuadro ideal.
+
+```{block, type='ejercicio'}
+Ubica los siguientes tipos de análisis:
+  
+- Pruebas clínicas para medicinas
+- Analizar cómo afecta tener seguro médico a los ingresos, usando datos del ENIGH.
+- Estimación de retorno sobre inversión en modelos de marketing mix.
+```
+
+#### Asignación natural del tratamiento {-}
+
+- Cuando consideramos un sistema donde se "asignan" tratamientos,
+generalmente los tratamientos se asignan bajo un criterio de 
+optimización o conveniencia. 
+
+- La cara buena de este hecho es que de alguna forma los resultados
+están intentando optimizarse, y la gente está haciendo su trabajo.
+
+- La cara mala de este hecho es que no podemos evaluar de manera simple la 
+efectividad de los tratamientos. Y esto hace difícil **optimizar** de forma 
+cuantificable los procesos, o **entender** qué funciona y qué no.
+
+
+
+
+
+
+
+
+<!-- ### Experimentos y datos observacionales {-} -->
+
+
+
