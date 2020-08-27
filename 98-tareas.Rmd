@@ -19,12 +19,13 @@ escribir su código en los bloques de código (secciones grises entre
 \```{r}  codigo \```) una vez que escriban sus respuestas pueden generar el reporte tejiendo el documento, para esto deben presionar el botón *Knit*. Envíen el 
 reporte por correo electrónico (con título fundamentos-tarea02).
 
-## 3. Proceso generador de datos {-}
+## 3. Tipos de estudio y PGD {-}
 
 Para cada uno de los siguientes estudios, ubícalos en el recuadro y contesta lo 
-que se pide.
+que se pide. Envíen las respuestas por correo electrónico (con título 
+fundamentos-tarea03).
 
-![Inferencia estadística de acuerdo al tipo del diseño [@ramsey]](images/03_inferencia-muestra.png)
+![Inferencia estadística de acuerdo al tipo del diseño [@ramsey].](images/03_inferencia-muestra.png)
 
 1. En 1930 se realizó un experimento en 20,000 niños de edad escolar de Inglaterra.
 Los maestros fueron los responsables de asignar a los niños de manera aleatoria al

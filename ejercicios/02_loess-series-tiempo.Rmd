@@ -1,0 +1,87 @@
+---
+title: "Untitled"
+author: "tu nombre"
+output: html_document
+---
+
+```{r, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, error=TRUE)
+
+# cargamos paquetes
+library(tidyverse)
+```
+
+
+## Series de tiempo
+Consideramos la ventas semanales de un producto a lo largo de 5 años, 
+transformaremos la variable de ventas utilizando el logaritmo. 
+
+1. Describe que observas en la gráfica.
+
+```{r, fig.width=5.5, fig.height = 3}
+ventas <- read_csv("ventas_semanal.csv")
+head(ventas)
+ggplot(ventas, aes(x = period, y = log(sales.kg))) + 
+  geom_line(size = 0.3)
+```
+
+Intentaremos usar suavizamiento para capturar los distintos tipos de variación
+que observamos en la serie. 
+
+2. Utiliza un suavizador *loess* para capturar la tendencia de la serie.
+
+```{r, fig.width=5.5, fig.height = 3}
+ggplot(ventas, aes(x = period, y = log(sales.kg))) +
+  geom_line(size = 0.3) +
+  geom_smooth(method = "loess", span #rellena, degree = 1, se = FALSE, size = 1, 
+    color = "red")
+
+fit_trend <- loess(log(sales.kg) ~ period, ventas, span = 0.3, degree = 1)
+```
+
+3. Ahora calcula los residuales de este ajuste y descríbelos
+mediante un suavizamiento más fino. Verifica que se ha estimado la mayor
+parte de la tendencia, e intenta capturar la variación estacional de los 
+residuales.
+
+```{r, fig.width=5.5, fig.height = 3}
+ggplot(ventas, aes(x = period, y = res.trend.1)) + #rellena
+  
+
+fit_season <- loess(#rellena)
+```
+
+4. Grafica los residuales obtenidos después de ajustar el componente 
+estacional para estudiar la componente de mayor frecuencia.
+
+```{r, fig.width=5.5, fig.height = 3}
+ggplot(ventas, aes(x = period, y = res.est1.1)) +
+  #rellena
+
+fit_season_high <- 
+```
+
+5. **Extra opcional**. Ahora que tenemos nuestra primera estimación de cada una de 
+las componentes, podemos regresar a hacer una mejor estimación de la tendencia. 
+La ventaja de volver es que ahora podemos suavizar más sin que en nuestra 
+muestra compita tanto la variación estacional. Por tanto puedes suavizar un 
+poco menos.
+
+```{r}
+
+```
+
+
+6. Visualiza el ajuste, genera una gráfica de páneles, en cada uno muestra
+una componente de la serie de tiempo y los residuales.
+
+```{r}
+
+```
+
+7. Genera una gráfica de cuantiles para los residuales.
+
+```{r}
+
+```
+
