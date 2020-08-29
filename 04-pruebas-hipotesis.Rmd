@@ -126,9 +126,11 @@ ggplot(prueba_tbl$lineup, aes(x = t_0, y = obs)) + geom_line() +
      facet_wrap(~rep, nrow = 4) + scale_y_log10()
 ```
 
-**Ejercicio**: ¿cuáles son los datos nuevos (solo hay un panel con los nuevos datos)?
+```{block, type = 'ejercicio'}
+¿Cuáles son los datos nuevos (solo hay un panel con los nuevos datos)?
 ¿Qué implica que la gráfica que escogamos como "más diferente" no sean los datos nuevos?
 ¿Qué implica que le "atinemos" a la gráfica de los datos nuevos?
+```
 
 
 Ahora observamos al sistema en otro momento y repetimos la comparación. En el siguiente caso obtenemos:
@@ -183,8 +185,8 @@ La hipótesis alternativa la denotamos por $H_1$ y representa el supuesto que es
 ```{block, type='mathblock'}
 **Definición.** La hipótesis normalmente se plantea en términos de un parámetro ($\theta\in\mathbb{R}$) o conjunto de parámetros ($\theta\in\mathbb{R}^p$) de la distribución de interés (por ejemplo media, moda, varianza). Para una hipótesis nula del estilo $H_0: \theta = \theta_0,$ la hipótesis a contrastar se puede denominar como:
 
-- *Hipótesis alternativa de una cola* $H_1: \theta > \theta_0$.   
-- *Hipótesis alternativa de dos colas* $H_1: \theta \neq \theta_0$.   
+- *Hipótesis alternativa de una cola* $$H_1: \theta > \theta_0.$$   
+- *Hipótesis alternativa de dos colas* $$H_1: \theta \neq \theta_0.$$
 ```
 
 
@@ -218,7 +220,7 @@ g_1
 
 En la muestra observamos diferencias entre los grupos. Pero notamos adicionalmente que
 hay mucha variación dentro de cada grupo. **Nos podríamos preguntar entonces si las diferencias
-que observamos se deben variación muestral, por ejemplo.**
+que observamos son artificio de variación muestral, por ejemplo.**
 
 Podemos construir ahora una *hipótesis nula*, que establece que las observaciones
 provienen de una población similar:
@@ -227,14 +229,27 @@ provienen de una población similar:
 son prácticamente indistiguibles. En este
 caso, la variación que observamos se debería a que tenemos información incompleta.
 
-Como en el ejemplo anterior **necesitamos construir o obtener una distribución de referencia** para comparar
-qué tan extremos o diferentes son los datos que observamos. Esa distribución de referencia debería
+Como en el ejemplo anterior **necesitamos construir u obtener una distribución de referencia** para comparar
+qué tan extremos, o diferentes, son los datos que observamos. Esa distribución de referencia debería
 estar basada en el supuesto de que los grupos producen datos de distribuciones similares.
 
 Si tuvieramos mediciones similares históricas de estos tres grupos, quizá podríamos extraer
 datos de referencia y comparar, como hicimos en el ejempo anterior. Pero esto es menos común en
 este tipo de ejemplos.
 
+En general, para realizar pruebas de hipótesis se necesitan dos ingredientes fundamentales: una medida númerica 
+de la evidencia de los datos y asociar la probabilidad de que tal evidencia sea generada de manera aleatoria 
+por los datos. 
+
+```{block, type='mathblock'}
+**Definición.** Una *estadística de prueba* es una función numérica de los datos cuyo valor determina el resultado de la
+prueba. La función usualmente es denotada por $T(\bf X)$ donde $\bf X$ representa los datos como variable aleatoria. Por ejemplo, $T = T(X_1, \ldots, X_N)$ si sólo tenemos una muestra, o por $T = T(X_1, \ldots, X_N, Y_1, \ldots, Y_M)$ en el caso de tener dos muestras. Al evaluar la prueba para un conjunto de datos dado, $x$, ésta se denomina *estadística de prueba observada,* $t = T(x).$
+```
+
+
+```{block, type='mathblock'}
+**Definición.** El *valor p* es la probabilidad de que bajo la hipótesis nula los datos generen un valor tan extremo como la estadística de prueba observada. Por ejemplo, si consideramos la hipótesis nula admite valores grandes, el valor p se calcula como $P(T \geq t).$
+```
 
 ## Permutaciones y el lineup {-}
 
@@ -256,22 +271,26 @@ donde 19 de los acusados **son generados mediante permutaciones al azar** de la 
 y el culpable (los verdaderos datos) están en una posición escogida al azar. ¿Podemos identificar
 los datos verdaderos? Para evitar sesgarnos, también ocultamos la etiqueta verdadera
 
-Usamos una gráfica que muestra los cuantes 0.10, 0.50, 0.90:
+Usamos una gráfica que muestra los cuantiles 0.10, 0.50, 0.90:
 
 ```{r}
 set.seed(88)
 reps <- lineup(null_permute("grupo"), muestra_tab, n = 20)
 reps_mezcla <- reps %>%  mutate(grupo_1 = factor(digest::digest2int(grupo) %% 177))
 grafica_cuantiles(reps_mezcla, grupo_1, x) +
-    facet_wrap(~.sample, ncol = 5) + ylab("x") +
-    labs(caption = "Mediana y percentiles 10% y 90%")+ geom_point(aes(colour = grupo_1))
+    facet_wrap(~.sample, ncol = 5) +
+    coord_flip() + ylab("x") +
+    labs(caption = "Mediana y percentiles 25% y 75%")+ 
+    geom_point(aes(colour = grupo_1))
 ```
 
 Y la pregunta que hacemos es **podemos distinguir nuestra muestra entre todas las
 replicaciones producidas con permutaciones**?
 
-**Ejercicio**: ¿dónde están los datos observados? Según tu elección,  ¿qué tan diferentes son los
+```{block, type='ejercicio'}
+¿Dónde están los datos observados? Según tu elección,  ¿qué tan diferentes son los
 datos observados de los datos nulos?
+```
 
 En este ejemplo, es difícil indicar cuáles son los datos. Los grupos tienen distribuciones
 similares y es factible que las diferencias que observamos se deban a variación muestral.
@@ -285,8 +304,12 @@ evidencia en contra de que los datos se producen de manera homogénea, independi
 - Si la persona escoge uno de los datos permutados,
 no encontramos evidencia en contra de que los tres grupos producen datos con
  distribuciones similares.
+ 
+```{block, type='mathblock'}
+**Definición.** Un resultado es *estadisticamente significativo* si tuviera muy poca probabilidad de suceder al azar.
+```
 
-## Comparaciones con lineup 2 {-}
+## Comparaciones con lineup (Ver. 2) {-}
 
 Repitimos el ejemplo para otra muestra (en este ejemplo el proceso generador
 de datos es diferente para el grupo b):
@@ -589,11 +612,14 @@ ggplot(reps, aes(sample = time, colour = nv.vv)) +
     scale_x_continuous(breaks = c(0, 0.5, 1))
 ```
 
-**Ejercicio**: ¿Podemos identificar los datos? En general, muy frecuentemente las personas
+```{block, type='mathblock'}
+¿Podemos identificar los datos? En general, muy frecuentemente las personas
 identifican los datos correctamente,
 lo que muestra evidencia considerable de que la instrucción verbal
 altera los tiempos de respuesta de los partipantes, y en este caso
 ayuda a reducir el tiempo de fusión de los estereogramas.
+```
+
 
 ## Ejemplo: tiempos de fusión 2 {-}
 
@@ -625,7 +651,7 @@ calc_fusion <- function(stat_fusion){
 calc_cociente <- calc_fusion(stat_fusion)
 dif_obs <- calc_cociente(fusion)
 # permutar
-valores_ref <- permutaciones_est(fusion, nv.vv, calc_cociente, n = 1500)
+valores_ref <- permutaciones_est(fusion, nv.vv, calc_cociente, n = N_rep)
 dist_perm_nv <- ecdf(valores_ref$diferencia)
 cuantil_obs <- dist_perm_nv(dif_obs)
 ```

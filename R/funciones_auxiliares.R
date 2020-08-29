@@ -38,7 +38,7 @@ grafica_cuantiles <- function(datos, grupo, valor){
 
   grafica <- ggplot(cuantiles_tbl  %>% spread(cuantil, valor),
                     aes(x = {{ grupo }}, y = `0.5`)) +
-    #geom_linerange(aes(ymin= `0.1`, ymax = `0.9`), colour = "gray40") +
+    geom_linerange(aes(ymin= `0.1`, ymax = `0.9`), colour = "gray40") +
     geom_linerange(aes(ymin= `0.25`, ymax = `0.75`), size = 2, colour = "gray") +
     geom_point(colour = "salmon", size = 2)
   grafica
