@@ -89,16 +89,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        15.69|    1.50|Si      |Dom |Cena    |            2|
-|        32.40|    6.00|No      |Dom |Cena    |            4|
-|        19.49|    3.51|No      |Dom |Cena    |            2|
-|        16.04|    2.24|No      |Sab |Cena    |            3|
-|        20.29|    3.21|Si      |Sab |Cena    |            2|
-|        13.39|    2.61|No      |Dom |Cena    |            2|
-|        48.27|    6.73|No      |Sab |Cena    |            4|
-|        17.51|    3.00|Si      |Dom |Cena    |            2|
-|        31.27|    5.00|No      |Sab |Cena    |            3|
-|        10.34|    2.00|Si      |Jue |Comida  |            2|
+|        34.63|    3.55|Si      |Dom |Cena    |            2|
+|        12.74|    2.01|Si      |Jue |Comida  |            2|
+|        10.09|    2.00|Si      |Vie |Comida  |            2|
+|        19.81|    4.19|Si      |Jue |Comida  |            2|
+|        25.21|    4.29|Si      |Sab |Cena    |            2|
+|        19.77|    2.00|No      |Dom |Cena    |            4|
+|        18.78|    3.00|No      |Jue |Cena    |            2|
+|        10.27|    1.71|No      |Dom |Cena    |            2|
+|        38.07|    4.00|No      |Dom |Cena    |            3|
+|        15.98|    2.03|No      |Jue |Comida  |            2|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
