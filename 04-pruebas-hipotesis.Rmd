@@ -2,6 +2,7 @@
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
+N_rep <- 10
 ```
 
 
@@ -173,6 +174,20 @@ esto también sugiere más evidencia en contra de la hipótesis nula.
 
 6. Finalmente, esta prueba rara vez (o nunca) **nos da seguridad completa acerca de ninguna conclusión**, aún cuando
 hiciéramos muchos páneles.
+
+```{block, type='mathblock'}
+**Definición.** Denotamos por $H_0$ a la *hipótesis nula* la cual usualmente tratamos como la afirmación del *status quo.*
+La hipótesis alternativa la denotamos por $H_1$ y representa el supuesto que está a prueba y para el cual buscamos evidencia en los datos.
+```
+
+```{block, type='mathblock'}
+**Definición.** La hipótesis normalmente se plantea en términos de un parámetro ($\theta\in\mathbb{R}$) o conjunto de parámetros ($\theta\in\mathbb{R}^p$) de la distribución de interés (por ejemplo media, moda, varianza). Para una hipótesis nula del estilo $H_0: \theta = \theta_0,$ la hipótesis a contrastar se puede denominar como:
+
+- *Hipótesis alternativa de una cola* $H_1: \theta > \theta_0$.   
+- *Hipótesis alternativa de dos colas* $H_1: \theta \neq \theta_0$.   
+```
+
+
 
 ## Comparando distribuciones {-}
 
@@ -371,7 +386,7 @@ calc_diferencia <- function(datos){
     mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>% pull(diferencia_prop)
 }
 # esta función hace permutaciones y calcula la diferencia para cada una
-permutaciones_est <- function(datos, variable, calc_diferencia, n = 1000){
+permutaciones_est <- function(datos, variable, calc_diferencia, n = 100){
   # calcular estadística para cada grupo
   permutar <- function(variable){
     sample(variable, length(variable))
@@ -393,7 +408,7 @@ dif_obs %>% round(3)
 Ahora construimos nuestra distribución nula o de referencia:
 
 ```{r, cache=TRUE}
-valores_ref <- permutaciones_est(te_azucar, how, calc_diferencia, n = 1000)
+valores_ref <- permutaciones_est(te_azucar, how, calc_diferencia, n = N_rep)
 ```
 
 Y graficamos nuestros resultados (con un histograma y una gráfica de cuantiles, por ejemplo). la
@@ -509,7 +524,7 @@ Ahora construimos nuestra distribución nula o de referencia:
 
 ```{r}
 set.seed(2)
-valores_ref <- permutaciones_est(te_azucar, Tea, calc_diferencia_2, n = 1000)
+valores_ref <- permutaciones_est(te_azucar, Tea, calc_diferencia_2, n = N_rep)
 ```
 
 Y podemos graficar la distribución de referencia otra vez marcando el valor observado
