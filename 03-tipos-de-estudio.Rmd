@@ -165,7 +165,7 @@ lo más chico posibles (además de estar correctamente calibrados).
 
 Por su parte, probabilísticamente bien calibrados se refiere a que, lo que 
 decimos que puede ocurrir con 10% de probabilidad ocurre efectivamente 1 de cada 
-10 veces, si decimos 20% entonces ocurre 2 de 20, etc.
+10 veces, si decimos 20% entonces ocurre 2 de 10, etc.
 
 Veremos que para muestras dadas naturalmente, a veces es muy difiícil entender a 
 fondo el proceso generación de la muestra.
