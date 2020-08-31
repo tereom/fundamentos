@@ -196,10 +196,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#permutaciones-y-el-lineup"><i class="fa fa-check"></i>Permutaciones y el lineup</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparaciones-con-lineup-2"><i class="fa fa-check"></i>Comparaciones con lineup 2</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-hipótesis-tradicionales"><i class="fa fa-check"></i>Pruebas de hipótesis tradicionales</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-2"><i class="fa fa-check"></i>Tomadores de té 2</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación"><i class="fa fa-check"></i>Pruebas de permutación: Implementación</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-2"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión 2</a></li>
-<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ojo-otros-tipos-de-hipótesis-nulas"><i class="fa fa-check"></i>Ojo: otros tipos de hipótesis nulas</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#avispas-opcional"><i class="fa fa-check"></i>Avispas (opcional)</a></li>
 </ul></li>
@@ -311,60 +312,60 @@ cuatro días consecutivos:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">34.63</td>
-<td align="right">3.55</td>
-<td align="left">Si</td>
+<td align="right">25.29</td>
+<td align="right">4.71</td>
+<td align="left">No</td>
 <td align="left">Dom</td>
 <td align="left">Cena</td>
-<td align="right">2</td>
+<td align="right">4</td>
 </tr>
 <tr class="even">
-<td align="right">12.74</td>
-<td align="right">2.01</td>
-<td align="left">Si</td>
+<td align="right">18.64</td>
+<td align="right">1.36</td>
+<td align="left">No</td>
 <td align="left">Jue</td>
 <td align="left">Comida</td>
-<td align="right">2</td>
+<td align="right">3</td>
 </tr>
 <tr class="odd">
-<td align="right">10.09</td>
-<td align="right">2.00</td>
-<td align="left">Si</td>
-<td align="left">Vie</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">19.81</td>
-<td align="right">4.19</td>
-<td align="left">Si</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">25.21</td>
-<td align="right">4.29</td>
+<td align="right">17.92</td>
+<td align="right">3.08</td>
 <td align="left">Si</td>
 <td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="right">19.77</td>
-<td align="right">2.00</td>
+<td align="right">48.17</td>
+<td align="right">5.00</td>
 <td align="left">No</td>
 <td align="left">Dom</td>
+<td align="left">Cena</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="right">10.33</td>
+<td align="right">1.67</td>
+<td align="left">No</td>
+<td align="left">Dom</td>
+<td align="left">Cena</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="right">20.45</td>
+<td align="right">3.00</td>
+<td align="left">No</td>
+<td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
-<td align="right">18.78</td>
-<td align="right">3.00</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
+<td align="right">30.46</td>
+<td align="right">2.00</td>
+<td align="left">Si</td>
+<td align="left">Dom</td>
 <td align="left">Cena</td>
-<td align="right">2</td>
+<td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="right">10.27</td>
@@ -375,19 +376,19 @@ cuatro días consecutivos:</p>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
-<td align="right">38.07</td>
-<td align="right">4.00</td>
+<td align="right">21.01</td>
+<td align="right">3.50</td>
 <td align="left">No</td>
 <td align="left">Dom</td>
 <td align="left">Cena</td>
 <td align="right">3</td>
 </tr>
 <tr class="even">
-<td align="right">15.98</td>
-<td align="right">2.03</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
+<td align="right">25.21</td>
+<td align="right">4.29</td>
+<td align="left">Si</td>
+<td align="left">Sab</td>
+<td align="left">Cena</td>
 <td align="right">2</td>
 </tr>
 </tbody>

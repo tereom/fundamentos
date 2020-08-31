@@ -196,10 +196,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#permutaciones-y-el-lineup"><i class="fa fa-check"></i>Permutaciones y el lineup</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparaciones-con-lineup-2"><i class="fa fa-check"></i>Comparaciones con lineup 2</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-hipótesis-tradicionales"><i class="fa fa-check"></i>Pruebas de hipótesis tradicionales</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-2"><i class="fa fa-check"></i>Tomadores de té 2</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación"><i class="fa fa-check"></i>Pruebas de permutación: Implementación</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-2"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión 2</a></li>
-<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ojo-otros-tipos-de-hipótesis-nulas"><i class="fa fa-check"></i>Ojo: otros tipos de hipótesis nulas</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#avispas-opcional"><i class="fa fa-check"></i>Avispas (opcional)</a></li>
 </ul></li>
@@ -253,15 +254,16 @@ evidencia para pensar que algo en el sistema cambió?</li>
 </ul>
 <div id="comparación-con-poblaciones-de-referencia" class="section level2 unnumbered">
 <h2>Comparación con poblaciones de referencia</h2>
-<p>En las prueba de hipótesis, tratamos de construir distribuciones de referencia para comparar resultados
-que obtengamos con un “estándar” de variación, y juzgar si nuestros resultados son consistentes con la referencia
-o no (<span class="citation">Box, Hunter, and Hunter (<a href="#ref-box78" role="doc-biblioref">1978</a>)</span>).</p>
+<p>En las prueba de hipótesis, tratamos de construir distribuciones de referencia
+para comparar resultados que obtengamos con un “estándar” de variación, y juzgar
+si nuestros resultados son consistentes con la referencia o no (<span class="citation">Box, Hunter, and Hunter (<a href="#ref-box78" role="doc-biblioref">1978</a>)</span>).</p>
 <p>En algunos casos, ese estándar de variación puede construirse con datos históricos.</p>
 <div id="ejemplo" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
-<p>Supongamos que estamos considerando cambios rápidos en una serie de tiempo de alta frecuencia.
-Hemos observado la serie en su estado “normal” durante un tiempo considerable, y cuando observamos nuevos
-datos <strong>quisiéramos juzgar si hay indicaciones o evidencia en contra de que el sistema sigue funcionando
+<p>Supongamos que estamos considerando cambios rápidos en una serie de tiempo de
+alta frecuencia. Hemos observado la serie en su estado “normal” durante un
+tiempo considerable, y cuando observamos nuevos datos <strong>quisiéramos juzgar si
+hay indicaciones o evidencia en contra de que el sistema sigue funcionando
 de manera similar</strong>.</p>
 <p>Digamos que monitoreamos ventanas de tiempo de tamaño 20 y necesitamos tomar una decisión. Abajo
 mostramos cinco ejemplos donde el sistema opera normalmente, que muestra la variabilidad
@@ -295,11 +297,13 @@ están los datos recientemente observados. ¿Hay algo en los datos que distinga 
 <span id="cb71-6"><a href="pruebas-de-hipótesis.html#cb71-6"></a><span class="kw">ggplot</span>(prueba_tbl<span class="op">$</span>lineup, <span class="kw">aes</span>(<span class="dt">x =</span> t_<span class="dv">0</span>, <span class="dt">y =</span> obs)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span></span>
 <span id="cb71-7"><a href="pruebas-de-hipótesis.html#cb71-7"></a><span class="st">     </span><span class="kw">facet_wrap</span>(<span class="op">~</span>rep, <span class="dt">nrow =</span> <span class="dv">4</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_log10</span>()</span></code></pre></div>
 <p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p><strong>Ejercicio</strong>: ¿cuáles son los datos nuevos (solo hay un panel con los nuevos datos)?
-¿Qué implica que la gráfica que escogamos como “más diferente” no sean los datos nuevos?
-¿Qué implica que le “atinemos” a la gráfica de los datos nuevos?</p>
+<div class="ejercicio">
+<p>
+¿Cuáles son los datos nuevos (solo hay un panel con los nuevos datos)? ¿Qué implica que la gráfica que escogamos como “más diferente” no sean los datos nuevos? ¿Qué implica que le “atinemos” a la gráfica de los datos nuevos?
+</p>
+</div>
 <p>Ahora observamos al sistema en otro momento y repetimos la comparación. En el siguiente caso obtenemos:</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>Aunque es imposible estar seguros de que ha ocurrido un cambio, la diferencia de una de las
 series es muy considerable. Si identificamos los datos correctos,
 la probabilidad de que hayamos señalado la nueva serie “sobreinterpretando”
@@ -308,8 +312,8 @@ fluctuaciones en un proceso que sigue comportándose normalente es 0.05 - relati
 manera que antes.</strong></p>
 <p><strong>Observaciones y terminología</strong>:</p>
 <ol style="list-style-type: decimal">
-<li><p>Llamamos <em>hipótesis nula</em> a la hipótesis de que los nuevos datos son
-producidos bajo las mismas condiciones que los datos de control o de referencia.</p></li>
+<li><p>Llamamos <em>hipótesis nula</em> a la hipótesis de que los nuevos
+datos son producidos bajo las mismas condiciones que los datos de control o de referencia.</p></li>
 <li><p><strong>Si no escogemos la gráfica de los nuevos datos, nuestra conclusión es que
 la prueba no aporta evidencia en contra de la hipótesis nula.</strong></p></li>
 <li><p><strong>Si escogemos la gráfica correcta, nuestra conclusión es que la prueba aporta evidencia
@@ -341,7 +345,7 @@ y las extracciones se hacen de manera independiente.)</p>
 Quizá la pregunta detrás de esta
 comparación es: el grupo de clientes b recibió una promoción especial. ¿Están gastando
 más? La medición que comparamos es el gasto de los clientes.</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-7-1.png" width="480" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-8-1.png" width="480" /></p>
 <p>En la muestra observamos diferencias entre los grupos. Pero notamos adicionalmente que
 hay mucha variación dentro de cada grupo. <strong>Nos podríamos preguntar entonces si las diferencias
 que observamos se deben variación muestral, por ejemplo.</strong></p>
@@ -385,11 +389,14 @@ los datos verdaderos? Para evitar sesgarnos, también ocultamos la etiqueta verd
 <span id="cb72-4"><a href="pruebas-de-hipótesis.html#cb72-4"></a><span class="kw">grafica_cuantiles</span>(reps_mezcla, grupo_<span class="dv">1</span>, x) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb72-5"><a href="pruebas-de-hipótesis.html#cb72-5"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>.sample, <span class="dt">ncol =</span> <span class="dv">5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;x&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb72-6"><a href="pruebas-de-hipótesis.html#cb72-6"></a><span class="st">    </span><span class="kw">labs</span>(<span class="dt">caption =</span> <span class="st">&quot;Mediana y percentiles 10% y 90%&quot;</span>)<span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> grupo_<span class="dv">1</span>))</span></code></pre></div>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Y la pregunta que hacemos es <strong>podemos distinguir nuestra muestra entre todas las
 replicaciones producidas con permutaciones</strong>?</p>
-<p><strong>Ejercicio</strong>: ¿dónde están los datos observados? Según tu elección, ¿qué tan diferentes son los
-datos observados de los datos nulos?</p>
+<div class="ejercicio">
+<p>
+¿Dónde están los datos observados? Según tu elección, ¿qué tan diferentes son los datos observados de los datos nulos?
+</p>
+</div>
 <p>En este ejemplo, es difícil indicar cuáles son los datos. Los grupos tienen distribuciones
 similares y es factible que las diferencias que observamos se deban a variación muestral.</p>
 <ul>
@@ -406,22 +413,26 @@ distribuciones similares.</p></li>
 <h2>Comparaciones con lineup 2</h2>
 <p>Repitimos el ejemplo para otra muestra (en este ejemplo el proceso generador
 de datos es diferente para el grupo b):</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-9-1.png" width="480" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-11-1.png" width="480" /></p>
 <p>Hacemos primero la prueba del <em>lineup</em>:</p>
 <div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="pruebas-de-hipótesis.html#cb73-1"></a><span class="kw">set.seed</span>(<span class="dv">121</span>)</span>
 <span id="cb73-2"><a href="pruebas-de-hipótesis.html#cb73-2"></a>reps &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="kw">null_permute</span>(<span class="st">&quot;grupo&quot;</span>), muestra_tab, <span class="dt">n =</span> <span class="dv">20</span>)</span>
 <span id="cb73-3"><a href="pruebas-de-hipótesis.html#cb73-3"></a><span class="kw">grafica_cuantiles</span>(reps <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">grupo_escondido =</span> <span class="kw">factor</span>(digest<span class="op">::</span><span class="kw">digest2int</span>(grupo) <span class="op">%%</span><span class="st"> </span><span class="dv">177</span>)), </span>
 <span id="cb73-4"><a href="pruebas-de-hipótesis.html#cb73-4"></a>                             grupo_escondido, x) <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>.sample) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;x&quot;</span>) <span class="op">+</span></span>
 <span id="cb73-5"><a href="pruebas-de-hipótesis.html#cb73-5"></a><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> grupo_escondido))</span></code></pre></div>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<p>Podemos distinguir más o menos claramente que está localizada en valores
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+Podemos distinguir más o menos claramente que está localizada en valores
 más altos y tiene mayor dispersión. En este caso, como en general podemos identificar los
 datos, obtenemos evidencia en contra de que los tres grupos tienen distribuciones iguales.</p>
+<p>Estos ejemplos siguen la idea de inferencia visual propuestas en
+<span class="citation">Wickham et al. (<a href="#ref-lineup" role="doc-biblioref">2010</a>)</span>, <span class="citation">Cook et al. (<a href="#ref-graphical-tests" role="doc-biblioref">2012</a>)</span> e implementadas en R en el paquete <code>lineup</code>. Son
+pruebas muy flexibles y estadísticamente rigurosas.</p>
 </div>
 <div id="prueba-de-permutaciones-para-proporciones" class="section level2 unnumbered">
 <h2>Prueba de permutaciones para proporciones</h2>
 <p>Veremos otro ejemplo donde podemos hacer más concreta la idea de
-<strong>distribución nula o de referencia</strong> usando pruebas de permutaciones. Supongamos que con nuestra muestra
+<strong>distribución nula o de referencia</strong> usando pruebas de permutaciones. Supongamos
+que con nuestra muestra
 de tomadores de té, queremos probar la siguiente hipótesis nula:</p>
 <ul>
 <li>Los tomadores de té en bolsas exclusivamente usan azúcar más a tasas simillares que
@@ -502,12 +513,18 @@ la diferencia entre las dos proporciones:</p>
 <p><span class="math display">\[p_1 - p_2\]</span>.</p>
 <p>(tomadores de en bolsa solamente vs. suelto y bolsa). El proceso sería entonces:</p>
 <ul>
-<li>La hipótesis nula es que los dos grupos tienen distribuciones iguales, que este caso quiere decir que
-en la población, tomadores de té solo en bolsa usan azúcar a las mismas tasas que tomadores de suelto o bolsas.</li>
-<li>Bajo nuestra hipótesis nula (proporciones iguales), producimos una cantidad grande (por ejemplo 10 mil o más) de muestras permutando las etiquetas de los grupos.</li>
-<li>Evaluamos nuestra estadística de prueba en cada una de las muestras permutadas.</li>
-<li>El conjunto de valores obtenidos nos da nuestra <em>distribución de referencia</em> (ya no estamos limitados a 20 replicaciones como en las pruebas gráficas).</li>
-<li>Y la pregunta clave es: ¿el valor de la estadística en nuestra muestra es <em>extrema</em> en comparación a la distribución de referencia?</li>
+<li>La hipótesis nula es que los dos grupos tienen distribuciones iguales, que
+este caso quiere decir que en la población, tomadores de té solo en bolsa usan
+azúcar a las mismas tasas que tomadores de suelto o bolsas.</li>
+<li>Bajo nuestra hipótesis nula (proporciones iguales), producimos una cantidad
+grande (por ejemplo 10 mil o más) de muestras permutando las etiquetas de los
+grupos.</li>
+<li>Evaluamos nuestra estadística de prueba en cada una de las muestras
+permutadas.</li>
+<li>El conjunto de valores obtenidos nos da nuestra <em>distribución de referencia</em>
+(ya no estamos limitados a 20 replicaciones como en las pruebas gráficas).</li>
+<li>Y la pregunta clave es: ¿el valor de la estadística en nuestra muestra es
+<em>extrema</em> en comparación a la distribución de referencia?</li>
 </ul>
 <div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="pruebas-de-hipótesis.html#cb75-1"></a><span class="co"># ESta función calcula la diferencia entre grupos de interés</span></span>
 <span id="cb75-2"><a href="pruebas-de-hipótesis.html#cb75-2"></a>calc_diferencia &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
@@ -535,62 +552,187 @@ en la población, tomadores de té solo en bolsa usan azúcar a las mismas tasas
 <pre><code>## [1] 0.093</code></pre>
 <p>Ahora construimos nuestra distribución nula o de referencia:</p>
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="pruebas-de-hipótesis.html#cb78-1"></a>valores_ref &lt;-<span class="st"> </span><span class="kw">permutaciones_est</span>(te_azucar, how, calc_diferencia, <span class="dt">n =</span> <span class="dv">10000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="pruebas-de-hipótesis.html#cb79-1"></a>reps &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="kw">null_permute</span>(<span class="st">&quot;how&quot;</span>), te_azucar, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb79-2"><a href="pruebas-de-hipótesis.html#cb79-2"></a>valores_ref &lt;-<span class="st"> </span>reps <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb79-3"><a href="pruebas-de-hipótesis.html#cb79-3"></a><span class="st">  </span><span class="kw">group_by</span>(.sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb79-4"><a href="pruebas-de-hipótesis.html#cb79-4"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb79-5"><a href="pruebas-de-hipótesis.html#cb79-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diferencia =</span> <span class="kw">lapply</span>(data, calc_diferencia)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb79-6"><a href="pruebas-de-hipótesis.html#cb79-6"></a><span class="st">  </span><span class="kw">unnest</span>(diferencia)</span></code></pre></div>
 <p>Y graficamos nuestros resultados (con un histograma y una gráfica de cuantiles, por ejemplo). la
 estadística evaluada un cada una de nuestras muestras permutadas:</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="pruebas-de-hipótesis.html#cb79-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">sample =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif)  <span class="op">+</span></span>
-<span id="cb79-2"><a href="pruebas-de-hipótesis.html#cb79-2"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;diferencia&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Distribución nula o de referencia&quot;</span>)</span>
-<span id="cb79-3"><a href="pruebas-de-hipótesis.html#cb79-3"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">x =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.04</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb79-4"><a href="pruebas-de-hipótesis.html#cb79-4"></a><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>)</span>
-<span id="cb79-5"><a href="pruebas-de-hipótesis.html#cb79-5"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span></span></code></pre></div>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-17-1.png" width="576" /></p>
-<p>Este es el rango de fluctuación usual para nuestra estadística *bajo la hipótesis de que
-los dos grupos de tomadores de té consumen té a la misma tasa.
-El valor que obtuvimos en nuestros datos es 0.0927602,
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="pruebas-de-hipótesis.html#cb80-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">sample =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif)  <span class="op">+</span></span>
+<span id="cb80-2"><a href="pruebas-de-hipótesis.html#cb80-2"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;diferencia&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Distribución nula o de referencia&quot;</span>)</span>
+<span id="cb80-3"><a href="pruebas-de-hipótesis.html#cb80-3"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">x =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.04</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb80-4"><a href="pruebas-de-hipótesis.html#cb80-4"></a><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>)</span>
+<span id="cb80-5"><a href="pruebas-de-hipótesis.html#cb80-5"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span></span></code></pre></div>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-18-1.png" width="576" /></p>
+<p>Este es el rango de fluctuación usual para nuestra estadística *bajo la
+hipótesis de que los dos grupos de tomadores de té consumen té a la misma tasa.
+El valor que obtuvimos en nuestros datos es 0.09,
 que no es un valor extremo en la distribución de referencia que vimos arriba: esta
 muestra no aporta mucha evidencia en contra de que los grupos tienen distribuciones similares.
 Podemos graficar otra vez marcando el valor de referencia:</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="pruebas-de-hipótesis.html#cb80-1"></a><span class="co"># Función de distribución acumulada (inverso de función de cuantiles)</span></span>
-<span id="cb80-2"><a href="pruebas-de-hipótesis.html#cb80-2"></a>dist_perm &lt;-<span class="st"> </span><span class="kw">ecdf</span>(valores_ref<span class="op">$</span>diferencia)</span>
-<span id="cb80-3"><a href="pruebas-de-hipótesis.html#cb80-3"></a><span class="co"># Calculamos el percentil del valor observado</span></span>
-<span id="cb80-4"><a href="pruebas-de-hipótesis.html#cb80-4"></a>percentil_obs &lt;-<span class="st"> </span><span class="kw">dist_perm</span>(dif_obs)</span></code></pre></div>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="pruebas-de-hipótesis.html#cb81-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">sample =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif)  <span class="op">+</span></span>
-<span id="cb81-2"><a href="pruebas-de-hipótesis.html#cb81-2"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;diferencia&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Distribución nula o de referencia&quot;</span>) <span class="op">+</span></span>
-<span id="cb81-3"><a href="pruebas-de-hipótesis.html#cb81-3"></a><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> dif_obs, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb81-4"><a href="pruebas-de-hipótesis.html#cb81-4"></a><span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.3</span>, <span class="dt">y =</span> dif_obs <span class="op">-</span><span class="st"> </span><span class="fl">0.05</span>, <span class="dt">label =</span> <span class="st">&quot;diferencia observada&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb81-5"><a href="pruebas-de-hipótesis.html#cb81-5"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">x =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.04</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb81-6"><a href="pruebas-de-hipótesis.html#cb81-6"></a><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span></span>
-<span id="cb81-7"><a href="pruebas-de-hipótesis.html#cb81-7"></a><span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> dif_obs, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb81-8"><a href="pruebas-de-hipótesis.html#cb81-8"></a><span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> dif_obs, <span class="dt">y =</span> <span class="dv">2000</span>, <span class="dt">label =</span> percentil_obs,<span class="dt">vjust =</span> <span class="fl">-0.2</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span>
-<span id="cb81-9"><a href="pruebas-de-hipótesis.html#cb81-9"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span> </span></code></pre></div>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-19-1.png" width="576" />
-Y vemos que es un valor algo (pero no muy) extremo en la distribución de referencia que vimos arriba: esta
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="pruebas-de-hipótesis.html#cb81-1"></a><span class="co"># Función de distribución acumulada (inverso de función de cuantiles)</span></span>
+<span id="cb81-2"><a href="pruebas-de-hipótesis.html#cb81-2"></a>dist_perm &lt;-<span class="st"> </span><span class="kw">ecdf</span>(valores_ref<span class="op">$</span>diferencia)</span>
+<span id="cb81-3"><a href="pruebas-de-hipótesis.html#cb81-3"></a><span class="co"># Calculamos el percentil del valor observado</span></span>
+<span id="cb81-4"><a href="pruebas-de-hipótesis.html#cb81-4"></a>percentil_obs &lt;-<span class="st"> </span><span class="kw">dist_perm</span>(dif_obs)</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="pruebas-de-hipótesis.html#cb82-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">sample =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif)  <span class="op">+</span></span>
+<span id="cb82-2"><a href="pruebas-de-hipótesis.html#cb82-2"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;diferencia&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Distribución nula o de referencia&quot;</span>) <span class="op">+</span></span>
+<span id="cb82-3"><a href="pruebas-de-hipótesis.html#cb82-3"></a><span class="st">    </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> dif_obs, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb82-4"><a href="pruebas-de-hipótesis.html#cb82-4"></a><span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.3</span>, <span class="dt">y =</span> dif_obs <span class="op">-</span><span class="st"> </span><span class="fl">0.05</span>, <span class="dt">label =</span> <span class="st">&quot;diferencia observada&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb82-5"><a href="pruebas-de-hipótesis.html#cb82-5"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(valores_ref, <span class="kw">aes</span>(<span class="dt">x =</span> diferencia)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.04</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb82-6"><a href="pruebas-de-hipótesis.html#cb82-6"></a><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span></span>
+<span id="cb82-7"><a href="pruebas-de-hipótesis.html#cb82-7"></a><span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> dif_obs, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb82-8"><a href="pruebas-de-hipótesis.html#cb82-8"></a><span class="st">    </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> dif_obs, <span class="dt">y =</span> <span class="dv">2000</span>, <span class="dt">label =</span> percentil_obs,<span class="dt">vjust =</span> <span class="fl">-0.2</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span>
+<span id="cb82-9"><a href="pruebas-de-hipótesis.html#cb82-9"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span> </span></code></pre></div>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-20-1.png" width="576" /></p>
+<p>Y vemos que es un valor algo (pero no muy) extremo en la distribución de referencia que vimos arriba: esta
 muestra no aporta una gran cantidad de
 evidencia en contra de que los grupos tienen distribuciones similares, que
-en este caso significa que los dos grupos usan azúcar a tasas similares.
-### Valor p {-}
-Nótese que calculamos una cantidad adicional, que es el percentil donde nuestra observación cae
-en la distribución generada por las permutación. Esta cantidad puede usarse para calcular un
-<strong>valor p</strong>. Podemos calcular, por ejemplo:</p>
+en este caso significa que los dos grupos usan azúcar a tasas similares.</p>
+</div>
+<div id="pruebas-de-hipótesis-tradicionales" class="section level2 unnumbered">
+<h2>Pruebas de hipótesis tradicionales</h2>
+<p>Comencemos recordando la definición de parámetro y estadística.</p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> Un <strong>parámetro</strong> es una característica (numérica) de una población o de una distribución de probabilidad.<br />
+Una <strong>estadística</strong> es una característica (numérica) de los datos.
+</p>
+</div>
+<p>Cualquier función de un parámetro es también un parámetro, y cualquier función
+de una estadística es también una estadística. Cuando la estadística se calcula
+de una muestra aleatoria, es por consiguiente aleatoria y es por tanto una
+variable aleatoria.</p>
+<ul>
+<li><p>Por ejemplo <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\sigma\)</span> son parámetros de la distribución normal con
+función de densidad <span class="math inline">\(f(x) = (1/\sqrt{2\pi}\sigma)e^{(x-\mu)^2/(2\sigma^2)}\)</span>.<br />
+La varianza <span class="math inline">\(\sigma^2\)</span>, y el cociente (<em>señal a ruido</em>) <span class="math inline">\(\mu/\sigma\)</span> también
+son parámetros.</p></li>
+<li><p>Si <span class="math inline">\(X_1,X_2,...,X_n\)</span> son una muestra aleatoria, entinces la media
+<span class="math inline">\(\bar{X}=1/n\sum X_i\)</span> es una estadística.</p></li>
+</ul>
+<p>Ahora podemos pasar a las definiciones correspondientes a pruebas de hipótesis
+(o pruebas de significancia).</p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> Denotamos por <span class="math inline"><span class="math inline">\(H_0\)</span></span> a la <em>hipótesis nula</em> la cual usualmente tratamos como la afirmación del <em>status quo.</em> La hipótesis alternativa la denotamos por <span class="math inline"><span class="math inline">\(H_1\)</span></span> y representa el supuesto que está a prueba y para el cual buscamos evidencia en los datos.
+</p>
+</div>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> La hipótesis normalmente se plantea en términos de un parámetro (<span class="math inline"><span class="math inline">\(\theta\in\mathbb{R}\)</span></span>) o conjunto de parámetros (<span class="math inline"><span class="math inline">\(\theta\in\mathbb{R}^p\)</span></span>) de la distribución de interés (por ejemplo media, moda, varianza). Para una hipótesis nula del estilo <span class="math inline"><span class="math inline">\(H_0: \theta = \theta_0,\)</span></span> la hipótesis a contrastar se puede denominar como:
+</p>
+<ul>
+<li>
+<em>Hipótesis alternativa de una cola</em> <span class="math inline"><span class="math inline">\(H_1: \theta &amp;gt; \theta_0\)</span></span><br />
+</li>
+<li>
+<em>Hipótesis alternativa de dos colas</em> <span class="math inline"><span class="math inline">\(H_1: \theta \neq \theta_0\)</span></span>
+</li>
+</ul>
+</div>
+<p>En el ejemplo anterior planteamos hipótesis nula (proporciones iguales) e
+hipótesis alternativa que la proporción de tomadores de te suelto que usan
+azúcar en menor, esto corresponde a una hipótesis alternativa a dos colas:
+<span class="math inline">\(H_0: p_1 = p_2\)</span>, y <span class="math inline">\(H_1:p_1 &gt; p_2\)</span>.</p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> Una <em>estadística de prueba</em> es una función numérica de los datos cuyo valor determina el resultado de la prueba. La función usualmente es denotada por <span class="math inline"><span class="math inline">\(T(\bf X)\)</span></span> donde <span class="math inline"><span class="math inline">\(\bf X\)</span></span> representa los datos como variable aleatoria. Por ejemplo, <span class="math inline"><span class="math inline">\(T = T(X_1, \ldots, X_N)\)</span></span> si sólo tenemos una muestra, o por <span class="math inline"><span class="math inline">\(T = T(X_1, \ldots, X_N, Y_1, \ldots, Y_M)\)</span></span> en el caso de tener dos muestras. Al evaluar la prueba para un conjunto de datos dado, <span class="math inline"><span class="math inline">\(x\)</span></span>, ésta se denomina <em>estadística de prueba observada,</em> <span class="math inline"><span class="math inline">\(t = T(x).\)</span></span>
+</p>
+</div>
+<p>La estadística de prueba correspondiente al ejemplo es <span class="math inline">\(T = p_1 - p_2\)</span></p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> El <em>valor p</em> es la probabilidad de que bajo la hipótesis nula los datos generen un valor tan extremo como la estadística de prueba observada. Por ejemplo, si consideramos la hipótesis nula admite valores grandes, el valor p se calcula como <span class="math inline"><span class="math inline">\(P(T \geq t).\)</span></span>
+</p>
+</div>
+<p>En el ejemplo de tomadores de té lo calculamos usando el percentil donde
+nuestra observación cae en la distribución generada por las permutación (valor
+<em>p</em> de una cola).
+.
+Podemos calcular, por ejemplo:</p>
 <ul>
 <li><strong>Valor p de dos colas</strong>: Si la hipótesis nula es cierta, ¿cuál es la
-<strong>probabilidad</strong> de observar una diferencia <strong>tan extrema o más extrema de lo que observamos</strong>?</li>
+<strong>probabilidad</strong> de observar una diferencia <strong>tan extrema o más extrema de lo
+que observamos</strong>?</li>
 </ul>
-<p>Considerando en este caso interpretamos <em>extrema</em> como que cae lejos de donde a mayoría de la distribución se concentra, podemos calcular el valor p como sigue. A partir de el valor observado, consideramos cuál dato es menor: la probabilidad bajo lo hipótesis nula de observar una diferencia mayor de a que observamos, o la probabilidad de observar una diferencia menor a la que observamos. Tomamos el mínimo y multiplicamos por dos (<span class="citation">Hesterberg (<a href="#ref-timboot14" role="doc-biblioref">2014</a>)</span>):</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="pruebas-de-hipótesis.html#cb82-1"></a><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">dist_perm</span>(dif_obs), (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">dist_perm</span>(dif_obs)))</span></code></pre></div>
+<p>Considerando en este caso interpretamos <em>extrema</em> como que cae lejos de donde a
+mayoría de la distribución se concentra, podemos calcular el valor p como sigue.
+A partir de el valor observado, consideramos cuál dato es menor: la probabilidad
+bajo lo hipótesis nula de observar una diferencia mayor de a que observamos, o
+la probabilidad de observar una diferencia menor a la que observamos. Tomamos
+el mínimo y multiplicamos por dos (<span class="citation">Hesterberg (<a href="#ref-timboot14" role="doc-biblioref">2014</a>)</span>):</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="pruebas-de-hipótesis.html#cb83-1"></a><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">dist_perm</span>(dif_obs), (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">dist_perm</span>(dif_obs)))</span></code></pre></div>
 <pre><code>## [1] 0.085</code></pre>
-<p>Este valor p se considera como evidencia “moderada” en contra de la hipótesis nula. Valores p
-más chicos (observaciones más extremas en comparación con la referencia) aportan más evidencia
-en contra de la hipótesis de que los grupos de tomadores de té , y valores más grandes aportan menos
-evidencia.</p>
+<p>Este valor <em>p</em> se considera como evidencia “moderada” en contra de la hipótesis
+nula. Valores p más chicos (observaciones más extremas en comparación con la
+referencia) aportan más evidencia en contra de la hipótesis de que los grupos de
+tomadores de té , y valores más grandes aportan menos evidencia.</p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> Un resultado es <strong>estadisticamente significativo</strong> si tiene muy baja probabilidad de suceder al azar.
+</p>
+</div>
+<p>Entre más pequeño requiramos un valor <em>p</em> oara declarar un resultado
+estadísticamente significativo, somos más conservadores.</p>
+<p>Las pruebas de hipótesis con frecuencia inician contestando una pregunta más
+general que los valores <em>p</em>: ¿Cuál es la distribución de la estadística de
+prueba cuando no hay efecto real?</p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> La <strong>distribución nula</strong> es la disttibución de la estadística de prueba si la hipótesis nula es cierta.
+</p>
+</div>
+<p>En ocasiones también nos referimos a ella como la distribución de referencia
+pues estamos comparando la estadística de prueba observada a su referencia
+para determinar que tan inusual es.</p>
+<p>En el ejemplo de tomadores de te aproximamos la distribución nula (y los valores
+<em>p</em>) con simulación; sin embargo, para algunas estadisticas hay métodos exactos.</p>
+<p>En particular, usamos el método de pruebas de permutación, el algoritmo para
+dos grupos sería como sigue.</p>
+<div class="mathblock">
+<p>
+<strong>Prueba de permutación para dos muestras</strong>
+</p>
+<p>
+Supongamos que tenemos <em>m</em> observaciones de una población y <em>n</em> de otra.
+</p>
+<ul>
+<li>
+Combina los <code>m+n</code> valores.<br />
+</li>
+<li>
+Repite:
+<ul>
+<li>
+Saca una remuestra de tamaño <code>m</code> sin reemplazo.
+</li>
+<li>
+Usa las <code>n</code> observaciones restantes para obtener la otra muestra.
+</li>
+<li>
+Calcula la estadística de prueba (que compara las muestras).
+</li>
+</ul>
+</li>
+<li>
+Calcula el valor <em>p</em> como la fracción de las veces que la estadística sobrepasó la estadística observada, multiplica por 2 para una prueba de dos lados.
+</li>
+</ul>
+</div>
+<p>La distribución de la estadística a lo largo de las remuestras de permutación
+es la <strong>distribución de permutación</strong>. Ésta puede ser exacta, si se calcula
+exhaustivamente (cuando tenemos pocas observaciones es posible) o aproximada.</p>
 </div>
 <div id="tomadores-de-té-2" class="section level2 unnumbered">
 <h2>Tomadores de té 2</h2>
-<p>Ahora hacemos una prueba de permutaciones otro par de proporciones con el mismo método. La hipótesis
-nula ahora es:</p>
+<p>Ahora hacemos una prueba de permutaciones otro par de proporciones con el mismo
+método. La hipótesis nula ahora es:</p>
 <ul>
 <li>Los tomadores de té Earl Gray usan azúcar a una tasa similar a los tomadores de té negro</li>
 </ul>
-Los datos que obtuvimos en nuestra encuesta, en conteos, son:
+<p>Los datos que obtuvimos en nuestra encuesta, en conteos, son:</p>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -631,11 +773,16 @@ sugar
 </tbody>
 </table>
 <p>Y en porcentajes tenemos que:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="pruebas-de-hipótesis.html#cb84-1"></a>prop_azucar &lt;-<span class="st"> </span>te_azucar <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(Tea, sugar) <span class="op">%&gt;%</span><span class="st"> </span>tally <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb84-2"><a href="pruebas-de-hipótesis.html#cb84-2"></a><span class="st">  </span><span class="kw">group_by</span>(Tea) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n), <span class="dt">n =</span> <span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb84-3"><a href="pruebas-de-hipótesis.html#cb84-3"></a><span class="st">  </span><span class="kw">filter</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(Tea, <span class="dt">prop_azucar =</span> prop, n) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb84-4"><a href="pruebas-de-hipótesis.html#cb84-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">&#39;% usa azúcar&#39; = round(prop_azucar)) %&gt;% select(-prop_azucar)</span></span>
-<span id="cb84-5"><a href="pruebas-de-hipótesis.html#cb84-5"></a><span class="st">prop_azucar %&gt;% formatear_tabla</span></span></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="pruebas-de-hipótesis.html#cb85-1"></a>prop_azucar &lt;-<span class="st"> </span>te_azucar <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-2"><a href="pruebas-de-hipótesis.html#cb85-2"></a><span class="st">  </span><span class="kw">count</span>(Tea, sugar) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-3"><a href="pruebas-de-hipótesis.html#cb85-3"></a><span class="st">  </span><span class="kw">group_by</span>(Tea) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-4"><a href="pruebas-de-hipótesis.html#cb85-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n), </span>
+<span id="cb85-5"><a href="pruebas-de-hipótesis.html#cb85-5"></a>         <span class="dt">n =</span> <span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-6"><a href="pruebas-de-hipótesis.html#cb85-6"></a><span class="st">  </span><span class="kw">filter</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-7"><a href="pruebas-de-hipótesis.html#cb85-7"></a><span class="st">  </span><span class="kw">select</span>(Tea, <span class="dt">prop_azucar =</span> prop, n) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb85-8"><a href="pruebas-de-hipótesis.html#cb85-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="st">&#39;% usa azúcar&#39; = round(prop_azucar)) %&gt;% </span></span>
+<span id="cb85-9"><a href="pruebas-de-hipótesis.html#cb85-9"></a><span class="st">  select(-prop_azucar)</span></span>
+<span id="cb85-10"><a href="pruebas-de-hipótesis.html#cb85-10"></a><span class="st">prop_azucar %&gt;% formatear_tabla</span></span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -675,28 +822,89 @@ Earl Grey
 </tr>
 </tbody>
 </table>
-<p>Pero distintas muestras podrían haber dado distintos resultados. Nos preguntamos que tan fuerte es
-la evidencia en contra de que en realidad los dos grupos de personas usan azúcar en proporciones similares,
-y la diferencia que vemos se puede atribuir a variación muestral.</p>
+<p>Pero distintas muestras podrían haber dado distintos resultados. Nos preguntamos
+que tan fuerte es la evidencia en contra de que en realidad los dos grupos de
+personas usan azúcar en proporciones similares, y la diferencia que vemos se
+puede atribuir a variación muestral.</p>
 <p>Escribimos la función que calcula diferencias para cada muestra:</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="pruebas-de-hipótesis.html#cb85-1"></a>calc_diferencia_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
-<span id="cb85-2"><a href="pruebas-de-hipótesis.html#cb85-2"></a>  datos <span class="op">%&gt;%</span></span>
-<span id="cb85-3"><a href="pruebas-de-hipótesis.html#cb85-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">usa_azucar =</span> <span class="kw">as.numeric</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb85-4"><a href="pruebas-de-hipótesis.html#cb85-4"></a><span class="st">    </span><span class="kw">group_by</span>(Tea) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb85-5"><a href="pruebas-de-hipótesis.html#cb85-5"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb85-6"><a href="pruebas-de-hipótesis.html#cb85-6"></a><span class="st">    </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> Tea, <span class="dt">values_from =</span> prop_azucar) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb85-7"><a href="pruebas-de-hipótesis.html#cb85-7"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">diferencia_prop =</span> <span class="st">`</span><span class="dt">Earl Grey</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>black) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(diferencia_prop)</span>
-<span id="cb85-8"><a href="pruebas-de-hipótesis.html#cb85-8"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="pruebas-de-hipótesis.html#cb86-1"></a>calc_diferencia_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
+<span id="cb86-2"><a href="pruebas-de-hipótesis.html#cb86-2"></a>  datos <span class="op">%&gt;%</span></span>
+<span id="cb86-3"><a href="pruebas-de-hipótesis.html#cb86-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">usa_azucar =</span> <span class="kw">as.numeric</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb86-4"><a href="pruebas-de-hipótesis.html#cb86-4"></a><span class="st">    </span><span class="kw">group_by</span>(Tea) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb86-5"><a href="pruebas-de-hipótesis.html#cb86-5"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb86-6"><a href="pruebas-de-hipótesis.html#cb86-6"></a><span class="st">    </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> Tea, <span class="dt">values_from =</span> prop_azucar) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb86-7"><a href="pruebas-de-hipótesis.html#cb86-7"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">diferencia_prop =</span> <span class="st">`</span><span class="dt">Earl Grey</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>black) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb86-8"><a href="pruebas-de-hipótesis.html#cb86-8"></a><span class="st">    </span><span class="kw">pull</span>(diferencia_prop)</span>
+<span id="cb86-9"><a href="pruebas-de-hipótesis.html#cb86-9"></a>}</span></code></pre></div>
 <p>La diferencia observada es:</p>
 <pre><code>## [1] 0.254</code></pre>
 <p>Ahora construimos nuestra distribución nula o de referencia:</p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="pruebas-de-hipótesis.html#cb87-1"></a><span class="kw">set.seed</span>(<span class="dv">2</span>)</span>
-<span id="cb87-2"><a href="pruebas-de-hipótesis.html#cb87-2"></a>valores_ref &lt;-<span class="st"> </span><span class="kw">permutaciones_est</span>(te_azucar, Tea, calc_diferencia_<span class="dv">2</span>, <span class="dt">n =</span> <span class="dv">10000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="pruebas-de-hipótesis.html#cb88-1"></a><span class="kw">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb88-2"><a href="pruebas-de-hipótesis.html#cb88-2"></a>reps &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="kw">null_permute</span>(<span class="st">&quot;Tea&quot;</span>), te_azucar, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb88-3"><a href="pruebas-de-hipótesis.html#cb88-3"></a>valores_ref &lt;-<span class="st"> </span>reps <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-4"><a href="pruebas-de-hipótesis.html#cb88-4"></a><span class="st">  </span><span class="kw">group_by</span>(.sample) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-5"><a href="pruebas-de-hipótesis.html#cb88-5"></a><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-6"><a href="pruebas-de-hipótesis.html#cb88-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diferencia =</span> <span class="kw">lapply</span>(data, calc_diferencia_<span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb88-7"><a href="pruebas-de-hipótesis.html#cb88-7"></a><span class="st">  </span><span class="kw">unnest</span>(diferencia)</span></code></pre></div>
 <p>Y podemos graficar la distribución de referencia otra vez marcando el valor observado</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-27-1.png" width="576" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-35-1.png" width="576" /></p>
 <p>En este caso, la evidencia es muy fuerte en contra de la hipótesis nula, pues el
 resultado que obtuvimos es muy extremo en relación a la distribución de referencia.
 El valor p es cercano a 0.</p>
+<div class="ejercicio">
+<p>
+Haz una prueba de permutaciones para diferencia de medias para comparar la propina en cena vs en comidas. * Grafica la distribución de referencia.<br />
+* Calcula el valor <em>p</em> (dos colas).
+</p>
+</div>
+</div>
+<div id="pruebas-de-permutación-implementación" class="section level2 unnumbered">
+<h2>Pruebas de permutación: Implementación</h2>
+<p>Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
+extender las pruebas de permutación a <span class="math inline">\(\bar{X}\)</span> (la media de la primera muestra),
+<span class="math inline">\(m\bar{X}\)</span> (la suma de las observaciones en la primera muestra), y más.</p>
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> En pruebas de permutación, si dos estadísticas de prueba <span class="math inline"><span class="math inline">\(T_1\)</span></span> y <span class="math inline"><span class="math inline">\(T_2\)</span></span> están relacionadas por una función estríctamente creciente, <span class="math inline"><span class="math inline">\(T_1(X^*)=f(T_2(X^*))\)</span></span> donde <span class="math inline"><span class="math inline">\(X^*\)</span></span> es una remuestra de permutación de los datos originales, entonces los valores <em>p</em> serán los mismos en las pruebas de permutación.
+</p>
+</div>
+<p><strong>Agregar uno al numerador y denominador.</strong> Cuando se calcula el valor <em>p</em> en la
+implementación de muestreo, agregar uno al numerador y denominador. Esto
+corresponde a incluir los datos como una remuestra adicional y sirve para evitar
+reportar el valor <em>p</em> <span class="math inline">\(0\)</span> que es imposible pues siempre hay una remuestra con un
+valor al menos tan extremo como los datos observados (los datos mismos).</p>
+<p><strong>Muestras con reemplazo de la Distribución Nula.</strong> En la implementación de
+muestreo, no nos aseguramos que las remuestras sean únicas. Sería más acertado
+tomar muestras sin reemplazo, sin embargo, el costo computacional es demasiado
+alto.</p>
+<p><strong>Entre más muestras más exactitud.</strong> Hemos usado 10,000 muestras, en general
+entre más remuestras tendremos una mejor estimación del valor <em>p</em>. Si el
+verdadero valor es <span class="math inline">\(p\)</span> el estimado tendrá una varianza aproximadamente de
+<span class="math inline">\(p(1-p)/N\)</span> donde <span class="math inline">\(N\)</span> es el número de remuestras.<br />
+<strong>Observación.</strong> Así como los <span class="math inline">\(n\)</span> datos originales son una muestra de la
+población, también las <span class="math inline">\(N\)</span> remuestras de la estadística son una muestra de una
+población, en este caso de la distribución nula.</p>
+<p>La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere
+que la distribución de los grupos son muy similares, o la independencia entre
+observaciones y grupo. Esto también aplica cuando queremos probar por ejemplo, que
+una variable numérica Y es independiente de X.</p>
+<ul>
+<li><p>Hay algunas hipótesis que no se pueden probar con este método, como por ejemplo,
+las que se refieren a una sola muestra: ¿los datos son consistentes con que su
+media es igual a 5?</p></li>
+<li><p>Adicionalmente, en algunas ocasiones queremos probar aspectos más específicos
+de las diferencias: como ¿son iguales las medias o medianas de dos grupos de
+datos? ¿Tienen dispersión similar?</p></li>
+</ul>
+<p>Las pruebas de permutaciones no están tan perfectamente adaptadas a este
+problema, pues prueban <em>todos</em> los aspectos de las distribuciones que se
+comparan, aún cuando escogamos una estadística particular que pretende medir,
+por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
+igualdad de medias, por ejemplo, cuando en realidad otra característica de las
+distribuciones es la que difiere mucho en las poblaciones</p>
+<p>En algunas referencias (ver <span class="citation">(<span class="citeproc-not-found" data-reference-id="chitim"><strong>???</strong></span>)</span>, <span class="citation">(<span class="citeproc-not-found" data-reference-id="bootefron"><strong>???</strong></span>)</span>) se argumenta que de todas formas
+las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
+excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en <span class="citation">(<span class="citeproc-not-found" data-reference-id="chitim"><strong>???</strong></span>)</span>).</p>
 </div>
 <div id="ejemplo-tiempos-de-fusión" class="section level2 unnumbered">
 <h2>Ejemplo: tiempos de fusión</h2>
@@ -705,7 +913,7 @@ que tardan distintas personas en fusionar un <a href="https://en.wikipedia.org/w
 <p>Existen dos condiciones: en una se dio indicaciones de qué figura tenían que
 buscar (VV) y en otra no se dio esa indicación. ¿Las instrucciones verbales
 ayudan a fusionar más rápido el estereograma?</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-28-1.png" width="384" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-38-1.png" width="384" /></p>
 <p>Una pregunta que podríamos hacer es: considerando que hay mucha variación en el
 tiempo de fusión dentro de cada tratamiento, necesitamos calificar la evidencia
 de nuestra conclusión (el tiempo de fusión se reduce con información verbal).</p>
@@ -716,68 +924,51 @@ permutarlas daría muestras igualmente verosímiles.</p>
 <p>En este caso, compararemos gráficas de cuantiles de los datos con los
 producidos por permutaciones (transformamos los datos pues en este caso es
 más apropiado una comparación multiplicativa):</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-29-1.png" width="768" /></p>
-<p><strong>Ejercicio</strong>: ¿Podemos identificar los datos? En general, muy frecuentemente las personas
-identifican los datos correctamente,
-lo que muestra evidencia considerable de que la instrucción verbal
-altera los tiempos de respuesta de los partipantes, y en este caso
-ayuda a reducir el tiempo de fusión de los estereogramas.</p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-39-1.png" width="768" /></p>
+<div class="ejercicio">
+<p>
+¿Podemos identificar los datos? En general, muy frecuentemente las personas identifican los datos correctamente, lo que muestra evidencia considerable de que la instrucción verbal altera los tiempos de respuesta de los partipantes, y en este caso ayuda a reducir el tiempo de fusión de los estereogramas.
+</p>
+</div>
 </div>
 <div id="ejemplo-tiempos-de-fusión-2" class="section level2 unnumbered">
 <h2>Ejemplo: tiempos de fusión 2</h2>
-<p>Podemos usar las pruebas de permutaciones para distintos de tipos de estadísticas: medianas, medias, comparar dispersión usando rangos intercuartiles o varianzas, etc.</p>
+<p>Podemos usar las pruebas de permutaciones para distintos de tipos de
+estadísticas: medianas, medias, comparar dispersión usando rangos
+intercuartiles o varianzas, etc.</p>
 <p>Regresamos a los tiempos de fusión. Podemos hacer una prueba de permutaciones para
 la diferencia de las medias o medianas, por ejemplo. En este ejemplo usaremos
 una medida de centralidad un poco diferente, como ilustración: el promedio de los cuartiles
 superior e inferior de las dos distribuciones. Usaremos el cociente de estas dos cantidades
 para medir su diferencia</p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="pruebas-de-hipótesis.html#cb88-1"></a>stat_fusion &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb88-2"><a href="pruebas-de-hipótesis.html#cb88-2"></a>    (<span class="kw">quantile</span>(x, <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(x, <span class="fl">0.25</span>))<span class="op">/</span><span class="dv">2</span></span>
-<span id="cb88-3"><a href="pruebas-de-hipótesis.html#cb88-3"></a>}</span>
-<span id="cb88-4"><a href="pruebas-de-hipótesis.html#cb88-4"></a>calc_fusion &lt;-<span class="st"> </span><span class="cf">function</span>(stat_fusion){</span>
-<span id="cb88-5"><a href="pruebas-de-hipótesis.html#cb88-5"></a>  fun &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
-<span id="cb88-6"><a href="pruebas-de-hipótesis.html#cb88-6"></a>    datos <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb88-7"><a href="pruebas-de-hipótesis.html#cb88-7"></a><span class="st">      </span><span class="kw">group_by</span>(nv.vv) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb88-8"><a href="pruebas-de-hipótesis.html#cb88-8"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>(time)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb88-9"><a href="pruebas-de-hipótesis.html#cb88-9"></a><span class="st">      </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> nv.vv, <span class="dt">values_from =</span> est) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb88-10"><a href="pruebas-de-hipótesis.html#cb88-10"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">dif =</span> VV <span class="op">/</span><span class="st"> </span>NV ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dif)</span>
-<span id="cb88-11"><a href="pruebas-de-hipótesis.html#cb88-11"></a>  }</span>
-<span id="cb88-12"><a href="pruebas-de-hipótesis.html#cb88-12"></a>  fun</span>
-<span id="cb88-13"><a href="pruebas-de-hipótesis.html#cb88-13"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="pruebas-de-hipótesis.html#cb89-1"></a>calc_cociente &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(stat_fusion)</span>
-<span id="cb89-2"><a href="pruebas-de-hipótesis.html#cb89-2"></a>dif_obs &lt;-<span class="st"> </span><span class="kw">calc_cociente</span>(fusion)</span>
-<span id="cb89-3"><a href="pruebas-de-hipótesis.html#cb89-3"></a><span class="co"># permutar</span></span>
-<span id="cb89-4"><a href="pruebas-de-hipótesis.html#cb89-4"></a>valores_ref &lt;-<span class="st"> </span><span class="kw">permutaciones_est</span>(fusion, nv.vv, calc_cociente, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
-<span id="cb89-5"><a href="pruebas-de-hipótesis.html#cb89-5"></a>dist_perm_nv &lt;-<span class="st"> </span><span class="kw">ecdf</span>(valores_ref<span class="op">$</span>diferencia) </span>
-<span id="cb89-6"><a href="pruebas-de-hipótesis.html#cb89-6"></a>cuantil_obs &lt;-<span class="st"> </span><span class="kw">dist_perm_nv</span>(dif_obs)</span></code></pre></div>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-32-1.png" width="576" /></p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="pruebas-de-hipótesis.html#cb89-1"></a>stat_fusion &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb89-2"><a href="pruebas-de-hipótesis.html#cb89-2"></a>    (<span class="kw">quantile</span>(x, <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(x, <span class="fl">0.25</span>))<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb89-3"><a href="pruebas-de-hipótesis.html#cb89-3"></a>}</span>
+<span id="cb89-4"><a href="pruebas-de-hipótesis.html#cb89-4"></a>calc_fusion &lt;-<span class="st"> </span><span class="cf">function</span>(stat_fusion){</span>
+<span id="cb89-5"><a href="pruebas-de-hipótesis.html#cb89-5"></a>  fun &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
+<span id="cb89-6"><a href="pruebas-de-hipótesis.html#cb89-6"></a>    datos <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb89-7"><a href="pruebas-de-hipótesis.html#cb89-7"></a><span class="st">      </span><span class="kw">group_by</span>(nv.vv) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb89-8"><a href="pruebas-de-hipótesis.html#cb89-8"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>(time)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb89-9"><a href="pruebas-de-hipótesis.html#cb89-9"></a><span class="st">      </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> nv.vv, <span class="dt">values_from =</span> est) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb89-10"><a href="pruebas-de-hipótesis.html#cb89-10"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">dif =</span> VV <span class="op">/</span><span class="st"> </span>NV ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dif)</span>
+<span id="cb89-11"><a href="pruebas-de-hipótesis.html#cb89-11"></a>  }</span>
+<span id="cb89-12"><a href="pruebas-de-hipótesis.html#cb89-12"></a>  fun</span>
+<span id="cb89-13"><a href="pruebas-de-hipótesis.html#cb89-13"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="pruebas-de-hipótesis.html#cb90-1"></a>calc_cociente &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(stat_fusion)</span>
+<span id="cb90-2"><a href="pruebas-de-hipótesis.html#cb90-2"></a>dif_obs &lt;-<span class="st"> </span><span class="kw">calc_cociente</span>(fusion)</span>
+<span id="cb90-3"><a href="pruebas-de-hipótesis.html#cb90-3"></a><span class="co"># permutar</span></span>
+<span id="cb90-4"><a href="pruebas-de-hipótesis.html#cb90-4"></a>valores_ref &lt;-<span class="st"> </span><span class="kw">permutaciones_est</span>(fusion, nv.vv, calc_cociente, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb90-5"><a href="pruebas-de-hipótesis.html#cb90-5"></a>dist_perm_nv &lt;-<span class="st"> </span><span class="kw">ecdf</span>(valores_ref<span class="op">$</span>diferencia) </span>
+<span id="cb90-6"><a href="pruebas-de-hipótesis.html#cb90-6"></a>cuantil_obs &lt;-<span class="st"> </span><span class="kw">dist_perm_nv</span>(dif_obs)</span></code></pre></div>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-43-1.png" width="576" /></p>
 <p>Y el valor p de dos colas es</p>
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="pruebas-de-hipótesis.html#cb90-1"></a>dist_perm_nv &lt;-<span class="st"> </span><span class="kw">ecdf</span>(valores_ref<span class="op">$</span>diferencia)</span>
-<span id="cb90-2"><a href="pruebas-de-hipótesis.html#cb90-2"></a><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">dist_perm_nv</span>(dif_obs), <span class="dv">1</span><span class="op">-</span><span class="st"> </span><span class="kw">dist_perm_nv</span>(dif_obs))</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="pruebas-de-hipótesis.html#cb91-1"></a>dist_perm_nv &lt;-<span class="st"> </span><span class="kw">ecdf</span>(valores_ref<span class="op">$</span>diferencia)</span>
+<span id="cb91-2"><a href="pruebas-de-hipótesis.html#cb91-2"></a><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">dist_perm_nv</span>(dif_obs), <span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">dist_perm_nv</span>(dif_obs))</span></code></pre></div>
 <pre><code>## [1] 0.0354</code></pre>
-<p>Lo que muestra evidencia considerable, aunque no muy fuerte, de que la instrucción verbal ayuda a reducir el tiempo de fusión de los estereogramas: la <em>caja</em> del diagrama de caja y brazos
-para el grupo VV está <em>encogida</em> por un factor menor a 1.</p>
-</div>
-<div id="ojo-otros-tipos-de-hipótesis-nulas" class="section level2 unnumbered">
-<h2>Ojo: otros tipos de hipótesis nulas</h2>
-<p>La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere
-que la distribución de los grupos son muy similares, o la independencia entre
-observaciones y grupo. Esto también aplica cuando queremos probar por ejemplo, que
-una variable numérica Y es independiente de X.</p>
-<ul>
-<li><p>Hay algunas hipótesis que no se pueden probar con este método, como por ejemplo, las
-que se refieren a una sola muestra: ¿los datos son consistentes con que su media es igual a 5?</p></li>
-<li><p>Adicionalmente, en algunas ocasiones queremos probar aspectos más específicos
-de las diferencias: como ¿son iguales las medias o medianas de dos grupos de datos? ¿Tienen
-dispersión similar?</p></li>
-</ul>
-<p>Las pruebas de permutaciones no están tan perfectamente
-adaptadas a este problema, pues prueban <em>todos</em> los aspectos de las distribuciones que se comparan, aún cuando escogamos una
-estadística particular que pretende medir, por ejemplo, diferencia de medias. Eso quiere
-decir que podemos rechazar igualdad de medias, por ejemplo, cuando en realidad otra característica de las distribuciones es la que difiere mucho en las poblaciones</p>
-<p>En algunas referencias (ver <span class="citation">(<span class="citeproc-not-found" data-reference-id="chitim"><strong>???</strong></span>)</span>, <span class="citation">(<span class="citeproc-not-found" data-reference-id="bootefron"><strong>???</strong></span>)</span>) se argumenta que de todas formas
-las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
-excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en <span class="citation">(<span class="citeproc-not-found" data-reference-id="chitim"><strong>???</strong></span>)</span>).</p>
+<p>Lo que muestra evidencia considerable, aunque no muy fuerte, de que la
+instrucción verbal ayuda a reducir el tiempo de fusión de los estereogramas: la
+<em>caja</em> del diagrama de caja y brazos para el grupo VV está <em>encogida</em> por un
+factor menor a 1.</p>
 </div>
 <div id="separación-de-grupos" class="section level2 unnumbered">
 <h2>Separación de grupos</h2>
@@ -807,7 +998,7 @@ dependiendo de sus mediciones?</p>
 datos en dimensión baja de forma que los grupos sean lo más compactos y separados posibles.</p>
 <p>Para probar qué tan bien funciona este método, podemos hacer una prueba de permutación, aplicamos
 LDA y observamos los resultados.</p>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-45-1.png" width="672" /></p>
 <p>Y vemos que incluso permutando los grupos, es generalmente posible separarlos en grupos
 bien definidos: la búsqueda es suficientemente agresiva para encontrar
 combinaciones lineales que los separan. Que no podamos distinguir
@@ -816,24 +1007,24 @@ servir para separar los grupos claramente.</p>
 <p>Otro enfoque sería separar los datos en una muestra de entrenamiento y una de prueba (que discutiremos
 en la última sesión). Aplicamos el procedimiento a la muestra de entrenamiento y luego vemos qué pasa
 con los datos de prueba:</p>
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="pruebas-de-hipótesis.html#cb92-1"></a><span class="kw">set.seed</span>(<span class="dv">8</span>)</span>
-<span id="cb92-2"><a href="pruebas-de-hipótesis.html#cb92-2"></a>wasps_<span class="dv">1</span> &lt;-<span class="st"> </span>wasps <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u =</span> <span class="kw">runif</span>(<span class="kw">nrow</span>(wasps), <span class="dv">0</span>, <span class="dv">1</span>))</span>
-<span id="cb92-3"><a href="pruebas-de-hipótesis.html#cb92-3"></a>wasps_entrena &lt;-<span class="st"> </span>wasps_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(u <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.8</span>)</span>
-<span id="cb92-4"><a href="pruebas-de-hipótesis.html#cb92-4"></a>wasps_prueba &lt;-<span class="st"> </span>wasps_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(u <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.8</span>)                            </span>
-<span id="cb92-5"><a href="pruebas-de-hipótesis.html#cb92-5"></a>                            </span>
-<span id="cb92-6"><a href="pruebas-de-hipótesis.html#cb92-6"></a>wasp.lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(Group <span class="op">~</span><span class="st"> </span>., <span class="dt">data=</span>wasps_entrena[,<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb92-7"><a href="pruebas-de-hipótesis.html#cb92-7"></a>wasp_ld_entrena &lt;-<span class="st"> </span><span class="kw">predict</span>(wasp.lda,  <span class="dt">dimen=</span><span class="dv">2</span>)<span class="op">$</span>x <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb92-8"><a href="pruebas-de-hipótesis.html#cb92-8"></a><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;universal&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb92-9"><a href="pruebas-de-hipótesis.html#cb92-9"></a><span class="st">     </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="st">&quot;entrenamiento&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb92-10"><a href="pruebas-de-hipótesis.html#cb92-10"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">grupo =</span> wasps_entrena<span class="op">$</span>Group)</span>
-<span id="cb92-11"><a href="pruebas-de-hipótesis.html#cb92-11"></a>wasp_ld_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(wasp.lda, <span class="dt">newdata =</span> wasps_prueba, <span class="dt">dimen=</span><span class="dv">2</span>)<span class="op">$</span>x  <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb92-12"><a href="pruebas-de-hipótesis.html#cb92-12"></a><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;universal&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb92-13"><a href="pruebas-de-hipótesis.html#cb92-13"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="st">&quot;prueba&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb92-14"><a href="pruebas-de-hipótesis.html#cb92-14"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">grupo =</span> wasps_prueba<span class="op">$</span>Group)</span>
-<span id="cb92-15"><a href="pruebas-de-hipótesis.html#cb92-15"></a>wasp_lda &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(wasp_ld_entrena, wasp_ld_prueba)</span>
-<span id="cb92-16"><a href="pruebas-de-hipótesis.html#cb92-16"></a><span class="kw">ggplot</span>(wasp_lda, <span class="kw">aes</span>(<span class="dt">x =</span> LD1, <span class="dt">y =</span> LD2, <span class="dt">colour =</span> grupo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span></span>
-<span id="cb92-17"><a href="pruebas-de-hipótesis.html#cb92-17"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo)</span></code></pre></div>
-<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="pruebas-de-hipótesis.html#cb93-1"></a><span class="kw">set.seed</span>(<span class="dv">8</span>)</span>
+<span id="cb93-2"><a href="pruebas-de-hipótesis.html#cb93-2"></a>wasps_<span class="dv">1</span> &lt;-<span class="st"> </span>wasps <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">u =</span> <span class="kw">runif</span>(<span class="kw">nrow</span>(wasps), <span class="dv">0</span>, <span class="dv">1</span>))</span>
+<span id="cb93-3"><a href="pruebas-de-hipótesis.html#cb93-3"></a>wasps_entrena &lt;-<span class="st"> </span>wasps_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(u <span class="op">&lt;=</span><span class="st"> </span><span class="fl">0.8</span>)</span>
+<span id="cb93-4"><a href="pruebas-de-hipótesis.html#cb93-4"></a>wasps_prueba &lt;-<span class="st"> </span>wasps_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(u <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.8</span>)                            </span>
+<span id="cb93-5"><a href="pruebas-de-hipótesis.html#cb93-5"></a>                            </span>
+<span id="cb93-6"><a href="pruebas-de-hipótesis.html#cb93-6"></a>wasp.lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(Group <span class="op">~</span><span class="st"> </span>., <span class="dt">data=</span>wasps_entrena[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb93-7"><a href="pruebas-de-hipótesis.html#cb93-7"></a>wasp_ld_entrena &lt;-<span class="st"> </span><span class="kw">predict</span>(wasp.lda,  <span class="dt">dimen=</span><span class="dv">2</span>)<span class="op">$</span>x <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb93-8"><a href="pruebas-de-hipótesis.html#cb93-8"></a><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;universal&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb93-9"><a href="pruebas-de-hipótesis.html#cb93-9"></a><span class="st">     </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="st">&quot;entrenamiento&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb93-10"><a href="pruebas-de-hipótesis.html#cb93-10"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">grupo =</span> wasps_entrena<span class="op">$</span>Group)</span>
+<span id="cb93-11"><a href="pruebas-de-hipótesis.html#cb93-11"></a>wasp_ld_prueba &lt;-<span class="st"> </span><span class="kw">predict</span>(wasp.lda, <span class="dt">newdata =</span> wasps_prueba, <span class="dt">dimen=</span><span class="dv">2</span>)<span class="op">$</span>x  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb93-12"><a href="pruebas-de-hipótesis.html#cb93-12"></a><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">.name_repair =</span> <span class="st">&quot;universal&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb93-13"><a href="pruebas-de-hipótesis.html#cb93-13"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="st">&quot;prueba&quot;</span>)<span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb93-14"><a href="pruebas-de-hipótesis.html#cb93-14"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">grupo =</span> wasps_prueba<span class="op">$</span>Group)</span>
+<span id="cb93-15"><a href="pruebas-de-hipótesis.html#cb93-15"></a>wasp_lda &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(wasp_ld_entrena, wasp_ld_prueba)</span>
+<span id="cb93-16"><a href="pruebas-de-hipótesis.html#cb93-16"></a><span class="kw">ggplot</span>(wasp_lda, <span class="kw">aes</span>(<span class="dt">x =</span> LD1, <span class="dt">y =</span> LD2, <span class="dt">colour =</span> grupo)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">3</span>) <span class="op">+</span></span>
+<span id="cb93-17"><a href="pruebas-de-hipótesis.html#cb93-17"></a><span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span>tipo)</span></code></pre></div>
+<p><img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
 <p>Aunque esta separación de datos es menos efectiva en este ejemplo por la muestra chica, podemos ver
 que la separación lograda en los datos de entrenamiento probablemente se debe a variación muestral.</p>
 </div>
@@ -903,51 +1094,51 @@ ilustración. Ahora intentamos usar distintas mediciones de la diferencia entre 
 usando distintas medidas resumen y transformaciones (por ejemplo, con o sin logaritmo). Aquí hay
 unas 12 combinaciones distintas para hacer el análisis (multiplicadas por criterios
 de “aceptación de datos en la muestra”, que simulamos tomando una submuestra al azar):</p>
-<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="pruebas-de-hipótesis.html#cb93-1"></a>calc_fusion &lt;-<span class="st"> </span><span class="cf">function</span>(stat_fusion, trans, comparacion){</span>
-<span id="cb93-2"><a href="pruebas-de-hipótesis.html#cb93-2"></a>  fun &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
-<span id="cb93-3"><a href="pruebas-de-hipótesis.html#cb93-3"></a>    datos <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-4"><a href="pruebas-de-hipótesis.html#cb93-4"></a><span class="st">      </span><span class="kw">group_by</span>(nv.vv) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-5"><a href="pruebas-de-hipótesis.html#cb93-5"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>({{ trans }}(time))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-6"><a href="pruebas-de-hipótesis.html#cb93-6"></a><span class="st">      </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> nv.vv, <span class="dt">values_from =</span> est) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb93-7"><a href="pruebas-de-hipótesis.html#cb93-7"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">dif =</span> {{ comparacion }}) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dif)</span>
-<span id="cb93-8"><a href="pruebas-de-hipótesis.html#cb93-8"></a>  }</span>
-<span id="cb93-9"><a href="pruebas-de-hipótesis.html#cb93-9"></a>  fun</span>
-<span id="cb93-10"><a href="pruebas-de-hipótesis.html#cb93-10"></a>}</span>
-<span id="cb93-11"><a href="pruebas-de-hipótesis.html#cb93-11"></a>valor_p &lt;-<span class="st"> </span><span class="cf">function</span>(datos, variable, calc_diferencia, <span class="dt">n =</span> <span class="dv">1000</span>){</span>
-<span id="cb93-12"><a href="pruebas-de-hipótesis.html#cb93-12"></a>  <span class="co"># calcular estadística para cada grupo</span></span>
-<span id="cb93-13"><a href="pruebas-de-hipótesis.html#cb93-13"></a>  permutar &lt;-<span class="st"> </span><span class="cf">function</span>(variable){</span>
-<span id="cb93-14"><a href="pruebas-de-hipótesis.html#cb93-14"></a>    <span class="kw">sample</span>(variable, <span class="kw">length</span>(variable))</span>
-<span id="cb93-15"><a href="pruebas-de-hipótesis.html#cb93-15"></a>  }</span>
-<span id="cb93-16"><a href="pruebas-de-hipótesis.html#cb93-16"></a>  tbl_perms &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">.sample =</span> <span class="kw">seq</span>(<span class="dv">1</span>, n<span class="dv">-1</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb93-17"><a href="pruebas-de-hipótesis.html#cb93-17"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">diferencia =</span> <span class="kw">map_dbl</span>(.sample, </span>
-<span id="cb93-18"><a href="pruebas-de-hipótesis.html#cb93-18"></a>              <span class="op">~</span><span class="st"> </span>datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>({{variable}} <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">permutar</span>({{variable}})) <span class="op">%&gt;%</span><span class="st"> </span>calc_diferencia))</span>
-<span id="cb93-19"><a href="pruebas-de-hipótesis.html#cb93-19"></a>  perms &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(tbl_perms, <span class="kw">tibble</span>(<span class="dt">.sample =</span> n, <span class="dt">diferencia =</span> <span class="kw">calc_diferencia</span>(datos)))</span>
-<span id="cb93-20"><a href="pruebas-de-hipótesis.html#cb93-20"></a>  perms_ecdf &lt;-<span class="st"> </span><span class="kw">ecdf</span>(perms<span class="op">$</span>diferencia)</span>
-<span id="cb93-21"><a href="pruebas-de-hipótesis.html#cb93-21"></a>  dif &lt;-<span class="st"> </span><span class="kw">calc_diferencia</span>(datos)</span>
-<span id="cb93-22"><a href="pruebas-de-hipótesis.html#cb93-22"></a>  <span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">perms_ecdf</span>(dif), <span class="dv">1</span><span class="op">-</span><span class="st"> </span><span class="kw">perms_ecdf</span>(dif))</span>
-<span id="cb93-23"><a href="pruebas-de-hipótesis.html#cb93-23"></a>}</span></code></pre></div>
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="pruebas-de-hipótesis.html#cb94-1"></a><span class="kw">set.seed</span>(<span class="dv">7272</span>)</span>
-<span id="cb94-2"><a href="pruebas-de-hipótesis.html#cb94-2"></a>media_cuartiles &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb94-3"><a href="pruebas-de-hipótesis.html#cb94-3"></a>    (<span class="kw">quantile</span>(x, <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(x, <span class="fl">0.25</span>))<span class="op">/</span><span class="dv">2</span></span>
-<span id="cb94-4"><a href="pruebas-de-hipótesis.html#cb94-4"></a>}</span>
-<span id="cb94-5"><a href="pruebas-de-hipótesis.html#cb94-5"></a><span class="co"># nota: usar n=10000 o más, esto solo es para demostración:</span></span>
-<span id="cb94-6"><a href="pruebas-de-hipótesis.html#cb94-6"></a>ejemplo &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
-<span id="cb94-7"><a href="pruebas-de-hipótesis.html#cb94-7"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(mean, identity, VV <span class="op">-</span><span class="st"> </span>NV)</span>
-<span id="cb94-8"><a href="pruebas-de-hipótesis.html#cb94-8"></a>ejemplo<span class="op">$</span>media_dif &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
-<span id="cb94-9"><a href="pruebas-de-hipótesis.html#cb94-9"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(mean, log, VV <span class="op">-</span><span class="st"> </span>NV)</span>
-<span id="cb94-10"><a href="pruebas-de-hipótesis.html#cb94-10"></a>ejemplo<span class="op">$</span>media_dif_log &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
-<span id="cb94-11"><a href="pruebas-de-hipótesis.html#cb94-11"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(median, identity, VV <span class="op">/</span><span class="st"> </span>NV)</span>
-<span id="cb94-12"><a href="pruebas-de-hipótesis.html#cb94-12"></a>ejemplo<span class="op">$</span>mediana_razon &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
-<span id="cb94-13"><a href="pruebas-de-hipótesis.html#cb94-13"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(media_cuartiles, identity, VV <span class="op">/</span><span class="st"> </span>NV)</span>
-<span id="cb94-14"><a href="pruebas-de-hipótesis.html#cb94-14"></a>ejemplo<span class="op">$</span>cuartiles_razon &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="pruebas-de-hipótesis.html#cb95-1"></a>ejemplo &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;cache/ejemplo_p_val.rds&quot;</span>)</span>
-<span id="cb95-2"><a href="pruebas-de-hipótesis.html#cb95-2"></a>ejemplo<span class="op">$</span>media_dif</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="pruebas-de-hipótesis.html#cb94-1"></a>calc_fusion &lt;-<span class="st"> </span><span class="cf">function</span>(stat_fusion, trans, comparacion){</span>
+<span id="cb94-2"><a href="pruebas-de-hipótesis.html#cb94-2"></a>  fun &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
+<span id="cb94-3"><a href="pruebas-de-hipótesis.html#cb94-3"></a>    datos <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-4"><a href="pruebas-de-hipótesis.html#cb94-4"></a><span class="st">      </span><span class="kw">group_by</span>(nv.vv) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-5"><a href="pruebas-de-hipótesis.html#cb94-5"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>({{ trans }}(time))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-6"><a href="pruebas-de-hipótesis.html#cb94-6"></a><span class="st">      </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> nv.vv, <span class="dt">values_from =</span> est) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb94-7"><a href="pruebas-de-hipótesis.html#cb94-7"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">dif =</span> {{ comparacion }}) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dif)</span>
+<span id="cb94-8"><a href="pruebas-de-hipótesis.html#cb94-8"></a>  }</span>
+<span id="cb94-9"><a href="pruebas-de-hipótesis.html#cb94-9"></a>  fun</span>
+<span id="cb94-10"><a href="pruebas-de-hipótesis.html#cb94-10"></a>}</span>
+<span id="cb94-11"><a href="pruebas-de-hipótesis.html#cb94-11"></a>valor_p &lt;-<span class="st"> </span><span class="cf">function</span>(datos, variable, calc_diferencia, <span class="dt">n =</span> <span class="dv">1000</span>){</span>
+<span id="cb94-12"><a href="pruebas-de-hipótesis.html#cb94-12"></a>  <span class="co"># calcular estadística para cada grupo</span></span>
+<span id="cb94-13"><a href="pruebas-de-hipótesis.html#cb94-13"></a>  permutar &lt;-<span class="st"> </span><span class="cf">function</span>(variable){</span>
+<span id="cb94-14"><a href="pruebas-de-hipótesis.html#cb94-14"></a>    <span class="kw">sample</span>(variable, <span class="kw">length</span>(variable))</span>
+<span id="cb94-15"><a href="pruebas-de-hipótesis.html#cb94-15"></a>  }</span>
+<span id="cb94-16"><a href="pruebas-de-hipótesis.html#cb94-16"></a>  tbl_perms &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">.sample =</span> <span class="kw">seq</span>(<span class="dv">1</span>, n<span class="dv">-1</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb94-17"><a href="pruebas-de-hipótesis.html#cb94-17"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">diferencia =</span> <span class="kw">map_dbl</span>(.sample, </span>
+<span id="cb94-18"><a href="pruebas-de-hipótesis.html#cb94-18"></a>              <span class="op">~</span><span class="st"> </span>datos <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>({{variable}} <span class="op">:</span><span class="er">=</span><span class="st"> </span><span class="kw">permutar</span>({{variable}})) <span class="op">%&gt;%</span><span class="st"> </span>calc_diferencia))</span>
+<span id="cb94-19"><a href="pruebas-de-hipótesis.html#cb94-19"></a>  perms &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(tbl_perms, <span class="kw">tibble</span>(<span class="dt">.sample =</span> n, <span class="dt">diferencia =</span> <span class="kw">calc_diferencia</span>(datos)))</span>
+<span id="cb94-20"><a href="pruebas-de-hipótesis.html#cb94-20"></a>  perms_ecdf &lt;-<span class="st"> </span><span class="kw">ecdf</span>(perms<span class="op">$</span>diferencia)</span>
+<span id="cb94-21"><a href="pruebas-de-hipótesis.html#cb94-21"></a>  dif &lt;-<span class="st"> </span><span class="kw">calc_diferencia</span>(datos)</span>
+<span id="cb94-22"><a href="pruebas-de-hipótesis.html#cb94-22"></a>  <span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">perms_ecdf</span>(dif), <span class="dv">1</span><span class="op">-</span><span class="st"> </span><span class="kw">perms_ecdf</span>(dif))</span>
+<span id="cb94-23"><a href="pruebas-de-hipótesis.html#cb94-23"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="pruebas-de-hipótesis.html#cb95-1"></a><span class="kw">set.seed</span>(<span class="dv">7272</span>)</span>
+<span id="cb95-2"><a href="pruebas-de-hipótesis.html#cb95-2"></a>media_cuartiles &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb95-3"><a href="pruebas-de-hipótesis.html#cb95-3"></a>    (<span class="kw">quantile</span>(x, <span class="fl">0.75</span>) <span class="op">+</span><span class="st"> </span><span class="kw">quantile</span>(x, <span class="fl">0.25</span>))<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb95-4"><a href="pruebas-de-hipótesis.html#cb95-4"></a>}</span>
+<span id="cb95-5"><a href="pruebas-de-hipótesis.html#cb95-5"></a><span class="co"># nota: usar n=10000 o más, esto solo es para demostración:</span></span>
+<span id="cb95-6"><a href="pruebas-de-hipótesis.html#cb95-6"></a>ejemplo &lt;-<span class="st"> </span><span class="kw">list</span>()</span>
+<span id="cb95-7"><a href="pruebas-de-hipótesis.html#cb95-7"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(mean, identity, VV <span class="op">-</span><span class="st"> </span>NV)</span>
+<span id="cb95-8"><a href="pruebas-de-hipótesis.html#cb95-8"></a>ejemplo<span class="op">$</span>media_dif &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb95-9"><a href="pruebas-de-hipótesis.html#cb95-9"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(mean, log, VV <span class="op">-</span><span class="st"> </span>NV)</span>
+<span id="cb95-10"><a href="pruebas-de-hipótesis.html#cb95-10"></a>ejemplo<span class="op">$</span>media_dif_log &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb95-11"><a href="pruebas-de-hipótesis.html#cb95-11"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(median, identity, VV <span class="op">/</span><span class="st"> </span>NV)</span>
+<span id="cb95-12"><a href="pruebas-de-hipótesis.html#cb95-12"></a>ejemplo<span class="op">$</span>mediana_razon &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span>
+<span id="cb95-13"><a href="pruebas-de-hipótesis.html#cb95-13"></a>calc_dif &lt;-<span class="st"> </span><span class="kw">calc_fusion</span>(media_cuartiles, identity, VV <span class="op">/</span><span class="st"> </span>NV)</span>
+<span id="cb95-14"><a href="pruebas-de-hipótesis.html#cb95-14"></a>ejemplo<span class="op">$</span>cuartiles_razon &lt;-<span class="st"> </span><span class="kw">valor_p</span>(fusion <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sample_frac</span>(<span class="fl">0.95</span>), nv.vv, calc_dif, <span class="dt">n =</span> <span class="dv">10000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="pruebas-de-hipótesis.html#cb96-1"></a>ejemplo &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;cache/ejemplo_p_val.rds&quot;</span>)</span>
+<span id="cb96-2"><a href="pruebas-de-hipótesis.html#cb96-2"></a>ejemplo<span class="op">$</span>media_dif</span></code></pre></div>
 <pre><code>## [1] 0.0658</code></pre>
-<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="pruebas-de-hipótesis.html#cb97-1"></a>ejemplo<span class="op">$</span>media_dif_log</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="pruebas-de-hipótesis.html#cb98-1"></a>ejemplo<span class="op">$</span>media_dif_log</span></code></pre></div>
 <pre><code>## [1] 0.018</code></pre>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="pruebas-de-hipótesis.html#cb99-1"></a>ejemplo<span class="op">$</span>mediana_razon</span></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="pruebas-de-hipótesis.html#cb100-1"></a>ejemplo<span class="op">$</span>mediana_razon</span></code></pre></div>
 <pre><code>## [1] 0.049</code></pre>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="pruebas-de-hipótesis.html#cb101-1"></a>ejemplo<span class="op">$</span>cuartiles_razon</span></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="pruebas-de-hipótesis.html#cb102-1"></a>ejemplo<span class="op">$</span>cuartiles_razon</span></code></pre></div>
 <pre><code>## [1] 0.0464</code></pre>
 <p>Si existen grados de libertad - muchas veces necesarios para hacer un análisis exitoso-, entonces
 los valores p pueden tener poco significado.</p>
@@ -979,6 +1170,9 @@ es de interés, puede intentarse una <strong>replicación confirmatoria, con pot
 </div>
 <div id="ref-cleveland93">
 <p>Cleveland, William S. 1993. <em>Visualizing Data</em>. Hobart Press.</p>
+</div>
+<div id="ref-graphical-tests">
+<p>Cook, D., M. Majumder, L. Follett, and H. Hofmann. 2012. “Graphical Tests for Power Comparison of Competing Designs.” <em>IEEE Transactions on Visualization &amp; Computer Graphics</em> 18 (December): 2441–8. <a href="https://doi.org/10.1109/TVCG.2012.230">https://doi.org/10.1109/TVCG.2012.230</a>.</p>
 </div>
 <div id="ref-timboot14">
 <p>Hesterberg, Tim. 2014. “What Teachers Should Know About the Bootstrap: Resampling in the Undergraduate Statistics Curriculum.” <em>The American Statistician</em> 69 (November). <a href="https://doi.org/10.1080/00031305.2015.1089789">https://doi.org/10.1080/00031305.2015.1089789</a>.</p>

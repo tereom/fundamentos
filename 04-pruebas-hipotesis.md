@@ -22,17 +22,18 @@ evidencia para pensar que algo en el sistema cambió?
 
 ## Comparación con poblaciones de referencia {-}
 
-En las prueba de hipótesis, tratamos de construir distribuciones de referencia para comparar resultados
-que obtengamos con un "estándar" de variación, y juzgar si nuestros resultados son consistentes con la referencia
-o no (@box78). 
+En las prueba de hipótesis, tratamos de construir distribuciones de referencia 
+para comparar resultados que obtengamos con un "estándar" de variación, y juzgar 
+si nuestros resultados son consistentes con la referencia o no (@box78). 
 
 En algunos casos, ese estándar de variación puede construirse con datos históricos.
 
 ### Ejemplo {-}
 
-Supongamos que estamos considerando cambios rápidos en una serie de tiempo de alta frecuencia. 
-Hemos observado la serie en su estado "normal" durante un tiempo considerable, y cuando observamos nuevos
-datos **quisiéramos juzgar si hay indicaciones o evidencia en contra de que el sistema sigue funcionando
+Supongamos que estamos considerando cambios rápidos en una serie de tiempo de 
+alta frecuencia. Hemos observado la serie en su estado "normal" durante un 
+tiempo considerable, y cuando observamos nuevos datos **quisiéramos juzgar si 
+hay indicaciones o evidencia en contra de que el sistema sigue funcionando
 de manera similar**. 
 
 Digamos que monitoreamos ventanas de tiempo de tamaño 20 y necesitamos tomar una decisión. Abajo
@@ -89,14 +90,13 @@ ggplot(prueba_tbl$lineup, aes(x = t_0, y = obs)) + geom_line() +
 
 <img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
-**Ejercicio**: ¿cuáles son los datos nuevos (solo hay un panel con los nuevos datos)? 
-¿Qué implica que la gráfica que escogamos como "más diferente" no sean los datos nuevos? 
-¿Qué implica que le "atinemos" a la gráfica de los datos nuevos?
-
+<div class="ejercicio">
+<p>¿Cuáles son los datos nuevos (solo hay un panel con los nuevos datos)? ¿Qué implica que la gráfica que escogamos como “más diferente” no sean los datos nuevos? ¿Qué implica que le “atinemos” a la gráfica de los datos nuevos?</p>
+</div>
 
 Ahora observamos al sistema en otro momento y repetimos la comparación. En el siguiente caso obtenemos:
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 
 Aunque es imposible estar seguros de que ha ocurrido un cambio, la diferencia de una de las
 series es muy considerable. Si identificamos los datos correctos,
@@ -108,8 +108,8 @@ manera que antes.**
 
 **Observaciones y terminología**:
 
-1. Llamamos *hipótesis nula* a la hipótesis de que los nuevos datos son 
-producidos bajo las mismas condiciones que los datos de control o de referencia.
+1. Llamamos *hipótesis nula* a la hipótesis de que los nuevos 
+datos son producidos bajo las mismas condiciones que los datos de control o de referencia.
 
 3. **Si no escogemos la gráfica de los nuevos datos, nuestra conclusión es que 
 la prueba no aporta evidencia en contra de la hipótesis nula.** 
@@ -147,8 +147,7 @@ comparación es: el grupo de clientes b recibió una promoción especial. ¿Est�
 más? La medición que comparamos es el gasto de los clientes.
 
 
-
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-7-1.png" width="480" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-8-1.png" width="480" />
 
 En la muestra observamos diferencias entre los grupos. Pero notamos adicionalmente que
 hay mucha variación dentro de cada grupo. **Nos podríamos preguntar entonces si las diferencias
@@ -202,17 +201,17 @@ grafica_cuantiles(reps_mezcla, grupo_1, x) +
     labs(caption = "Mediana y percentiles 10% y 90%")+ geom_point(aes(colour = grupo_1))
 ```
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-8-1.png" width="672" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 
 Y la pregunta que hacemos es **podemos distinguir nuestra muestra entre todas las 
 replicaciones producidas con permutaciones**? 
 
-**Ejercicio**: ¿dónde están los datos observados? Según tu elección,  ¿qué tan diferentes son los
-datos observados de los datos nulos?
+<div class="ejercicio">
+<p>¿Dónde están los datos observados? Según tu elección, ¿qué tan diferentes son los datos observados de los datos nulos?</p>
+</div>
 
 En este ejemplo, es difícil indicar cuáles son los datos. Los grupos tienen distribuciones
 similares y es factible que las diferencias que observamos se deban a variación muestral.  
-
 
 - Si la persona escoge los verdaderos datos, encontramos evidencia en contra de la hipótesis nula
 (los tres grupos son equivalentes).
@@ -228,11 +227,9 @@ no encontramos evidencia en contra de que los tres grupos producen datos con
 Repitimos el ejemplo para otra muestra (en este ejemplo el proceso generador
 de datos es diferente para el grupo b):
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-9-1.png" width="480" />
-
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-11-1.png" width="480" />
 
 Hacemos primero la prueba del *lineup*:
-
 
 
 ```r
@@ -243,18 +240,20 @@ grafica_cuantiles(reps %>%  mutate(grupo_escondido = factor(digest::digest2int(g
     coord_flip() + geom_point(aes(colour = grupo_escondido))
 ```
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-10-1.png" width="672" />
-
-
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-12-1.png" width="672" />
 Podemos distinguir más o menos claramente que está localizada en valores
 más altos y tiene mayor dispersión. En este caso, como en general podemos identificar los
 datos, obtenemos evidencia en contra de que los tres grupos tienen distribuciones iguales.
 
+Estos ejemplos siguen la idea de inferencia visual propuestas en 
+@lineup, @graphical-tests e implementadas en R en el paquete `lineup`. Son 
+pruebas muy flexibles y estadísticamente rigurosas.
 
 ## Prueba de permutaciones para proporciones {-}
 
 Veremos otro ejemplo donde podemos hacer más concreta la idea de 
-**distribución nula o de referencia** usando pruebas de permutaciones. Supongamos que con nuestra muestra
+**distribución nula o de referencia** usando pruebas de permutaciones. Supongamos 
+que con nuestra muestra
 de tomadores de té, queremos probar la siguiente hipótesis nula:
 
 - Los tomadores de té en bolsas exclusivamente usan azúcar más a tasas simillares que
@@ -315,12 +314,18 @@ $$p_1 - p_2$$.
 
 (tomadores de en bolsa solamente vs. suelto y bolsa). El proceso sería entonces:
 
-- La hipótesis nula es que los dos grupos tienen distribuciones iguales, que este caso quiere decir que
-en la población, tomadores de té solo en bolsa usan azúcar a las mismas tasas que tomadores de suelto o bolsas.
-- Bajo nuestra hipótesis nula (proporciones iguales), producimos una cantidad grande (por ejemplo 10 mil o más) de muestras permutando las etiquetas de los grupos.
-- Evaluamos nuestra estadística de prueba en cada una de las muestras permutadas.
-- El conjunto de valores obtenidos nos da nuestra *distribución de referencia* (ya no estamos limitados a 20 replicaciones como en las pruebas gráficas).
-- Y la pregunta clave es: ¿el valor de la estadística en nuestra muestra es *extrema* en comparación a la distribución de referencia?
+- La hipótesis nula es que los dos grupos tienen distribuciones iguales, que 
+este caso quiere decir que en la población, tomadores de té solo en bolsa usan 
+azúcar a las mismas tasas que tomadores de suelto o bolsas.
+- Bajo nuestra hipótesis nula (proporciones iguales), producimos una cantidad 
+grande (por ejemplo 10 mil o más) de muestras permutando las etiquetas de los 
+grupos.
+- Evaluamos nuestra estadística de prueba en cada una de las muestras 
+permutadas.
+- El conjunto de valores obtenidos nos da nuestra *distribución de referencia* 
+(ya no estamos limitados a 20 replicaciones como en las pruebas gráficas).
+- Y la pregunta clave es: ¿el valor de la estadística en nuestra muestra es 
+*extrema* en comparación a la distribución de referencia?
 
 
 
@@ -366,6 +371,16 @@ Ahora construimos nuestra distribución nula o de referencia:
 valores_ref <- permutaciones_est(te_azucar, how, calc_diferencia, n = 10000)
 ```
 
+
+```r
+reps <- lineup(null_permute("how"), te_azucar, n = 10000)
+valores_ref <- reps %>% 
+  group_by(.sample) %>% 
+  nest() %>% 
+  mutate(diferencia = lapply(data, calc_diferencia)) %>% 
+  unnest(diferencia)
+```
+
 Y graficamos nuestros resultados (con un histograma y una gráfica de cuantiles, por ejemplo). la
 estadística evaluada un cada una de nuestras muestras permutadas:
 
@@ -378,15 +393,15 @@ g_2 <- ggplot(valores_ref, aes(x = diferencia)) + geom_histogram(binwidth = 0.04
 g_1 + g_2
 ```
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-17-1.png" width="576" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-18-1.png" width="576" />
 
-
-Este es el rango de fluctuación usual para nuestra estadística *bajo la hipótesis de que
-los dos grupos de tomadores de té consumen té a la misma tasa.
-El valor que obtuvimos en nuestros datos es 0.0927602,
- que no es un valor extremo en la distribución de referencia que vimos arriba: esta
+Este es el rango de fluctuación usual para nuestra estadística *bajo la 
+hipótesis de que los dos grupos de tomadores de té consumen té a la misma tasa.
+El valor que obtuvimos en nuestros datos es 0.09,
+que no es un valor extremo en la distribución de referencia que vimos arriba: esta
 muestra no aporta mucha evidencia en contra de que los grupos tienen distribuciones similares.
 Podemos graficar otra vez marcando el valor de referencia:
+
 
 ```r
 # Función de distribución acumulada (inverso de función de cuantiles)
@@ -394,6 +409,7 @@ dist_perm <- ecdf(valores_ref$diferencia)
 # Calculamos el percentil del valor observado
 percentil_obs <- dist_perm(dif_obs)
 ```
+
 
 ```r
 g_1 <- ggplot(valores_ref, aes(sample = diferencia)) + geom_qq(distribution = stats::qunif)  +
@@ -407,20 +423,84 @@ g_2 <- ggplot(valores_ref, aes(x = diferencia)) + geom_histogram(binwidth = 0.04
 g_1 + g_2 
 ```
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-19-1.png" width="576" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-20-1.png" width="576" />
+
 Y vemos que es un valor algo (pero no muy) extremo en la distribución de referencia que vimos arriba: esta
 muestra no aporta una gran cantidad de 
 evidencia en contra de que los grupos tienen distribuciones similares, que
 en este caso significa que los dos grupos usan azúcar a tasas similares.
-### Valor p {-}
-Nótese que calculamos una cantidad adicional, que es el percentil donde nuestra observación cae
-en la distribución generada por las permutación. Esta cantidad puede usarse para calcular un 
-**valor p**. Podemos calcular, por ejemplo:
+
+
+## Pruebas de hipótesis tradicionales {-}
+
+Comencemos recordando la definición de parámetro y estadística. 
+
+<div class="mathblock">
+<p><strong>Definición.</strong> Un <strong>parámetro</strong> es una característica (numérica) de una población o de una distribución de probabilidad.<br />
+Una <strong>estadística</strong> es una característica (numérica) de los datos.</p>
+</div>
+
+Cualquier función de un parámetro es también un parámetro, y cualquier función 
+de una estadística es también una estadística. Cuando la estadística se calcula
+de una muestra aleatoria, es por consiguiente aleatoria y es por tanto una 
+variable aleatoria.
+
+* Por ejemplo $\mu$ y $\sigma$ son parámetros de la distribución normal con 
+función de densidad $f(x) = (1/\sqrt{2\pi}\sigma)e^{(x-\mu)^2/(2\sigma^2)}$.  
+La varianza $\sigma^2$, y el cociente (*señal a ruido*) $\mu/\sigma$ también
+son parámetros.
+
+* Si $X_1,X_2,...,X_n$ son una muestra aleatoria, entinces la media 
+$\bar{X}=1/n\sum X_i$ es una estadística.
+
+Ahora podemos pasar a las definiciones correspondientes a pruebas de hipótesis
+(o pruebas de significancia).
+
+<div class="mathblock">
+<p><strong>Definición.</strong> Denotamos por <span class="math inline">\(H_0\)</span> a la <em>hipótesis nula</em> la cual usualmente tratamos como la afirmación del <em>status quo.</em> La hipótesis alternativa la denotamos por <span class="math inline">\(H_1\)</span> y representa el supuesto que está a prueba y para el cual buscamos evidencia en los datos.</p>
+</div>
+
+<div class="mathblock">
+<p><strong>Definición.</strong> La hipótesis normalmente se plantea en términos de un parámetro (<span class="math inline">\(\theta\in\mathbb{R}\)</span>) o conjunto de parámetros (<span class="math inline">\(\theta\in\mathbb{R}^p\)</span>) de la distribución de interés (por ejemplo media, moda, varianza). Para una hipótesis nula del estilo <span class="math inline">\(H_0: \theta = \theta_0,\)</span> la hipótesis a contrastar se puede denominar como:</p>
+<ul>
+<li><em>Hipótesis alternativa de una cola</em> <span class="math inline">\(H_1: \theta &gt; \theta_0\)</span><br />
+</li>
+<li><em>Hipótesis alternativa de dos colas</em> <span class="math inline">\(H_1: \theta \neq \theta_0\)</span></li>
+</ul>
+</div>
+
+En el ejemplo anterior planteamos hipótesis nula (proporciones iguales) e 
+hipótesis alternativa que la proporción de tomadores de te suelto que usan 
+azúcar en menor, esto corresponde a una hipótesis alternativa a dos colas: 
+$H_0: p_1 = p_2$, y $H_1:p_1 > p_2$.
+
+
+<div class="mathblock">
+<p><strong>Definición.</strong> Una <em>estadística de prueba</em> es una función numérica de los datos cuyo valor determina el resultado de la prueba. La función usualmente es denotada por <span class="math inline">\(T(\bf X)\)</span> donde <span class="math inline">\(\bf X\)</span> representa los datos como variable aleatoria. Por ejemplo, <span class="math inline">\(T = T(X_1, \ldots, X_N)\)</span> si sólo tenemos una muestra, o por <span class="math inline">\(T = T(X_1, \ldots, X_N, Y_1, \ldots, Y_M)\)</span> en el caso de tener dos muestras. Al evaluar la prueba para un conjunto de datos dado, <span class="math inline">\(x\)</span>, ésta se denomina <em>estadística de prueba observada,</em> <span class="math inline">\(t = T(x).\)</span></p>
+</div>
+
+La estadística de prueba correspondiente al ejemplo es $T = p_1 - p_2$
+
+<div class="mathblock">
+<p><strong>Definición.</strong> El <em>valor p</em> es la probabilidad de que bajo la hipótesis nula los datos generen un valor tan extremo como la estadística de prueba observada. Por ejemplo, si consideramos la hipótesis nula admite valores grandes, el valor p se calcula como <span class="math inline">\(P(T \geq t).\)</span></p>
+</div>
+
+En el ejemplo de tomadores de té lo calculamos usando el percentil donde 
+nuestra observación cae en la distribución generada por las permutación  (valor
+*p* de una cola).
+.
+Podemos calcular, por ejemplo:
 
 - **Valor p de dos colas**: Si la hipótesis nula es cierta, ¿cuál es la
-**probabilidad** de observar una diferencia **tan extrema o más extrema de lo que observamos**? 
+**probabilidad** de observar una diferencia **tan extrema o más extrema de lo 
+que observamos**? 
 
-Considerando en este caso interpretamos *extrema* como que cae lejos de donde a mayoría de la distribución se concentra, podemos calcular el valor p como sigue. A partir de el valor observado, consideramos cuál dato es menor: la probabilidad bajo lo hipótesis nula de observar una diferencia mayor de a que observamos, o la probabilidad de observar una diferencia menor a la que observamos. Tomamos el mínimo y multiplicamos por dos (@timboot14):
+Considerando en este caso interpretamos *extrema* como que cae lejos de donde a 
+mayoría de la distribución se concentra, podemos calcular el valor p como sigue. 
+A partir de el valor observado, consideramos cuál dato es menor: la probabilidad 
+bajo lo hipótesis nula de observar una diferencia mayor de a que observamos, o 
+la probabilidad de observar una diferencia menor a la que observamos. Tomamos 
+el mínimo y multiplicamos por dos (@timboot14):
 
 
 ```r
@@ -431,19 +511,66 @@ Considerando en este caso interpretamos *extrema* como que cae lejos de donde a 
 ## [1] 0.085
 ```
 
-Este valor p se considera como evidencia "moderada" en contra de la hipótesis nula. Valores p
-más chicos (observaciones más extremas en comparación con la referencia) aportan más evidencia
-en contra de la hipótesis de que los grupos de tomadores de té , y valores más grandes aportan menos 
-evidencia.
+Este valor *p* se considera como evidencia "moderada" en contra de la hipótesis 
+nula. Valores p más chicos (observaciones más extremas en comparación con la 
+referencia) aportan más evidencia en contra de la hipótesis de que los grupos de 
+tomadores de té , y valores más grandes aportan menos evidencia.
+
+
+<div class="mathblock">
+<p><strong>Definición.</strong> Un resultado es <strong>estadisticamente significativo</strong> si tiene muy baja probabilidad de suceder al azar.</p>
+</div>
+
+Entre más pequeño requiramos un valor *p* oara declarar un resultado 
+estadísticamente significativo, somos más conservadores.
+
+Las pruebas de hipótesis con frecuencia inician contestando una pregunta más
+general que los valores *p*: ¿Cuál es la distribución de la estadística de
+prueba cuando no hay efecto real?
+
+<div class="mathblock">
+<p><strong>Definición.</strong> La <strong>distribución nula</strong> es la disttibución de la estadística de prueba si la hipótesis nula es cierta.</p>
+</div>
+
+En ocasiones también nos referimos a ella como la distribución de referencia
+pues estamos comparando la estadística de prueba observada a su referencia 
+para determinar que tan inusual es.
+
+En el ejemplo de tomadores de te aproximamos la distribución nula (y los valores
+*p*) con simulación; sin embargo, para algunas estadisticas hay métodos exactos.
+
+En particular, usamos el método de pruebas de permutación, el algoritmo para
+dos grupos sería como sigue.
+
+<div class="mathblock">
+<p><strong>Prueba de permutación para dos muestras</strong></p>
+<p>Supongamos que tenemos <em>m</em> observaciones de una población y <em>n</em> de otra.</p>
+<ul>
+<li>Combina los <code>m+n</code> valores.<br />
+</li>
+<li>Repite:
+<ul>
+<li>Saca una remuestra de tamaño <code>m</code> sin reemplazo.</li>
+<li>Usa las <code>n</code> observaciones restantes para obtener la otra muestra.</li>
+<li>Calcula la estadística de prueba (que compara las muestras).</li>
+</ul></li>
+<li>Calcula el valor <em>p</em> como la fracción de las veces que la estadística sobrepasó la estadística observada, multiplica por 2 para una prueba de dos lados.</li>
+</ul>
+</div>
+
+La distribución de la estadística a lo largo de las remuestras de permutación 
+es la **distribución de permutación**. Ésta puede ser exacta, si se calcula
+exhaustivamente (cuando tenemos pocas observaciones es posible) o aproximada.
 
 ## Tomadores de té 2 {-}
 
-Ahora hacemos una prueba de permutaciones otro par de proporciones con el mismo método. La hipótesis
-nula ahora es: 
+Ahora hacemos una prueba de permutaciones otro par de proporciones con el mismo 
+método. La hipótesis nula ahora es: 
 
 - Los tomadores de té Earl Gray usan azúcar a una tasa similar a los tomadores de té negro
 
 Los datos que obtuvimos en nuestra encuesta, en conteos, son:
+
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
@@ -470,10 +597,15 @@ Y en porcentajes tenemos que:
 
 
 ```r
-prop_azucar <- te_azucar %>% group_by(Tea, sugar) %>% tally %>% 
-  group_by(Tea) %>% mutate(prop = 100 * n / sum(n), n = sum(n)) %>% 
-  filter(sugar == "sugar") %>% select(Tea, prop_azucar = prop, n) %>% 
-  mutate('% usa azúcar' = round(prop_azucar)) %>% select(-prop_azucar)
+prop_azucar <- te_azucar %>% 
+  count(Tea, sugar) %>% 
+  group_by(Tea) %>% 
+  mutate(prop = 100 * n / sum(n), 
+         n = sum(n)) %>% 
+  filter(sugar == "sugar") %>% 
+  select(Tea, prop_azucar = prop, n) %>% 
+  mutate('% usa azúcar' = round(prop_azucar)) %>% 
+  select(-prop_azucar)
 prop_azucar %>% formatear_tabla
 ```
 
@@ -499,9 +631,10 @@ prop_azucar %>% formatear_tabla
 </tbody>
 </table>
 
-Pero distintas muestras podrían haber dado distintos resultados. Nos preguntamos que tan fuerte es
-la evidencia en contra de que en realidad los dos grupos de personas usan azúcar en proporciones similares,
-y la diferencia que vemos se puede atribuir a variación muestral.
+Pero distintas muestras podrían haber dado distintos resultados. Nos preguntamos 
+que tan fuerte es la evidencia en contra de que en realidad los dos grupos de 
+personas usan azúcar en proporciones similares, y la diferencia que vemos se 
+puede atribuir a variación muestral.
 
 Escribimos la función que calcula diferencias para cada muestra:
 
@@ -513,7 +646,8 @@ calc_diferencia_2 <- function(datos){
     group_by(Tea) %>% 
     summarise(prop_azucar = mean(usa_azucar)) %>% 
     pivot_wider(names_from = Tea, values_from = prop_azucar) %>% 
-    mutate(diferencia_prop = `Earl Grey` - black) %>% pull(diferencia_prop)
+    mutate(diferencia_prop = `Earl Grey` - black) %>% 
+    pull(diferencia_prop)
 }
 ```
 
@@ -529,18 +663,82 @@ Ahora construimos nuestra distribución nula o de referencia:
 
 ```r
 set.seed(2)
-valores_ref <- permutaciones_est(te_azucar, Tea, calc_diferencia_2, n = 10000)
+reps <- lineup(null_permute("Tea"), te_azucar, n = 10000)
+valores_ref <- reps %>% 
+  group_by(.sample) %>% 
+  nest() %>% 
+  mutate(diferencia = lapply(data, calc_diferencia_2)) %>% 
+  unnest(diferencia)
 ```
 
 Y podemos graficar la distribución de referencia otra vez marcando el valor observado
 
 
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-27-1.png" width="576" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-35-1.png" width="576" />
 
 En este caso, la evidencia es muy fuerte en contra de la hipótesis nula, pues el
 resultado que obtuvimos es muy extremo en relación a la distribución de referencia.
 El valor p es cercano a 0.
+
+<div class="ejercicio">
+<p>Haz una prueba de permutaciones para diferencia de medias para comparar la propina en cena vs en comidas. * Grafica la distribución de referencia.<br />
+* Calcula el valor <em>p</em> (dos colas).</p>
+</div>
+
+
+## Pruebas de permutación: Implementación {-}
+
+Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
+extender las pruebas de permutación a $\bar{X}$ (la media de la primera muestra), 
+$m\bar{X}$ (la suma de las observaciones en la primera muestra), y más.
+
+<div class="mathblock">
+<p><strong>Teorema.</strong> En pruebas de permutación, si dos estadísticas de prueba <span class="math inline">\(T_1\)</span> y <span class="math inline">\(T_2\)</span> están relacionadas por una función estríctamente creciente, <span class="math inline">\(T_1(X^*)=f(T_2(X^*))\)</span> donde <span class="math inline">\(X^*\)</span> es una remuestra de permutación de los datos originales, entonces los valores <em>p</em> serán los mismos en las pruebas de permutación.</p>
+</div>
+
+**Agregar uno al numerador y denominador.** Cuando se calcula el valor *p* en la
+implementación de muestreo, agregar uno al numerador y denominador. Esto 
+corresponde a incluir los datos como una remuestra adicional y sirve para evitar 
+reportar el valor *p* $0$ que es imposible pues siempre hay una remuestra con un
+valor al menos tan extremo como los datos observados (los datos mismos).
+
+**Muestras con reemplazo de la Distribución Nula.** En la implementación de 
+muestreo, no nos aseguramos que las remuestras sean únicas. Sería más acertado
+tomar muestras sin reemplazo, sin embargo, el costo computacional es demasiado
+alto.
+
+**Entre más muestras más exactitud.** Hemos usado 10,000 muestras, en general 
+entre más remuestras tendremos una mejor estimación del valor *p*. Si el 
+verdadero valor es $p$ el estimado tendrá una varianza aproximadamente de 
+$p(1-p)/N$ donde $N$ es el número de remuestras.  
+**Observación.** Así como los $n$ datos originales son una muestra de la 
+población, también las $N$ remuestras de la estadística son una muestra de una
+población, en este caso de la distribución nula.
+
+La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere
+que la distribución de los grupos son muy similares, o la independencia entre
+observaciones y grupo. Esto también aplica cuando queremos probar por ejemplo, que
+una variable numérica Y es independiente de X.
+
+- Hay algunas hipótesis que no se pueden probar con este método, como por ejemplo, 
+las que se refieren a una sola muestra: ¿los datos son consistentes con que su 
+media es igual a 5?
+
+- Adicionalmente, en algunas ocasiones queremos probar aspectos más específicos
+de las diferencias: como ¿son iguales las medias o medianas de dos grupos de 
+datos? ¿Tienen dispersión similar? 
+
+Las pruebas de permutaciones no están tan perfectamente adaptadas a este 
+problema, pues prueban *todos* los aspectos de las distribuciones que se 
+comparan, aún cuando escogamos una estadística particular que pretende medir, 
+por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar 
+igualdad de medias, por ejemplo, cuando en realidad otra característica de las 
+distribuciones es la que difiere mucho en las poblaciones
+
+En algunas referencias (ver @chitim, @bootefron) se argumenta que de todas formas
+las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
+excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @chitim).
 
 
 ## Ejemplo: tiempos de fusión {-}
@@ -552,7 +750,7 @@ Existen dos condiciones: en una se dio indicaciones de qué figura tenían que
 buscar (VV) y en otra no se dio esa indicación. ¿Las instrucciones verbales
 ayudan a fusionar más rápido el estereograma? 
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-28-1.png" width="384" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-38-1.png" width="384" />
 
 Una pregunta que podríamos hacer es: considerando que hay mucha variación en el 
 tiempo de fusión dentro de cada tratamiento, necesitamos calificar la evidencia 
@@ -567,17 +765,18 @@ En este caso, compararemos gráficas de cuantiles de los datos con los
 producidos por permutaciones (transformamos los datos pues en este caso es 
 más apropiado una comparación multiplicativa):
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-29-1.png" width="768" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-39-1.png" width="768" />
 
-**Ejercicio**: ¿Podemos identificar los datos? En general, muy frecuentemente las personas
-identifican los datos correctamente,
-lo que muestra evidencia considerable de que la instrucción verbal 
-altera los tiempos de respuesta de los partipantes, y en este caso 
-ayuda a reducir el tiempo de fusión de los estereogramas. 
+<div class="ejercicio">
+<p>¿Podemos identificar los datos? En general, muy frecuentemente las personas identifican los datos correctamente, lo que muestra evidencia considerable de que la instrucción verbal altera los tiempos de respuesta de los partipantes, y en este caso ayuda a reducir el tiempo de fusión de los estereogramas.</p>
+</div>
+
 
 ## Ejemplo: tiempos de fusión 2 {-}
 
-Podemos usar las pruebas de permutaciones para distintos de tipos de estadísticas: medianas, medias, comparar dispersión usando rangos intercuartiles o varianzas, etc.
+Podemos usar las pruebas de permutaciones para distintos de tipos de 
+estadísticas: medianas, medias, comparar dispersión usando rangos 
+intercuartiles o varianzas, etc.
 
 Regresamos a los tiempos de fusión. Podemos hacer una prueba de permutaciones para
 la diferencia de las medias o medianas, por ejemplo. En este ejemplo usaremos
@@ -613,46 +812,24 @@ cuantil_obs <- dist_perm_nv(dif_obs)
 ```
 
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-32-1.png" width="576" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-43-1.png" width="576" />
 
 Y el valor p de dos colas es
 
 
 ```r
 dist_perm_nv <- ecdf(valores_ref$diferencia)
-2 * min(dist_perm_nv(dif_obs), 1- dist_perm_nv(dif_obs))
+2 * min(dist_perm_nv(dif_obs), 1 - dist_perm_nv(dif_obs))
 ```
 
 ```
 ## [1] 0.0354
 ```
 
-Lo que muestra evidencia considerable, aunque no muy fuerte, de que la instrucción verbal ayuda a reducir el tiempo de fusión de los estereogramas: la *caja* del diagrama de caja y brazos
-para el grupo VV está *encogida* por un factor menor a 1.
-
-
-## Ojo: otros tipos de hipótesis nulas {-}
-
-La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere
-que la distribución de los grupos son muy similares, o la independencia entre
-observaciones y grupo. Esto también aplica cuando queremos probar por ejemplo, que
-una variable numérica Y es independiente de X.
-
-- Hay algunas hipótesis que no se pueden probar con este método, como por ejemplo, las
-que se refieren a una sola muestra: ¿los datos son consistentes con que su media es igual a 5?
-
-- Adicionalmente, en algunas ocasiones queremos probar aspectos más específicos
-de las diferencias: como ¿son iguales las medias o medianas de dos grupos de datos? ¿Tienen
-dispersión similar? 
-
-Las pruebas de permutaciones no están tan perfectamente
-adaptadas a este problema, pues prueban *todos* los aspectos de las distribuciones que se comparan, aún cuando escogamos una
-estadística particular que pretende medir, por ejemplo, diferencia de medias. Eso quiere
-decir que podemos rechazar igualdad de medias, por ejemplo, cuando en realidad otra característica de las distribuciones es la que difiere mucho en las poblaciones
-
-En algunas referencias (ver @chitim, @bootefron) se argumenta que de todas formas
-las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
-excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @chitim).
+Lo que muestra evidencia considerable, aunque no muy fuerte, de que la 
+instrucción verbal ayuda a reducir el tiempo de fusión de los estereogramas: la 
+*caja* del diagrama de caja y brazos para el grupo VV está *encogida* por un 
+factor menor a 1.
 
 
 ##  Separación de grupos {-}
@@ -688,7 +865,7 @@ datos en dimensión baja de forma que los grupos sean lo más compactos y separa
 Para probar qué tan bien funciona este método, podemos hacer una prueba de permutación, aplicamos
 LDA y observamos los resultados. 
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-45-1.png" width="672" />
 
 Y vemos que incluso permutando los grupos, es generalmente posible separarlos en grupos
 bien definidos: la búsqueda es suficientemente agresiva para encontrar 
@@ -721,7 +898,7 @@ ggplot(wasp_lda, aes(x = LD1, y = LD2, colour = grupo)) + geom_point(size = 3) +
     facet_wrap(~tipo)
 ```
 
-<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-35-1.png" width="672" />
+<img src="04-pruebas-hipotesis_files/figure-html/unnamed-chunk-46-1.png" width="672" />
 
 Aunque esta separación de datos es menos efectiva en este ejemplo por la muestra chica, podemos ver
 que la separación lograda en los datos de entrenamiento probablemente se debe a variación muestral.
