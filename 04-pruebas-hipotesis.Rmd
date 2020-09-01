@@ -2,7 +2,7 @@
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-N_rep <- 100
+N_rep <- 1000
 ```
 
 
@@ -129,7 +129,7 @@ ggplot(prueba_tbl$lineup, aes(x = t_0, y = obs)) + geom_line() +
 
 ```{block, type = 'ejercicio'}
 ¿Cuáles son los datos nuevos (solo hay un panel con los nuevos datos)?
-¿Qué implica que la gráfica que escogamos como "más diferente" no sean los datos nuevos?
+¿Qué implica que la gráfica que escojamos como "más diferente" no sean los datos nuevos?
 ¿Qué implica que le "atinemos" a la gráfica de los datos nuevos?
 ```
 
@@ -181,14 +181,14 @@ hiciéramos muchos páneles.
 
 Ahora intentamos un ejemplo más típico.
 
-Supongamos tenemos *muestras* para tres grupos  a, b y c, que quiere decir
+Supongamos tenemos *muestras* para tres grupos `a`, `b` y `c`, que quiere decir
 que dentro de cada grupo, el proceso e selección de los elementos se hace
 de manera al azar y de manera simétrica (por ejemplo cada elemento tiene a misma probabiidad de ser seleccionado,
 y las extracciones se hacen de manera independiente.)
 
 Queremos comparar las distribuciones de los datos obtenidos para cada grupo.
 Quizá la pregunta detrás de esta
-comparación es: el grupo de clientes b recibió una promoción especial. ¿Están gastando
+comparación es: el grupo de `clientes b` recibió una promoción especial. ¿Están gastando
 más? La medición que comparamos es el gasto de los clientes.
 
 
@@ -226,10 +226,10 @@ este tipo de ejemplos.
 ## Permutaciones y el lineup {-}
 
 Para abordar este problema podemos pensar en usar permutaciones de los grupos de
-la siguiente forma (@box78, @timboot14):
+la siguiente forma ([@box78], [@timboot14]):
 
 - Si los grupos producen
-datos bajo procesos idénticos, entonces los grupos a, b, c solo son etiquetas que no contienen información.
+datos bajo procesos idénticos, entonces los grupos `a`, `b`, `c` solo son etiquetas que no contienen información.
 - Podríamos **permutar al azar** las etiquetas y observar nuevamente la gráfica
 de caja y brazos por grupos.
 - Si la hipótesis nula es cierta (grupos idénticos), esta es una muestra tan verosímil como la que obtuvimos.
@@ -237,11 +237,11 @@ de caja y brazos por grupos.
 - Si la hipótesis nula es cercana a ser cierta, no deberíamos de poder distinguir fácilmente los
 datos observados de los producidos con las permutaciones al azar.
 
-Vamos a intentar esto, por ejemplo usando una gráfica de cuantiles simplificada. Hacemos un *lineup*, o una
+Vamos a intentar esto, por ejemplo usando una **gráfica de cuantiles simplificada**. Hacemos un *lineup*, o una
 *rueda de sospechosos* (usamos el paquete [@nullabor], ver [@lineup]),
 donde 19 de los acusados **son generados mediante permutaciones al azar** de la variable del grupo,
 y el culpable (los verdaderos datos) están en una posición escogida al azar. ¿Podemos identificar
-los datos verdaderos? Para evitar sesgarnos, también ocultamos la etiqueta verdadera
+los datos verdaderos? Para evitar sesgarnos, también ocultamos la etiqueta verdadera.
 
 Usamos una gráfica que muestra los cuantes 0.10, 0.50, 0.90:
 
@@ -254,7 +254,7 @@ grafica_cuantiles(reps_mezcla, grupo_1, x) +
     labs(caption = "Mediana y percentiles 10% y 90%")+ geom_point(aes(colour = grupo_1))
 ```
 
-Y la pregunta que hacemos es **podemos distinguir nuestra muestra entre todas las
+Y la pregunta que hacemos es ¿**podemos distinguir nuestra muestra entre todas las
 replicaciones producidas con permutaciones**?
 
 ```{block, type = 'ejercicio'}
@@ -277,7 +277,7 @@ no encontramos evidencia en contra de que los tres grupos producen datos con
 ## Comparaciones con lineup 2 {-}
 
 Repitimos el ejemplo para otra muestra (en este ejemplo el proceso generador
-de datos es diferente para el grupo b):
+de datos es diferente para el grupo `b`):
 
 ```{r, echo = FALSE, fig.width =5, fig.height=3}
 set.seed(72)
@@ -351,12 +351,12 @@ y la diferencia que vemos se puede atribuir a variación muestral.
 En este ejemplo, podemos usar una **estadística de prueba numérica**, por ejemplo,
 la diferencia entre las dos proporciones:
 
-$$p_1 - p_2$$.
+$$\hat p_1 - \hat p_2,$$
 
 (tomadores de en bolsa solamente vs. suelto y bolsa). El proceso sería entonces:
 
-- La hipótesis nula es que los dos grupos tienen distribuciones iguales, que
-este caso quiere decir que en la población, tomadores de té solo en bolsa usan
+- La hipótesis nula es que los dos grupos tienen distribuciones iguales. Este caso 
+quiere decir que en la población, tomadores de té solo en bolsa usan
 azúcar a las mismas tasas que tomadores de suelto o bolsas.
 - Bajo nuestra hipótesis nula (proporciones iguales), producimos una cantidad
 grande (por ejemplo 10 mil o más) de muestras permutando las etiquetas de los
@@ -426,9 +426,9 @@ g_1 + g_2
 ```
 
 Este es el rango de fluctuación usual para nuestra estadística *bajo la
-hipótesis de que los dos grupos de tomadores de té consumen té a la misma tasa.
-El valor que obtuvimos en nuestros datos es `r round(dif_obs, 2)`,
-que no es un valor extremo en la distribución de referencia que vimos arriba: esta
+hipótesis* de que los dos grupos de tomadores de té consumen té a la misma tasa.
+El valor que obtuvimos en nuestros datos es: `r round(dif_obs, 2)`.
+Misimo que no es un valor extremo en la distribución de referencia que vimos arriba. Ésta
 muestra no aporta mucha evidencia en contra de que los grupos tienen distribuciones similares.
 Podemos graficar otra vez marcando el valor de referencia:
 
@@ -454,7 +454,11 @@ g_1 + g_2
 Y vemos que es un valor algo (pero no muy) extremo en la distribución de referencia que vimos arriba: esta
 muestra no aporta una gran cantidad de
 evidencia en contra de que los grupos tienen distribuciones similares, que
-en este caso significa que los dos grupos usan azúcar a tasas similares.
+en este caso significa que los dos grupos usan azúcar a tasas similares. Es decir, sobre
+la hipótesis 
+$$H_0: p_1 = p_2,$$
+o bien, 
+$$H_0: p_1 - p_2 = 0.$$
 
 
 ## Pruebas de hipótesis tradicionales {-}
@@ -463,22 +467,24 @@ Comencemos recordando la definición de parámetro y estadística.
 
 ```{block, type='mathblock'}
 **Definición.** Un **parámetro** es una característica (numérica) de una
-población o de una distribución de probabilidad.  
-Una **estadística** es una característica (numérica) de los datos.
+población o de una distribución de probabilidad. Usualmente denotado por 
+$\theta \in \mathbb{R},$ o por $\theta \in \mathbb{R}^p.$
+Una **estadística** es una característica (numérica) de los datos. Usualmente
+denotado por $\hat \theta,$ o $\theta_N.$
 ```
 
-Cualquier función de un parámetro es también un parámetro, y cualquier función
-de una estadística es también una estadística. Cuando la estadística se calcula
-de una muestra aleatoria, es por consiguiente aleatoria y es por tanto una
-variable aleatoria.
+Cualquier función de un parámetro es también un parámetro $\varphi = h(\theta),$ y cualquier función
+de una estadística es también una estadística $\hat \varphi = h(\hat \theta).$ Cuando la estadística se calcula
+de una muestra aleatoria ($T(X),$ para $X_n \sim \pi_x$ para $n = 1, \ldots, N$), es por consiguiente aleatoria y es por tanto una
+variable aleatoria ($T \sim \pi_T$).
 
 * Por ejemplo $\mu$ y $\sigma$ son parámetros de la distribución normal con
-función de densidad $f(x) = (1/\sqrt{2\pi}\sigma)e^{(x-\mu)^2/(2\sigma^2)}$.  
-La varianza $\sigma^2$, y el cociente (*señal a ruido*) $\mu/\sigma$ también
+función de densidad $\pi(x) = (1/\sqrt{2\pi}\sigma)e^{(x-\mu)^2/(2\sigma^2)}$. 
+La varianza $\sigma^2$, y el coeficiente de variación (cociente de *señal a ruido*) $\mu/\sigma$ también
 son parámetros.
 
-* Si $X_1,X_2,...,X_n$ son una muestra aleatoria, entinces la media
-$\bar{X}=1/n\sum X_i$ es una estadística.
+* Si $X_1, \ldots ,X_N$ son una muestra aleatoria, entonces la media
+$\bar{X}=\frac1N\sum_n X_n$ es una estadística.
 
 Ahora podemos pasar a las definiciones correspondientes a pruebas de hipótesis
 (o pruebas de significancia).
@@ -518,7 +524,7 @@ evaluar la prueba para un conjunto de datos dado, $x$, ésta se denomina
 *estadística de prueba observada,* $t = T(x).$
 ```
 
-La estadística de prueba correspondiente al ejemplo es $T = p_1 - p_2$
+La estadística de prueba correspondiente al ejemplo es $T = \hat p_1 - \hat p_2$
 
 ```{block, type='mathblock'}
 **Definición.** El *valor p* es la probabilidad de que bajo la hipótesis nula
@@ -567,16 +573,16 @@ general que los valores *p*: ¿Cuál es la distribución de la estadística de
 prueba cuando no hay efecto real?
 
 ```{block, type='mathblock'}
-**Definición.** La **distribución nula** es la disttibución de la estadística de
+**Definición.** La **distribución nula** es la distribución de la estadística de
 prueba si la hipótesis nula es cierta.
 ```
 
-En ocasiones también nos referimos a ella como la distribución de referencia
+En ocasiones también nos referimos a ella como la *distribución de referencia*
 pues estamos comparando la estadística de prueba observada a su referencia
 para determinar que tan inusual es.
 
 En el ejemplo de tomadores de te aproximamos la distribución nula (y los valores
-*p*) con simulación; sin embargo, para algunas estadisticas hay métodos exactos.
+*p*) con simulación; sin embargo, para algunas estadísticas hay métodos exactos.
 
 En particular, usamos el método de pruebas de permutación, el algoritmo para
 dos grupos sería como sigue.
@@ -584,12 +590,12 @@ dos grupos sería como sigue.
 ```{block, type='mathblock'}
 **Prueba de permutación para dos muestras**
 
-Supongamos que tenemos *m* observaciones de una población y *n* de otra.
+Supongamos que tenemos *M* observaciones de una población y *N* de otra.
 
-* Combina los `m+n` valores.  
+* Combina los `M+N` valores.  
 * Repite:  
-  - Saca una remuestra de tamaño `m` sin reemplazo.
-  - Usa las `n` observaciones restantes para obtener la otra muestra.
+  - Saca una remuestra de tamaño `M` sin reemplazo.
+  - Usa las `N` observaciones restantes para obtener la otra muestra.
   - Calcula la estadística de prueba (que compara las muestras).
 * Calcula el valor *p* como la fracción de las veces que la estadística
 sobrepasó la estadística observada, multiplica por 2 para una prueba de dos
@@ -599,6 +605,7 @@ lados.
 La distribución de la estadística a lo largo de las remuestras de permutación
 es la **distribución de permutación**. Ésta puede ser exacta, si se calcula
 exhaustivamente (cuando tenemos pocas observaciones es posible) o aproximada.
+
 
 ## Tomadores de té 2 {-}
 
@@ -706,11 +713,11 @@ El valor p es cercano a 0.
 ```
 
 
-## Pruebas de permutación: Implementación {-}
+## Pruebas de permutación: Problemas en Implementación. {-}
 
 Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
 extender las pruebas de permutación a $\bar{X}$ (la media de la primera muestra),
-$m\bar{X}$ (la suma de las observaciones en la primera muestra), y más.
+$N\bar{X}$ (la suma de las observaciones en la primera muestra), y más.
 
 ```{block, type='mathblock'}
 **Teorema.** En pruebas de permutación, si dos estadísticas de prueba $T_1$ y
@@ -723,26 +730,29 @@ permutación.
 **Agregar uno al numerador y denominador.** Cuando se calcula el valor *p* en la
 implementación de muestreo, agregar uno al numerador y denominador. Esto
 corresponde a incluir los datos como una remuestra adicional y sirve para evitar
-reportar el valor *p* $0$ que es imposible pues siempre hay una remuestra con un
+reportar el valor *p* $= 0$ que es imposible pues siempre hay una remuestra con un
 valor al menos tan extremo como los datos observados (los datos mismos).
 
 **Muestras con reemplazo de la Distribución Nula.** En la implementación de
 muestreo, no nos aseguramos que las remuestras sean únicas. Sería más acertado
 tomar muestras sin reemplazo, sin embargo, el costo computacional es demasiado
-alto.
+alto. Por simplicidad consideramos muestras *con reemplazo* del total de 
+$$M+N\choose N$$
+posibles remuestras. Por lo tanto, al remuestrar obtenemos *una muestra de la distribución nula.*
 
-**Entre más muestras más exactitud.** Hemos usado 10,000 muestras, en general
+**Entre más muestras más exactitud.** Hemos usado $B = 10^3$ muestras (`N_rep` en el código), en general
 entre más remuestras tendremos una mejor estimación del valor *p*. Si el
 verdadero valor es $p$ el estimado tendrá una varianza aproximadamente de
-$p(1-p)/N$ donde $N$ es el número de remuestras.  
-**Observación.** Así como los $n$ datos originales son una muestra de la
-población, también las $N$ remuestras de la estadística son una muestra de una
+$p(1- p)/B$ donde $B$ es el número de remuestras generadas.  
+
+**Observación.** Así como los $N$ datos originales son una muestra de la
+población, también las $B$ remuestras de la estadística son una muestra de una
 población, en este caso de la distribución nula.
 
 La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere
 que la distribución de los grupos son muy similares, o la independencia entre
 observaciones y grupo. Esto también aplica cuando queremos probar por ejemplo, que
-una variable numérica Y es independiente de X.
+una variable numérica $Y$ es independiente de $X.$
 
 - Hay algunas hipótesis que no se pueden probar con este método, como por ejemplo,
 las que se refieren a una sola muestra: ¿los datos son consistentes con que su
@@ -754,7 +764,7 @@ datos? ¿Tienen dispersión similar?
 
 Las pruebas de permutaciones no están tan perfectamente adaptadas a este
 problema, pues prueban *todos* los aspectos de las distribuciones que se
-comparan, aún cuando escogamos una estadística particular que pretende medir,
+comparan, aún cuando escojamos una estadística particular que pretende medir,
 por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
 igualdad de medias, por ejemplo, cuando en realidad otra característica de las
 distribuciones es la que difiere mucho en las poblaciones
@@ -882,7 +892,7 @@ ese estudio es:
 
 - Existen métodos de clasificación (supervisados o no supervisados) para formar grupos en términos
 de variables que describen a los individuos
-- Estos métodos (análisis discriminante, o k-means, por ejemplo), pretenden formar grupos compactos,
+- Estos métodos (análisis discriminante, o `k-means`, por ejemplo), pretenden formar grupos compactos,
 bien separados entre ellos. Cuando aplicamos el método, obtenemos clasificadores basados en las variables
 de entrada.
 - La pregunta es: ¿los grupos resultantes son producto de patrones que se generalizan a la población, o
@@ -991,8 +1001,8 @@ se están investigando "fenómenos no estudiados antes")
 
 ## El jardín de los senderos que se bifurcan {-}
 
-Aunque haya algunos ejemplos de manipulaciones conscientes --e incluso, en menos casos,
-malintencionadas-- para obtener resultados publicables o significativos
+Aunque haya algunos ejemplos de manipulaciones conscientes ---e incluso, en menos casos,
+malintencionadas--- para obtener resultados publicables o significativos
 ([p-hacking](https://en.wikipedia.org/wiki/Data_dredging)),
  como vimos en ejemplos anteriores, hay varias decisiones, todas razonables, que podemos tomar cuando
 estamos buscando las comparaciones correctas. Algunas pueden ser:
@@ -1004,21 +1014,21 @@ mostraron tener gripa, o revelaron que durmieron muy poco la noche anterior, etc
 
 Dado un conjunto de datos, las justificaciones de las decisiones que se toman
 en cada paso son razonables, pero con datos distintos las decisiones podrían ser diferentes.
-Este es el **jardín de los senderos que se bifurcan**  [Gelman](http://www.stat.columbia.edu/~gelman/research/published/incrementalism_3.pdf),
+Este es el **jardín de los senderos que se bifurcan** [(ver referencia en Gelman)](http://www.stat.columbia.edu/~gelman/research/published/incrementalism_3.pdf),
 que **invalida en parte el uso valores p como criterio de evidencia contra la hipótesis nula**.
 
 Esto es exacerbado por:
 
-- Tamaños de muestra chicos y efectos "inestables" que se quieren medir (por ejemplo en sicología)
+- Tamaños de muestra chicos y efectos "inestables" que se quieren medir (por ejemplo en psicología)
 - El hecho de que el criterio de publicación es obtener un
-valor p < 0.05, y la presión fuerte sobre los investigadores
-para producir resultados publicables (p < 0.05)
+valor $p < 0.05$, y la presión fuerte sobre los investigadores
+para producir resultados publicables ($p < 0.05$).
 - El que estudios o resultados similares que no obtuvieron valores $p$ por debajo del umbral no son
 publicados o reportados.
 
 Ver por ejemplo el [comunicado de la ASA](https://www.amstat.org/asa/files/pdfs/P-ValueStatement.pdf).
 
-**Ojo**: esas presiones de publicación no sólo ocurre para investigadores en sicología. Cuando
+**Ojo**: esas presiones de publicación no sólo ocurre para investigadores en psicología. Cuando
 trabajamos en problemas de análisis de datos en problemas que son de importancia, es común que
 existan intereses de algunas partes o personas involucradas por algunos resultados u otros (por
 ejemplo, nuestros clientes de consultoría o clientes internos). Eso puede dañar nuestro trabajo
@@ -1089,7 +1099,7 @@ ejemplo$cuartiles_razon
 ```
 
 
-Si existen grados de libertad - muchas veces necesarios para hacer un análisis exitoso-, entonces
+Si existen grados de libertad ---muchas veces necesarios para hacer un análisis exitoso---, entonces
 los valores p pueden tener poco significado.
 
 ## Alternativas o soluciones {-}
