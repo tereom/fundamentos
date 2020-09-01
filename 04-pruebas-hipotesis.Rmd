@@ -223,7 +223,7 @@ datos de referencia y comparar, como hicimos en el ejempo anterior. Pero esto es
 este tipo de ejemplos.
 
 
-## Permutaciones y el lineup {-}
+## Prueba de permutaciones y el lineup {-}
 
 Para abordar este problema podemos pensar en usar permutaciones de los grupos de
 la siguiente forma ([@box78], [@timboot14]):
@@ -274,7 +274,7 @@ evidencia en contra de que los datos se producen de manera homogénea, independi
 no encontramos evidencia en contra de que los tres grupos producen datos con
  distribuciones similares.
 
-## Comparaciones con lineup 2 {-}
+## Comparaciones usando lineup (Ver. 2) {-}
 
 Repitimos el ejemplo para otra muestra (en este ejemplo el proceso generador
 de datos es diferente para el grupo `b`):
@@ -594,7 +594,7 @@ Supongamos que tenemos *M* observaciones de una población y *N* de otra.
 
 * Combina los `M+N` valores.  
 * Repite:  
-  - Saca una remuestra de tamaño `M` sin reemplazo.
+  - Obtén un remuestra de tamaño `M` sin reemplazo del total.
   - Usa las `N` observaciones restantes para obtener la otra muestra.
   - Calcula la estadística de prueba (que compara las muestras).
 * Calcula el valor *p* como la fracción de las veces que la estadística
@@ -607,7 +607,7 @@ es la **distribución de permutación**. Ésta puede ser exacta, si se calcula
 exhaustivamente (cuando tenemos pocas observaciones es posible) o aproximada.
 
 
-## Tomadores de té 2 {-}
+## Tomadores de té (Cont') {-}
 
 Ahora hacemos una prueba de permutaciones otro par de proporciones con el mismo
 método. La hipótesis nula ahora es:
@@ -740,8 +740,8 @@ alto. Por simplicidad consideramos muestras *con reemplazo* del total de
 $$M+N\choose N$$
 posibles remuestras. Por lo tanto, al remuestrar obtenemos *una muestra de la distribución nula.*
 
-**Entre más muestras más exactitud.** Hemos usado $B = 10^3$ muestras (`N_rep` en el código), en general
-entre más remuestras tendremos una mejor estimación del valor *p*. Si el
+**Entre más muestras más exactitud.** Hemos usado $B = 10^3$ remuestras (`N_rep` en el código), 
+en general entre más remuestras tendremos una mejor estimación del valor *p*. Si el
 verdadero valor es $p$ el estimado tendrá una varianza aproximadamente de
 $p(1- p)/B$ donde $B$ es el número de remuestras generadas.  
 
