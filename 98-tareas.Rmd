@@ -63,3 +63,10 @@ involucradas?
 
 2. ¿Cuál es la diferencia entre un experimento aleatorizado y una muestra 
 aleatoria?
+
+
+## 4. Pruebas de hipótesis visuales y permutación {-}
+
+La tarea 4 es el proyecto de RStudio.Cloud con este nombre, el ejercicio está
+en un archvio de R Markdown. Envíen el reporte por correo electrónico (con 
+título fundamentos-tarea04).
