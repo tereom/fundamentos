@@ -741,7 +741,7 @@ por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
 igualdad de medias, por ejemplo, cuando en realidad otra característica de las 
 distribuciones es la que difiere mucho en las poblaciones
 
-En algunas referencias (ver @chitim, @bootefron) se argumenta que de todas formas
+En algunas referencias (ver @chihara, @efron) se argumenta que de todas formas
 las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
 excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @chitim).
 
@@ -804,6 +804,18 @@ superior e inferior de las dos distribuciones. Usaremos el cociente de estas dos
 para medir su diferencia
 
 ```{r, message = FALSE}
+# esta función hace permutaciones y calcula la diferencia para cada una
+permutaciones_est <- function(datos, variable, calc_diferencia, n = 1000){
+  # calcular estadística para cada grupo
+  permutar <- function(variable){
+    sample(variable, length(variable))
+  }
+  tbl_perms <- tibble(.sample = seq(1, n-1, 1)) %>%
+    mutate(diferencia = map_dbl(.sample, 
+              ~ datos %>% mutate({{variable}}:= permutar({{variable}})) %>% calc_diferencia))
+  bind_rows(tbl_perms, tibble(.sample = n, diferencia = calc_diferencia(datos)))
+}
+
 stat_fusion <- function(x){
     (quantile(x, 0.75) + quantile(x, 0.25))/2
 }
