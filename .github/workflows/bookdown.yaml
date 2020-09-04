@@ -27,7 +27,7 @@ jobs:
 # and also add secrets for a GITHUB_PAT and EMAIL to the repository
 # gh-action from Cecilapp/GitHub-Pages-deploy
   checkout-and-deploy:
-   runs-on: ubuntu-latest
+   runs-on: macOS-latest
    needs: bookdown
    steps:
      - name: Checkout
