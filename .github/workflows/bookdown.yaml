@@ -8,7 +8,7 @@ name: renderbook
 jobs:
   bookdown:
     name: Render-Book
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@v1
@@ -27,7 +27,7 @@ jobs:
 # and also add secrets for a GITHUB_PAT and EMAIL to the repository
 # gh-action from Cecilapp/GitHub-Pages-deploy
   checkout-and-deploy:
-   runs-on: macOS-latest
+   runs-on: ubuntu-latest
    needs: bookdown
    steps:
      - name: Checkout
