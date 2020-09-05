@@ -330,33 +330,19 @@ permutadas.
 
 
 ```r
-# ESta función calcula la diferencia entre grupos de interés
-calc_diferencia <- function(datos){
-  datos %>%
-    mutate(usa_azucar = as.numeric(sugar == "sugar")) %>% 
-    group_by(how) %>% 
-    summarise(prop_azucar = mean(usa_azucar)) %>% 
-    pivot_wider(names_from = how, values_from = prop_azucar) %>% 
-    mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>% pull(diferencia_prop)
-}
-# esta función hace permutaciones y calcula la diferencia para cada una
-permutaciones_est <- function(datos, variable, calc_diferencia, n = 1000){
-  # calcular estadística para cada grupo
-  permutar <- function(variable){
-    sample(variable, length(variable))
-  }
-  tbl_perms <- tibble(.sample = seq(1, n-1, 1)) %>%
-    mutate(diferencia = map_dbl(.sample, 
-              ~ datos %>% mutate({{variable}}:= permutar({{variable}})) %>% calc_diferencia))
-  bind_rows(tbl_perms, tibble(.sample = n, diferencia = calc_diferencia(datos)))
-}
+dif_obs <- te_azucar %>% 
+  mutate(usa_azucar = as.numeric(sugar == "sugar")) %>% 
+  group_by(how) %>% 
+  summarise(prop_azucar = mean(usa_azucar)) %>% 
+  pivot_wider(names_from = how, values_from = prop_azucar) %>% 
+  mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>%
+  pull(diferencia_prop)
 ```
 
 La diferencia observada es:
 
 
 ```r
-dif_obs <- calc_diferencia(te_azucar)
 dif_obs %>% round(3)
 ```
 
@@ -368,17 +354,13 @@ Ahora construimos nuestra distribución nula o de referencia:
 
 
 ```r
-valores_ref <- permutaciones_est(te_azucar, how, calc_diferencia, n = 10000)
-```
-
-
-```r
 reps <- lineup(null_permute("how"), te_azucar, n = 10000)
 valores_ref <- reps %>% 
-  group_by(.sample) %>% 
-  nest() %>% 
-  mutate(diferencia = lapply(data, calc_diferencia)) %>% 
-  unnest(diferencia)
+  mutate(usa_azucar = as.numeric(sugar == "sugar")) %>% 
+  group_by(.sample, how) %>% 
+  summarise(prop_azucar = mean(usa_azucar)) %>% 
+  pivot_wider(names_from = how, values_from = prop_azucar) %>% 
+  mutate(diferencia = bolsa_exclusivo - `suelto o bolsa`) 
 ```
 
 Y graficamos nuestros resultados (con un histograma y una gráfica de cuantiles, por ejemplo). la
@@ -736,7 +718,7 @@ por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
 igualdad de medias, por ejemplo, cuando en realidad otra característica de las 
 distribuciones es la que difiere mucho en las poblaciones
 
-En algunas referencias (ver @chitim, @bootefron) se argumenta que de todas formas
+En algunas referencias (ver @chihara, @efron) se argumenta que de todas formas
 las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
 excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @chitim).
 
@@ -786,6 +768,18 @@ para medir su diferencia
 
 
 ```r
+# esta función hace permutaciones y calcula la diferencia para cada una
+permutaciones_est <- function(datos, variable, calc_diferencia, n = 1000){
+  # calcular estadística para cada grupo
+  permutar <- function(variable){
+    sample(variable, length(variable))
+  }
+  tbl_perms <- tibble(.sample = seq(1, n-1, 1)) %>%
+    mutate(diferencia = map_dbl(.sample, 
+              ~ datos %>% mutate({{variable}}:= permutar({{variable}})) %>% calc_diferencia))
+  bind_rows(tbl_perms, tibble(.sample = n, diferencia = calc_diferencia(datos)))
+}
+
 stat_fusion <- function(x){
     (quantile(x, 0.75) + quantile(x, 0.25))/2
 }
@@ -976,9 +970,8 @@ unas 12 combinaciones distintas para hacer el análisis (multiplicadas por crite
 de "aceptación de datos en la muestra", que simulamos tomando una submuestra al azar):
 
 
-
-
 ```r
+# otra manera de calcular las permutaciones
 calc_fusion <- function(stat_fusion, trans, comparacion){
   fun <- function(datos){
     datos %>% 
