@@ -1,7 +1,7 @@
 # Pruebas de hipótesis
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
 N_rep <- 1000
 ```
 
@@ -226,7 +226,7 @@ datos de referencia y comparar, como hicimos en el ejempo anterior. Pero esto es
 este tipo de ejemplos.
 
 
-## Prueba de permutaciones y el lineup {-}
+## Prueba de permutaciones y el *lineup* {-}
 
 Para abordar este problema podemos pensar en usar permutaciones de los grupos de
 la siguiente forma ([@box78], [@timboot14]):
@@ -253,6 +253,7 @@ set.seed(88)
 reps <- lineup(null_permute("grupo"), muestra_tab, n = 20)
 reps_mezcla <- reps %>%  mutate(grupo_1 = factor(digest::digest2int(grupo) %% 177))
 grafica_cuantiles(reps_mezcla, grupo_1, x) +
+    coord_flip() + 
     facet_wrap(~.sample, ncol = 5) + ylab("x") +
     labs(caption = "Mediana y percentiles 10% y 90%")+ geom_point(aes(colour = grupo_1))
 ```
@@ -277,7 +278,7 @@ evidencia en contra de que los datos se producen de manera homogénea, independi
 no encontramos evidencia en contra de que los tres grupos producen datos con
  distribuciones similares.
 
-## Comparaciones usando lineup (Ver. 2) {-}
+## Comparaciones usando *lineup* (continuación) {-}
 
 Repitimos el ejemplo para otra muestra (en este ejemplo el proceso generador
 de datos es diferente para el grupo `b`):
@@ -328,7 +329,7 @@ tea <- read_csv(("data/tea.csv"))
 te <- tea %>% select(how, price, sugar)
 ```
 
-```{r}
+```{r, echo = FALSE}
 te_azucar <- tea %>% select(how, sugar) %>%
   mutate(how = ifelse(how == "tea bag", "bolsa_exclusivo", "suelto o bolsa"))
 te_azucar %>% count(how, sugar) %>%
@@ -356,7 +357,7 @@ la diferencia entre las dos proporciones:
 
 $$\hat p_1 - \hat p_2,$$
 
-(tomadores de en bolsa solamente vs. suelto y bolsa). El proceso sería entonces:
+(tomadores de té en `bolsa solamente` vs. `suelto y bolsa`). El proceso sería entonces:
 
 - La hipótesis nula es que los dos grupos tienen distribuciones iguales. Este caso 
 quiere decir que en la población, tomadores de té solo en bolsa usan
@@ -373,48 +374,31 @@ permutadas.
 
 
 ```{r, message = FALSE}
-# ESta función calcula la diferencia entre grupos de interés
-calc_diferencia <- function(datos){
-  datos %>%
-    mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
-    group_by(how) %>%
-    summarise(prop_azucar = mean(usa_azucar)) %>%
-    pivot_wider(names_from = how, values_from = prop_azucar) %>%
-    mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>% pull(diferencia_prop)
-}
-# esta función hace permutaciones y calcula la diferencia para cada una
-permutaciones_est <- function(datos, variable, calc_diferencia, n = 1000){
-  # calcular estadística para cada grupo
-  permutar <- function(variable){
-    sample(variable, length(variable))
-  }
-  tbl_perms <- tibble(.sample = seq(1, n-1, 1)) %>%
-    mutate(diferencia = map_dbl(.sample,
-              ~ datos %>% mutate({{variable}}:= permutar({{variable}})) %>% calc_diferencia))
-  bind_rows(tbl_perms, tibble(.sample = n, diferencia = calc_diferencia(datos)))
-}
+dif_obs <- te_azucar %>%
+  mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
+  group_by(how) %>%
+  summarise(prop_azucar = mean(usa_azucar)) %>%
+  pivot_wider(names_from = how, values_from = prop_azucar) %>%
+  mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>%
+  pull(diferencia_prop)
 ```
 
 La diferencia observada es:
 
 ```{r}
-dif_obs <- calc_diferencia(te_azucar)
 dif_obs %>% round(3)
 ```
 
 Ahora construimos nuestra distribución nula o de referencia:
 
-```{r permutaciones-fun, eval = FALSE}
-valores_ref <- permutaciones_est(te_azucar, how, calc_diferencia, n = N_rep)
-```
-
 ```{r permutaciones-lineup}
-reps <- lineup(null_permute("how"), te_azucar, n = N_rep)
+reps <- lineup(null_permute("how"), te_azucar, n = 10000)
 valores_ref <- reps %>%
-  group_by(.sample) %>%
-  nest() %>%
-  mutate(diferencia = lapply(data, calc_diferencia)) %>%
-  unnest(diferencia)
+  mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
+  group_by(.sample, how) %>%
+  summarise(prop_azucar = mean(usa_azucar)) %>%
+  pivot_wider(names_from = how, values_from = prop_azucar) %>%
+  mutate(diferencia = bolsa_exclusivo - `suelto o bolsa`)
 ```
 
 Y graficamos nuestros resultados (con un histograma y una gráfica de cuantiles, por ejemplo). la
@@ -527,7 +511,7 @@ evaluar la prueba para un conjunto de datos dado, $x$, ésta se denomina
 *estadística de prueba observada,* $t = T(x).$
 ```
 
-La estadística de prueba correspondiente al ejemplo es $T = \hat p_1 - \hat p_2$
+La estadística de prueba correspondiente al ejemplo es $T = \hat p_1 - \hat p_2.$
 
 ```{block, type='mathblock'}
 **Definición.** El *valor p* es la probabilidad de que bajo la hipótesis nula
@@ -536,20 +520,20 @@ Por ejemplo, si consideramos la hipótesis nula admite valores grandes, el valor
 p se calcula como $P(T \geq t).$
 ```
 
-En el ejemplo de tomadores de té lo calculamos usando el percentil donde
-nuestra observación cae en la distribución generada por las permutación  (valor
+En el ejemplo de tomadores de té: el valor *p* lo calculamos usando el percentil donde
+nuestra observación cae en la distribución generada por las permutación (valor
 *p* de una cola).
-.
-Podemos calcular, por ejemplo:
+
+Por otro lado, podemos calcular:
 
 - **Valor p de dos colas**: Si la hipótesis nula es cierta, ¿cuál es la
 **probabilidad** de observar una diferencia **tan extrema o más extrema de lo
 que observamos**?
 
-Considerando en este caso interpretamos *extrema* como que cae lejos de donde a
-mayoría de la distribución se concentra, podemos calcular el valor p como sigue.
-A partir de el valor observado, consideramos cuál dato es menor: la probabilidad
-bajo lo hipótesis nula de observar una diferencia mayor de a que observamos, o
+Considerando este caso interpretamos *extrema* como qué tan lejos cae del centro de 
+masa de la distribución. De tal orma que podemos calcular el valor *p* como sigue.
+A partir del valor observado, consideramos cuál dato es menor: la probabilidad
+bajo lo hipótesis nula de observar una diferencia mayor de la que observamos, o
 la probabilidad de observar una diferencia menor a la que observamos. Tomamos
 el mínimo y multiplicamos por dos [@timboot14]:
 
@@ -557,10 +541,10 @@ el mínimo y multiplicamos por dos [@timboot14]:
 2 * min(dist_perm(dif_obs), (1 - dist_perm(dif_obs)))
 ```
 
-Este valor *p* se considera como evidencia "moderada" en contra de la hipótesis
-nula. Valores p más chicos (observaciones más extremas en comparación con la
-referencia) aportan más evidencia en contra de la hipótesis de que los grupos de
-tomadores de té , y valores más grandes aportan menos evidencia.
+Este valor *p* se considera como evidencia *moderada* en contra de la hipótesis
+nula. Valores *p* chicos (observaciones más extremas en comparación con la
+referencia) aportan más evidencia **en contra** de la hipótesis nula, y valores 
+más grandes aportan menos evidencia **en contra**.
 
 
 ```{block, type='mathblock'}
@@ -569,11 +553,11 @@ baja probabilidad de suceder al azar.
 ```
 
 Entre más pequeño requiramos un valor *p* oara declarar un resultado
-estadísticamente significativo, somos más conservadores.
+estadísticamente significativo, somos *más conservadores*.
 
 Las pruebas de hipótesis con frecuencia inician contestando una pregunta más
 general que los valores *p*: ¿Cuál es la distribución de la estadística de
-prueba cuando no hay efecto real?
+prueba cuando no hay un efecto real?
 
 ```{block, type='mathblock'}
 **Definición.** La **distribución nula** es la distribución de la estadística de
@@ -584,22 +568,22 @@ En ocasiones también nos referimos a ella como la *distribución de referencia*
 pues estamos comparando la estadística de prueba observada a su referencia
 para determinar que tan inusual es.
 
-En el ejemplo de tomadores de te aproximamos la distribución nula (y los valores
+En el ejemplo de tomadores de té aproximamos la distribución nula (y los valores
 *p*) con simulación; sin embargo, para algunas estadísticas hay métodos exactos.
 
-En particular, usamos el método de pruebas de permutación, el algoritmo para
-dos grupos sería como sigue.
+En particular, usamos el método de pruebas de permutación. Para dicha prueba el 
+algoritmo para en el caso de dos grupos sería como sigue:
 
 ```{block, type='mathblock'}
 **Prueba de permutación para dos muestras**
 
-Supongamos que tenemos *M* observaciones de una población y *N* de otra.
+Supongamos que tenemos `M` observaciones de una población y `N` de otra.
 
 * Combina los `M+N` valores.  
 * Repite:  
-  - Obtén un remuestra de tamaño `M` sin reemplazo del total.
-  - Usa las `N` observaciones restantes para obtener la otra muestra.
-  - Calcula la estadística de prueba (que compara las muestras).
+  - Obtén un remuestra de tamaño `M` sin reemplazo del total.  
+  - Usa las `N` observaciones restantes para obtener la otra muestra.  
+  - Calcula la estadística de prueba (que compara las muestras).  
 * Calcula el valor *p* como la fracción de las veces que la estadística
 sobrepasó la estadística observada, multiplica por 2 para una prueba de dos
 lados.
@@ -607,17 +591,18 @@ lados.
 
 La distribución de la estadística a lo largo de las remuestras de permutación
 es la **distribución de permutación**. Ésta puede ser exacta, si se calcula
-exhaustivamente (cuando tenemos pocas observaciones es posible) o aproximada.
+exhaustivamente (como cuando tenemos pocas observaciones) o aproximada (cuando enlistar todas las
+posible combinaciones es prohibitivo).
 
 
-## Tomadores de té (Cont') {-}
+## Tomadores de té (continuación) {-}
 
-Ahora hacemos una prueba de permutaciones otro par de proporciones con el mismo
-método. La hipótesis nula ahora es:
+Ahora hacemos una prueba de permutaciones para otro par de proporciones utilizando el mismo
+método. La hipótesis nula ahora es:  
 
-- Los tomadores de té Earl Gray usan azúcar a una tasa similar a los tomadores de té negro
+- Los tomadores de té Earl Gray usan azúcar a una tasa similar a los tomadores de té negro.  
 
-Los datos que obtuvimos en nuestra encuesta, en conteos, son:
+Los datos que obtuvimos en nuestra encuesta se muestran en la siguiente tabla:
 
 ```{r, echo = FALSE}
 set.seed(23)
@@ -646,9 +631,9 @@ prop_azucar %>% formatear_tabla
 ```
 
 Pero distintas muestras podrían haber dado distintos resultados. Nos preguntamos
-que tan fuerte es la evidencia en contra de que en realidad los dos grupos de
-personas usan azúcar en proporciones similares, y la diferencia que vemos se
-puede atribuir a variación muestral.
+qué tan fuerte es la evidencia en contra de que en realidad los dos grupos de
+personas usan azúcar en proporciones similares considerando que la 
+diferencia que vemos se puede atribuir a variación muestral.
 
 Escribimos la función que calcula diferencias para cada muestra:
 
@@ -704,9 +689,9 @@ g_2 <- ggplot(valores_ref, aes(x = diferencia)) + geom_histogram(binwidth = 0.04
 g_1 + g_2
 ```
 
-En este caso, la evidencia es muy fuerte en contra de la hipótesis nula, pues el
+En este caso, la evidencia es muy fuerte *en contra* de la hipótesis nula, pues el
 resultado que obtuvimos es muy extremo en relación a la distribución de referencia.
-El valor p es cercano a 0.
+El valor *p* es cercano a 0.
 
 ```{block, type = 'ejercicio'}
  * Haz una prueba de permutaciones para diferencia de medias para comparar la
@@ -716,7 +701,7 @@ El valor p es cercano a 0.
 ```
 
 
-## Pruebas de permutación: Problemas en Implementación. {-}
+## Pruebas de permutación: problemas en implementación. {-}
 
 Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
 extender las pruebas de permutación a $\bar{X}$ (la media de la primera muestra),
@@ -731,9 +716,9 @@ permutación.
 ```
 
 **Agregar uno al numerador y denominador.** Cuando se calcula el valor *p* en la
-implementación de muestreo, agregar uno al numerador y denominador. Esto
+implementación de muestreo, podemos agregar un uno al numerador y denominador. Esto
 corresponde a incluir los datos como una remuestra adicional y sirve para evitar
-reportar el valor *p* $= 0$ que es imposible pues siempre hay una remuestra con un
+reportar el valor *p* $= 0,$ que es imposible pues siempre hay una remuestra con un
 valor al menos tan extremo como los datos observados (los datos mismos).
 
 **Muestras con reemplazo de la Distribución Nula.** En la implementación de
@@ -743,7 +728,7 @@ alto. Por simplicidad consideramos muestras *con reemplazo* del total de
 $$M+N\choose N$$
 posibles remuestras. Por lo tanto, al remuestrar obtenemos *una muestra de la distribución nula.*
 
-**Entre más muestras más exactitud.** Hemos usado $B = 10^3$ remuestras (`N_rep` en el código), 
+**Entre más muestras, más exactitud.** Hemos usado $B = 10^3$ remuestras (`N_rep` en el código), 
 en general entre más remuestras tendremos una mejor estimación del valor *p*. Si el
 verdadero valor es $p$ el estimado tendrá una varianza aproximadamente de
 $p(1- p)/B$ donde $B$ es el número de remuestras generadas.  
@@ -767,14 +752,14 @@ datos? ¿Tienen dispersión similar?
 
 Las pruebas de permutaciones no están tan perfectamente adaptadas a este
 problema, pues prueban *todos* los aspectos de las distribuciones que se
-comparan, aún cuando escojamos una estadística particular que pretende medir,
-por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
-igualdad de medias, por ejemplo, cuando en realidad otra característica de las
-distribuciones es la que difiere mucho en las poblaciones
+comparan, aún cuando escojamos una estadística particular que pretende medir.
+Por ejemplo, cuando trabajamos con la diferencia de medias. Eso quiere decir que podemos 
+rechazar igualdad de medias, por ejemplo, cuando en realidad otra característica de las
+distribuciones es la que difiere mucho en las poblaciones.
 
 En algunas referencias (ver [@Chihara], [@Efron]) se argumenta que de todas formas
 las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
-excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @Chihara).
+excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en [@Chihara]).
 
 
 ## Ejemplo: tiempos de fusión {-}
@@ -791,13 +776,13 @@ fusion <- read_delim("./data/fusion_time.txt", delim = " ", trim_ws = TRUE)
 ggplot(fusion, aes(x = nv.vv, y = time)) + geom_boxplot() + geom_jitter()
 ```
 
-Una pregunta que podríamos hacer es: considerando que hay mucha variación en el
+La situación es la siguiente: considerando que hay mucha variación en el
 tiempo de fusión dentro de cada tratamiento, necesitamos calificar la evidencia
 de nuestra conclusión (el tiempo de fusión se reduce con información verbal).
 
 Podemos usar una prueba de permutaciones, esta vez justificándola por el hecho
 de que los tratamientos se asignan al azar: si los tratamientos son
-indistinguibles, entonces las etiquetas de los grupos son solo etiquetas, y
+indistinguibles, entonces las etiquetas de los grupos son sólo etiquetas, y
 permutarlas daría muestras igualmente verosímiles.
 
 En este caso, compararemos gráficas de cuantiles de los datos con los
@@ -822,7 +807,7 @@ ayuda a reducir el tiempo de fusión de los estereogramas.
 ```
 
 
-## Ejemplo: tiempos de fusión 2 {-}
+## Ejemplo: tiempos de fusión (continuación) {-}
 
 Podemos usar las pruebas de permutaciones para distintos de tipos de
 estadísticas: medianas, medias, comparar dispersión usando rangos
@@ -835,6 +820,18 @@ superior e inferior de las dos distribuciones. Usaremos el cociente de estas dos
 para medir su diferencia
 
 ```{r, message = FALSE}
+# esta función hace permutaciones y calcula la diferencia para cada una
+permutaciones_est <- function(datos, variable, calc_diferencia, n = 1000){
+  # calcular estadística para cada grupo
+  permutar <- function(variable){
+    sample(variable, length(variable))
+  }
+  tbl_perms <- tibble(.sample = seq(1, n-1, 1)) %>%
+    mutate(diferencia = map_dbl(.sample,
+              ~ datos %>% mutate({{variable}}:= permutar({{variable}})) %>% calc_diferencia))
+  bind_rows(tbl_perms, tibble(.sample = n, diferencia = calc_diferencia(datos)))
+}
+
 stat_fusion <- function(x){
     (quantile(x, 0.75) + quantile(x, 0.25))/2
 }
@@ -875,7 +872,7 @@ g_2 <- ggplot(valores_ref, aes(x = diferencia)) + geom_histogram(binwidth = 0.04
 g_1 + g_2
 ```
 
-Y el valor p de dos colas es
+Y el valor *p* de dos colas es
 
 ```{r}
 dist_perm_nv <- ecdf(valores_ref$diferencia)
@@ -890,7 +887,7 @@ factor menor a 1.
 
 ##  Separación de grupos {-}
 
-Este ejemplo tomado de @cookwasps (tanto la idea como el código). La pregunta que se aborda en
+Este ejemplo tomado de [@cookwasps] (tanto la idea como el código). La pregunta que se aborda en
 ese estudio es:
 
 - Existen métodos de clasificación (supervisados o no supervisados) para formar grupos en términos
@@ -904,7 +901,7 @@ capitalizaron en variación aleatoria para formarse?
 Es relativamente fácil encontrar combinaciones de variables que separan los grupos, aunque estas combinaciones
 y diferencias están basadas en ruido y no generalizan a la población.
 
-Como muestran en @cookwasps, el *lineup* es útil para juzgar si tenemos evidencia en contra de que los
+Como muestran en [@cookwasps], el *lineup* es útil para juzgar si tenemos evidencia en contra de que los
 grupos en realidad son iguales, y usamos variación muestral para separarlos.
 
 
@@ -915,8 +912,8 @@ y para cada individuo se miden expresiones
 de 42 genes distintos. La pregunta es: ¿Podemos separar a los grupos de avispas
 dependiendo de sus mediciones?
 
-En este se usó análisis discriminante para buscar proyecciones de los
-datos en dimensión baja de forma que los grupos sean lo más compactos y separados posibles.
+En este se usó análisis discriminante (LDA) para buscar proyecciones de los
+datos en dimensión baja de forma que los grupos sean lo *más compactos y separados posibles.*
 
 Para probar qué tan bien funciona este método, podemos hacer una prueba de permutación, aplicamos
 LDA y observamos los resultados.
@@ -944,8 +941,8 @@ ggplot(d, aes(x=LD1, y=LD2, colour=Group)) +
 ```
 
 Y vemos que incluso permutando los grupos, es generalmente posible separarlos en grupos
-bien definidos: la búsqueda es suficientemente agresiva para encontrar
- combinaciones lineales que los separan. Que no podamos distinguir
+bien definidos: la búsqueda es suficientemente agresiva para encontrar 
+combinaciones lineales que los separan. Que no podamos distinguir
 los datos verdaderos de las replicaciones nulas indica que este método difícilmente puede
 servir para separar los grupos claramente.
 
@@ -976,44 +973,42 @@ ggplot(wasp_lda, aes(x = LD1, y = LD2, colour = grupo)) + geom_point(size = 3) +
 Aunque esta separación de datos es menos efectiva en este ejemplo por la muestra chica, podemos ver
 que la separación lograda en los datos de entrenamiento probablemente se debe a variación muestral.
 
-
 ## La "crisis de replicabilidad" {-}
 
 Recientemente [@falsefindings] se ha reconocido
-en campos como la sicología la *crisis de replicabilidad*. Varios estudios que recibieron
+en campos como la psicología la *crisis de replicabilidad*. Varios estudios que recibieron
 mucha publicidad inicialmente no han podido ser replicados
 posteriormente por otros investigadores. Por ejemplo:
 
-- Hacer [poses poderosas](https://www.sciencedaily.com/releases/2017/09/170911095932.htm) produce cambios fisiológicos que mejoran nuestro desempeño en ciertas tareas
-- Mostrar palabras relacionadas con "viejo" hacen que las personas caminen más lento (efectos de [priming](https://www.nature.com/news/nobel-laureate-challenges-psychologists-to-clean-up-their-act-1.11535))
+- Hacer [poses poderosas](https://www.sciencedaily.com/releases/2017/09/170911095932.htm) produce cambios fisiológicos que mejoran nuestro desempeño en ciertas tareas.  
+- Mostrar palabras relacionadas con "viejo" hacen que las personas caminen más lento (efectos de [priming](https://www.nature.com/news/nobel-laureate-challenges-psychologists-to-clean-up-their-act-1.11535)).  
 
 En todos estos casos, el argumento de la evidencia de estos efectos fue respaldada
-por una prueba de hipótesis nula con un valor p menor a 0.05. La razón es que ese es el estándar de publicación
- seguido por varias áreas y revistas. La tasa de no replicabilidad parece ser mucho más alta (al menos la mitad o más
- según algunas fuentes, como la señalada arriba)
- que lo sugeriría la tasa de falsos positivos (menos de 5\%)
+por una prueba de hipótesis nula con un valor *p* menor a 0.05. La razón es que ese es el estándar de publicación
+seguido por varias áreas y revistas arbitradas. La tasa de *no replicabilidad*
+parece ser mucho más alta (al menos la mitad o más, según algunas fuentes como la señalada arriba) 
+que la sugerida por la tasa de falsos positivos (menos de 5\%).
 
-Este problema de replicabilidad parece ser más frecuente cuando:
+Este problema de replicabilidad parece ser más frecuente cuando:  
 
-1. Se trata de estudios de potencia baja: mediciones ruidosas y  tamaños de muestra chicos.
+1. Se trata de estudios de potencia baja: mediciones ruidosas y tamaños de muestra chicos.  
 2. El plan de análisis no está claramente definido desde un principio (lo cual es difícil cuando
-se están investigando "fenómenos no estudiados antes")
+se están investigando "fenómenos no estudiados antes").  
 
 ¿A qué se atribuye esta crisis de replicabilidad?
-
 
 ## El jardín de los senderos que se bifurcan {-}
 
 Aunque haya algunos ejemplos de manipulaciones conscientes ---e incluso, en menos casos,
 malintencionadas--- para obtener resultados publicables o significativos
-([p-hacking](https://en.wikipedia.org/wiki/Data_dredging)),
- como vimos en ejemplos anteriores, hay varias decisiones, todas razonables, que podemos tomar cuando
-estamos buscando las comparaciones correctas. Algunas pueden ser:
+([p-hacking](https://en.wikipedia.org/wiki/Data_dredging)), como vimos en
+ejemplos anteriores, hay varias decisiones, todas razonables, que podemos tomar cuando
+estamos buscando las comparaciones correctas. Algunas pueden ser:  
 
-- Transformar los datos (tomar o no logaritmos, u otra transformación)
-- Editar datos atípicos (razonable si los equipos pueden fallar, o hay errores de captura, por ejemplo)
+- Transformar los datos (tomar o no logaritmos, u otra transformación).  
+- Editar datos atípicos (razonable si los equipos pueden fallar, o hay errores de captura, por ejemplo).  
 - Distintas maneras de interpretar los criterios de inclusión de un estudio (por ejemplo, algunos participantes
-mostraron tener gripa, o revelaron que durmieron muy poco la noche anterior, etc. ¿los dejamos o los quitamos?)
+mostraron tener gripa, o revelaron que durmieron muy poco la noche anterior, etc. ¿los dejamos o los quitamos?).    
 
 Dado un conjunto de datos, las justificaciones de las decisiones que se toman
 en cada paso son razonables, pero con datos distintos las decisiones podrían ser diferentes.
@@ -1022,24 +1017,24 @@ que **invalida en parte el uso valores p como criterio de evidencia contra la hi
 
 Esto es exacerbado por:
 
-- Tamaños de muestra chicos y efectos "inestables" que se quieren medir (por ejemplo en psicología)
+- Tamaños de muestra chicos y efectos "inestables" que se quieren medir (por ejemplo en psicología).  
 - El hecho de que el criterio de publicación es obtener un
 valor $p < 0.05$, y la presión fuerte sobre los investigadores
-para producir resultados publicables ($p < 0.05$).
+para producir resultados publicables ($p < 0.05$).  
 - El que estudios o resultados similares que no obtuvieron valores $p$ por debajo del umbral no son
-publicados o reportados.
+publicados o reportados.  
 
-Ver por ejemplo el [comunicado de la ASA](https://www.amstat.org/asa/files/pdfs/P-ValueStatement.pdf).
+Ver por ejemplo el [comunicado de la ASA](https://www.amstat.org/asa/files/pdfs/P-ValueStatement.pdf).  
 
 **Ojo**: esas presiones de publicación no sólo ocurre para investigadores en psicología. Cuando
-trabajamos en problemas de análisis de datos en problemas que son de importancia, es común que
+trabajamos en problemas de análisis de datos que son de importancia, es común que
 existan intereses de algunas partes o personas involucradas por algunos resultados u otros (por
 ejemplo, nuestros clientes de consultoría o clientes internos). Eso puede dañar nuestro trabajo
 como analistas, y el avance de nuestro equipo. Aunque esas presiones son inevitables, se vuelven
 manejables cuando hay una relación de confianza entre las partes involucradas.
 
 
-## Ejemplo: decisiones de análisis y valores p {-}
+## Ejemplo: decisiones de análisis y valores *p* {-}
 
 En el ejemplo de datos de fusión, decidimos probar, por ejemplo, el promedio de
 los cuartiles inferior y superior, lo cual no es una decisión típica pero usamos como
@@ -1047,7 +1042,6 @@ ilustración. Ahora intentamos usar distintas mediciones de la diferencia entre 
 usando distintas medidas resumen y transformaciones (por ejemplo, con o sin logaritmo). Aquí hay
 unas 12 combinaciones distintas para hacer el análisis (multiplicadas por criterios
 de "aceptación de datos en la muestra", que simulamos tomando una submuestra al azar):
-
 
 
 ```{r}
@@ -1103,24 +1097,24 @@ ejemplo$cuartiles_razon
 
 
 Si existen grados de libertad ---muchas veces necesarios para hacer un análisis exitoso---, entonces
-los valores p pueden tener poco significado.
+los valores *p* pueden tener poco significado.
 
 ## Alternativas o soluciones {-}
 
 El primer punto importante es reconocer que la mayor parte de nuestro trabajo
 es **exploratorio** (recordemos el proceso complicado del análisis de datos de refinamiento de preguntas).
-En este tipo de trabajo, reportar valores p puede tener poco sentido,
-y mucho menos tiene sentido aceptar algo "verdadero" cuando pasa un umbral de significancia dado.
+En este tipo de trabajo, reportar valores *p* puede tener poco sentido,
+y mucho menos tiene sentido aceptar algo *verdadero* cuando pasa un umbral de significancia dado.
 
-Nuestro interés principal al hacer análisis es expresar correctamente y de manera útil la incertidumbre
+Nuestro interés principal al hacer análisis es: expresar correctamente, y de manera útil, la incertidumbre
 asociada a las conclusiones o patrones que mostramos
-(asociada a variación muestral, por ejemplo) para que el proceso de toma de decisiones sea informado. **Un** resumen de **un número** (valor p, o el que sea) no puede ser tomado como criterio para tomar una decisión que generalmente es compleja.
+(asociada a variación muestral, por ejemplo) con el objetivo que el proceso de toma de decisiones sea informado. **Un** resumen de **un número** (valor *p*, o el que sea) no puede ser tomado como criterio para tomar una decisión que generalmente es compleja.
 En la siguiente sección veremos cómo podemos mostrar parte de esa incertidumbre de manera más útil.
 
-Por otra parte, los estudios confirmatorios (donde se reportan valores p)
-también tienen un lugar. En áreas como la sicología, existen ahora movimientos fuertes en
+Por otra parte, los estudios confirmatorios (donde se reportan valores *p*)
+también tienen un lugar. En áreas como la psicología, existen ahora movimientos fuertes en
 favor de la repetición de estudios prometedores pero donde hay sospecha
 de grados de libertad del investigador. Este movimiento
-sugiere dar valor a los **estudios exploratorios** que no reportan valor p,
+sugiere dar valor a los **estudios exploratorios** que no reportan valor *p*,
 y posteriormente, si el estudio
 es de interés, puede intentarse una **replicación confirmatoria, con potencia más alta y con planes de análisis predefinidos**.
