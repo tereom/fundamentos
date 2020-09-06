@@ -1,0 +1,280 @@
+# Estimación y distribución de muestreo
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+source("R/funciones_auxiliares.R")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
+En esta sección discutiremos cuál el objetivo general del proceso de estimación.
+y cómo entender y manejar la variabilidad que se produce cuando aleatorizamos
+la selección de las muestras que utilizamos para hacer análisis.
+
+## Ejemplo: precios de casas {-}
+
+Supongamos que queremos conocer el valor total de las casas
+que se vendieron recientemente en una zona
+particular. Supondremos que tenemos un listado de las casas que se han
+vendido recientemente, pero en ese listado no se encuentra el precio de venta.
+Decidimos entonces tomar una muestra aleatoria de 100 de esas casas. Para esas
+casas hacemos trabajo de campo para averiguar el precio de venta.
+
+```{r}
+marco_casas <- read_csv("data/casas.csv")
+set.seed(841)
+muestra_casas <- sample_n(marco_casas, 100) %>%
+  select(id, nombre_zona, area_habitable_sup_m2, precio_miles)
+sprintf("Hay %0.0f casas en total, tomamos muestra de %0.0f",
+        nrow(marco_casas), nrow(muestra_casas))
+head(muestra_casas)
+```
+Como tomamos una muestra aleatoria, intentamos estimar el valor
+total de las casas que se vendieron expandiendo el total muestral.
+
+```{r}
+n <- nrow(muestra_casas) # tamaño muestra
+N <- nrow(marco_casas) # tamaño población
+estimar_total <- function(muestra_casas, N){
+  total_muestral <- sum(muestra_casas$precio_miles)
+  n <- nrow(muestra_casas)
+  # cada unidad de la muestra representa a N/n
+  f_exp <- N / n
+  estimador_total <- f_exp * total_muestral
+  res <- tibble(total_muestra = total_muestral,
+         factor_exp = f_exp,
+         est_total_millones = estimador_total / 1000)
+  res
+}
+estimar_total(muestra_casas, N) %>%
+  mutate(across(where(is.numeric), round, 2))
+```
+
+Sin embargo, si hubiéramos obtenido otra muestra, hubiéramos obtenido otra
+estimación diferente. Por ejemplo:
+
+```{r}
+estimar_total(sample_n(marco_casas, 100), N) %>%
+  mutate(across(where(is.numeric), round, 2))
+```
+
+El valor poblacional que buscamos estimar (nótese que en la práctica este no lo conocemos)
+es:
+
+```{r}
+# multiplicar por 1000 para que sea en millones de dólares
+total_pob <- sum(marco_casas %>% pull(precio_miles)) / 1000
+total_pob
+```
+
+Como vemos arriba, para algunas muestras esta estadística puede estar muy cercana al valor poblacional,
+pero para otras puede estar más lejana. Para entender qué tan buena es una estimación
+particular, entonces, tenemos que entender cuánta variabilidad hay de muestra a muestra
+debida a la aleatorización.
+
+
+## Distribución de muestreo {-}
+
+La distribución de muestreo de una estadística enumera los posibles resultados
+que puede tomar esa estadística sobre todas las muestras posibles. Este es el concepto
+básico para poder entender qué tan bien o mal estima un parámetro poblacional dado.
+
+En nuestro ejemplo anterior de precio de casas, no podemos calcular todas las posibles
+estimaciones bajo todas las posibles muestras, pero podemos aproximar
+repitiendo una gran cantidad de veces el proceso de muestreo.
+
+Empezamos repitiendo 10 veces y examinamos cómo varía nuestra estadística:
+
+```{r, cache = TRUE}
+replicar_muestreo <- function(marco_casas, m = 500, n){
+  # n es el tamaño de muestra que se saca de marco_casas
+  # m es el número de veces que repetimos el muestro de tamaño n
+  resultados <- map(1:m,
+      function(id) {
+        sample_n(marco_casas, n) %>%
+          estimar_total(N) %>%
+          mutate(id_muestra = id) %>%
+          select(id_muestra, everything())
+      })
+  resultados %>% bind_rows
+}
+replicar_muestreo(marco_casas, m = 10, n = 100) %>%
+  mutate(across(where(is.numeric), round, 1)) %>%
+  formatear_tabla()
+```
+Como vemos, hay variación considerable en nuestro estimador del total, pero
+la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
+examinamos un número más grande de simulaciones:
+
+```{r, cache = TRUE}
+replicaciones_1 <- replicar_muestreo(marco_casas, m = 1500, n = 100)
+```
+
+
+```{r}
+graf_1 <- ggplot(replicaciones_1, aes(x = est_total_millones)) +
+  geom_histogram() +
+  geom_vline(xintercept = total_pob, colour = "red") +
+  xlab("Millones de dólares") +
+  scale_x_continuous(breaks = seq(180, 240, 10), limits = c(180, 240))
+graf_1
+```
+Y esta gráfica nos dice qué podemos esperar de una estimación particular.
+Con muy alta probabilidad el error no será de más de unos 40 millones de dólares
+(o no más de 20% del valor poblacional).
+
+
+```{block, type='mathblock'}
+**Definición.** Sea $X_1, X_2, \ldots X_n$ una muestra aleatoria de tamaño $n$,
+y $T = t(X_1, X_2, \ldots, X_n)$ una estadística.
+
+La **distribución de muestreo** de $T$ es la función de distribución de $T$.
+```
+
+
+Lo más importante es entender que:
+
+- Cuando usamos $T$ para estimar un valor poblacional $\theta$, buscamos que
+la distribución de muestreo de $T$ esté **altamente concentrada** alrededor del verdadero
+valor $\theta$.
+
+Cuando esto es cierto, quiere decir que con alta probabilidad cuando obtengamos
+nuestra muestra y calculemos nuestra estimación, el resultado no estará muy lejano
+del valor poblacional que nos interesa estimar.
+
+Por ejemplo, veamos qué pasa cuando hacemos la muestra más grande (ahora $n = 250$) en nuestro ejemplo:
+
+
+```{r, cache = TRUE}
+replicaciones_2 <- replicar_muestreo(marco_casas, m = 1500, n = 250)
+```
+
+Graficamos las dos distribuciones de muestreo juntas, y vemos cómo
+con mayor muestra obtenemos un estimador más preciso, y sin considerar el costo,
+preferimos el estimador **mejor concentrado alrededor del valor que buscamos estimar**.
+
+```{r, fig.width = 8, fig.height = 4}
+library(patchwork)
+graf_2 <- ggplot(replicaciones_2, aes(x = est_total_millones)) +
+  geom_histogram() +
+  geom_vline(xintercept = total_pob, colour = "red") +
+  xlab("Millones de dólares") +
+  scale_x_continuous(breaks = seq(180, 240, 10), limits = c(180, 240))
+graf_1 + graf_2
+```
+
+```{block, type = 'comentario'}
+**Observación**: a veces este concepto se confunde la distribución
+poblacional de las $X_i$. Esto es muy diferente.
+```
+
+Por ejemplo, en nuestro caso, el histograma de la distribución de valores poblacionales es
+```{r, fig.width = 5, fig.height=3}
+ggplot(marco_casas, aes(x = precio_miles)) + geom_histogram()
+```
+que en general no tiene ver mucho en escala o forma con la distribución de muestreo
+de nuestro estimador del total.
+
+## Más ejemplos {-}
+
+Podemos también considerar muestrear de poblaciones sintéticas.
+Por ejemplo, supongamos que tomamos una muestra de tamaño $n = 15$ de la distribución
+uniforme en $[0,1]$. Es decir, cada $X_i$ es un valor uniformemente distribuido
+en $[0,1]$, y las $X_i$ se extraen independientemente unas de otras. Consideramos
+dos estadísticas de interés:
+
+1. La media muestral $T_1(X) = \frac{1}{n}\sum_{i = 1}^{n} X_i$
+2. El máximo de la muestra $T_2(X) = \max_{i=1,\ldots, n} X_i$
+
+```{block2, type='ejercicio'}
+¿Cómo crees que se vean las distribuciones muestrales de estas estadísticas?
+¿Alrededor de qué valores crees que concentren? ¿Crees que tendrán mucha o poca
+dispersión? ¿Qué forma crees que tengan?
+```
+
+Para el primer caso hacemos:
+
+```{r}
+replicar_muestreo_unif <- function(est = estimador_1, m = 100, n = 15){
+  valores_est <- map_dbl(1:m, ~ est(runif(12)))
+  tibble(id_muestra = 1:m, estimacion = valores_est)
+}
+sim_estimador_1 <- replicar_muestreo_unif(mean, 4000, 15)
+ggplot(sim_estimador_1, aes(x = estimacion)) + geom_histogram(bins = 40) +
+  xlim(c(0, 1))
+```
+
+```{r}
+sim_estimador_2 <- replicar_muestreo_unif(max, 4000, 15)
+ggplot(sim_estimador_2, aes(x = estimacion)) + geom_histogram(breaks = seq(0, 1, 0.02)) +
+  xlim(c(0, 1))
+```
+
+
+## El error estándar {-}
+
+Una primera medida útil de la dispersión de la distribución de muestreo
+es su desviación estándar. En este caso particular, a esta desviación estándar
+se le llama error estándar
+
+```{block, type='mathblock'}
+**Definición.** A la desviación estándar del una estadística $T$ le llamamos
+el **error estándar**, y la denotamos por $se(T)$. A cualquier estimador
+de este error estándar lo denotamos como $\hat{se}(T)$.
+```
+
+Este error estándar mide que tanto varía el estimador $T$ de muestra a muestra.
+
+```{block, type = 'comentario'}
+**Observación**: es importante no confundir el error estándar con
+la desviación estándar de una muestra (o de la población). En nuestro ejemplo
+de las uniformes, la desviación estándar de las muestras varía como:
+```
+
+```{r}
+map_dbl(1:10000, ~ sd(runif(15))) %>% quantile %>% round(2)
+```
+
+Mientras que el error estándar de la media es aproximadamente
+
+```{r}
+map_dbl(1:10000, ~ mean(runif(15))) %>% sd
+```
+
+y el error estándar del máximo es aproximadamente
+
+```{r}
+map_dbl(1:10000, ~ max(runif(15))) %>% sd
+```
+
+Como ejercicio para contrastar estos conceptos,
+puedes considerar ¿qué pasa con la desviación estándar de una muestra muy grande de uniformes?
+¿Qué pasa con el error estándar de la media de una muestra muy grande de uniformes?
+
+
+### Ejemplo: valor de casas {-}
+
+Consideramos el error estándar del estimador del total del inventario vendido, usando
+una muestra de 250 con el estimador del total que consideramos. Como aproximamos con
+simulación la distribución de muestreo, podemos hacer:
+
+```{r}
+ee_2 <- replicaciones_2 %>% pull(est_total_millones) %>% sd
+ee_2
+```
+que está en millones de pesos y cuantifica la dispersión de la distribución de
+muestreo del estimador del total.
+
+Para tamaño de muestra 100, obtenemos más dispersión:
+
+```{r}
+ee_1 <- replicaciones_2 %>% pull(est_total_millones) %>% sd
+ee_1
+```
+
+Nótese que esto es muy diferente, por ejemplo, a la desviación estándar
+poblacional o de una muestra. Estas dos cantidades miden la variabilidad del
+estimador del total.
+
+## Calculando la distribución de muestreo {-}
