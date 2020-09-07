@@ -479,7 +479,7 @@ distribución de interés (por ejemplo media, moda, varianza). Para una hipótes
 nula del estilo $H_0: \theta = \theta_0,$ la hipótesis a contrastar se puede 
 denominar como:
 
-- *Hipótesis alternativa de una cola* $H_1: \theta > \theta_0$   
+- *Hipótesis alternativa de una cola* $H_1: \theta \gt \theta_0$   
 - *Hipótesis alternativa de dos colas* $H_1: \theta \neq \theta_0$
 ```
 
@@ -494,8 +494,8 @@ $H_0: p_1 = p_2$, y $H_1:p_1 > p_2$.
 cuyo valor determina el resultado de la prueba. La función usualmente es 
 denotada por $T(\bf X)$ donde $\bf X$ representa los datos como variable 
 aleatoria. Por ejemplo, 
-$T = T(X_1, \ldots, X_N)$ si sólo tenemos una muestra, o por 
-$T = T(X_1, \ldots, X_N, Y_1, \ldots, Y_M)$ en el caso de tener dos muestras. Al 
+$T = T(X_1, \ldots, X_n)$ si sólo tenemos una muestra, o por 
+$T = T(X_1, \ldots, X_n, Y_1, \ldots, Y_m)$ en el caso de tener dos muestras. Al 
 evaluar la prueba para un conjunto de datos dado, $x$, ésta se denomina 
 *estadística de prueba observada,* $t = T(x).$
 ```
