@@ -6,7 +6,8 @@ on:
 name: renderbook
 
 jobs:
-  build:
+  bookdown:
+    name: Render-Book
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v1
