@@ -18,7 +18,7 @@ jobs:
       - name: Install packages
         run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra","timeDate","here","nullabor"))'
       - name: Render book
-        run: Rscript -e 'bookdown::render_book("index.Rmd", encoding = "UTF-8")'
+        run: Rscript -e 'rmarkdown::render_site(output_format = "bookdown::gitbook", encoding = "UTF-8")'
       - uses: actions/upload-artifact@v1
         with:
           name: _book

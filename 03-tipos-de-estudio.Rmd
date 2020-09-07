@@ -1,5 +1,21 @@
 # Tipos de estudio y experimentos
 
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(
+    comment = "#>",
+    collapse = TRUE,
+    fig.align = "center", 
+    error = TRUE,
+    cache = TRUE, 
+    warning = FALSE, 
+    message=FALSE, 
+    out.width = "70%"
+)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
 ### Motivación {-}
 
 ```{block, type='ejercicio'}
