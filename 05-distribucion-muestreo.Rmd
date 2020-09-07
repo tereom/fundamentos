@@ -126,10 +126,9 @@ Con muy alta probabilidad el error no será de más de unos 40 millones de dóla
 
 
 ```{block, type='mathblock'}
-**Definición.** Sea $X_1, X_2, \ldots X_n$ una muestra aleatoria de tamaño $n$,
-y $T = t(X_1, X_2, \ldots, X_n)$ una estadística.
-
-La **distribución de muestreo** de $T$ es la función de distribución de $T$.
+**Definición.** Sea $X_1, X_2, \ldots X_N$ una muestra aleatoria de tamaño $N$,
+y $T = t(X_1, X_2, \ldots, X_N)$ una estadística. La **distribución de muestreo** 
+de $T$ es la función de distribución de $T$.
 ```
 
 
@@ -143,7 +142,7 @@ Cuando esto es cierto, quiere decir que con alta probabilidad cuando obtengamos
 nuestra muestra y calculemos nuestra estimación, el resultado no estará muy lejano
 del valor poblacional que nos interesa estimar.
 
-Por ejemplo, veamos qué pasa cuando hacemos la muestra más grande (ahora $n = 250$) en nuestro ejemplo:
+Por ejemplo, veamos qué pasa cuando hacemos la muestra más grande (ahora $N = 250$) en nuestro ejemplo:
 
 
 ```{r, cache = TRUE}
@@ -184,8 +183,8 @@ uniforme en $[0,1]$. Es decir, cada $X_i$ es un valor uniformemente distribuido
 en $[0,1]$, y las $X_i$ se extraen independientemente unas de otras. Consideramos
 dos estadísticas de interés:
 
-1. La media muestral $T_1(X) = \frac{1}{n}\sum_{i = 1}^{n} X_i$
-2. El máximo de la muestra $T_2(X) = \max_{i=1,\ldots, n} X_i$
+1. La media muestral $T_1(X) = \frac{1}{N}\sum_{i = 1}^{N} X_i$
+2. El máximo de la muestra $T_2(X) = \max_{i=1,\ldots, N} X_i$
 
 ```{block2, type='ejercicio'}
 ¿Cómo crees que se vean las distribuciones muestrales de estas estadísticas?
@@ -220,8 +219,8 @@ se le llama error estándar
 
 ```{block, type='mathblock'}
 **Definición.** A la desviación estándar del una estadística $T$ le llamamos
-el **error estándar**, y la denotamos por $se(T)$. A cualquier estimador
-de este error estándar lo denotamos como $\hat{se}(T)$.
+el **error estándar**, y la denotamos por $\text{se}(T)$. A cualquier estimador
+de este error estándar lo denotamos como $\hat{\text{se}}(T)$.
 ```
 
 Este error estándar mide que tanto varía el estimador $T$ de muestra a muestra.
@@ -266,7 +265,7 @@ ee_2
 que está en millones de pesos y cuantifica la dispersión de la distribución de
 muestreo del estimador del total.
 
-Para tamaño de muestra 100, obtenemos más dispersión:
+Para tamaño de muestra $N = 100$, obtenemos más dispersión:
 
 ```{r}
 ee_1 <- replicaciones_2 %>% pull(est_total_millones) %>% sd
@@ -278,3 +277,24 @@ poblacional o de una muestra. Estas dos cantidades miden la variabilidad del
 estimador del total.
 
 ## Calculando la distribución de muestreo {-}
+
+Existen tres formas de calcular la distribución de muestreo y errores estándar 
+---cálculos exactos, simulación y approximación a fórmulas. 
+
+Recordemos el ejemplo para $X_n \sim U[0,1],$ sabemos que si $0 \leq a \leq 1,$ entonces 
+$P(X_n \leq a) = a.$ Por lo tanto, para $T_2 = \max_n X_n,$ la función de distribución es
+\begin{align}
+P(T_2 \leq a) &= P(\max_n X_n \leq a) \\
+&= P(X_1 \leq a, \ldots, X_N \leq N) \\
+&= P(X_1 \leq a) \cdots P(X_N \leq a) \\ 
+&= a^{N}.
+\end{align}
+
+```{block, type = 'ejercicio'}
+¿Cuál es la función de densidad del máximo? ¿Cuál es la función de distribución del mínimo? 
+¿Cuál es la función de densidad del mínimo?
+```
+
+El resultado más notable para calcular *distribuciones* de muestreo por aproximaciones es por 
+medio del *teorema de límite central,*  y lo veremos en el próximo bloque.
+
