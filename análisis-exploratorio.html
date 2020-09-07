@@ -209,6 +209,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-decisiones-de-análisis-y-valores-p"><i class="fa fa-check"></i>Ejemplo: decisiones de análisis y valores p</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#alternativas-o-soluciones"><i class="fa fa-check"></i>Alternativas o soluciones</a></li>
 </ul></li>
+<li class="chapter" data-level="5" data-path="index.html"><a href="index.html#estimación-y-distribución-de-muestreo"><i class="fa fa-check"></i><b>5</b> Estimación y distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html"><i class="fa fa-check"></i>Ejemplo: precios de casas</a></li>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#distribución-de-muestreo"><i class="fa fa-check"></i>Distribución de muestreo</a></li>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#más-ejemplos"><i class="fa fa-check"></i>Más ejemplos</a></li>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#el-error-estándar"><i class="fa fa-check"></i>El error estándar</a><ul>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#ejemplo-valor-de-casas"><i class="fa fa-check"></i>Ejemplo: valor de casas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#calculando-la-distribución-de-muestreo"><i class="fa fa-check"></i>Calculando la distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#ejemplo-1"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="estimación-y-distribución-de-muestreo.html"><a href="estimación-y-distribución-de-muestreo.html#teorema-central-del-límite"><i class="fa fa-check"></i>Teorema central del límite</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
 <li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>2. Loess</a></li>
@@ -313,44 +326,12 @@ cuatro días consecutivos:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">24.71</td>
-<td align="right">5.85</td>
-<td align="left">No</td>
+<td align="right">18.71</td>
+<td align="right">4.00</td>
+<td align="left">Si</td>
 <td align="left">Jue</td>
 <td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">12.26</td>
-<td align="right">2.00</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">12.43</td>
-<td align="right">1.80</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">18.35</td>
-<td align="right">2.50</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="right">13.42</td>
-<td align="right">1.68</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
+<td align="right">3</td>
 </tr>
 <tr class="even">
 <td align="right">14.00</td>
@@ -361,36 +342,68 @@ cuatro días consecutivos:</p>
 <td align="right">2</td>
 </tr>
 <tr class="odd">
-<td align="right">15.42</td>
-<td align="right">1.57</td>
-<td align="left">No</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">16.43</td>
-<td align="right">2.30</td>
-<td align="left">No</td>
+<td align="right">12.74</td>
+<td align="right">2.01</td>
+<td align="left">Si</td>
 <td align="left">Jue</td>
 <td align="left">Comida</td>
 <td align="right">2</td>
 </tr>
+<tr class="even">
+<td align="right">35.26</td>
+<td align="right">5.00</td>
+<td align="left">No</td>
+<td align="left">Dom</td>
+<td align="left">Cena</td>
+<td align="right">4</td>
+</tr>
 <tr class="odd">
-<td align="right">11.24</td>
-<td align="right">1.76</td>
+<td align="right">25.21</td>
+<td align="right">4.29</td>
 <td align="left">Si</td>
 <td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="right">17.51</td>
+<td align="right">15.69</td>
 <td align="right">3.00</td>
 <td align="left">Si</td>
-<td align="left">Dom</td>
+<td align="left">Sab</td>
+<td align="left">Cena</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="right">10.65</td>
+<td align="right">1.50</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">28.44</td>
+<td align="right">2.56</td>
+<td align="left">Si</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">13.27</td>
+<td align="right">2.50</td>
+<td align="left">Si</td>
+<td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">10.07</td>
+<td align="right">1.83</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
