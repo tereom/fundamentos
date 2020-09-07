@@ -119,7 +119,7 @@ Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
 examinamos un número más grande de simulaciones:
 
-```{r}
+```{r, cache = TRUE}
 replicaciones_1 <- replicar_muestreo(marco_casas, m = 1500, n = 100)
 ```
 
@@ -158,7 +158,7 @@ del valor poblacional que nos interesa estimar.
 
 Veamos qué pasa cuando hacemos la muestra más grande en nuestro ejemplo:
 
-```{r}
+```{r, cache = TRUE}
 replicaciones_2 <- replicar_muestreo(marco_casas, m = 1500, n = 250)
 ```
 
