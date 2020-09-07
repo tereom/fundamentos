@@ -445,7 +445,7 @@ Ahora podemos pasar a las definiciones correspondientes a pruebas de hipótesis
 <div class="mathblock">
 <p><strong>Definición.</strong> La hipótesis normalmente se plantea en términos de un parámetro (<span class="math inline">\(\theta\in\mathbb{R}\)</span>) o conjunto de parámetros (<span class="math inline">\(\theta\in\mathbb{R}^p\)</span>) de la distribución de interés (por ejemplo media, moda, varianza). Para una hipótesis nula del estilo <span class="math inline">\(H_0: \theta = \theta_0,\)</span> la hipótesis a contrastar se puede denominar como:</p>
 <ul>
-<li><em>Hipótesis alternativa de una cola</em> <span class="math inline">\(H_1: \theta &gt; \theta_0\)</span><br />
+<li><em>Hipótesis alternativa de una cola</em> <span class="math inline">\(H_1: \theta \gt \theta_0\)</span><br />
 </li>
 <li><em>Hipótesis alternativa de dos colas</em> <span class="math inline">\(H_1: \theta \neq \theta_0\)</span></li>
 </ul>
@@ -458,7 +458,7 @@ $H_0: p_1 = p_2$, y $H_1:p_1 > p_2$.
 
 
 <div class="mathblock">
-<p><strong>Definición.</strong> Una <em>estadística de prueba</em> es una función numérica de los datos cuyo valor determina el resultado de la prueba. La función usualmente es denotada por <span class="math inline">\(T(\bf X)\)</span> donde <span class="math inline">\(\bf X\)</span> representa los datos como variable aleatoria. Por ejemplo, <span class="math inline">\(T = T(X_1, \ldots, X_N)\)</span> si sólo tenemos una muestra, o por <span class="math inline">\(T = T(X_1, \ldots, X_N, Y_1, \ldots, Y_M)\)</span> en el caso de tener dos muestras. Al evaluar la prueba para un conjunto de datos dado, <span class="math inline">\(x\)</span>, ésta se denomina <em>estadística de prueba observada,</em> <span class="math inline">\(t = T(x).\)</span></p>
+<p><strong>Definición.</strong> Una <em>estadística de prueba</em> es una función numérica de los datos cuyo valor determina el resultado de la prueba. La función usualmente es denotada por <span class="math inline">\(T(\bf X)\)</span> donde <span class="math inline">\(\bf X\)</span> representa los datos como variable aleatoria. Por ejemplo, <span class="math inline">\(T = T(X_1, \ldots, X_n)\)</span> si sólo tenemos una muestra, o por <span class="math inline">\(T = T(X_1, \ldots, X_n, Y_1, \ldots, Y_m)\)</span> en el caso de tener dos muestras. Al evaluar la prueba para un conjunto de datos dado, <span class="math inline">\(x\)</span>, ésta se denomina <em>estadística de prueba observada,</em> <span class="math inline">\(t = T(x).\)</span></p>
 </div>
 
 La estadística de prueba correspondiente al ejemplo es $T = p_1 - p_2$

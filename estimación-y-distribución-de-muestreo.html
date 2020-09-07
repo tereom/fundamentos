@@ -269,119 +269,55 @@ casas hacemos trabajo de campo para averiguar el precio de venta.</p>
 <span id="cb96-5"><a href="estimación-y-distribución-de-muestreo.html#cb96-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Hay %0.0f casas en total, tomamos muestra de %0.0f&quot;</span>,</span>
 <span id="cb96-6"><a href="estimación-y-distribución-de-muestreo.html#cb96-6"></a>        <span class="kw">nrow</span>(marco_casas), <span class="kw">nrow</span>(muestra_casas))</span></code></pre></div>
 <pre><code>## [1] &quot;Hay 1144 casas en total, tomamos muestra de 100&quot;</code></pre>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="estimación-y-distribución-de-muestreo.html#cb98-1"></a><span class="kw">head</span>(muestra_casas) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
-<table>
-<thead>
-<tr class="header">
-<th align="right">id</th>
-<th align="left">nombre_zona</th>
-<th align="right">area_habitable_sup_m2</th>
-<th align="right">precio_miles</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">287</td>
-<td align="left">NAmes</td>
-<td align="right">161.09380</td>
-<td align="right">159.00</td>
-</tr>
-<tr class="even">
-<td align="right">755</td>
-<td align="left">NAmes</td>
-<td align="right">95.31848</td>
-<td align="right">156.00</td>
-</tr>
-<tr class="odd">
-<td align="right">1190</td>
-<td align="left">Gilbert</td>
-<td align="right">167.59701</td>
-<td align="right">189.00</td>
-</tr>
-<tr class="even">
-<td align="right">36</td>
-<td align="left">NridgHt</td>
-<td align="right">227.79816</td>
-<td align="right">309.00</td>
-</tr>
-<tr class="odd">
-<td align="right">32</td>
-<td align="left">Sawyer</td>
-<td align="right">114.08488</td>
-<td align="right">149.35</td>
-</tr>
-<tr class="even">
-<td align="right">538</td>
-<td align="left">NAmes</td>
-<td align="right">80.26819</td>
-<td align="right">111.25</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="estimación-y-distribución-de-muestreo.html#cb98-1"></a><span class="kw">head</span>(muestra_casas)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##      id nombre_zona area_habitable_sup_m2 precio_miles
+##   &lt;dbl&gt; &lt;chr&gt;                       &lt;dbl&gt;        &lt;dbl&gt;
+## 1   287 NAmes                       161.          159 
+## 2   755 NAmes                        95.3         156 
+## 3  1190 Gilbert                     168.          189 
+## 4    36 NridgHt                     228.          309 
+## 5    32 Sawyer                      114.          149.
+## 6   538 NAmes                        80.3         111.</code></pre>
 <p>Como tomamos una muestra aleatoria, intentamos estimar el valor
 total de las casas que se vendieron expandiendo el total muestral, es decir
 nuestro estimador <span class="math inline">\(\hat{t} = t(X_1,\ldots X_{100})\)</span> del total
 poblacional <span class="math inline">\(t\)</span> es</p>
-<p><span class="math display">\[\hat{t} = \frac{N}{n} \sum_{i=1}^{100} X_i = N\bar{x}\]</span>
-Esta función implementa el estimador:</p>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb99-1"><a href="estimación-y-distribución-de-muestreo.html#cb99-1"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(muestra_casas) <span class="co"># tamaño muestra</span></span>
-<span id="cb99-2"><a href="estimación-y-distribución-de-muestreo.html#cb99-2"></a>N &lt;-<span class="st"> </span><span class="kw">nrow</span>(marco_casas) <span class="co"># tamaño población</span></span>
-<span id="cb99-3"><a href="estimación-y-distribución-de-muestreo.html#cb99-3"></a>estimar_total &lt;-<span class="st"> </span><span class="cf">function</span>(muestra_casas, N){</span>
-<span id="cb99-4"><a href="estimación-y-distribución-de-muestreo.html#cb99-4"></a>  total_muestral &lt;-<span class="st"> </span><span class="kw">sum</span>(muestra_casas<span class="op">$</span>precio_miles)</span>
-<span id="cb99-5"><a href="estimación-y-distribución-de-muestreo.html#cb99-5"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(muestra_casas)</span>
-<span id="cb99-6"><a href="estimación-y-distribución-de-muestreo.html#cb99-6"></a>  <span class="co"># cada unidad de la muestra representa a N/n</span></span>
-<span id="cb99-7"><a href="estimación-y-distribución-de-muestreo.html#cb99-7"></a>  f_exp &lt;-<span class="st"> </span>N <span class="op">/</span><span class="st"> </span>n</span>
-<span id="cb99-8"><a href="estimación-y-distribución-de-muestreo.html#cb99-8"></a>  <span class="co"># estimador total es la expansión del total muestral</span></span>
-<span id="cb99-9"><a href="estimación-y-distribución-de-muestreo.html#cb99-9"></a>  estimador_total &lt;-<span class="st"> </span>f_exp <span class="op">*</span><span class="st"> </span>total_muestral</span>
-<span id="cb99-10"><a href="estimación-y-distribución-de-muestreo.html#cb99-10"></a>  res &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">total_muestra =</span> total_muestral,</span>
-<span id="cb99-11"><a href="estimación-y-distribución-de-muestreo.html#cb99-11"></a>         <span class="dt">factor_exp =</span> f_exp,</span>
-<span id="cb99-12"><a href="estimación-y-distribución-de-muestreo.html#cb99-12"></a>         <span class="dt">est_total_millones =</span> estimador_total <span class="op">/</span><span class="st"> </span><span class="dv">1000</span>)</span>
-<span id="cb99-13"><a href="estimación-y-distribución-de-muestreo.html#cb99-13"></a>  res</span>
-<span id="cb99-14"><a href="estimación-y-distribución-de-muestreo.html#cb99-14"></a>}</span>
-<span id="cb99-15"><a href="estimación-y-distribución-de-muestreo.html#cb99-15"></a><span class="kw">estimar_total</span>(muestra_casas, N) <span class="op">%&gt;%</span></span>
-<span id="cb99-16"><a href="estimación-y-distribución-de-muestreo.html#cb99-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">2</span>))</span></code></pre></div>
+<p><span class="math display">\[\hat{t} = \frac{N}{n} \sum_{i=1}^{100} X_i = N\bar{x}\]</span></p>
+<p>Esta función implementa el estimador:</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="estimación-y-distribución-de-muestreo.html#cb100-1"></a>n &lt;-<span class="st"> </span><span class="kw">nrow</span>(muestra_casas) <span class="co"># tamaño muestra</span></span>
+<span id="cb100-2"><a href="estimación-y-distribución-de-muestreo.html#cb100-2"></a>N &lt;-<span class="st"> </span><span class="kw">nrow</span>(marco_casas) <span class="co"># tamaño población</span></span>
+<span id="cb100-3"><a href="estimación-y-distribución-de-muestreo.html#cb100-3"></a>estimar_total &lt;-<span class="st"> </span><span class="cf">function</span>(muestra_casas, N){</span>
+<span id="cb100-4"><a href="estimación-y-distribución-de-muestreo.html#cb100-4"></a>  total_muestral &lt;-<span class="st"> </span><span class="kw">sum</span>(muestra_casas<span class="op">$</span>precio_miles)</span>
+<span id="cb100-5"><a href="estimación-y-distribución-de-muestreo.html#cb100-5"></a>  n &lt;-<span class="st"> </span><span class="kw">nrow</span>(muestra_casas)</span>
+<span id="cb100-6"><a href="estimación-y-distribución-de-muestreo.html#cb100-6"></a>  <span class="co"># cada unidad de la muestra representa a N/n</span></span>
+<span id="cb100-7"><a href="estimación-y-distribución-de-muestreo.html#cb100-7"></a>  f_exp &lt;-<span class="st"> </span>N <span class="op">/</span><span class="st"> </span>n</span>
+<span id="cb100-8"><a href="estimación-y-distribución-de-muestreo.html#cb100-8"></a>  <span class="co"># estimador total es la expansión del total muestral</span></span>
+<span id="cb100-9"><a href="estimación-y-distribución-de-muestreo.html#cb100-9"></a>  estimador_total &lt;-<span class="st"> </span>f_exp <span class="op">*</span><span class="st"> </span>total_muestral</span>
+<span id="cb100-10"><a href="estimación-y-distribución-de-muestreo.html#cb100-10"></a>  res &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">total_muestra =</span> total_muestral,</span>
+<span id="cb100-11"><a href="estimación-y-distribución-de-muestreo.html#cb100-11"></a>         <span class="dt">factor_exp =</span> f_exp,</span>
+<span id="cb100-12"><a href="estimación-y-distribución-de-muestreo.html#cb100-12"></a>         <span class="dt">est_total_millones =</span> estimador_total <span class="op">/</span><span class="st"> </span><span class="dv">1000</span>)</span>
+<span id="cb100-13"><a href="estimación-y-distribución-de-muestreo.html#cb100-13"></a>  res</span>
+<span id="cb100-14"><a href="estimación-y-distribución-de-muestreo.html#cb100-14"></a>}</span>
+<span id="cb100-15"><a href="estimación-y-distribución-de-muestreo.html#cb100-15"></a><span class="kw">estimar_total</span>(muestra_casas, N) <span class="op">%&gt;%</span></span>
+<span id="cb100-16"><a href="estimación-y-distribución-de-muestreo.html#cb100-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">2</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##   total_muestra factor_exp est_total_millones
 ##           &lt;dbl&gt;      &lt;dbl&gt;              &lt;dbl&gt;
 ## 1        18444.       11.4                211</code></pre>
 <p>Sin embargo, si hubiéramos obtenido otra muestra, hubiéramos obtenido otra
 estimación diferente. Por ejemplo:</p>
-<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb101-1"><a href="estimación-y-distribución-de-muestreo.html#cb101-1"></a><span class="kw">estimar_total</span>(<span class="kw">sample_n</span>(marco_casas, <span class="dv">100</span>), N) <span class="op">%&gt;%</span></span>
-<span id="cb101-2"><a href="estimación-y-distribución-de-muestreo.html#cb101-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb101-3"><a href="estimación-y-distribución-de-muestreo.html#cb101-3"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
-<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<thead>
-<tr>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-total_muestra
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-factor_exp
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-est_total_millones
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-17915.66
-</td>
-<td style="text-align:right;">
-11.44
-</td>
-<td style="text-align:right;">
-204.96
-</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="estimación-y-distribución-de-muestreo.html#cb102-1"></a><span class="kw">estimar_total</span>(<span class="kw">sample_n</span>(marco_casas, <span class="dv">100</span>), N) <span class="op">%&gt;%</span></span>
+<span id="cb102-2"><a href="estimación-y-distribución-de-muestreo.html#cb102-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##   total_muestra factor_exp est_total_millones
+##           &lt;dbl&gt;      &lt;dbl&gt;              &lt;dbl&gt;
+## 1        17916.       11.4               205.</code></pre>
 <p>El valor poblacional que buscamos estimar (nótese que en la práctica este no lo conocemos)
 es:</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="estimación-y-distribución-de-muestreo.html#cb102-1"></a><span class="co"># multiplicar por 1000 para que sea en millones de dólares</span></span>
-<span id="cb102-2"><a href="estimación-y-distribución-de-muestreo.html#cb102-2"></a>total_pob &lt;-<span class="st"> </span><span class="kw">sum</span>(marco_casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(precio_miles)) <span class="op">/</span><span class="st"> </span><span class="dv">1000</span></span>
-<span id="cb102-3"><a href="estimación-y-distribución-de-muestreo.html#cb102-3"></a>total_pob</span></code></pre></div>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="estimación-y-distribución-de-muestreo.html#cb104-1"></a><span class="co"># multiplicar por 1000 para que sea en millones de dólares</span></span>
+<span id="cb104-2"><a href="estimación-y-distribución-de-muestreo.html#cb104-2"></a>total_pob &lt;-<span class="st"> </span><span class="kw">sum</span>(marco_casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(precio_miles)) <span class="op">/</span><span class="st"> </span><span class="dv">1000</span></span>
+<span id="cb104-3"><a href="estimación-y-distribución-de-muestreo.html#cb104-3"></a>total_pob</span></code></pre></div>
 <pre><code>## [1] 209.7633</code></pre>
 <p>Así que:</p>
 <ul>
@@ -404,195 +340,107 @@ repitiendo una gran cantidad de veces el proceso de muestreo, como hicimos
 al aproximar la distribución de permutaciones de estadísticas de prueba de las
 secciones anteriores.</p>
 <p>Empezamos repitiendo 10 veces y examinamos cómo varía nuestra estadística:</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="estimación-y-distribución-de-muestreo.html#cb104-1"></a>replicar_muestreo &lt;-<span class="st"> </span><span class="cf">function</span>(marco_casas, <span class="dt">m =</span> <span class="dv">500</span>, n){</span>
-<span id="cb104-2"><a href="estimación-y-distribución-de-muestreo.html#cb104-2"></a>  <span class="co"># n es el tamaño de muestra que se saca de marco_casas</span></span>
-<span id="cb104-3"><a href="estimación-y-distribución-de-muestreo.html#cb104-3"></a>  <span class="co"># m es el número de veces que repetimos el muestro de tamaño n</span></span>
-<span id="cb104-4"><a href="estimación-y-distribución-de-muestreo.html#cb104-4"></a>  resultados &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span>m,</span>
-<span id="cb104-5"><a href="estimación-y-distribución-de-muestreo.html#cb104-5"></a>      <span class="cf">function</span>(id) {</span>
-<span id="cb104-6"><a href="estimación-y-distribución-de-muestreo.html#cb104-6"></a>        <span class="kw">sample_n</span>(marco_casas, n) <span class="op">%&gt;%</span></span>
-<span id="cb104-7"><a href="estimación-y-distribución-de-muestreo.html#cb104-7"></a><span class="st">          </span><span class="kw">estimar_total</span>(N) <span class="op">%&gt;%</span></span>
-<span id="cb104-8"><a href="estimación-y-distribución-de-muestreo.html#cb104-8"></a><span class="st">          </span><span class="kw">mutate</span>(<span class="dt">id_muestra =</span> id) <span class="op">%&gt;%</span></span>
-<span id="cb104-9"><a href="estimación-y-distribución-de-muestreo.html#cb104-9"></a><span class="st">          </span><span class="kw">select</span>(id_muestra, <span class="kw">everything</span>())</span>
-<span id="cb104-10"><a href="estimación-y-distribución-de-muestreo.html#cb104-10"></a>      })</span>
-<span id="cb104-11"><a href="estimación-y-distribución-de-muestreo.html#cb104-11"></a>  resultados <span class="op">%&gt;%</span><span class="st"> </span>bind_rows</span>
-<span id="cb104-12"><a href="estimación-y-distribución-de-muestreo.html#cb104-12"></a>}</span>
-<span id="cb104-13"><a href="estimación-y-distribución-de-muestreo.html#cb104-13"></a><span class="kw">replicar_muestreo</span>(marco_casas, <span class="dt">m =</span> <span class="dv">10</span>, <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span></span>
-<span id="cb104-14"><a href="estimación-y-distribución-de-muestreo.html#cb104-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb104-15"><a href="estimación-y-distribución-de-muestreo.html#cb104-15"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
-<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="estimación-y-distribución-de-muestreo.html#cb106-1"></a>replicar_muestreo &lt;-<span class="st"> </span><span class="cf">function</span>(marco_casas, <span class="dt">m =</span> <span class="dv">500</span>, n){</span>
+<span id="cb106-2"><a href="estimación-y-distribución-de-muestreo.html#cb106-2"></a>  <span class="co"># n es el tamaño de muestra que se saca de marco_casas</span></span>
+<span id="cb106-3"><a href="estimación-y-distribución-de-muestreo.html#cb106-3"></a>  <span class="co"># m es el número de veces que repetimos el muestro de tamaño n</span></span>
+<span id="cb106-4"><a href="estimación-y-distribución-de-muestreo.html#cb106-4"></a>  resultados &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span>m,</span>
+<span id="cb106-5"><a href="estimación-y-distribución-de-muestreo.html#cb106-5"></a>      <span class="cf">function</span>(id) {</span>
+<span id="cb106-6"><a href="estimación-y-distribución-de-muestreo.html#cb106-6"></a>        <span class="kw">sample_n</span>(marco_casas, n) <span class="op">%&gt;%</span></span>
+<span id="cb106-7"><a href="estimación-y-distribución-de-muestreo.html#cb106-7"></a><span class="st">          </span><span class="kw">estimar_total</span>(N) <span class="op">%&gt;%</span></span>
+<span id="cb106-8"><a href="estimación-y-distribución-de-muestreo.html#cb106-8"></a><span class="st">          </span><span class="kw">mutate</span>(<span class="dt">id_muestra =</span> id) <span class="op">%&gt;%</span></span>
+<span id="cb106-9"><a href="estimación-y-distribución-de-muestreo.html#cb106-9"></a><span class="st">          </span><span class="kw">select</span>(id_muestra, <span class="kw">everything</span>())</span>
+<span id="cb106-10"><a href="estimación-y-distribución-de-muestreo.html#cb106-10"></a>      })</span>
+<span id="cb106-11"><a href="estimación-y-distribución-de-muestreo.html#cb106-11"></a>  resultados <span class="op">%&gt;%</span><span class="st"> </span>bind_rows</span>
+<span id="cb106-12"><a href="estimación-y-distribución-de-muestreo.html#cb106-12"></a>}</span>
+<span id="cb106-13"><a href="estimación-y-distribución-de-muestreo.html#cb106-13"></a><span class="kw">replicar_muestreo</span>(marco_casas, <span class="dt">m =</span> <span class="dv">10</span>, <span class="dt">n =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span></span>
+<span id="cb106-14"><a href="estimación-y-distribución-de-muestreo.html#cb106-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb106-15"><a href="estimación-y-distribución-de-muestreo.html#cb106-15"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
+<table>
 <thead>
-<tr>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-id_muestra
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-total_muestra
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-factor_exp
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-est_total_millones
-</th>
+<tr class="header">
+<th align="right">id_muestra</th>
+<th align="right">total_muestra</th>
+<th align="right">factor_exp</th>
+<th align="right">est_total_millones</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-17594.8
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-201.3
-</td>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">17594.8</td>
+<td align="right">11.4</td>
+<td align="right">201.3</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-17423.9
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-199.3
-</td>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">17423.9</td>
+<td align="right">11.4</td>
+<td align="right">199.3</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-18444.3
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-211.0
-</td>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">18444.3</td>
+<td align="right">11.4</td>
+<td align="right">211.0</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-17696.6
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-202.4
-</td>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">17696.6</td>
+<td align="right">11.4</td>
+<td align="right">202.4</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-17275.8
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-197.6
-</td>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">17275.8</td>
+<td align="right">11.4</td>
+<td align="right">197.6</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-17867.6
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-204.4
-</td>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">17867.6</td>
+<td align="right">11.4</td>
+<td align="right">204.4</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
-18450.8
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-211.1
-</td>
+<tr class="odd">
+<td align="right">7</td>
+<td align="right">18450.8</td>
+<td align="right">11.4</td>
+<td align="right">211.1</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
-18187.2
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-208.1
-</td>
+<tr class="even">
+<td align="right">8</td>
+<td align="right">18187.2</td>
+<td align="right">11.4</td>
+<td align="right">208.1</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-9
-</td>
-<td style="text-align:right;">
-18604.2
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-212.8
-</td>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">18604.2</td>
+<td align="right">11.4</td>
+<td align="right">212.8</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-19144.4
-</td>
-<td style="text-align:right;">
-11.4
-</td>
-<td style="text-align:right;">
-219.0
-</td>
+<tr class="even">
+<td align="right">10</td>
+<td align="right">19144.4</td>
+<td align="right">11.4</td>
+<td align="right">219.0</td>
 </tr>
 </tbody>
 </table>
 <p>Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
 examinamos un número más grande de simulaciones:</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="estimación-y-distribución-de-muestreo.html#cb105-1"></a>replicaciones_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo</span>(marco_casas, <span class="dt">m =</span> <span class="dv">1500</span>, <span class="dt">n =</span> <span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="estimación-y-distribución-de-muestreo.html#cb107-1"></a>replicaciones_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo</span>(marco_casas, <span class="dt">m =</span> <span class="dv">1500</span>, <span class="dt">n =</span> <span class="dv">100</span>)</span></code></pre></div>
 <p>Y el siguiente histograma nos dice qué podemos esperar de la variación de
 nuestras estimadores, y donde es más probable que una estimación particular caiga:</p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="estimación-y-distribución-de-muestreo.html#cb106-1"></a>graf_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(replicaciones_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x =</span> est_total_millones)) <span class="op">+</span></span>
-<span id="cb106-2"><a href="estimación-y-distribución-de-muestreo.html#cb106-2"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
-<span id="cb106-3"><a href="estimación-y-distribución-de-muestreo.html#cb106-3"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> total_pob, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb106-4"><a href="estimación-y-distribución-de-muestreo.html#cb106-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Millones de dólares&quot;) +</span></span>
-<span id="cb106-5"><a href="estimación-y-distribución-de-muestreo.html#cb106-5"></a><span class="st">  scale_x_continuous(breaks = seq(180, 240, 10), limits = c(180, 240))</span></span>
-<span id="cb106-6"><a href="estimación-y-distribución-de-muestreo.html#cb106-6"></a><span class="st">graf_1</span></span></code></pre></div>
-<p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" />
-Con muy alta probabilidad el error no será de más de unos 30 millones de dólares
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="estimación-y-distribución-de-muestreo.html#cb108-1"></a>graf_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(replicaciones_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x =</span> est_total_millones)) <span class="op">+</span></span>
+<span id="cb108-2"><a href="estimación-y-distribución-de-muestreo.html#cb108-2"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
+<span id="cb108-3"><a href="estimación-y-distribución-de-muestreo.html#cb108-3"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> total_pob, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb108-4"><a href="estimación-y-distribución-de-muestreo.html#cb108-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Millones de dólares&quot;) +</span></span>
+<span id="cb108-5"><a href="estimación-y-distribución-de-muestreo.html#cb108-5"></a><span class="st">  scale_x_continuous(breaks = seq(180, 240, 10), limits = c(180, 240))</span></span>
+<span id="cb108-6"><a href="estimación-y-distribución-de-muestreo.html#cb108-6"></a><span class="st">graf_1</span></span></code></pre></div>
+<p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Con muy alta probabilidad el error no será de más de unos 30 millones de dólares
 (o no más de 20% del valor poblacional).</p>
 <div class="mathblock">
 <p>
@@ -610,24 +458,24 @@ o muy disperso, quiere decir que con alta probabilidad cuando obtengamos
 nuestra muestra y calculemos nuestra estimación, el resultado estará lejano
 del valor poblacional que nos interesa estimar.</p>
 <p>Veamos qué pasa cuando hacemos la muestra más grande en nuestro ejemplo:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="estimación-y-distribución-de-muestreo.html#cb107-1"></a>replicaciones_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo</span>(marco_casas, <span class="dt">m =</span> <span class="dv">1500</span>, <span class="dt">n =</span> <span class="dv">250</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="estimación-y-distribución-de-muestreo.html#cb109-1"></a>replicaciones_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo</span>(marco_casas, <span class="dt">m =</span> <span class="dv">1500</span>, <span class="dt">n =</span> <span class="dv">250</span>)</span></code></pre></div>
 <p>Graficamos las dos distribuciones de muestreo juntas, y vemos cómo
 con mayor muestra obtenemos un estimador más preciso, y sin considerar el costo,
 preferimos el estimador <strong>mejor concentrado alrededor del valor que buscamos estimar</strong>.</p>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="estimación-y-distribución-de-muestreo.html#cb108-1"></a><span class="kw">library</span>(patchwork)</span>
-<span id="cb108-2"><a href="estimación-y-distribución-de-muestreo.html#cb108-2"></a>graf_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(replicaciones_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> est_total_millones)) <span class="op">+</span></span>
-<span id="cb108-3"><a href="estimación-y-distribución-de-muestreo.html#cb108-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
-<span id="cb108-4"><a href="estimación-y-distribución-de-muestreo.html#cb108-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> total_pob, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb108-5"><a href="estimación-y-distribución-de-muestreo.html#cb108-5"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Millones de dólares&quot;) +</span></span>
-<span id="cb108-6"><a href="estimación-y-distribución-de-muestreo.html#cb108-6"></a><span class="st">  scale_x_continuous(breaks = seq(180, 240, 10), limits = c(180, 240))</span></span>
-<span id="cb108-7"><a href="estimación-y-distribución-de-muestreo.html#cb108-7"></a><span class="st">graf_1 + graf_2</span></span></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="estimación-y-distribución-de-muestreo.html#cb110-1"></a><span class="kw">library</span>(patchwork)</span>
+<span id="cb110-2"><a href="estimación-y-distribución-de-muestreo.html#cb110-2"></a>graf_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(replicaciones_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> est_total_millones)) <span class="op">+</span></span>
+<span id="cb110-3"><a href="estimación-y-distribución-de-muestreo.html#cb110-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
+<span id="cb110-4"><a href="estimación-y-distribución-de-muestreo.html#cb110-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> total_pob, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb110-5"><a href="estimación-y-distribución-de-muestreo.html#cb110-5"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Millones de dólares&quot;) +</span></span>
+<span id="cb110-6"><a href="estimación-y-distribución-de-muestreo.html#cb110-6"></a><span class="st">  scale_x_continuous(breaks = seq(180, 240, 10), limits = c(180, 240))</span></span>
+<span id="cb110-7"><a href="estimación-y-distribución-de-muestreo.html#cb110-7"></a><span class="st">graf_1 + graf_2</span></span></code></pre></div>
 <p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" /></p>
 <div class="comentario">
 <p>
 <strong>Observación</strong>: a veces este concepto se confunde la distribución poblacional de las <span class="math inline"><span class="math inline">\(X_i\)</span></span>. Esto es muy diferente. Por ejemplo, en nuestro caso, el histograma de la distribución de valores poblacionales es
 </p>
 </div>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="estimación-y-distribución-de-muestreo.html#cb109-1"></a><span class="kw">ggplot</span>(marco_casas, <span class="kw">aes</span>(<span class="dt">x =</span> precio_miles)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="estimación-y-distribución-de-muestreo.html#cb111-1"></a><span class="kw">ggplot</span>(marco_casas, <span class="kw">aes</span>(<span class="dt">x =</span> precio_miles)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</span></code></pre></div>
 <p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;" />
 que en general no tiene ver mucho en escala o forma con la distribución de muestreo
 de nuestro estimador del total.</p>
@@ -641,7 +489,7 @@ uniforme en <span class="math inline">\([0,1]\)</span>. Es decir, cada <span cla
 en <span class="math inline">\([0,1]\)</span>, y las <span class="math inline">\(X_i\)</span> se extraen independientemente unas de otras. Consideramos
 dos estadísticas de interés:</p>
 <ol style="list-style-type: decimal">
-<li>La media muestral <span class="math inline">\(T_1(X) = \frac{1}{n}\sum_{i = 1}{15} X_i\)</span></li>
+<li>La media muestral <span class="math inline">\(T_1(X) = \frac{1}{15}\sum_{i = 1}^{15} X_i\)</span></li>
 <li>El cuantil 0.75 de la muestra <span class="math inline">\(T_2(X) = q_{0.75}(X)\)</span></li>
 </ol>
 
@@ -652,24 +500,24 @@ dispersión? ¿Qué forma crees que tengan?
 </div>
 
 <p>Para el primer caso hacemos:</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="estimación-y-distribución-de-muestreo.html#cb110-1"></a><span class="co"># simular</span></span>
-<span id="cb110-2"><a href="estimación-y-distribución-de-muestreo.html#cb110-2"></a>replicar_muestreo_unif &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">est =</span> estimador_<span class="dv">1</span>, m, <span class="dt">n =</span> <span class="dv">15</span>){</span>
-<span id="cb110-3"><a href="estimación-y-distribución-de-muestreo.html#cb110-3"></a>  valores_est &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>m, <span class="op">~</span><span class="st"> </span><span class="kw">est</span>(<span class="kw">runif</span>(n)))</span>
-<span id="cb110-4"><a href="estimación-y-distribución-de-muestreo.html#cb110-4"></a>  <span class="kw">tibble</span>(<span class="dt">id_muestra =</span> <span class="dv">1</span><span class="op">:</span>m, <span class="dt">estimacion =</span> valores_est)</span>
-<span id="cb110-5"><a href="estimación-y-distribución-de-muestreo.html#cb110-5"></a>}</span>
-<span id="cb110-6"><a href="estimación-y-distribución-de-muestreo.html#cb110-6"></a>sim_estimador_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_unif</span>(mean, <span class="dv">4000</span>, <span class="dv">15</span>)</span>
-<span id="cb110-7"><a href="estimación-y-distribución-de-muestreo.html#cb110-7"></a><span class="co"># graficar aprox de distribución de muestreo</span></span>
-<span id="cb110-8"><a href="estimación-y-distribución-de-muestreo.html#cb110-8"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x =</span> estimacion)) <span class="op">+</span></span>
-<span id="cb110-9"><a href="estimación-y-distribución-de-muestreo.html#cb110-9"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">40</span>) <span class="op">+</span></span>
-<span id="cb110-10"><a href="estimación-y-distribución-de-muestreo.html#cb110-10"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="estimación-y-distribución-de-muestreo.html#cb112-1"></a><span class="co"># simular</span></span>
+<span id="cb112-2"><a href="estimación-y-distribución-de-muestreo.html#cb112-2"></a>replicar_muestreo_unif &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">est =</span> estimador_<span class="dv">1</span>, m, <span class="dt">n =</span> <span class="dv">15</span>){</span>
+<span id="cb112-3"><a href="estimación-y-distribución-de-muestreo.html#cb112-3"></a>  valores_est &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>m, <span class="op">~</span><span class="st"> </span><span class="kw">est</span>(<span class="kw">runif</span>(n)))</span>
+<span id="cb112-4"><a href="estimación-y-distribución-de-muestreo.html#cb112-4"></a>  <span class="kw">tibble</span>(<span class="dt">id_muestra =</span> <span class="dv">1</span><span class="op">:</span>m, <span class="dt">estimacion =</span> valores_est)</span>
+<span id="cb112-5"><a href="estimación-y-distribución-de-muestreo.html#cb112-5"></a>}</span>
+<span id="cb112-6"><a href="estimación-y-distribución-de-muestreo.html#cb112-6"></a>sim_estimador_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_unif</span>(mean, <span class="dv">4000</span>, <span class="dv">15</span>)</span>
+<span id="cb112-7"><a href="estimación-y-distribución-de-muestreo.html#cb112-7"></a><span class="co"># graficar aprox de distribución de muestreo</span></span>
+<span id="cb112-8"><a href="estimación-y-distribución-de-muestreo.html#cb112-8"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">1</span>, <span class="kw">aes</span>(<span class="dt">x =</span> estimacion)) <span class="op">+</span></span>
+<span id="cb112-9"><a href="estimación-y-distribución-de-muestreo.html#cb112-9"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">40</span>) <span class="op">+</span></span>
+<span id="cb112-10"><a href="estimación-y-distribución-de-muestreo.html#cb112-10"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
 <p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="estimación-y-distribución-de-muestreo.html#cb111-1"></a><span class="co"># simular para el máximo</span></span>
-<span id="cb111-2"><a href="estimación-y-distribución-de-muestreo.html#cb111-2"></a>cuantil_<span class="dv">75</span> &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">quantile</span>(x, <span class="fl">0.75</span>)</span>
-<span id="cb111-3"><a href="estimación-y-distribución-de-muestreo.html#cb111-3"></a>sim_estimador_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_unif</span>(cuantil_<span class="dv">75</span>, <span class="dv">4000</span>, <span class="dv">15</span>)</span>
-<span id="cb111-4"><a href="estimación-y-distribución-de-muestreo.html#cb111-4"></a><span class="co"># graficar distribución de muestreo</span></span>
-<span id="cb111-5"><a href="estimación-y-distribución-de-muestreo.html#cb111-5"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> estimacion)) <span class="op">+</span></span>
-<span id="cb111-6"><a href="estimación-y-distribución-de-muestreo.html#cb111-6"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.02</span>)) <span class="op">+</span></span>
-<span id="cb111-7"><a href="estimación-y-distribución-de-muestreo.html#cb111-7"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="estimación-y-distribución-de-muestreo.html#cb113-1"></a><span class="co"># simular para el máximo</span></span>
+<span id="cb113-2"><a href="estimación-y-distribución-de-muestreo.html#cb113-2"></a>cuantil_<span class="dv">75</span> &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">quantile</span>(x, <span class="fl">0.75</span>)</span>
+<span id="cb113-3"><a href="estimación-y-distribución-de-muestreo.html#cb113-3"></a>sim_estimador_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_unif</span>(cuantil_<span class="dv">75</span>, <span class="dv">4000</span>, <span class="dv">15</span>)</span>
+<span id="cb113-4"><a href="estimación-y-distribución-de-muestreo.html#cb113-4"></a><span class="co"># graficar distribución de muestreo</span></span>
+<span id="cb113-5"><a href="estimación-y-distribución-de-muestreo.html#cb113-5"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">2</span>, <span class="kw">aes</span>(<span class="dt">x =</span> estimacion)) <span class="op">+</span></span>
+<span id="cb113-6"><a href="estimación-y-distribución-de-muestreo.html#cb113-6"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.02</span>)) <span class="op">+</span></span>
+<span id="cb113-7"><a href="estimación-y-distribución-de-muestreo.html#cb113-7"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span></code></pre></div>
 <p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
 
 <div class="ejercicio">
@@ -700,14 +548,14 @@ se le llama error estándar:</p>
 la desviación estándar de una muestra (o de la población).</p>
 <p>En nuestro ejemplo
 de las uniformes, la desviación estándar de las muestras varía como:</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="estimación-y-distribución-de-muestreo.html#cb112-1"></a><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">sd</span>(<span class="kw">runif</span>(<span class="dv">15</span>))) <span class="op">%&gt;%</span><span class="st"> </span>quantile <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="estimación-y-distribución-de-muestreo.html#cb114-1"></a><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">sd</span>(<span class="kw">runif</span>(<span class="dv">15</span>))) <span class="op">%&gt;%</span><span class="st"> </span>quantile <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ## 0.11 0.26 0.29 0.31 0.41</code></pre>
 <p>Mientras que el error estándar de la media es aproximadamente</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="estimación-y-distribución-de-muestreo.html#cb114-1"></a><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">15</span>))) <span class="op">%&gt;%</span><span class="st"> </span>sd</span></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="estimación-y-distribución-de-muestreo.html#cb116-1"></a><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">mean</span>(<span class="kw">runif</span>(<span class="dv">15</span>))) <span class="op">%&gt;%</span><span class="st"> </span>sd</span></code></pre></div>
 <pre><code>## [1] 0.07439575</code></pre>
 <p>y el error estándar del máximo es aproximadamente</p>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="estimación-y-distribución-de-muestreo.html#cb116-1"></a><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">max</span>(<span class="kw">runif</span>(<span class="dv">15</span>))) <span class="op">%&gt;%</span><span class="st"> </span>sd</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="estimación-y-distribución-de-muestreo.html#cb118-1"></a><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">max</span>(<span class="kw">runif</span>(<span class="dv">15</span>))) <span class="op">%&gt;%</span><span class="st"> </span>sd</span></code></pre></div>
 <pre><code>## [1] 0.05928675</code></pre>
 
 <div class="ejercicio">
@@ -720,14 +568,14 @@ puedes considerar: ¿Qué pasa con la desviación estándar de una muestra muy g
 <p>Consideramos el error estándar del estimador del total del inventario vendido, usando
 una muestra de 250 con el estimador del total que consideramos. Como aproximamos con
 simulación la distribución de muestreo, podemos hacer:</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="estimación-y-distribución-de-muestreo.html#cb118-1"></a>ee_<span class="dv">2</span> &lt;-<span class="st"> </span>replicaciones_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(est_total_millones) <span class="op">%&gt;%</span><span class="st"> </span>sd</span>
-<span id="cb118-2"><a href="estimación-y-distribución-de-muestreo.html#cb118-2"></a><span class="kw">round</span>(ee_<span class="dv">2</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="estimación-y-distribución-de-muestreo.html#cb120-1"></a>ee_<span class="dv">2</span> &lt;-<span class="st"> </span>replicaciones_<span class="dv">2</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(est_total_millones) <span class="op">%&gt;%</span><span class="st"> </span>sd</span>
+<span id="cb120-2"><a href="estimación-y-distribución-de-muestreo.html#cb120-2"></a><span class="kw">round</span>(ee_<span class="dv">2</span>, <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 5.2</code></pre>
 <p>que está en millones de pesos y cuantifica la dispersión de la distribución de
 muestreo del estimador del total.</p>
 <p>Para tamaño de muestra 100, obtenemos más dispersión:</p>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="estimación-y-distribución-de-muestreo.html#cb120-1"></a>ee_<span class="dv">1</span> &lt;-<span class="st"> </span>replicaciones_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(est_total_millones) <span class="op">%&gt;%</span><span class="st"> </span>sd</span>
-<span id="cb120-2"><a href="estimación-y-distribución-de-muestreo.html#cb120-2"></a><span class="kw">round</span>(ee_<span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="estimación-y-distribución-de-muestreo.html#cb122-1"></a>ee_<span class="dv">1</span> &lt;-<span class="st"> </span>replicaciones_<span class="dv">1</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(est_total_millones) <span class="op">%&gt;%</span><span class="st"> </span>sd</span>
+<span id="cb122-2"><a href="estimación-y-distribución-de-muestreo.html#cb122-2"></a><span class="kw">round</span>(ee_<span class="dv">1</span>, <span class="dv">1</span>)</span></code></pre></div>
 <pre><code>## [1] 8.9</code></pre>
 <p>Nótese que esto es muy diferente, por ejemplo, a la desviación estándar
 poblacional o de una muestra. Estas dos cantidades miden la variabilidad del
@@ -738,7 +586,7 @@ estimador del total.</p>
 <h2>Calculando la distribución de muestreo</h2>
 <p>En los ejemplos anteriores usamos simulación para obtener aproximaciones
 de la distribución de muestreo de algunos estimadores. También
-es posible</p>
+es posible:</p>
 <ul>
 <li>Hacer cálculos exactos a partir de modelos
 probabilísticos.</li>
@@ -756,8 +604,9 @@ es un conjunto de observaciones <span class="math inline">\(X_1,X_2, \ldots X_n\
 y cada una con la misma distribución.</p>
 <p>En términos de poblaciones, esto lo logramos obteniendo cada observación
 de manera aleatoria con el mismo procedimiento. En términos de modelos
-probabilísticos, cada <span class="math inline">\(X_i\)</span> se extrae de la misma distribución fija <span class="math inline">\(F(x)\)</span>
-(que pensamos como la “población”) de manera independiente.</p>
+probabilísticos, cada <span class="math inline">\(X_i\)</span> se extrae de la misma distribución fija <span class="math inline">\(F\)</span>
+(que pensamos como la “población”) de manera independiente. Esto lo denotamos
+por <span class="math inline">\(X_i \overset{iid}{\sim} F.\)</span></p>
 <div id="ejemplo" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
 <p>Si <span class="math inline">\(X_1, X_2, \ldots X_n\)</span> es una muestra de uniformes independientes en <span class="math inline">\([0,1]\)</span>, ¿cómo
@@ -775,70 +624,70 @@ Derivando esta distribución acumulada obtenemos su densidad, que es</p>
 <p><span class="math display">\[f(x) = nx^{n-1}\]</span></p>
 <p>para <span class="math inline">\(x\in [0,1]\)</span>, y es cero en otro caso.</p>
 <p>Si comparamos con nuestra simulación:</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="estimación-y-distribución-de-muestreo.html#cb122-1"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span> ,<span class="fl">0.001</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb122-2"><a href="estimación-y-distribución-de-muestreo.html#cb122-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_dens =</span> <span class="dv">15</span> <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">14</span>)</span>
-<span id="cb122-3"><a href="estimación-y-distribución-de-muestreo.html#cb122-3"></a>sim_estimador_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_unif</span>(max, <span class="dv">4000</span>, <span class="dv">15</span>)</span>
-<span id="cb122-4"><a href="estimación-y-distribución-de-muestreo.html#cb122-4"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">3</span>) <span class="op">+</span></span>
-<span id="cb122-5"><a href="estimación-y-distribución-de-muestreo.html#cb122-5"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimacion), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.02</span>)) <span class="op">+</span></span>
-<span id="cb122-6"><a href="estimación-y-distribución-de-muestreo.html#cb122-6"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb122-7"><a href="estimación-y-distribución-de-muestreo.html#cb122-7"></a><span class="st">  </span><span class="co"># el histograma es de ancho 0.02 y el número de simulaciones 4000  </span></span>
-<span id="cb122-8"><a href="estimación-y-distribución-de-muestreo.html#cb122-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> (<span class="dv">4000</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.02</span>) <span class="op">*</span><span class="st"> </span>f_dens),</span>
-<span id="cb122-9"><a href="estimación-y-distribución-de-muestreo.html#cb122-9"></a>            <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.3</span>)</span></code></pre></div>
-<p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" />
-Y vemos que con la simulación obtuvimos una buena aproximación</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="estimación-y-distribución-de-muestreo.html#cb124-1"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span> ,<span class="fl">0.001</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb124-2"><a href="estimación-y-distribución-de-muestreo.html#cb124-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_dens =</span> <span class="dv">15</span> <span class="op">*</span><span class="st"> </span>x<span class="op">^</span><span class="dv">14</span>)</span>
+<span id="cb124-3"><a href="estimación-y-distribución-de-muestreo.html#cb124-3"></a>sim_estimador_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_unif</span>(max, <span class="dv">4000</span>, <span class="dv">15</span>)</span>
+<span id="cb124-4"><a href="estimación-y-distribución-de-muestreo.html#cb124-4"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">3</span>) <span class="op">+</span></span>
+<span id="cb124-5"><a href="estimación-y-distribución-de-muestreo.html#cb124-5"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimacion), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.02</span>)) <span class="op">+</span></span>
+<span id="cb124-6"><a href="estimación-y-distribución-de-muestreo.html#cb124-6"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb124-7"><a href="estimación-y-distribución-de-muestreo.html#cb124-7"></a><span class="st">  </span><span class="co"># el histograma es de ancho 0.02 y el número de simulaciones 4000  </span></span>
+<span id="cb124-8"><a href="estimación-y-distribución-de-muestreo.html#cb124-8"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> (<span class="dv">4000</span> <span class="op">*</span><span class="st"> </span><span class="fl">0.02</span>) <span class="op">*</span><span class="st"> </span>f_dens),</span>
+<span id="cb124-9"><a href="estimación-y-distribución-de-muestreo.html#cb124-9"></a>            <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.3</span>)</span></code></pre></div>
+<p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Y vemos que con la simulación obtuvimos una buena aproximación</p>
 <p><strong>Nota</strong>: ¿cómo se relaciona un histograma con la función de densidad
 que genera los datos? Supón que <span class="math inline">\(f(x)\)</span> es una función de densidad, y
-obtenemos un número <span class="math inline">\(N\)</span> de simulaciones independientes. Si escogemos
+obtenemos un número <span class="math inline">\(n\)</span> de simulaciones independientes. Si escogemos
 un histograma de ancho <span class="math inline">\(\Delta\)</span>, ¿cuántas observaciones esperamos
 que caigan en un intervalo <span class="math inline">\(I = [a - \Delta/2, a + \Delta/2]\)</span>?. La probabilidad
 de que una observación caiga en <span class="math inline">\(I\)</span> es igual a</p>
-<p><span class="math display">\[P(X\in I) = \int_I f(x)\,dx = \int_{a - \Delta/2}^{a + \Delta/2} f(x)\,dx \approx f(a)long(I) = f(a) \Delta\]</span>
-para <span class="math inline">\(\Delta\)</span> chica. Si nuestra muestra es de tamaño <span class="math inline">\(N\)</span>, el número esperado
-de observaciones que caen en <span class="math inline">\(I\)</span> es entonces <span class="math inline">\(Nf(a)\Delta\)</span>. Eso explica
+<p><span class="math display">\[P(X\in I) = \int_I f(x)\,dx = \int_{a - \Delta/2}^{a + \Delta/2} f(x)\,dx \approx f(a) \text{long}(I) = f(a) \Delta\]</span>
+para <span class="math inline">\(\Delta\)</span> chica. Si nuestra muestra es de tamaño <span class="math inline">\(n\)</span>, el número esperado
+de observaciones que caen en <span class="math inline">\(I\)</span> es entonces <span class="math inline">\(nf(a)\Delta\)</span>. Eso explica
 el ajuste que hicimos en la gráfica de arriba. Otra manera de hacer es
 ajustando el histograma: si en un intervalo el histograma alcanza el valor <span class="math inline">\(y\)</span>,
-<span class="math display">\[f(a) = \frac{y}{N\Delta}\]</span></p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="estimación-y-distribución-de-muestreo.html#cb123-1"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span> ,<span class="fl">0.001</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb123-2"><a href="estimación-y-distribución-de-muestreo.html#cb123-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_dens =</span> <span class="dv">15</span><span class="op">*</span>x<span class="op">^</span>{<span class="dv">14</span>})</span>
-<span id="cb123-3"><a href="estimación-y-distribución-de-muestreo.html#cb123-3"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">3</span>) <span class="op">+</span></span>
-<span id="cb123-4"><a href="estimación-y-distribución-de-muestreo.html#cb123-4"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimacion, <span class="dt">y =</span> ..density..), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.02</span>)) <span class="op">+</span></span>
-<span id="cb123-5"><a href="estimación-y-distribución-de-muestreo.html#cb123-5"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
-<span id="cb123-6"><a href="estimación-y-distribución-de-muestreo.html#cb123-6"></a><span class="st">  </span><span class="co"># el histograma es de ancho 0.02 y el número de simulaciones 4000  </span></span>
-<span id="cb123-7"><a href="estimación-y-distribución-de-muestreo.html#cb123-7"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> f_dens),</span>
-<span id="cb123-8"><a href="estimación-y-distribución-de-muestreo.html#cb123-8"></a>            <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.3</span>)</span></code></pre></div>
+<span class="math display">\[f(a) = \frac{y}{n\Delta}\]</span></p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="estimación-y-distribución-de-muestreo.html#cb125-1"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span> ,<span class="fl">0.001</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb125-2"><a href="estimación-y-distribución-de-muestreo.html#cb125-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_dens =</span> <span class="dv">15</span><span class="op">*</span>x<span class="op">^</span>{<span class="dv">14</span>})</span>
+<span id="cb125-3"><a href="estimación-y-distribución-de-muestreo.html#cb125-3"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">3</span>) <span class="op">+</span></span>
+<span id="cb125-4"><a href="estimación-y-distribución-de-muestreo.html#cb125-4"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimacion, <span class="dt">y =</span> ..density..), <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.02</span>)) <span class="op">+</span></span>
+<span id="cb125-5"><a href="estimación-y-distribución-de-muestreo.html#cb125-5"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb125-6"><a href="estimación-y-distribución-de-muestreo.html#cb125-6"></a><span class="st">  </span><span class="co"># el histograma es de ancho 0.02 y el número de simulaciones 4000  </span></span>
+<span id="cb125-7"><a href="estimación-y-distribución-de-muestreo.html#cb125-7"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> f_dens),</span>
+<span id="cb125-8"><a href="estimación-y-distribución-de-muestreo.html#cb125-8"></a>            <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.3</span>)</span></code></pre></div>
 <p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="ejemplo-1" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
 <p>Supongamos que las <span class="math inline">\(X_i\)</span>’s son independientes y exponenciales con tasa <span class="math inline">\(\lambda &gt; 0\)</span>.
-¿Cuál es la distribución de muestreo de la suma <span class="math inline">\(S\)</span>? Sabemos que la suma
+¿Cuál es la distribución de muestreo de la suma <span class="math inline">\(S = X_1 + \cdots + X_n\)</span>? Sabemos que la suma
 de exponenciales independientes es una distribución gamma con parámetros <span class="math inline">\((n, \lambda)\)</span>,
 y esta es la distribución de muestreo de nuestra estadística <span class="math inline">\(S\)</span> bajo las hipótesis
 que hicimos.</p>
 <p>Podemos checar este resultado con simulación, por ejemplo para una
 muestra de tamaño <span class="math inline">\(n=15\)</span> con <span class="math inline">\(\lambda = 1\)</span>:</p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="estimación-y-distribución-de-muestreo.html#cb124-1"></a>replicar_muestreo_exp &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">est =</span> estimador_<span class="dv">1</span>, m, <span class="dt">n =</span> <span class="dv">15</span>, <span class="dt">lambda =</span> <span class="dv">1</span>){</span>
-<span id="cb124-2"><a href="estimación-y-distribución-de-muestreo.html#cb124-2"></a>  valores_est &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>m, <span class="op">~</span><span class="st"> </span><span class="kw">est</span>(<span class="kw">rexp</span>(n, lambda)))</span>
-<span id="cb124-3"><a href="estimación-y-distribución-de-muestreo.html#cb124-3"></a>  <span class="kw">tibble</span>(<span class="dt">id_muestra =</span> <span class="dv">1</span><span class="op">:</span>m, <span class="dt">estimacion =</span> valores_est)</span>
-<span id="cb124-4"><a href="estimación-y-distribución-de-muestreo.html#cb124-4"></a>}</span>
-<span id="cb124-5"><a href="estimación-y-distribución-de-muestreo.html#cb124-5"></a>sim_estimador_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_exp</span>(sum, <span class="dv">4000</span>, <span class="dt">n =</span> <span class="dv">15</span>)</span>
-<span id="cb124-6"><a href="estimación-y-distribución-de-muestreo.html#cb124-6"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">35</span>, <span class="fl">0.001</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb124-7"><a href="estimación-y-distribución-de-muestreo.html#cb124-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_dens =</span> <span class="kw">dgamma</span>(x, <span class="dt">shape =</span> <span class="dv">15</span>, <span class="dt">rate =</span> <span class="dv">1</span>))</span>
-<span id="cb124-8"><a href="estimación-y-distribución-de-muestreo.html#cb124-8"></a><span class="co"># graficar aprox de distribución de muestreo</span></span>
-<span id="cb124-9"><a href="estimación-y-distribución-de-muestreo.html#cb124-9"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb124-10"><a href="estimación-y-distribución-de-muestreo.html#cb124-10"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimacion, <span class="dt">y =</span> ..density..), <span class="dt">bins =</span> <span class="dv">40</span>) <span class="op">+</span></span>
-<span id="cb124-11"><a href="estimación-y-distribución-de-muestreo.html#cb124-11"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> f_dens), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="estimación-y-distribución-de-muestreo.html#cb126-1"></a>replicar_muestreo_exp &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">est =</span> estimador_<span class="dv">1</span>, m, <span class="dt">n =</span> <span class="dv">15</span>, <span class="dt">lambda =</span> <span class="dv">1</span>){</span>
+<span id="cb126-2"><a href="estimación-y-distribución-de-muestreo.html#cb126-2"></a>  valores_est &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>m, <span class="op">~</span><span class="st"> </span><span class="kw">est</span>(<span class="kw">rexp</span>(n, lambda)))</span>
+<span id="cb126-3"><a href="estimación-y-distribución-de-muestreo.html#cb126-3"></a>  <span class="kw">tibble</span>(<span class="dt">id_muestra =</span> <span class="dv">1</span><span class="op">:</span>m, <span class="dt">estimacion =</span> valores_est)</span>
+<span id="cb126-4"><a href="estimación-y-distribución-de-muestreo.html#cb126-4"></a>}</span>
+<span id="cb126-5"><a href="estimación-y-distribución-de-muestreo.html#cb126-5"></a>sim_estimador_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">replicar_muestreo_exp</span>(sum, <span class="dv">4000</span>, <span class="dt">n =</span> <span class="dv">15</span>)</span>
+<span id="cb126-6"><a href="estimación-y-distribución-de-muestreo.html#cb126-6"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">35</span>, <span class="fl">0.001</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb126-7"><a href="estimación-y-distribución-de-muestreo.html#cb126-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_dens =</span> <span class="kw">dgamma</span>(x, <span class="dt">shape =</span> <span class="dv">15</span>, <span class="dt">rate =</span> <span class="dv">1</span>))</span>
+<span id="cb126-8"><a href="estimación-y-distribución-de-muestreo.html#cb126-8"></a><span class="co"># graficar aprox de distribución de muestreo</span></span>
+<span id="cb126-9"><a href="estimación-y-distribución-de-muestreo.html#cb126-9"></a><span class="kw">ggplot</span>(sim_estimador_<span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb126-10"><a href="estimación-y-distribución-de-muestreo.html#cb126-10"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimacion, <span class="dt">y =</span> ..density..), <span class="dt">bins =</span> <span class="dv">40</span>) <span class="op">+</span></span>
+<span id="cb126-11"><a href="estimación-y-distribución-de-muestreo.html#cb126-11"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> f_dens), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="fl">1.2</span>)</span></code></pre></div>
 <p><img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 </div>
 <div id="teorema-central-del-límite" class="section level2 unnumbered">
 <h2>Teorema central del límite</h2>
 <p>Si consideramos los ejemplos de arriba donde consideramos estimadores
-basados en una suma o total o en una media (y en menor medida cuantiles muestrales ?),
+basados en una suma, total o una media —y en menor medida cuantiles muestrales—,
 vimos que las distribución de
-muestreo estadísticas que usamos tienden a tener una forma común de campana.
+muestreo de las estadísticas que usamos tienden a tener una forma común.
 Estas son manifestaciones de una regularidad estadística importante que
-se establece en el <strong>teorema central del límite</strong>: las distribuciones de muestreo
+se conoce como el <strong>teorema central del límite</strong>: las distribuciones de muestreo
 de sumas y promedios son aproximadamente normales cuando el tamaño de muestra
 es suficientemente grande.</p>
 
@@ -852,7 +701,7 @@ que escribimos como</p>
 <p>Adicionalmente, la distribución de la
 media estandarizada converge a una distribución normal
 estándar cuando <span class="math inline">\(n\)</span> es grande:
-<span class="math display">\[\frac{\bar{X}-\mu}{\sigma} \xrightarrow{}  N(0, 1)\]</span></p>
+<span class="math display">\[\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  N(0, 1)\]</span></p>
 </div>
 
 <ul>

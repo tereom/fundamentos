@@ -6,7 +6,6 @@ En esta sección discutiremos cuál el objetivo general del proceso de estimaci�
 y cómo entender y manejar la variabilidad que se produce cuando aleatorizamos
 la selección de las muestras que utilizamos para hacer análisis.
 
-
 ## Ejemplo: precios de casas {-}
 
 Supongamos que queremos conocer el valor total de las casas
@@ -31,19 +30,20 @@ sprintf("Hay %0.0f casas en total, tomamos muestra de %0.0f",
 ```
 
 ```r
-head(muestra_casas) %>% formatear_tabla()
+head(muestra_casas)
 ```
 
-
-
-|   id|nombre_zona | area_habitable_sup_m2| precio_miles|
-|----:|:-----------|---------------------:|------------:|
-|  287|NAmes       |             161.09380|       159.00|
-|  755|NAmes       |              95.31848|       156.00|
-| 1190|Gilbert     |             167.59701|       189.00|
-|   36|NridgHt     |             227.79816|       309.00|
-|   32|Sawyer      |             114.08488|       149.35|
-|  538|NAmes       |              80.26819|       111.25|
+```
+## # A tibble: 6 x 4
+##      id nombre_zona area_habitable_sup_m2 precio_miles
+##   <dbl> <chr>                       <dbl>        <dbl>
+## 1   287 NAmes                       161.          159 
+## 2   755 NAmes                        95.3         156 
+## 3  1190 Gilbert                     168.          189 
+## 4    36 NridgHt                     228.          309 
+## 5    32 Sawyer                      114.          149.
+## 6   538 NAmes                        80.3         111.
+```
 
 Como tomamos una muestra aleatoria, intentamos estimar el valor
 total de las casas que se vendieron expandiendo el total muestral, es decir
@@ -51,6 +51,7 @@ nuestro estimador $\hat{t} = t(X_1,\ldots X_{100})$ del total
 poblacional $t$ es
 
 $$\hat{t} = \frac{N}{n} \sum_{i=1}^{100} X_i = N\bar{x}$$
+
 Esta función implementa el estimador:
 
 
@@ -86,26 +87,15 @@ estimación diferente. Por ejemplo:
 
 ```r
 estimar_total(sample_n(marco_casas, 100), N) %>%
-  mutate(across(where(is.numeric), round, 2)) %>% 
-  formatear_tabla()
+  mutate(across(where(is.numeric), round, 2))
 ```
 
-<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total_muestra </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> factor_exp </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> est_total_millones </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:right;"> 17915.66 </td>
-   <td style="text-align:right;"> 11.44 </td>
-   <td style="text-align:right;"> 204.96 </td>
-  </tr>
-</tbody>
-</table>
+```
+## # A tibble: 1 x 3
+##   total_muestra factor_exp est_total_millones
+##           <dbl>      <dbl>              <dbl>
+## 1        17916.       11.4               205.
+```
 
 El valor poblacional que buscamos estimar (nótese que en la práctica este no lo conocemos)
 es:
@@ -163,78 +153,20 @@ replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   formatear_tabla()
 ```
 
-<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
- <thead>
-  <tr>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> id_muestra </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total_muestra </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> factor_exp </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> est_total_millones </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 17594.8 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 201.3 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 17423.9 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 199.3 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 18444.3 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 211.0 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 17696.6 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 202.4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 17275.8 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 197.6 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 17867.6 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 204.4 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 18450.8 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 211.1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> 18187.2 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 208.1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 18604.2 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 212.8 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 10 </td>
-   <td style="text-align:right;"> 19144.4 </td>
-   <td style="text-align:right;"> 11.4 </td>
-   <td style="text-align:right;"> 219.0 </td>
-  </tr>
-</tbody>
-</table>
+
+
+| id_muestra| total_muestra| factor_exp| est_total_millones|
+|----------:|-------------:|----------:|------------------:|
+|          1|       17594.8|       11.4|              201.3|
+|          2|       17423.9|       11.4|              199.3|
+|          3|       18444.3|       11.4|              211.0|
+|          4|       17696.6|       11.4|              202.4|
+|          5|       17275.8|       11.4|              197.6|
+|          6|       17867.6|       11.4|              204.4|
+|          7|       18450.8|       11.4|              211.1|
+|          8|       18187.2|       11.4|              208.1|
+|          9|       18604.2|       11.4|              212.8|
+|         10|       19144.4|       11.4|              219.0|
 
 Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
@@ -259,6 +191,7 @@ graf_1
 ```
 
 <img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" />
+
 Con muy alta probabilidad  el error no será de más de unos 30 millones de dólares
 (o no más de 20% del valor poblacional).
 
@@ -322,7 +255,7 @@ uniforme en $[0,1]$. Es decir, cada $X_i$ es un valor uniformemente distribuido
 en $[0,1]$, y las $X_i$ se extraen independientemente unas de otras. Consideramos
 dos estadísticas de interés:
 
-1. La media muestral $T_1(X) = \frac{1}{n}\sum_{i = 1}{15} X_i$
+1. La media muestral $T_1(X) = \frac{1}{15}\sum_{i = 1}^{15} X_i$
 2. El cuantil 0.75 de la muestra $T_2(X) = q_{0.75}(X)$
 
 \BeginKnitrBlock{ejercicio}<div class="ejercicio">¿Cómo crees que se vean las distribuciones muestrales de estas estadísticas?
@@ -465,7 +398,7 @@ estimador del total.
 
 En los ejemplos anteriores usamos simulación para obtener aproximaciones
 de la distribución de muestreo de algunos estimadores. También
-es posible
+es posible:
 
 - Hacer cálculos exactos a partir de modelos
 probabilísticos.
@@ -485,9 +418,9 @@ y cada una con la misma distribución.
 
 En términos de poblaciones, esto lo logramos obteniendo cada observación
 de manera aleatoria con el mismo procedimiento. En términos de modelos
-probabilísticos, cada $X_i$ se extrae de la misma distribución fija $F(x)$
-(que pensamos como la "población") de manera independiente.
-
+probabilísticos, cada $X_i$ se extrae de la misma distribución fija $F$
+(que pensamos como la "población") de manera independiente. Esto lo denotamos
+por $X_i \overset{iid}{\sim} F.$
 
 ### Ejemplo {-}
 
@@ -525,22 +458,23 @@ ggplot(sim_estimador_3) +
 ```
 
 <img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" />
+
 Y vemos que con la simulación obtuvimos una buena aproximación
 
 
 **Nota**: ¿cómo se relaciona un histograma con la función de densidad
 que genera los datos? Supón que $f(x)$ es una función de densidad, y
-obtenemos un número $N$ de simulaciones independientes. Si escogemos
+obtenemos un número $n$ de simulaciones independientes. Si escogemos
 un histograma de ancho $\Delta$, ¿cuántas observaciones esperamos
 que caigan en un intervalo $I = [a - \Delta/2, a + \Delta/2]$?. La probabilidad
 de que una observación caiga en $I$ es igual a
 
-$$P(X\in I) = \int_I f(x)\,dx = \int_{a - \Delta/2}^{a + \Delta/2} f(x)\,dx \approx f(a)long(I) = f(a) \Delta$$
-para $\Delta$ chica. Si nuestra muestra es de tamaño $N$, el número esperado
-de observaciones que caen en $I$ es entonces $Nf(a)\Delta$. Eso explica
+$$P(X\in I) = \int_I f(x)\,dx = \int_{a - \Delta/2}^{a + \Delta/2} f(x)\,dx \approx f(a) \text{long}(I) = f(a) \Delta$$
+para $\Delta$ chica. Si nuestra muestra es de tamaño $n$, el número esperado
+de observaciones que caen en $I$ es entonces $nf(a)\Delta$. Eso explica
 el ajuste que hicimos en la gráfica de arriba. Otra manera de hacer es
 ajustando el histograma: si en un intervalo el histograma alcanza el valor $y$,
-$$f(a) = \frac{y}{N\Delta}$$
+$$f(a) = \frac{y}{n\Delta}$$
 
 
 ```r
@@ -559,7 +493,7 @@ ggplot(sim_estimador_3) +
 ### Ejemplo {-}
 
 Supongamos que las $X_i$'s son independientes y exponenciales con tasa $\lambda > 0$.
-¿Cuál es la distribución de muestreo de la suma $S$? Sabemos que la suma
+¿Cuál es la distribución de muestreo de la suma $S = X_1 + \cdots + X_n$? Sabemos que la suma
 de exponenciales independientes es una distribución gamma con parámetros $(n, \lambda)$,
 y esta es la distribución de muestreo de nuestra estadística $S$ bajo las hipótesis
 que hicimos.
@@ -587,11 +521,11 @@ ggplot(sim_estimador_1) +
 ## Teorema central del límite {-}
 
 Si consideramos los ejemplos de arriba donde consideramos estimadores
-basados en una suma o total o en una media (y en menor medida cuantiles muestrales ?),
+basados en una suma, total o una media ---y en menor medida cuantiles muestrales---,
 vimos que las distribución de
-muestreo estadísticas que usamos tienden a tener una forma común de campana.
+muestreo de las estadísticas que usamos tienden a tener una forma común.
 Estas son manifestaciones de una regularidad estadística importante que
-se establece en el **teorema central del límite**: las distribuciones de muestreo
+se conoce como el **teorema central del límite**: las distribuciones de muestreo
 de sumas y promedios son aproximadamente normales cuando el tamaño de muestra
 es suficientemente grande.
 
@@ -608,7 +542,7 @@ $$\bar{X} \xrightarrow{} N \left (\mu, \frac{\sigma}{\sqrt{n}} \right)$$
 Adicionalmente, la distribución de la
 media estandarizada converge a una distribución normal
 estándar cuando $n$ es grande:
-$$\frac{\bar{X}-\mu}{\sigma} \xrightarrow{}  N(0, 1)$$
+$$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  N(0, 1)$$
 </div>\EndKnitrBlock{mathblock}
 
 - El error estándar de $\bar{X}$ es
