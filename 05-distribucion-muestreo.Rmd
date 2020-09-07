@@ -29,8 +29,9 @@ muestra_casas <- sample_n(marco_casas, 100) %>%
   select(id, nombre_zona, area_habitable_sup_m2, precio_miles)
 sprintf("Hay %0.0f casas en total, tomamos muestra de %0.0f",
         nrow(marco_casas), nrow(muestra_casas))
-head(muestra_casas)
+head(muestra_casas) %>% formatear_tabla()
 ```
+
 Como tomamos una muestra aleatoria, intentamos estimar el valor
 total de las casas que se vendieron expandiendo el total muestral, es decir
 nuestro estimador $\hat{t} = t(X_1,\ldots X_{100})$ del total
@@ -63,7 +64,8 @@ estimación diferente. Por ejemplo:
 
 ```{r}
 estimar_total(sample_n(marco_casas, 100), N) %>%
-  mutate(across(where(is.numeric), round, 2))
+  mutate(across(where(is.numeric), round, 2)) %>% 
+  formatear_tabla()
 ```
 
 El valor poblacional que buscamos estimar (nótese que en la práctica este no lo conocemos)
@@ -115,6 +117,7 @@ replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   mutate(across(where(is.numeric), round, 1)) %>%
   formatear_tabla()
 ```
+
 Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
 examinamos un número más grande de simulaciones:

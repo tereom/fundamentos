@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@v1
+        with:
+          crayon.enabled: 'FALSE'
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install dependencies
         run: sudo apt-get install libssl-dev libxml2-dev libcurl4-openssl-dev
