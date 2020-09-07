@@ -270,7 +270,7 @@ evidencia para pensar que algo en el sistema cambió?</li>
 <h2>Comparación con poblaciones de referencia</h2>
 <p>En las prueba de hipótesis, tratamos de construir distribuciones de referencia
 para comparar resultados que obtengamos con un “estándar” de variación, y juzgar
-si nuestros resultados son consistentes con la referencia o no (<span class="citation">Box, Hunter, and Hunter (<a href="#ref-box78" role="doc-biblioref">1978</a>)</span>).</p>
+si nuestros resultados son consistentes con la referencia o no (<span class="citation">Box et al. (<a href="#ref-box78" role="doc-biblioref">1978</a>)</span>).</p>
 <p>En algunos casos, ese estándar de variación puede construirse con datos históricos.</p>
 <div id="ejemplo" class="section level3 unnumbered">
 <h3>Ejemplo</h3>
@@ -380,7 +380,7 @@ este tipo de ejemplos.</p>
 <div id="permutaciones-y-el-lineup" class="section level2 unnumbered">
 <h2>Permutaciones y el lineup</h2>
 <p>Para abordar este problema podemos pensar en usar permutaciones de los grupos de
-la siguiente forma (<span class="citation">Box, Hunter, and Hunter (<a href="#ref-box78" role="doc-biblioref">1978</a>)</span>, <span class="citation">Hesterberg (<a href="#ref-timboot14" role="doc-biblioref">2014</a>)</span>):</p>
+la siguiente forma (<span class="citation">Box et al. (<a href="#ref-box78" role="doc-biblioref">1978</a>)</span>, <span class="citation">T. C. Hesterberg (<a href="#ref-timboot14" role="doc-biblioref">2015</a>)</span>):</p>
 <ul>
 <li>Si los grupos producen
 datos bajo procesos idénticos, entonces los grupos a, b, c solo son etiquetas que no contienen información.</li>
@@ -392,7 +392,7 @@ de caja y brazos por grupos.</li>
 datos observados de los producidos con las permutaciones al azar.</li>
 </ul>
 <p>Vamos a intentar esto, por ejemplo usando una gráfica de cuantiles simplificada. Hacemos un <em>lineup</em>, o una
-<em>rueda de sospechosos</em> (usamos el paquete <span class="citation">Wickham et al. (<a href="#ref-nullabor" role="doc-biblioref">2018</a>)</span>, ver <span class="citation">Wickham et al. (<a href="#ref-lineup" role="doc-biblioref">2010</a>)</span>),
+<em>rueda de sospechosos</em> (usamos el paquete <span class="citation">Wickham, Chowdhury, and Cook (<a href="#ref-nullabor" role="doc-biblioref">2012</a>)</span>, ver <span class="citation">Wickham et al. (<a href="#ref-lineup" role="doc-biblioref">2010</a>)</span>),
 donde 19 de los acusados <strong>son generados mediante permutaciones al azar</strong> de la variable del grupo,
 y el culpable (los verdaderos datos) están en una posición escogida al azar. ¿Podemos identificar
 los datos verdaderos? Para evitar sesgarnos, también ocultamos la etiqueta verdadera</p>
@@ -439,7 +439,7 @@ Podemos distinguir más o menos claramente que está localizada en valores
 más altos y tiene mayor dispersión. En este caso, como en general podemos identificar los
 datos, obtenemos evidencia en contra de que los tres grupos tienen distribuciones iguales.</p>
 <p>Estos ejemplos siguen la idea de inferencia visual propuestas en
-<span class="citation">Wickham et al. (<a href="#ref-lineup" role="doc-biblioref">2010</a>)</span>, <span class="citation">Cook et al. (<a href="#ref-graphical-tests" role="doc-biblioref">2012</a>)</span> e implementadas en R en el paquete <code>lineup</code>. Son
+<span class="citation">Wickham et al. (<a href="#ref-lineup" role="doc-biblioref">2010</a>)</span>, <span class="citation">Hofmann et al. (<a href="#ref-graphical-tests" role="doc-biblioref">2012</a>)</span> e implementadas en R en el paquete <code>lineup</code>. Son
 pruebas muy flexibles y estadísticamente rigurosas.</p>
 </div>
 <div id="prueba-de-permutaciones-para-proporciones" class="section level2 unnumbered">
@@ -662,7 +662,7 @@ mayoría de la distribución se concentra, podemos calcular el valor p como sigu
 A partir de el valor observado, consideramos cuál dato es menor: la probabilidad
 bajo lo hipótesis nula de observar una diferencia mayor de a que observamos, o
 la probabilidad de observar una diferencia menor a la que observamos. Tomamos
-el mínimo y multiplicamos por dos (<span class="citation">Hesterberg (<a href="#ref-timboot14" role="doc-biblioref">2014</a>)</span>):</p>
+el mínimo y multiplicamos por dos (<span class="citation">T. C. Hesterberg (<a href="#ref-timboot14" role="doc-biblioref">2015</a>)</span>):</p>
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="pruebas-de-hipótesis.html#cb82-1"></a><span class="dv">2</span> <span class="op">*</span><span class="st"> </span><span class="kw">min</span>(<span class="kw">dist_perm</span>(dif_obs), (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">dist_perm</span>(dif_obs)))</span></code></pre></div>
 <pre><code>## [1] 0.085</code></pre>
 <p>Este valor <em>p</em> se considera como evidencia “moderada” en contra de la hipótesis
@@ -902,9 +902,9 @@ comparan, aún cuando escogamos una estadística particular que pretende medir,
 por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
 igualdad de medias, por ejemplo, cuando en realidad otra característica de las
 distribuciones es la que difiere mucho en las poblaciones</p>
-<p>En algunas referencias (ver <span class="citation">(<span class="citeproc-not-found" data-reference-id="chihara"><strong>???</strong></span>)</span>, <span class="citation">(<span class="citeproc-not-found" data-reference-id="efron"><strong>???</strong></span>)</span>) se argumenta que de todas formas
+<p>En algunas referencias (ver <span class="citation">Chihara and Hesterberg (<a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span>, <span class="citation">Efron and Tibshirani (<a href="#ref-Efron" role="doc-biblioref">1993</a>)</span>) se argumenta que de todas formas
 las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
-excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en <span class="citation">(<span class="citeproc-not-found" data-reference-id="chitim"><strong>???</strong></span>)</span>).</p>
+excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en <span class="citation">Chihara and Hesterberg (<a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span>).</p>
 </div>
 <div id="ejemplo-tiempos-de-fusión" class="section level2 unnumbered">
 <h2>Ejemplo: tiempos de fusión</h2>
@@ -984,7 +984,7 @@ factor menor a 1.</p>
 </div>
 <div id="separación-de-grupos" class="section level2 unnumbered">
 <h2>Separación de grupos</h2>
-<p>Este ejemplo tomado de <span class="citation">Roy Chowdhury et al. (<a href="#ref-cookwasps" role="doc-biblioref">2014</a>)</span> (tanto la idea como el código). La pregunta que se aborda en
+<p>Este ejemplo tomado de <span class="citation">Chowdhury et al. (<a href="#ref-cookwasps" role="doc-biblioref">2015</a>)</span> (tanto la idea como el código). La pregunta que se aborda en
 ese estudio es:</p>
 <ul>
 <li>Existen métodos de clasificación (supervisados o no supervisados) para formar grupos en términos
@@ -998,7 +998,7 @@ capitalizaron en variación aleatoria para formarse?</li>
 Es relativamente fácil encontrar combinaciones de variables que separan los grupos, aunque estas combinaciones
 y diferencias están basadas en ruido y no generalizan a la población.</li>
 </ul>
-<p>Como muestran en <span class="citation">Roy Chowdhury et al. (<a href="#ref-cookwasps" role="doc-biblioref">2014</a>)</span>, el <em>lineup</em> es útil para juzgar si tenemos evidencia en contra de que los
+<p>Como muestran en <span class="citation">Chowdhury et al. (<a href="#ref-cookwasps" role="doc-biblioref">2015</a>)</span>, el <em>lineup</em> es útil para juzgar si tenemos evidencia en contra de que los
 grupos en realidad son iguales, y usamos variación muestral para separarlos.</p>
 <div id="avispas-opcional" class="section level3 unnumbered">
 <h3>Avispas (opcional)</h3>
@@ -1179,28 +1179,34 @@ es de interés, puede intentarse una <strong>replicación confirmatoria, con pot
 <h3>Referencias</h3>
 <div id="refs" class="references">
 <div id="ref-box78">
-<p>Box, G. E. P., W. G. Hunter, and J. S. Hunter. 1978. <em>Statistics for Experimenters: An Introduction to Design, Data Analysis, and Model Building</em>. Wiley Series in Probability and Mathematical Statistics: Applied Probability and Statistics. Wiley.</p>
+<p>Box, George EP, William H Hunter, Stuart Hunter, and others. 1978. <em>Statistics for Experimenters</em>. Vol. 664. John Wiley; sons New York.</p>
+</div>
+<div id="ref-Chihara">
+<p>Chihara, Laura M., and Tim C. Hesterberg. 2018. <em>Mathematical Statistics with Resampling and R</em>. 2nd ed. Hoboken, NJ: John Wiley &amp; Sons. <a href="https://sites.google.com/site/chiharahesterberg/home">https://sites.google.com/site/chiharahesterberg/home</a>.</p>
+</div>
+<div id="ref-cookwasps">
+<p>Chowdhury, Niladri Roy, Dianne Cook, Heike Hofmann, Mahbubul Majumder, Eun-Kyung Lee, and Amy L Toth. 2015. “Using Visual Statistical Inference to Better Understand Random Class Separations in High Dimension, Low Sample Size Data.” <em>Computational Statistics</em> 30 (2): 293–316.</p>
 </div>
 <div id="ref-cleveland93">
 <p>Cleveland, William S. 1993. <em>Visualizing Data</em>. Hobart Press.</p>
 </div>
-<div id="ref-graphical-tests">
-<p>Cook, D., M. Majumder, L. Follett, and H. Hofmann. 2012. “Graphical Tests for Power Comparison of Competing Designs.” <em>IEEE Transactions on Visualization &amp; Computer Graphics</em> 18 (December): 2441–8. <a href="https://doi.org/10.1109/TVCG.2012.230">https://doi.org/10.1109/TVCG.2012.230</a>.</p>
+<div id="ref-Efron">
+<p>Efron, Bradley, and Robert J. Tibshirani. 1993. <em>An Introduction to the Bootstrap</em>. Monographs on Statistics and Applied Probability 57. Boca Raton, Florida, USA: Chapman &amp; Hall/CRC.</p>
 </div>
 <div id="ref-timboot14">
-<p>Hesterberg, Tim. 2014. “What Teachers Should Know About the Bootstrap: Resampling in the Undergraduate Statistics Curriculum.” <em>The American Statistician</em> 69 (November). <a href="https://doi.org/10.1080/00031305.2015.1089789">https://doi.org/10.1080/00031305.2015.1089789</a>.</p>
+<p>Hesterberg, Tim C. 2015. “What Teachers Should Know About the Bootstrap: Resampling in the Undergraduate Statistics Curriculum.” <em>The American Statistician</em> 69 (4): 371–86.</p>
+</div>
+<div id="ref-graphical-tests">
+<p>Hofmann, Heike, Lendie Follett, Mahbubul Majumder, and Dianne Cook. 2012. “Graphical Tests for Power Comparison of Competing Designs.” <em>IEEE Transactions on Visualization and Computer Graphics</em> 18 (12): 2441–8.</p>
 </div>
 <div id="ref-falsefindings">
-<p>Ioannidis, John P. A. 2005. “Why Most Published Research Findings Are False.” <em>PLOS Medicine</em> 2 (8). <a href="https://doi.org/10.1371/journal.pmed.0020124">https://doi.org/10.1371/journal.pmed.0020124</a>.</p>
-</div>
-<div id="ref-cookwasps">
-<p>Roy Chowdhury, Niladri, Dianne Cook, Heike Hofmann, Mahbubul Majumder, Eun Kyung Lee, and Amy L. Toth. 2014. “Using Visual Statistical Inference to Better Understand Random Class Separations in High Dimension, Low Sample Size Data.” <em>Computational Statistics</em> 30 (2): 293–316. <a href="https://doi.org/10.1007/s00180-014-0534-x">https://doi.org/10.1007/s00180-014-0534-x</a>.</p>
-</div>
-<div id="ref-nullabor">
-<p>Wickham, Hadley, Niladri Roy Chowdhury, Di Cook, and Heike Hofmann. 2018. <em>Nullabor: Tools for Graphical Inference</em>. <a href="https://CRAN.R-project.org/package=nullabor">https://CRAN.R-project.org/package=nullabor</a>.</p>
+<p>Ioannidis, John PA. 2005. “Why Most Published Research Findings Are False.” <em>PLoS Medicine</em> 2 (8): e124.</p>
 </div>
 <div id="ref-lineup">
-<p>Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2010. “Graphical Inference for Infovis.” <em>IEEE Transactions on Visualization and Computer Graphics</em> 16 (6): 973–79. <a href="https://doi.org/10.1109/TVCG.2010.161">https://doi.org/10.1109/TVCG.2010.161</a>.</p>
+<p>Wickham, Hadley, Dianne Cook, Heike Hofmann, and Andreas Buja. 2010. “Graphical Inference for Infovis.” <em>IEEE Transactions on Visualization and Computer Graphics</em> 16 (6): 973–79.</p>
+</div>
+<div id="ref-nullabor">
+<p>Wickham, H, NR Chowdhury, and D Cook. 2012. “Nullabor: Tools for Graphical Inference.” <em>R Package Version 0.2</em> 1: 213.</p>
 </div>
 </div>
             </section>

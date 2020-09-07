@@ -718,9 +718,9 @@ por ejemplo, diferencia de medias. Eso quiere decir que podemos rechazar
 igualdad de medias, por ejemplo, cuando en realidad otra característica de las 
 distribuciones es la que difiere mucho en las poblaciones
 
-En algunas referencias (ver @chihara, @efron) se argumenta que de todas formas
+En algunas referencias (ver @Chihara, @Efron) se argumenta que de todas formas
 las pruebas de permutaciones son relativamente robustas a esta desadaptación. Un caso
-excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @chitim).
+excepcional, por ejemplo, es cuando las poblaciones que comparamos resultan tener dispersión extremadamente distinta, y adicionalmente los tamaños de muestra de los grupos son muy desiguales (otra vez, ver ejemplos en @Chihara).
 
 
 ## Ejemplo: tiempos de fusión {-}
