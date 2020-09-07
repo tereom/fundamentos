@@ -457,12 +457,12 @@ Comencemos recordando la definición de parámetro y estadística.
 población o de una distribución de probabilidad. Usualmente denotado por 
 $\theta \in \mathbb{R},$ o por $\theta \in \mathbb{R}^p.$
 Una **estadística** es una característica (numérica) de los datos. Usualmente
-denotado por $\hat \theta,$ o $\theta_N.$
+denotado por $\hat \theta.$
 ```
 
 Cualquier función de un parámetro es también un parámetro $\varphi = h(\theta),$ y cualquier función
 de una estadística es también una estadística $\hat \varphi = h(\hat \theta).$ Cuando la estadística se calcula
-de una muestra aleatoria ($T(X),$ para $X_n \sim \pi_x$ para $n = 1, \ldots, N$), es por consiguiente aleatoria y es por tanto una
+de una muestra aleatoria ($T(X),$ para $X_i \sim \pi_x$ para $i = 1, \ldots, n$), es por consiguiente aleatoria y es por tanto una
 variable aleatoria ($T \sim \pi_T$).
 
 * Por ejemplo $\mu$ y $\sigma$ son parámetros de la distribución normal con
@@ -470,8 +470,8 @@ función de densidad $\pi(x) = (1/\sqrt{2\pi}\sigma)e^{(x-\mu)^2/(2\sigma^2)}$.
 La varianza $\sigma^2$, y el coeficiente de variación (cociente de *señal a ruido*) $\mu/\sigma$ también
 son parámetros.
 
-* Si $X_1, \ldots ,X_N$ son una muestra aleatoria, entonces la media
-$\bar{X}=\frac1N\sum_n X_n$ es una estadística.
+* Si $X_1, \ldots ,X_n$ son una muestra aleatoria, entonces la media
+$\bar{X}=\frac1n\sum_i X_i$ es una estadística.
 
 Ahora podemos pasar a las definiciones correspondientes a pruebas de hipótesis
 (o pruebas de significancia).
@@ -505,8 +505,8 @@ $H_0: p_1 = p_2$, y $H_1:p_1 > p_2$.
 cuyo valor determina el resultado de la prueba. La función usualmente es
 denotada por $T(\bf X)$ donde $\bf X$ representa los datos como variable
 aleatoria. Por ejemplo,
-$T = T(X_1, \ldots, X_N)$ si sólo tenemos una muestra, o por
-$T = T(X_1, \ldots, X_N, Y_1, \ldots, Y_M)$ en el caso de tener dos muestras. Al
+$T = T(X_1, \ldots, X_n)$ si sólo tenemos una muestra, o por
+$T = T(X_1, \ldots, X_n, Y_1, \ldots, Y_m)$ en el caso de tener dos muestras. Al
 evaluar la prueba para un conjunto de datos dado, $x$, ésta se denomina
 *estadística de prueba observada,* $t = T(x).$
 ```
@@ -577,12 +577,12 @@ algoritmo para en el caso de dos grupos sería como sigue:
 ```{block, type='mathblock'}
 **Prueba de permutación para dos muestras**
 
-Supongamos que tenemos `M` observaciones de una población y `N` de otra.
+Supongamos que tenemos `m` observaciones de una población y `n` de otra.
 
-* Combina los `M+N` valores.  
+* Combina los `m+n` valores.  
 * Repite:  
-  - Obtén un remuestra de tamaño `M` sin reemplazo del total.  
-  - Usa las `N` observaciones restantes para obtener la otra muestra.  
+  - Obtén un remuestra de tamaño `m` sin reemplazo del total.  
+  - Usa las `n` observaciones restantes para obtener la otra muestra.  
   - Calcula la estadística de prueba (que compara las muestras).  
 * Calcula el valor *p* como la fracción de las veces que la estadística
 sobrepasó la estadística observada, multiplica por 2 para una prueba de dos
@@ -725,16 +725,16 @@ valor al menos tan extremo como los datos observados (los datos mismos).
 muestreo, no nos aseguramos que las remuestras sean únicas. Sería más acertado
 tomar muestras sin reemplazo, sin embargo, el costo computacional es demasiado
 alto. Por simplicidad consideramos muestras *con reemplazo* del total de 
-$$M+N\choose N$$
+$$m+n\choose n$$
 posibles remuestras. Por lo tanto, al remuestrar obtenemos *una muestra de la distribución nula.*
 
-**Entre más muestras, más exactitud.** Hemos usado $B = 10^3$ remuestras (`N_rep` en el código), 
+**Entre más muestras, más exactitud.** Hemos usado $N = 10^3$ remuestras (`N_rep` en el código), 
 en general entre más remuestras tendremos una mejor estimación del valor *p*. Si el
 verdadero valor es $p$ el estimado tendrá una varianza aproximadamente de
-$p(1- p)/B$ donde $B$ es el número de remuestras generadas.  
+$p(1- p)/N$ donde $N$ es el número de remuestras generadas.  
 
-**Observación.** Así como los $N$ datos originales son una muestra de la
-población, también las $B$ remuestras de la estadística son una muestra de una
+**Observación.** Así como los $n$ datos originales son una muestra de la
+población, también las $N$ remuestras de la estadística son una muestra de una
 población, en este caso de la distribución nula.
 
 La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere

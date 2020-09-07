@@ -12,13 +12,6 @@ En esta sección discutiremos cuál el objetivo general del proceso de estimaci�
 y cómo entender y manejar la variabilidad que se produce cuando aleatorizamos
 la selección de las muestras que utilizamos para hacer análisis.
 
-```{block, type = 'comentario'}
-
-En esta sección usaremos notación acorde a la literatura estadística. Denotaremos por $n$ el tamaño de nuestras muestras y por $N$ el tamaño de la población. 
-
-```
-
-
 ## Ejemplo: precios de casas {-}
 
 Supongamos que queremos conocer el valor total de las casas
