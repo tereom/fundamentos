@@ -83,15 +83,15 @@ si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.
 
 ```r
 head(paciente)
-#> [90m# A tibble: 6 x 4[39m
+#> # A tibble: 6 x 4
 #>    edad padecimiento         sexo   anemia
-#>   [3m[90m<int>[39m[23m [3m[90m<chr>[39m[23m                [3m[90m<chr>[39m[23m   [3m[90m<int>[39m[23m
-#> [90m1[39m     8 picadura alacrán     mujer       0
-#> [90m2[39m    10 infección intestinal hombre      1
-#> [90m3[39m     7 mordedura de perro   hombre      1
-#> [90m4[39m     8 asma                 hombre      1
-#> [90m5[39m    13 infección intestinal mujer       0
-#> [90m6[39m     7 picadura alacrán     hombre      0
+#>   <int> <chr>                <chr>   <int>
+#> 1     8 picadura alacrán     mujer       0
+#> 2    10 infección intestinal hombre      1
+#> 3     7 mordedura de perro   hombre      1
+#> 4     8 asma                 hombre      1
+#> 5    13 infección intestinal mujer       0
+#> 6     7 picadura alacrán     hombre      0
 ```
 
 
@@ -127,19 +127,19 @@ nos informan que la anemia se presenta en tasas más altas en niños más chicos
 paciente %>% 
   count(edad) %>% 
   mutate(prop = round(100 * n / sum(n)))
-#> [90m# A tibble: 10 x 3[39m
+#> # A tibble: 10 x 3
 #>     edad     n  prop
-#>    [3m[90m<int>[39m[23m [3m[90m<int>[39m[23m [3m[90m<dbl>[39m[23m
-#> [90m 1[39m     6  [4m1[24m001    20
-#> [90m 2[39m     7   931    19
-#> [90m 3[39m     8   980    20
-#> [90m 4[39m     9   445     9
-#> [90m 5[39m    10   484    10
-#> [90m 6[39m    11   489    10
-#> [90m 7[39m    12   246     5
-#> [90m 8[39m    13   239     5
-#> [90m 9[39m    14    90     2
-#> [90m10[39m    15    95     2
+#>    <int> <int> <dbl>
+#>  1     6  1001    20
+#>  2     7   931    19
+#>  3     8   980    20
+#>  4     9   445     9
+#>  5    10   484    10
+#>  6    11   489    10
+#>  7    12   246     5
+#>  8    13   239     5
+#>  9    14    90     2
+#> 10    15    95     2
 ```
 
 Y consultando con las proyecciones de población notamos que los niños chicos 
@@ -155,16 +155,16 @@ prevalencia de anemia:
 paciente %>% 
   count(padecimiento) %>% 
   arrange(-n)
-#> [90m# A tibble: 7 x 2[39m
+#> # A tibble: 7 x 2
 #>   padecimiento               n
-#>   [3m[90m<chr>[39m[23m                  [3m[90m<int>[39m[23m
-#> [90m1[39m infección respiratoria   745
-#> [90m2[39m mordedura de perro       723
-#> [90m3[39m úlcera                   723
-#> [90m4[39m asma                     713
-#> [90m5[39m apendcitis               704
-#> [90m6[39m picadura alacrán         701
-#> [90m7[39m infección intestinal     691
+#>   <chr>                  <int>
+#> 1 infección respiratoria   745
+#> 2 mordedura de perro       723
+#> 3 úlcera                   723
+#> 4 asma                     713
+#> 5 apendcitis               704
+#> 6 picadura alacrán         701
+#> 7 infección intestinal     691
 ```
 
 Utilizamos esta información para modelar y *corregir* nuestra estimación 
@@ -191,20 +191,20 @@ Después de este esfuerzo, obtenemos los siguientes datos:
 
 
 ```
-#> [90m# A tibble: 10 x 2[39m
-#> [90m# Groups:   policia [2][39m
+#> # A tibble: 10 x 2
+#> # Groups:   policia [2]
 #>    policia tiempo_espera_min
-#>      [3m[90m<int>[39m[23m             [3m[90m<dbl>[39m[23m
-#> [90m 1[39m       0              2.27
-#> [90m 2[39m       0              2.65
-#> [90m 3[39m       0              3.4 
-#> [90m 4[39m       0              0.39
-#> [90m 5[39m       0              1.1 
-#> [90m 6[39m       1             10.8 
-#> [90m 7[39m       1              4.67
-#> [90m 8[39m       1              7.77
-#> [90m 9[39m       1              6.3 
-#> [90m10[39m       1              6.99
+#>      <int>             <dbl>
+#>  1       0              2.27
+#>  2       0              2.65
+#>  3       0              3.4 
+#>  4       0              0.39
+#>  5       0              1.1 
+#>  6       1             10.8 
+#>  7       1              4.67
+#>  8       1              7.77
+#>  9       1              6.3 
+#> 10       1              6.99
 ```
 
 Lo que sabemos ahora es que la presencia de un policía es indicador
@@ -236,20 +236,20 @@ categorías históricas de qué tan complicado es cada crucero. Junta a sus dato
 
 
 ```
-#> [90m# A tibble: 10 x 3[39m
-#> [90m# Groups:   policia [2][39m
+#> # A tibble: 10 x 3
+#> # Groups:   policia [2]
 #>    policia tiempo_espera_min categoria 
-#>      [3m[90m<int>[39m[23m             [3m[90m<dbl>[39m[23m [3m[90m<fct>[39m[23m     
-#> [90m 1[39m       0              2.27 Fluido    
-#> [90m 2[39m       0              2.65 Fluido    
-#> [90m 3[39m       0              3.4  Típico    
-#> [90m 4[39m       0              0.39 Fluido    
-#> [90m 5[39m       0              1.1  Fluido    
-#> [90m 6[39m       1             10.8  Complicado
-#> [90m 7[39m       1              4.67 Típico    
-#> [90m 8[39m       1              7.77 Complicado
-#> [90m 9[39m       1              6.3  Complicado
-#> [90m10[39m       1              6.99 Típico
+#>      <int>             <dbl> <fct>     
+#>  1       0              2.27 Fluido    
+#>  2       0              2.65 Fluido    
+#>  3       0              3.4  Típico    
+#>  4       0              0.39 Fluido    
+#>  5       0              1.1  Fluido    
+#>  6       1             10.8  Complicado
+#>  7       1              4.67 Típico    
+#>  8       1              7.77 Complicado
+#>  9       1              6.3  Complicado
+#> 10       1              6.99 Típico
 ```
 
 El analista argumenta entonces qu los policías se enviaron principalmente a cruceros que 
@@ -316,13 +316,13 @@ Y ahora hacemos comparaciones dentro de cada bloque creado por categoría:
 
 
 ```
-#> [90m# A tibble: 3 x 3[39m
-#> [90m# Groups:   categoria [3][39m
+#> # A tibble: 3 x 3
+#> # Groups:   categoria [3]
 #>   categoria  `policia =0` `policia =1`
-#>   [3m[90m<fct>[39m[23m             [3m[90m<dbl>[39m[23m        [3m[90m<dbl>[39m[23m
-#> [90m1[39m Fluido              2.1          0.8
-#> [90m2[39m Típico              5.6          4.2
-#> [90m3[39m Complicado         10.4          8.6
+#>   <fct>             <dbl>        <dbl>
+#> 1 Fluido              2.1          0.8
+#> 2 Típico              5.6          4.2
+#> 3 Complicado         10.4          8.6
 ```
 
 Y empezamos a ver otra imagen en estos datos: comparando tipos
@@ -410,24 +410,24 @@ Resumimos nuestros resultados del experimento son:
 
 
 ```
-#> [90m# A tibble: 2 x 3[39m
-#> [90m# Groups:   categoria [2][39m
+#> # A tibble: 2 x 3
+#> # Groups:   categoria [2]
 #>   categoria  `policia=0` `policia=1`
-#>   [3m[90m<fct>[39m[23m            [3m[90m<dbl>[39m[23m       [3m[90m<dbl>[39m[23m
-#> [90m1[39m Típico            6.24        4.97
-#> [90m2[39m Complicado       15.8         8.47
+#>   <fct>            <dbl>       <dbl>
+#> 1 Típico            6.24        4.97
+#> 2 Complicado       15.8         8.47
 ```
 
 Sin embargo, la muestra natural da:
 
 
 ```
-#> [90m# A tibble: 2 x 3[39m
-#> [90m# Groups:   categoria [2][39m
+#> # A tibble: 2 x 3
+#> # Groups:   categoria [2]
 #>   categoria  `policia=0` `policia=1`
-#>   [3m[90m<fct>[39m[23m            [3m[90m<dbl>[39m[23m       [3m[90m<dbl>[39m[23m
-#> [90m1[39m Típico            5.49        4.35
-#> [90m2[39m Complicado       10.8         8.93
+#>   <fct>            <dbl>       <dbl>
+#> 1 Típico            5.49        4.35
+#> 2 Complicado       10.8         8.93
 ```
 
 **¿Cuál de los dos análisis da la respuesta correcta a la pregunta:

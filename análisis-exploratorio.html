@@ -326,27 +326,27 @@ cuatro días consecutivos:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">18.26</td>
-<td align="right">3.25</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">17.81</td>
-<td align="right">2.34</td>
-<td align="left">No</td>
+<td align="right">38.73</td>
+<td align="right">3.00</td>
+<td align="left">Si</td>
 <td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">4</td>
 </tr>
-<tr class="odd">
-<td align="right">12.54</td>
-<td align="right">2.50</td>
+<tr class="even">
+<td align="right">24.52</td>
+<td align="right">3.48</td>
 <td align="left">No</td>
 <td align="left">Dom</td>
 <td align="left">Cena</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="right">12.48</td>
+<td align="right">2.52</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
 <td align="right">2</td>
 </tr>
 <tr class="even">
@@ -358,51 +358,51 @@ cuatro días consecutivos:</p>
 <td align="right">4</td>
 </tr>
 <tr class="odd">
-<td align="right">12.60</td>
-<td align="right">1.00</td>
+<td align="right">13.16</td>
+<td align="right">2.75</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">11.87</td>
+<td align="right">1.63</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">50.81</td>
+<td align="right">10.00</td>
 <td align="left">Si</td>
 <td align="left">Sab</td>
 <td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">8.58</td>
-<td align="right">1.92</td>
-<td align="left">Si</td>
-<td align="left">Vie</td>
-<td align="left">Comida</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="right">31.85</td>
-<td align="right">3.18</td>
-<td align="left">Si</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">10.33</td>
-<td align="right">1.67</td>
-<td align="left">No</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
 <td align="right">3</td>
 </tr>
+<tr class="even">
+<td align="right">11.17</td>
+<td align="right">1.50</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
+</tr>
 <tr class="odd">
-<td align="right">18.43</td>
-<td align="right">3.00</td>
+<td align="right">14.07</td>
+<td align="right">2.50</td>
 <td align="left">No</td>
 <td align="left">Dom</td>
 <td align="left">Cena</td>
-<td align="right">4</td>
+<td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="right">16.58</td>
-<td align="right">4.00</td>
+<td align="right">12.90</td>
+<td align="right">1.10</td>
 <td align="left">Si</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
+<td align="left">Sab</td>
+<td align="left">Cena</td>
 <td align="right">2</td>
 </tr>
 </tbody>
@@ -1222,19 +1222,19 @@ historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:</p>
 <span id="cb25-11"><a href="análisis-exploratorio.html#cb25-11"></a>    <span class="dt">azucar =</span> <span class="kw">fct_recode</span>(azucar,</span>
 <span id="cb25-12"><a href="análisis-exploratorio.html#cb25-12"></a>        sin_azúcar =<span class="st"> &quot;No.sugar&quot;</span>, con_azúcar =<span class="st"> &quot;sugar&quot;</span>))</span></code></pre></div>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="análisis-exploratorio.html#cb26-1"></a><span class="kw">sample_n</span>(te, <span class="dv">10</span>)</span></code></pre></div>
-<pre><code>## [90m# A tibble: 10 x 3[39m
+<pre><code>## # A tibble: 10 x 3
 ##    presentacion precio   azucar    
-##    [3m[90m&lt;fct&gt;[39m[23m        [3m[90m&lt;fct&gt;[39m[23m    [3m[90m&lt;fct&gt;[39m[23m     
-## [90m 1[39m mixto        variable sin_azúcar
-## [90m 2[39m suelto       fino     con_azúcar
-## [90m 3[39m bolsas       fino     con_azúcar
-## [90m 4[39m mixto        variable sin_azúcar
-## [90m 5[39m bolsas       variable sin_azúcar
-## [90m 6[39m suelto       variable con_azúcar
-## [90m 7[39m bolsas       variable con_azúcar
-## [90m 8[39m mixto        fino     sin_azúcar
-## [90m 9[39m bolsas       marca    con_azúcar
-## [90m10[39m mixto        marca    sin_azúcar</code></pre>
+##    &lt;fct&gt;        &lt;fct&gt;    &lt;fct&gt;     
+##  1 mixto        variable sin_azúcar
+##  2 suelto       fino     con_azúcar
+##  3 bolsas       fino     con_azúcar
+##  4 mixto        variable sin_azúcar
+##  5 bolsas       variable sin_azúcar
+##  6 suelto       variable con_azúcar
+##  7 bolsas       variable con_azúcar
+##  8 mixto        fino     sin_azúcar
+##  9 bolsas       marca    con_azúcar
+## 10 mixto        marca    sin_azúcar</code></pre>
 <p>Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
 ver las proporciones que compran té según su empaque (en bolsita o suelto):</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="análisis-exploratorio.html#cb28-1"></a>precio &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -1432,27 +1432,27 @@ de las columnas con la columna marginal (en la tabla de tipo de estilo de té):<
 <span id="cb31-7"><a href="análisis-exploratorio.html#cb31-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prom_prop =</span> <span class="kw">sum</span>(prop_precio)<span class="op">/</span>num_grupos) <span class="op">%&gt;%</span></span>
 <span id="cb31-8"><a href="análisis-exploratorio.html#cb31-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(prop_precio <span class="op">/</span><span class="st"> </span>prom_prop <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
 <span id="cb31-9"><a href="análisis-exploratorio.html#cb31-9"></a>tabla</span></code></pre></div>
-<pre><code>## [90m# A tibble: 17 x 6[39m
-## [90m# Groups:   precio [6][39m
+<pre><code>## # A tibble: 17 x 6
+## # Groups:   precio [6]
 ##    presentacion precio           n prop_precio prom_prop perfil
-##    [3m[90m&lt;fct&gt;[39m[23m        [3m[90m&lt;fct&gt;[39m[23m        [3m[90m&lt;int&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m     [3m[90m&lt;dbl&gt;[39m[23m  [3m[90m&lt;dbl&gt;[39m[23m
-## [90m 1[39m bolsas       marca           70       41.2      25.4    61.8
-## [90m 2[39m bolsas       barato           5        2.94      2.26   30.1
-## [90m 3[39m bolsas       marca_propia    16        9.41      5.48   71.7
-## [90m 4[39m bolsas       desconocido     11        6.47      2.51  158. 
-## [90m 5[39m bolsas       fino            14        8.24     28.0   -[31m70[39m[31m.[39m[31m6[39m
-## [90m 6[39m bolsas       variable        54       31.8      36.3   -[31m12[39m[31m.[39m[31m5[39m
-## [90m 7[39m mixto        marca           20       21.3      25.4   -[31m16[39m[31m.[39m[31m4[39m
-## [90m 8[39m mixto        barato           1        1.06      2.26  -[31m52[39m[31m.[39m[31m9[39m
-## [90m 9[39m mixto        marca_propia     4        4.26      5.48  -[31m22[39m[31m.[39m[31m4[39m
-## [90m10[39m mixto        desconocido      1        1.06      2.51  -[31m57[39m[31m.[39m[31m6[39m
-## [90m11[39m mixto        fino            19       20.2      28.0   -[31m27[39m[31m.[39m[31m8[39m
-## [90m12[39m mixto        variable        49       52.1      36.3    43.6
-## [90m13[39m suelto       marca            5       13.9      25.4   -[31m45[39m[31m.[39m[31m4[39m
-## [90m14[39m suelto       barato           1        2.78      2.26   22.9
-## [90m15[39m suelto       marca_propia     1        2.78      5.48  -[31m49[39m[31m.[39m[31m3[39m
-## [90m16[39m suelto       fino            20       55.6      28.0    98.4
-## [90m17[39m suelto       variable         9       25        36.3   -[31m31[39m[31m.[39m[31m1[39m</code></pre>
+##    &lt;fct&gt;        &lt;fct&gt;        &lt;int&gt;       &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+##  1 bolsas       marca           70       41.2      25.4    61.8
+##  2 bolsas       barato           5        2.94      2.26   30.1
+##  3 bolsas       marca_propia    16        9.41      5.48   71.7
+##  4 bolsas       desconocido     11        6.47      2.51  158. 
+##  5 bolsas       fino            14        8.24     28.0   -70.6
+##  6 bolsas       variable        54       31.8      36.3   -12.5
+##  7 mixto        marca           20       21.3      25.4   -16.4
+##  8 mixto        barato           1        1.06      2.26  -52.9
+##  9 mixto        marca_propia     4        4.26      5.48  -22.4
+## 10 mixto        desconocido      1        1.06      2.51  -57.6
+## 11 mixto        fino            19       20.2      28.0   -27.8
+## 12 mixto        variable        49       52.1      36.3    43.6
+## 13 suelto       marca            5       13.9      25.4   -45.4
+## 14 suelto       barato           1        2.78      2.26   22.9
+## 15 suelto       marca_propia     1        2.78      5.48  -49.3
+## 16 suelto       fino            20       55.6      28.0    98.4
+## 17 suelto       variable         9       25        36.3   -31.1</code></pre>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="análisis-exploratorio.html#cb33-1"></a>tabla_perfil &lt;-<span class="st"> </span>tabla <span class="op">%&gt;%</span></span>
 <span id="cb33-2"><a href="análisis-exploratorio.html#cb33-2"></a><span class="st">  </span><span class="kw">select</span>(presentacion, precio, perfil, <span class="dt">pct =</span> prom_prop) <span class="op">%&gt;%</span></span>
 <span id="cb33-3"><a href="análisis-exploratorio.html#cb33-3"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> presentacion, <span class="dt">values_from =</span> perfil,</span>

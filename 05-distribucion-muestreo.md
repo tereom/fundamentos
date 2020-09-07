@@ -31,20 +31,20 @@ sprintf("Hay %0.0f casas en total, tomamos muestra de %0.0f",
 ```
 
 ```r
-head(muestra_casas)
+head(muestra_casas) %>% formatear_tabla()
 ```
 
-```
-## [90m# A tibble: 6 x 4[39m
-##      id nombre_zona area_habitable_sup_m2 precio_miles
-##   [3m[90m<dbl>[39m[23m [3m[90m<chr>[39m[23m                       [3m[90m<dbl>[39m[23m        [3m[90m<dbl>[39m[23m
-## [90m1[39m   287 NAmes                       161.          159 
-## [90m2[39m   755 NAmes                        95.3         156 
-## [90m3[39m  [4m1[24m190 Gilbert                     168.          189 
-## [90m4[39m    36 NridgHt                     228.          309 
-## [90m5[39m    32 Sawyer                      114.          149.
-## [90m6[39m   538 NAmes                        80.3         111.
-```
+
+
+|   id|nombre_zona | area_habitable_sup_m2| precio_miles|
+|----:|:-----------|---------------------:|------------:|
+|  287|NAmes       |             161.09380|       159.00|
+|  755|NAmes       |              95.31848|       156.00|
+| 1190|Gilbert     |             167.59701|       189.00|
+|   36|NridgHt     |             227.79816|       309.00|
+|   32|Sawyer      |             114.08488|       149.35|
+|  538|NAmes       |              80.26819|       111.25|
+
 Como tomamos una muestra aleatoria, intentamos estimar el valor
 total de las casas que se vendieron expandiendo el total muestral, es decir
 nuestro estimador $\hat{t} = t(X_1,\ldots X_{100})$ del total
@@ -74,10 +74,10 @@ estimar_total(muestra_casas, N) %>%
 ```
 
 ```
-## [90m# A tibble: 1 x 3[39m
+## # A tibble: 1 x 3
 ##   total_muestra factor_exp est_total_millones
-##           [3m[90m<dbl>[39m[23m      [3m[90m<dbl>[39m[23m              [3m[90m<dbl>[39m[23m
-## [90m1[39m        [4m1[24m[4m8[24m444.       11.4                211
+##           <dbl>      <dbl>              <dbl>
+## 1        18444.       11.4                211
 ```
 
 Sin embargo, si hubiéramos obtenido otra muestra, hubiéramos obtenido otra
@@ -86,15 +86,26 @@ estimación diferente. Por ejemplo:
 
 ```r
 estimar_total(sample_n(marco_casas, 100), N) %>%
-  mutate(across(where(is.numeric), round, 2))
+  mutate(across(where(is.numeric), round, 2)) %>% 
+  formatear_tabla()
 ```
 
-```
-## [90m# A tibble: 1 x 3[39m
-##   total_muestra factor_exp est_total_millones
-##           [3m[90m<dbl>[39m[23m      [3m[90m<dbl>[39m[23m              [3m[90m<dbl>[39m[23m
-## [90m1[39m        [4m1[24m[4m7[24m916.       11.4               205.
-```
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total_muestra </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> factor_exp </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> est_total_millones </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 17915.66 </td>
+   <td style="text-align:right;"> 11.44 </td>
+   <td style="text-align:right;"> 204.96 </td>
+  </tr>
+</tbody>
+</table>
 
 El valor poblacional que buscamos estimar (nótese que en la práctica este no lo conocemos)
 es:
@@ -152,20 +163,79 @@ replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   formatear_tabla()
 ```
 
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> id_muestra </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total_muestra </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> factor_exp </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> est_total_millones </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 17594.8 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 201.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 17423.9 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 199.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 18444.3 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 211.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 17696.6 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 202.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 17275.8 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 197.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 17867.6 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 204.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 18450.8 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 211.1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 18187.2 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 208.1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:right;"> 18604.2 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 212.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 10 </td>
+   <td style="text-align:right;"> 19144.4 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 219.0 </td>
+  </tr>
+</tbody>
+</table>
 
-
-| id_muestra| total_muestra| factor_exp| est_total_millones|
-|----------:|-------------:|----------:|------------------:|
-|          1|       17594.8|       11.4|              201.3|
-|          2|       17423.9|       11.4|              199.3|
-|          3|       18444.3|       11.4|              211.0|
-|          4|       17696.6|       11.4|              202.4|
-|          5|       17275.8|       11.4|              197.6|
-|          6|       17867.6|       11.4|              204.4|
-|          7|       18450.8|       11.4|              211.1|
-|          8|       18187.2|       11.4|              208.1|
-|          9|       18604.2|       11.4|              212.8|
-|         10|       19144.4|       11.4|              219.0|
 Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
 examinamos un número más grande de simulaciones:

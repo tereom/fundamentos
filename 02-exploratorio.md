@@ -89,16 +89,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        18.26|    3.25|No      |Jue |Comida  |            2|
-|        17.81|    2.34|No      |Sab |Cena    |            4|
-|        12.54|    2.50|No      |Dom |Cena    |            2|
+|        38.73|    3.00|Si      |Sab |Cena    |            4|
+|        24.52|    3.48|No      |Dom |Cena    |            3|
+|        12.48|    2.52|No      |Jue |Comida  |            2|
 |        40.17|    4.73|Si      |Vie |Cena    |            4|
-|        12.60|    1.00|Si      |Sab |Cena    |            2|
-|         8.58|    1.92|Si      |Vie |Comida  |            1|
-|        31.85|    3.18|Si      |Dom |Cena    |            2|
-|        10.33|    1.67|No      |Dom |Cena    |            3|
-|        18.43|    3.00|No      |Dom |Cena    |            4|
-|        16.58|    4.00|Si      |Jue |Comida  |            2|
+|        13.16|    2.75|No      |Jue |Comida  |            2|
+|        11.87|    1.63|No      |Jue |Comida  |            2|
+|        50.81|   10.00|Si      |Sab |Cena    |            3|
+|        11.17|    1.50|No      |Jue |Comida  |            2|
+|        14.07|    2.50|No      |Dom |Cena    |            2|
+|        12.90|    1.10|Si      |Sab |Cena    |            2|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
@@ -887,19 +887,19 @@ sample_n(te, 10)
 ```
 
 ```
-## [90m# A tibble: 10 x 3[39m
+## # A tibble: 10 x 3
 ##    presentacion precio   azucar    
-##    [3m[90m<fct>[39m[23m        [3m[90m<fct>[39m[23m    [3m[90m<fct>[39m[23m     
-## [90m 1[39m mixto        variable sin_azúcar
-## [90m 2[39m suelto       fino     con_azúcar
-## [90m 3[39m bolsas       fino     con_azúcar
-## [90m 4[39m mixto        variable sin_azúcar
-## [90m 5[39m bolsas       variable sin_azúcar
-## [90m 6[39m suelto       variable con_azúcar
-## [90m 7[39m bolsas       variable con_azúcar
-## [90m 8[39m mixto        fino     sin_azúcar
-## [90m 9[39m bolsas       marca    con_azúcar
-## [90m10[39m mixto        marca    sin_azúcar
+##    <fct>        <fct>    <fct>     
+##  1 mixto        variable sin_azúcar
+##  2 suelto       fino     con_azúcar
+##  3 bolsas       fino     con_azúcar
+##  4 mixto        variable sin_azúcar
+##  5 bolsas       variable sin_azúcar
+##  6 suelto       variable con_azúcar
+##  7 bolsas       variable con_azúcar
+##  8 mixto        fino     sin_azúcar
+##  9 bolsas       marca    con_azúcar
+## 10 mixto        marca    sin_azúcar
 ```
 
 Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
@@ -1044,27 +1044,27 @@ tabla
 ```
 
 ```
-## [90m# A tibble: 17 x 6[39m
-## [90m# Groups:   precio [6][39m
+## # A tibble: 17 x 6
+## # Groups:   precio [6]
 ##    presentacion precio           n prop_precio prom_prop perfil
-##    [3m[90m<fct>[39m[23m        [3m[90m<fct>[39m[23m        [3m[90m<int>[39m[23m       [3m[90m<dbl>[39m[23m     [3m[90m<dbl>[39m[23m  [3m[90m<dbl>[39m[23m
-## [90m 1[39m bolsas       marca           70       41.2      25.4    61.8
-## [90m 2[39m bolsas       barato           5        2.94      2.26   30.1
-## [90m 3[39m bolsas       marca_propia    16        9.41      5.48   71.7
-## [90m 4[39m bolsas       desconocido     11        6.47      2.51  158. 
-## [90m 5[39m bolsas       fino            14        8.24     28.0   -[31m70[39m[31m.[39m[31m6[39m
-## [90m 6[39m bolsas       variable        54       31.8      36.3   -[31m12[39m[31m.[39m[31m5[39m
-## [90m 7[39m mixto        marca           20       21.3      25.4   -[31m16[39m[31m.[39m[31m4[39m
-## [90m 8[39m mixto        barato           1        1.06      2.26  -[31m52[39m[31m.[39m[31m9[39m
-## [90m 9[39m mixto        marca_propia     4        4.26      5.48  -[31m22[39m[31m.[39m[31m4[39m
-## [90m10[39m mixto        desconocido      1        1.06      2.51  -[31m57[39m[31m.[39m[31m6[39m
-## [90m11[39m mixto        fino            19       20.2      28.0   -[31m27[39m[31m.[39m[31m8[39m
-## [90m12[39m mixto        variable        49       52.1      36.3    43.6
-## [90m13[39m suelto       marca            5       13.9      25.4   -[31m45[39m[31m.[39m[31m4[39m
-## [90m14[39m suelto       barato           1        2.78      2.26   22.9
-## [90m15[39m suelto       marca_propia     1        2.78      5.48  -[31m49[39m[31m.[39m[31m3[39m
-## [90m16[39m suelto       fino            20       55.6      28.0    98.4
-## [90m17[39m suelto       variable         9       25        36.3   -[31m31[39m[31m.[39m[31m1[39m
+##    <fct>        <fct>        <int>       <dbl>     <dbl>  <dbl>
+##  1 bolsas       marca           70       41.2      25.4    61.8
+##  2 bolsas       barato           5        2.94      2.26   30.1
+##  3 bolsas       marca_propia    16        9.41      5.48   71.7
+##  4 bolsas       desconocido     11        6.47      2.51  158. 
+##  5 bolsas       fino            14        8.24     28.0   -70.6
+##  6 bolsas       variable        54       31.8      36.3   -12.5
+##  7 mixto        marca           20       21.3      25.4   -16.4
+##  8 mixto        barato           1        1.06      2.26  -52.9
+##  9 mixto        marca_propia     4        4.26      5.48  -22.4
+## 10 mixto        desconocido      1        1.06      2.51  -57.6
+## 11 mixto        fino            19       20.2      28.0   -27.8
+## 12 mixto        variable        49       52.1      36.3    43.6
+## 13 suelto       marca            5       13.9      25.4   -45.4
+## 14 suelto       barato           1        2.78      2.26   22.9
+## 15 suelto       marca_propia     1        2.78      5.48  -49.3
+## 16 suelto       fino            20       55.6      28.0    98.4
+## 17 suelto       variable         9       25        36.3   -31.1
 ```
 
 
