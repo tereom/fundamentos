@@ -260,8 +260,8 @@ Imagina que eres consultor y te preguntan lo siguiente (ver siguiente figura):<b
 Estoy haciendo una comparación de antes y después donde la hipótesis alternativa es pre.media.error &gt; post.media.error. La distribución de ambas muestras es sesgada a la derecha. ¿Qué prueba me recomiendas para ésta situación?
 </p>
 </div>
-<div class="figure"><span id="fig:grafica-pcr"></span>
-<img src="03-tipos-de-estudio_files/figure-html/grafica-pcr-1.png" alt="Error CPR, gráfica de densidad." width="403.2" />
+<div class="figure" style="text-align: center"><span id="fig:grafica-pcr"></span>
+<img src="03-tipos-de-estudio_files/figure-html/grafica-pcr-1.png" alt="Error CPR, gráfica de densidad." width="70%" />
 <p class="caption">
 Figure 3.1: Error CPR, gráfica de densidad.
 </p>
@@ -272,8 +272,8 @@ desarrolló en el contexto de preguntas vagas. En el esquema hay tres caminos:
 uno es uno ideal que pocas veces sucede,
 otro produce respuestas poco útiles pero es fácil, y otro es tortuoso pero que
 caracteriza el mejor trabajo de análisis de datos:</p>
-<div class="figure"><span id="fig:unnamed-chunk-2"></span>
-<img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-2-1.png" alt="Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)" width="672" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-2"></span>
+<img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-2-1.png" alt="Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)" width="70%" />
 <p class="caption">
 Figure 3.2: Adaptado de R. Peng: <a href="https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/">Tukey, design thinking and better questions.</a>
 </p>
@@ -321,16 +321,16 @@ del IMSS de hospitalizaciones de menores, ya sea por anemia o
 que por otra causa (infecciones gastrointestinales, apendicitis, tratamiento de
 leucemia, …), se registró
 si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="tipos-de-estudio-y-experimentos.html#cb52-1"></a><span class="kw">head</span>(paciente)</span></code></pre></div>
-<pre><code>## [90m# A tibble: 6 x 4[39m
-##    edad padecimiento         sexo   anemia
-##   [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;chr&gt;[39m[23m                [3m[90m&lt;chr&gt;[39m[23m   [3m[90m&lt;int&gt;[39m[23m
-## [90m1[39m     8 picadura alacrán     mujer       0
-## [90m2[39m    10 infección intestinal hombre      1
-## [90m3[39m     7 mordedura de perro   hombre      1
-## [90m4[39m     8 asma                 hombre      1
-## [90m5[39m    13 infección intestinal mujer       0
-## [90m6[39m     7 picadura alacrán     hombre      0</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="tipos-de-estudio-y-experimentos.html#cb52-1"></a><span class="kw">head</span>(paciente)</span>
+<span id="cb52-2"><a href="tipos-de-estudio-y-experimentos.html#cb52-2"></a><span class="co">#&gt; [90m# A tibble: 6 x 4[39m</span></span>
+<span id="cb52-3"><a href="tipos-de-estudio-y-experimentos.html#cb52-3"></a><span class="co">#&gt;    edad padecimiento         sexo   anemia</span></span>
+<span id="cb52-4"><a href="tipos-de-estudio-y-experimentos.html#cb52-4"></a><span class="co">#&gt;   [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;chr&gt;[39m[23m                [3m[90m&lt;chr&gt;[39m[23m   [3m[90m&lt;int&gt;[39m[23m</span></span>
+<span id="cb52-5"><a href="tipos-de-estudio-y-experimentos.html#cb52-5"></a><span class="co">#&gt; [90m1[39m     8 picadura alacrán     mujer       0</span></span>
+<span id="cb52-6"><a href="tipos-de-estudio-y-experimentos.html#cb52-6"></a><span class="co">#&gt; [90m2[39m    10 infección intestinal hombre      1</span></span>
+<span id="cb52-7"><a href="tipos-de-estudio-y-experimentos.html#cb52-7"></a><span class="co">#&gt; [90m3[39m     7 mordedura de perro   hombre      1</span></span>
+<span id="cb52-8"><a href="tipos-de-estudio-y-experimentos.html#cb52-8"></a><span class="co">#&gt; [90m4[39m     8 asma                 hombre      1</span></span>
+<span id="cb52-9"><a href="tipos-de-estudio-y-experimentos.html#cb52-9"></a><span class="co">#&gt; [90m5[39m    13 infección intestinal mujer       0</span></span>
+<span id="cb52-10"><a href="tipos-de-estudio-y-experimentos.html#cb52-10"></a><span class="co">#&gt; [90m6[39m     7 picadura alacrán     hombre      0</span></span></code></pre></div>
 <ul>
 <li>¿Qué nos dice esta cantidad acerca de la anemia en la población?<br />
 </li>
@@ -338,10 +338,10 @@ si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.
 </li>
 <li>¿Cómo calculamos intervalos de confianza?</li>
 </ul>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tipos-de-estudio-y-experimentos.html#cb54-1"></a><span class="co"># Si calculo el error estándar de la p estimada como sigue, es correcto?</span></span>
-<span id="cb54-2"><a href="tipos-de-estudio-y-experimentos.html#cb54-2"></a>p &lt;-<span class="st"> </span><span class="kw">mean</span>(paciente<span class="op">$</span>anemia)</span>
-<span id="cb54-3"><a href="tipos-de-estudio-y-experimentos.html#cb54-3"></a><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span><span class="dv">5000</span>)</span></code></pre></div>
-<pre><code>## [1] 0.007060751</code></pre>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="tipos-de-estudio-y-experimentos.html#cb53-1"></a><span class="co"># Si calculo el error estándar de la p estimada como sigue, es correcto?</span></span>
+<span id="cb53-2"><a href="tipos-de-estudio-y-experimentos.html#cb53-2"></a>p &lt;-<span class="st"> </span><span class="kw">mean</span>(paciente<span class="op">$</span>anemia)</span>
+<span id="cb53-3"><a href="tipos-de-estudio-y-experimentos.html#cb53-3"></a><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span><span class="dv">5000</span>)</span>
+<span id="cb53-4"><a href="tipos-de-estudio-y-experimentos.html#cb53-4"></a><span class="co">#&gt; [1] 0.007060751</span></span></code></pre></div>
 </div>
 <div id="muestreo-aleatorio" class="section level2 unnumbered">
 <h2>Muestreo aleatorio</h2>
@@ -356,41 +356,41 @@ o errores estándar).</p>
 <h2>Pero si no podemos hacer muestreo aleatorio?</h2>
 <p>En el caso de prevalencia de anemia, discutiendo con médicos e investigadores
 nos informan que la anemia se presenta en tasas más altas en niños más chicos.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="tipos-de-estudio-y-experimentos.html#cb56-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-2"><a href="tipos-de-estudio-y-experimentos.html#cb56-2"></a><span class="st">  </span><span class="kw">count</span>(edad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb56-3"><a href="tipos-de-estudio-y-experimentos.html#cb56-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span></code></pre></div>
-<pre><code>## [90m# A tibble: 10 x 3[39m
-##     edad     n  prop
-##    [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m
-## [90m 1[39m     6  [4m1[24m001    20
-## [90m 2[39m     7   931    19
-## [90m 3[39m     8   980    20
-## [90m 4[39m     9   445     9
-## [90m 5[39m    10   484    10
-## [90m 6[39m    11   489    10
-## [90m 7[39m    12   246     5
-## [90m 8[39m    13   239     5
-## [90m 9[39m    14    90     2
-## [90m10[39m    15    95     2</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tipos-de-estudio-y-experimentos.html#cb54-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-2"><a href="tipos-de-estudio-y-experimentos.html#cb54-2"></a><span class="st">  </span><span class="kw">count</span>(edad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-3"><a href="tipos-de-estudio-y-experimentos.html#cb54-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
+<span id="cb54-4"><a href="tipos-de-estudio-y-experimentos.html#cb54-4"></a><span class="co">#&gt; [90m# A tibble: 10 x 3[39m</span></span>
+<span id="cb54-5"><a href="tipos-de-estudio-y-experimentos.html#cb54-5"></a><span class="co">#&gt;     edad     n  prop</span></span>
+<span id="cb54-6"><a href="tipos-de-estudio-y-experimentos.html#cb54-6"></a><span class="co">#&gt;    [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;int&gt;[39m[23m [3m[90m&lt;dbl&gt;[39m[23m</span></span>
+<span id="cb54-7"><a href="tipos-de-estudio-y-experimentos.html#cb54-7"></a><span class="co">#&gt; [90m 1[39m     6  [4m1[24m001    20</span></span>
+<span id="cb54-8"><a href="tipos-de-estudio-y-experimentos.html#cb54-8"></a><span class="co">#&gt; [90m 2[39m     7   931    19</span></span>
+<span id="cb54-9"><a href="tipos-de-estudio-y-experimentos.html#cb54-9"></a><span class="co">#&gt; [90m 3[39m     8   980    20</span></span>
+<span id="cb54-10"><a href="tipos-de-estudio-y-experimentos.html#cb54-10"></a><span class="co">#&gt; [90m 4[39m     9   445     9</span></span>
+<span id="cb54-11"><a href="tipos-de-estudio-y-experimentos.html#cb54-11"></a><span class="co">#&gt; [90m 5[39m    10   484    10</span></span>
+<span id="cb54-12"><a href="tipos-de-estudio-y-experimentos.html#cb54-12"></a><span class="co">#&gt; [90m 6[39m    11   489    10</span></span>
+<span id="cb54-13"><a href="tipos-de-estudio-y-experimentos.html#cb54-13"></a><span class="co">#&gt; [90m 7[39m    12   246     5</span></span>
+<span id="cb54-14"><a href="tipos-de-estudio-y-experimentos.html#cb54-14"></a><span class="co">#&gt; [90m 8[39m    13   239     5</span></span>
+<span id="cb54-15"><a href="tipos-de-estudio-y-experimentos.html#cb54-15"></a><span class="co">#&gt; [90m 9[39m    14    90     2</span></span>
+<span id="cb54-16"><a href="tipos-de-estudio-y-experimentos.html#cb54-16"></a><span class="co">#&gt; [90m10[39m    15    95     2</span></span></code></pre></div>
 <p>Y consultando con las proyecciones de población notamos que los niños chicos
 están sobrerepresentados en la muestra. Lo que nos hace considerar que debemos
 buscar una manera de ponderar nuestras observaciones para que reflejen a la
 población.</p>
 <p>Más aún, investigamos que algunas enfermedades están asociadas a mayor
 prevalencia de anemia:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="tipos-de-estudio-y-experimentos.html#cb58-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb58-2"><a href="tipos-de-estudio-y-experimentos.html#cb58-2"></a><span class="st">  </span><span class="kw">count</span>(padecimiento) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb58-3"><a href="tipos-de-estudio-y-experimentos.html#cb58-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span></code></pre></div>
-<pre><code>## [90m# A tibble: 7 x 2[39m
-##   padecimiento               n
-##   [3m[90m&lt;chr&gt;[39m[23m                  [3m[90m&lt;int&gt;[39m[23m
-## [90m1[39m infección respiratoria   745
-## [90m2[39m mordedura de perro       723
-## [90m3[39m úlcera                   723
-## [90m4[39m asma                     713
-## [90m5[39m apendcitis               704
-## [90m6[39m picadura alacrán         701
-## [90m7[39m infección intestinal     691</code></pre>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="tipos-de-estudio-y-experimentos.html#cb55-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb55-2"><a href="tipos-de-estudio-y-experimentos.html#cb55-2"></a><span class="st">  </span><span class="kw">count</span>(padecimiento) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb55-3"><a href="tipos-de-estudio-y-experimentos.html#cb55-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span>
+<span id="cb55-4"><a href="tipos-de-estudio-y-experimentos.html#cb55-4"></a><span class="co">#&gt; [90m# A tibble: 7 x 2[39m</span></span>
+<span id="cb55-5"><a href="tipos-de-estudio-y-experimentos.html#cb55-5"></a><span class="co">#&gt;   padecimiento               n</span></span>
+<span id="cb55-6"><a href="tipos-de-estudio-y-experimentos.html#cb55-6"></a><span class="co">#&gt;   [3m[90m&lt;chr&gt;[39m[23m                  [3m[90m&lt;int&gt;[39m[23m</span></span>
+<span id="cb55-7"><a href="tipos-de-estudio-y-experimentos.html#cb55-7"></a><span class="co">#&gt; [90m1[39m infección respiratoria   745</span></span>
+<span id="cb55-8"><a href="tipos-de-estudio-y-experimentos.html#cb55-8"></a><span class="co">#&gt; [90m2[39m mordedura de perro       723</span></span>
+<span id="cb55-9"><a href="tipos-de-estudio-y-experimentos.html#cb55-9"></a><span class="co">#&gt; [90m3[39m úlcera                   723</span></span>
+<span id="cb55-10"><a href="tipos-de-estudio-y-experimentos.html#cb55-10"></a><span class="co">#&gt; [90m4[39m asma                     713</span></span>
+<span id="cb55-11"><a href="tipos-de-estudio-y-experimentos.html#cb55-11"></a><span class="co">#&gt; [90m5[39m apendcitis               704</span></span>
+<span id="cb55-12"><a href="tipos-de-estudio-y-experimentos.html#cb55-12"></a><span class="co">#&gt; [90m6[39m picadura alacrán         701</span></span>
+<span id="cb55-13"><a href="tipos-de-estudio-y-experimentos.html#cb55-13"></a><span class="co">#&gt; [90m7[39m infección intestinal     691</span></span></code></pre></div>
 <p>Utilizamos esta información para modelar y <em>corregir</em> nuestra estimación
 original. Por ejemplo con modelos de regresión. Sin embargo,
 debemos preguntarnos:</p>
@@ -409,25 +409,24 @@ no saben mover los semáforos.</p>
 entonces un grupo de cruceros problemáticos, registramos el tráfico
 cuando visitamos, y si había un policía o no.</p>
 <p>Después de este esfuerzo, obtenemos los siguientes datos:</p>
-<pre><code>## [90m# A tibble: 10 x 2[39m
-## [90m# Groups:   policia [2][39m
-##    policia tiempo_espera_min
-##      [3m[90m&lt;int&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m
-## [90m 1[39m       0              2.27
-## [90m 2[39m       0              2.65
-## [90m 3[39m       0              3.4 
-## [90m 4[39m       0              0.39
-## [90m 5[39m       0              1.1 
-## [90m 6[39m       1             10.8 
-## [90m 7[39m       1              4.67
-## [90m 8[39m       1              7.77
-## [90m 9[39m       1              6.3 
-## [90m10[39m       1              6.99</code></pre>
+<pre><code>#&gt; [90m# A tibble: 10 x 2[39m
+#&gt; [90m# Groups:   policia [2][39m
+#&gt;    policia tiempo_espera_min
+#&gt;      [3m[90m&lt;int&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m
+#&gt; [90m 1[39m       0              2.27
+#&gt; [90m 2[39m       0              2.65
+#&gt; [90m 3[39m       0              3.4 
+#&gt; [90m 4[39m       0              0.39
+#&gt; [90m 5[39m       0              1.1 
+#&gt; [90m 6[39m       1             10.8 
+#&gt; [90m 7[39m       1              4.67
+#&gt; [90m 8[39m       1              7.77
+#&gt; [90m 9[39m       1              6.3 
+#&gt; [90m10[39m       1              6.99</code></pre>
 <p>Lo que sabemos ahora es que la presencia de un policía es indicador
 de tráfico alto. El análisis prosiguiría calculando medias y medidas de error
 (escogimos una muestra aleatoria):</p>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<p><img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
 <p>Si somos ingenuos, entonces podríamos concluir que los policías efectivamente
 empeoran la situación cuando manipulan los semáforos, y confirmaríamos la
 sabiduría popular.</p>
@@ -448,20 +447,20 @@ hecho otra cosa que la que efectivamente hicimos) de las observaciones?</li>
 </ul>
 <p>En nuestro ejemplo, quizá un analista más astuto nota que tienen
 categorías históricas de qué tan complicado es cada crucero. Junta a sus datos, y obtiene:</p>
-<pre><code>## [90m# A tibble: 10 x 3[39m
-## [90m# Groups:   policia [2][39m
-##    policia tiempo_espera_min categoria 
-##      [3m[90m&lt;int&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;fct&gt;[39m[23m     
-## [90m 1[39m       0              2.27 Fluido    
-## [90m 2[39m       0              2.65 Fluido    
-## [90m 3[39m       0              3.4  Típico    
-## [90m 4[39m       0              0.39 Fluido    
-## [90m 5[39m       0              1.1  Fluido    
-## [90m 6[39m       1             10.8  Complicado
-## [90m 7[39m       1              4.67 Típico    
-## [90m 8[39m       1              7.77 Complicado
-## [90m 9[39m       1              6.3  Complicado
-## [90m10[39m       1              6.99 Típico</code></pre>
+<pre><code>#&gt; [90m# A tibble: 10 x 3[39m
+#&gt; [90m# Groups:   policia [2][39m
+#&gt;    policia tiempo_espera_min categoria 
+#&gt;      [3m[90m&lt;int&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m [3m[90m&lt;fct&gt;[39m[23m     
+#&gt; [90m 1[39m       0              2.27 Fluido    
+#&gt; [90m 2[39m       0              2.65 Fluido    
+#&gt; [90m 3[39m       0              3.4  Típico    
+#&gt; [90m 4[39m       0              0.39 Fluido    
+#&gt; [90m 5[39m       0              1.1  Fluido    
+#&gt; [90m 6[39m       1             10.8  Complicado
+#&gt; [90m 7[39m       1              4.67 Típico    
+#&gt; [90m 8[39m       1              7.77 Complicado
+#&gt; [90m 9[39m       1              6.3  Complicado
+#&gt; [90m10[39m       1              6.99 Típico</code></pre>
 <p>El analista argumenta entonces qu los policías se enviaron principalmente a cruceros que
 se consideran <em>Complicados</em> según datos históricos. Esto resta credibilidad a la
 comparación que hicimos inicialmente:</p>
@@ -546,13 +545,13 @@ de crucero, 3 con policía y 3 sin policía):</p>
 </tbody>
 </table>
 <p>Y ahora hacemos comparaciones dentro de cada bloque creado por categoría:</p>
-<pre><code>## [90m# A tibble: 3 x 3[39m
-## [90m# Groups:   categoria [3][39m
-##   categoria  `policia =0` `policia =1`
-##   [3m[90m&lt;fct&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m        [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m Fluido              2.1          0.8
-## [90m2[39m Típico              5.6          4.2
-## [90m3[39m Complicado         10.4          8.6</code></pre>
+<pre><code>#&gt; [90m# A tibble: 3 x 3[39m
+#&gt; [90m# Groups:   categoria [3][39m
+#&gt;   categoria  `policia =0` `policia =1`
+#&gt;   [3m[90m&lt;fct&gt;[39m[23m             [3m[90m&lt;dbl&gt;[39m[23m        [3m[90m&lt;dbl&gt;[39m[23m
+#&gt; [90m1[39m Fluido              2.1          0.8
+#&gt; [90m2[39m Típico              5.6          4.2
+#&gt; [90m3[39m Complicado         10.4          8.6</code></pre>
 <p>Y empezamos a ver otra imagen en estos datos: comparando tipos
 e cruceros similares, los que tienen policía tienen tiempos de
 espera ligeramente más cortos.</p>
@@ -603,36 +602,34 @@ tenemos para cada caso los dos posibles resultados hipotéticos
 <span class="math inline">\(y_0\)</span> y <span class="math inline">\(y_1\)</span> (con
 policia y sin policia). En el experimento asignamos el
 tratamiento al azar:</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="tipos-de-estudio-y-experimentos.html#cb64-1"></a>muestra_exp &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-2"><a href="tipos-de-estudio-y-experimentos.html#cb64-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb64-3"><a href="tipos-de-estudio-y-experimentos.html#cb64-3"></a><span class="st">  </span><span class="co"># asignar tratamiento al azar, esta es nuestra intervención:</span></span>
-<span id="cb64-4"><a href="tipos-de-estudio-y-experimentos.html#cb64-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tratamiento_policia =</span> <span class="kw">rbernoulli</span>(<span class="kw">length</span>(y_<span class="dv">0</span>), <span class="fl">0.5</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb64-5"><a href="tipos-de-estudio-y-experimentos.html#cb64-5"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
-<span id="cb64-6"><a href="tipos-de-estudio-y-experimentos.html#cb64-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_exp =</span> <span class="kw">ifelse</span>(tratamiento_policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="tipos-de-estudio-y-experimentos.html#cb59-1"></a>muestra_exp &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-2"><a href="tipos-de-estudio-y-experimentos.html#cb59-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-3"><a href="tipos-de-estudio-y-experimentos.html#cb59-3"></a><span class="st">  </span><span class="co"># asignar tratamiento al azar, esta es nuestra intervención:</span></span>
+<span id="cb59-4"><a href="tipos-de-estudio-y-experimentos.html#cb59-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tratamiento_policia =</span> <span class="kw">rbernoulli</span>(<span class="kw">length</span>(y_<span class="dv">0</span>), <span class="fl">0.5</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb59-5"><a href="tipos-de-estudio-y-experimentos.html#cb59-5"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
+<span id="cb59-6"><a href="tipos-de-estudio-y-experimentos.html#cb59-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_exp =</span> <span class="kw">ifelse</span>(tratamiento_policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
 <p>Nótese la diferencia si tomamos la asignación natural del tratamiento (policía o no):</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="tipos-de-estudio-y-experimentos.html#cb65-1"></a><span class="kw">set.seed</span>(<span class="dv">134</span>)</span>
-<span id="cb65-2"><a href="tipos-de-estudio-y-experimentos.html#cb65-2"></a>muestra_natural &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb65-3"><a href="tipos-de-estudio-y-experimentos.html#cb65-3"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb65-4"><a href="tipos-de-estudio-y-experimentos.html#cb65-4"></a><span class="st">  </span><span class="co"># usamos el tratamiento que se asignó</span></span>
-<span id="cb65-5"><a href="tipos-de-estudio-y-experimentos.html#cb65-5"></a><span class="st">  </span><span class="co"># policia indica si hubo o no policía en ese crucero</span></span>
-<span id="cb65-6"><a href="tipos-de-estudio-y-experimentos.html#cb65-6"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
-<span id="cb65-7"><a href="tipos-de-estudio-y-experimentos.html#cb65-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_obs =</span> <span class="kw">ifelse</span>(policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="tipos-de-estudio-y-experimentos.html#cb60-1"></a><span class="kw">set.seed</span>(<span class="dv">134</span>)</span>
+<span id="cb60-2"><a href="tipos-de-estudio-y-experimentos.html#cb60-2"></a>muestra_natural &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb60-3"><a href="tipos-de-estudio-y-experimentos.html#cb60-3"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb60-4"><a href="tipos-de-estudio-y-experimentos.html#cb60-4"></a><span class="st">  </span><span class="co"># usamos el tratamiento que se asignó</span></span>
+<span id="cb60-5"><a href="tipos-de-estudio-y-experimentos.html#cb60-5"></a><span class="st">  </span><span class="co"># policia indica si hubo o no policía en ese crucero</span></span>
+<span id="cb60-6"><a href="tipos-de-estudio-y-experimentos.html#cb60-6"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
+<span id="cb60-7"><a href="tipos-de-estudio-y-experimentos.html#cb60-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_obs =</span> <span class="kw">ifelse</span>(policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
 <p>Resumimos nuestros resultados del experimento son:</p>
-<pre><code>## `summarise()` regrouping output by &#39;categoria&#39; (override with `.groups` argument)</code></pre>
-<pre><code>## [90m# A tibble: 2 x 3[39m
-## [90m# Groups:   categoria [2][39m
-##   categoria  `policia=0` `policia=1`
-##   [3m[90m&lt;fct&gt;[39m[23m            [3m[90m&lt;dbl&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m Típico            6.24        4.97
-## [90m2[39m Complicado       15.8         8.47</code></pre>
+<pre><code>#&gt; [90m# A tibble: 2 x 3[39m
+#&gt; [90m# Groups:   categoria [2][39m
+#&gt;   categoria  `policia=0` `policia=1`
+#&gt;   [3m[90m&lt;fct&gt;[39m[23m            [3m[90m&lt;dbl&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m
+#&gt; [90m1[39m Típico            6.24        4.97
+#&gt; [90m2[39m Complicado       15.8         8.47</code></pre>
 <p>Sin embargo, la muestra natural da:</p>
-<pre><code>## `summarise()` regrouping output by &#39;categoria&#39; (override with `.groups` argument)</code></pre>
-<pre><code>## [90m# A tibble: 2 x 3[39m
-## [90m# Groups:   categoria [2][39m
-##   categoria  `policia=0` `policia=1`
-##   [3m[90m&lt;fct&gt;[39m[23m            [3m[90m&lt;dbl&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m
-## [90m1[39m Típico            5.49        4.35
-## [90m2[39m Complicado       10.8         8.93</code></pre>
+<pre><code>#&gt; [90m# A tibble: 2 x 3[39m
+#&gt; [90m# Groups:   categoria [2][39m
+#&gt;   categoria  `policia=0` `policia=1`
+#&gt;   [3m[90m&lt;fct&gt;[39m[23m            [3m[90m&lt;dbl&gt;[39m[23m       [3m[90m&lt;dbl&gt;[39m[23m
+#&gt; [90m1[39m Típico            5.49        4.35
+#&gt; [90m2[39m Complicado       10.8         8.93</code></pre>
 <p><strong>¿Cuál de los dos análisis da la respuesta correcta a la pregunta:
 ayudan o no los policías a reducir el tráfico en los cruceros
 problemáticos?</strong> El experimento establece que un policía en promedio
