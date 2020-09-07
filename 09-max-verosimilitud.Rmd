@@ -1,0 +1,476 @@
+# Estimación: máxima verosimilitud (parte 1)
+
+Los ejemplos que hemos visto han sido todos de estimadores *plug-in* (o por sustitución): 
+si queremos saber una cantidad poblacional, y tenemos una muestra dada, entonces
+calculamos la estadística de interés "como si la muestra fuera la población". Por ejemplo,
+para estimar la mediana poblacional usamos la mediana muestral, si queremos estimar
+la media poblacional usamos la media muestral, y así sucesivamente. Estos estimadores
+usualmente dan resultados razonables (pero hay que checar usando muestra bootstraps, por ejemplo,
+y pensar lo que estamos haciendo).
+
+Cuando sabemos más acerca de la población y usamos un modelo teórico es posible
+hacer más: dependiendo de qué cantidades se quieren estimar, podemos construir estimadores
+que sean *óptimos* en algún sentido - siempre y cuando se cumplan los supuestos teóricos-, como veremos ahora. 
+
+Por ejemplo: ¿deberíamos estimar el centro de una distribución simétrica con la
+media o con la mediana, o quizá con una media recortada?
+
+En esta parte construiremos la teoría básica de estimación cuando trabajamos con 
+modelos teóricos conocidos. El objetivo es entender **las ideas básicas** de estos procedimientos, y cómo evaluar sus resultados.
+
+
+**Recordatorio**: las ventajas de usar modelos teóricos para describir distribuciones de
+datos está en que es posible comprimir más eficientemente la información, es posible construir
+modelos más complejos juntando varios de estos modelos y de sus dependencias, y de que es
+posible hacer más teoría útil que nos guíe. La desventaja es que es neceario que esos supuestos teóricos sean razonables.
+
+
+## Intro a estimación por máxima verosimilitud {-}
+
+Uno de los procedimientos más estándar en esta situación es el **método 
+de máxima verosimilitud**. Los estimadores de máxima verosimilitud tienen propiedades
+convenientes, y dan en general resultados razonables siempre y cuando los supuestos
+sean razonables. 
+
+**Máxima verosimilitud es un proceso intuitivo, y consiste en aprender o estimar valores de parámetros desconocidos suponiendo para los datos su explicación más probable**. Para
+esto, usando supuestos y modelos requeriremos calcular la probabilidad de un conjunto
+de observaciones.
+
+#### Ejemplo 1 {-}
+
+(Adaptado de @chihara). Supongamos que una máquina produce dos tipos de bolsas de 25 galletas: la mitad de las veces produce una bolsa con 5 galletas de avena y 20 de chispas de chocolate, y
+la otra mitad produce galletas con 23 galletas de avena y 2 de chispas de chocolate. 
+
+Tomamos una bolsa, y no sabemos qué tipo de bolsa es (parámetro desconocido). Extraemos al azar una de las galletas, y es de chispas de chocolate (observación).
+
+Por máxima verosimilitud, inferimos que la bolsa que estamos considerando tiene 5 galletas de avena. Esto es porque es más probable observar una galleta de chispas en las bolsas que contienen 5 galletas de avena que en las bolsas que contienen 23 galletas de avena. Podemos cuantificar la probabilidad que "acertemos" en nuestra inferencia.
+
+---
+
+Cómo se aprecia en el ejemplo anterior, el esquema general es:
+
+1. Existe un proceso del que podemos obtener observaciones de algún sistema
+o población real.
+2. Tenemos un modelo probabilístico que dice cómo se producen esas observaciones a partir del sistema o población real.
+3. Usualmente este modelo tiene algunas cantidades que no conocemos, que rigen el proceso y cómo se relaciona el proceso con las observaciones.
+
+Nuestro propósito es:
+
+4. Extraemos observaciones del proceso:  
+$$x_1, x_2, \ldots, x_n$$
+5. Queremos aprender de los parámetros desconocidos del proceso para calcular cantidades de interés acerca del sistema o población real
+
+
+En principio, los modelos que consideramos pueden ser complicados y tener varias partes o parámetros. Veamos primero un ejemplo clásico con un solo parámetro, y cómo lo resolveríamos
+usando máxima verosimilitud.
+
+**Nota**: Cuando decimos *muestra* en general nos referimos a observaciones
+independientes obtenidas del mismo proceso (ver la sección anterior para ver qué 
+significa que sea independientes). Este esquema es un supuesto
+que simplifica mucho los cálculos, como discutimos antes. Muchas veces este supuesto
+sale del diseño de la muestra o del estudio, pero en todo caso es importante considerar
+si es razonable o no para nuestro problema particular.
+
+
+#### Ejemplo {-}
+Supongamos que queremos saber qué proporción de registros de una base de datos tiene algún error menor de captura. No podemos revisar todos los registros, así que tomamos una muestra
+de 8 registros, escogiendo uno por uno al azar de manera independiente. Revisamos los
+8 registros, y obtenemos los siguientes datos:
+
+$$x_1 = 0, x_2 = 1, x_3 = 0, x_4 = 0, x_5 =1, x_6 =0, x_7 =0, x_8 =0$$
+
+donde 1 indica un error menor. Encontramos dos errores menores. ¿Cómo estimamos el número de
+registros con errores leves en la base de datos?
+
+Ya sabemos una respuesta razonable para nuestro estimador puntual, que sería $\hat{p}=2/8=0.25$. 
+Veamos cómo se obtendría por máxima verosimilitud.
+
+Según el proceso con el que se construyó la muestra, debemos dar una probabilidad de observar
+los 2 errores en 8 registros. Supongamos que en realidad existe una proporción $p$
+de que un registro tenga un error. Entonces calculamos
+
+Probabilidad de observar la muestra:
+
+$$P(x_1 = 0, x_2 = 1, x_3 = 0, x_4 = 0, x_5 =1, x_6 =0, x_7 =0, x_8 =0)$$
+
+es igual a
+
+$$P(x_1 = 0)P(x_2 = 1)P(x_3 = 0)P( x_4 = 0)P(x_5 =1)P(x_6 =0)P(x_7 =0)P(x_8 =0)$$
+pues la probabilidad de que cada observación sea 0 o 1 no depende de las observaciones restantes (la muestra se extrajo de manera independiente).érvese que para hacer esto usamos:
+
+Un modelo teórico de cómo es la población con parámetros y
+Información de como se extrajo la muestra,
+
+Esta ultima cantidad tiene un parámetro que no conocemos: la proporcion $p$ de registros
+con errores. Así que lo denotamos como una cantidad desconocida $p$. Nótese
+entonces que $P(x_2=1) = p$, $P(X_3=0) = 1-p$ y así sucesivamente, así que la cantidad
+de arriba es igual a
+
+$$p(1-p)p(1-p)(1-p)p(1-p)(1-p)(1-p) $$
+
+que se simplifica a 
+
+$$ L(p) = p^2(1-p)^6$$
+
+Ahora la idea es **encontrar la p que maximiza la probabilidad de lo que observamos**. En
+este caso se puede hacer con cálculo, pero vamos a ver una gráfica de esta función y
+cómo resolverla de manera numérica.
+
+```{r, fig.width = 4, fig.height=3}
+verosimilitud <- function(p){
+  p^2 * (1-p)^6
+}
+dat_verosim <- tibble(x = seq(0,1, 0.001)) %>% mutate(prob = map_dbl(x, verosimilitud))
+ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
+  geom_vline(xintercept = 0.25, color = "red") +
+  xlab("p")
+```
+
+
+Nótese que esta gráfica:
+
+- Depende de los datos, que pensamos fijos.
+- Cuando cambiamos la $p$, la probabilidad de observar la muestra cambia. Nos interesa
+ver las regiones donde la probabilidad es relativamente alta.
+- El máximo está en 0.25.
+- Así que el estimador de máxima verosimilitud es $\hat{p} = 0.25$, **que es también
+el estimador usual de plugin** en este caso.
+
+---
+
+Obsérvese que para hacer esto usamos:
+
+- Un modelo teórico de cómo es la población con parámetros y 
+- Información de como se extrajo la muestra,
+
+y resolvimos el problema de estimación convirtiéndolo en uno de optimización.
+
+Probamos esta idea con un proceso más complejo:
+
+#### Ejemplo 2 {-}
+
+Supongamos que una máquina puede estar funcionando correctamente o no en cada
+corrida. Cada corrida se producen 500 productos, y se muestrean 10 para
+detectar defectos. Cuando la máquina funciona correctamente, la tasa de defectos
+es de 3%. Cuando la máquina no está funcionando correctamente la tasa de defectos
+es de 10%
+
+Supongamos que escogemos al azar 11 corridas, y obervamos los siguientes datos
+de número de defectuosos:
+
+$$1, 0, 0, 3 ,0, 0, 0, 2, 1, 0, 0$$
+
+La pregunta es: ¿qué porcentaje del tiempo la máquina está funcionando correctamente?
+
+Primero pensemos en una corrida. La probabilidad de observar una sucesión particular de 
+$r$ defectos es
+
+$$0.03^r(0.97)^{(10-r)}$$
+cuando la máquina está funcionando correctamente.
+
+Si la máquina está fallando, la misma probabilidad es 
+
+$$0.2^r(0.8)^{(10-r)}$$
+
+Ahora supongamos que la máquina trabaja
+correctamente en una proporción $p$ de las corridas. Entonces la probabilidad
+de observar $r$ fallas se calcula promediando (probabilidad
+total) sobre las probabilidades de que la máquina esté funcionando
+bien o no:
+
+$$0.03^r(0.97)^{(10-r)}p + 0.2^r(0.8)^{(10-r)}(1-p)$$
+Y esta es nuestra función de verosimilitud para una observación.
+
+Suponemos que las $r_1,r_2, \ldots, r_{11}$ observaciones son independientes
+(por ejemplo, después de cada corrida la máquina se prepara de una manera estándar,
+y es como si el proceso comenzara otra vez). Entonces tenemos que multiplicar
+estas probabilidades para cada observación $r_1$:
+
+
+```{r}
+calc_verosim <- function(r){
+  q_func <- 0.03^r*(0.97)^(10-r)
+  q_falla <- 0.2^r*(0.8)^(10-r)
+  function(p){
+    #nota: esta no es la mejor manera de calcularlo, hay 
+    # que usar logaritmos.
+    prod(p*q_func + (1-p)*q_falla)
+  }
+}
+verosim <- calc_verosim(c(1, 0, 0, 3, 0, 0, 0, 2, 1, 0, 0))
+verosim(0.1)
+```
+
+```{r, fig.width = 5, fig.height=4}
+dat_verosim <- tibble(x = seq(0,1, 0.001)) %>% mutate(prob = map_dbl(x, verosim))
+ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
+  geom_vline(xintercept = 0.8, color = "red") +
+  xlab("prop funcionado")
+```
+
+Y nuestra estimación puntual sería de alrededor de 80%.
+
+## Aspectos numéricos: parte 1 {-}
+
+Cuando calculamos la verosimilitud arriba, nótese que estamos multiplicando
+números que pueden ser muy chicos (por ejemplo $p^6$, etc). Esto puede producir
+desbordes numéricos fácilmente. Por ejemplo para un tamaño de muestra de 1000, podríamos
+tener que calcular
+
+```{r}
+p <- 0.1
+proba <- (p ^ 800)*(1-p)^200
+proba
+```
+
+En estos casos, es mejor hacer los cálculos en la escala logarítmica. El logaritmo
+convierte productos en sumas, y baja exponentes multiplicando. Si calculamos en escala
+logaritmica la cantidad de arriba, no tenemos problema:
+
+```{r}
+log_proba <- 800 * log(p) + 200 * log(1-p)
+log_proba
+```
+
+Ahora notemos que 
+
+- Maximizar la verosimilitud **es lo mismo** que maximizar la log-verosimilitud,  pues el logaritmo es una función creciente. Si $x_{max}$ es el máximo de $f$, tenemos que $f(x_{max})>f(x)$ para cualquier $x$, entonces tomando logaritmo,
+$$log(f(x_{max}))>log(f(x))$$ para cualquier $x$, pues el logaritmo respeta la desigualdad por ser creciente.
+- Usualmente usamos la log verosimilitud para encontrar estimador de máxima verosimilitud
+- Hay razónes teóricas y de interpretación por las que también es conveniente hacer esto.
+
+
+#### Ejemplo {-}
+
+En nuestro primer ejemplo,
+
+```{r, fig.width = 4, fig.height=3}
+log_verosimilitud <- function(p){
+  2*log(p) + 6*log(1-p)
+}
+dat_verosim <- tibble(x = seq(0,1, 0.01)) %>% mutate(log_prob = map_dbl(x, log_verosimilitud))
+ggplot(dat_verosim, aes(x = x, y = log_prob)) + geom_line() +
+  geom_vline(xintercept = 0.25, color = "red") +
+  xlab("p")
+```
+
+Obtenemos el mismo máximo. Podemos incluso resolver numéricamente:
+
+```{r, warning = FALSE}
+solucion <- optim(p = 0.5, log_verosimilitud, control = list(fnscale = -1))
+solucion$par
+```
+
+Y en nuestro segundo ejemplo:
+
+```{r}
+calc_log_verosim <- function(r){
+  q_func <- 0.03^r*(0.97)^(10-r)
+  q_falla <- 0.2^r*(0.8)^(10-r)
+  function(p){
+    #nota: esta no es la mejor manera de calcularlo, hay 
+    # que usar logaritmos.
+    sum(log(p*q_func + (1-p)*q_falla))
+  }
+}
+log_verosim <- calc_log_verosim(c(1, 0, 0, 3, 0, 0, 0, 2, 1, 0, 0))
+log_verosim(0.1)
+```
+
+```{r, fig.width = 5, fig.height=4}
+dat_verosim <- tibble(x = seq(0,1, 0.001)) %>% mutate(log_verosimilitud = map_dbl(x, log_verosim))
+ggplot(dat_verosim, aes(x = x, y = log_verosimilitud)) + geom_line() +
+  geom_vline(xintercept = 0.775, color = "red") +
+  xlab("prop funcionado")
+```
+
+## Aspectos numéricos: parte 2 {-}
+
+En la función de verosimilitud los datos están fijos y optimizamos con respecto a
+las variables que no conocemos. ¿Cómo construimos esta función en general, para cualquier
+tamaño de muestra y cualquier número de registros detectados como erróneos?
+
+Nótese que la verosimilitud la consideramos **función de los parámetros**,
+donde **los datos están fijos**.
+
+Podemos construir una función que genera la función de verosimilitud dependiendo de los datos. En nuestro primer ejemplo de muestras de registros erróneos,
+podríamos construir una función que genera la log verosimilitud dependiendo
+del tamaño de muestra y del número de errores encontrado:
+
+```{r}
+construir_log_verosim <- function(n, n_err){
+  # n es tamaño de muestra 
+  # n_err el número de errores detectados (datos)
+  n_corr <- n - n_err
+  log_verosim <- function(p){
+    n_err * log(p) + n_corr * log(1-p)
+  }
+}
+```
+
+Cuando fijamos $n$ y $n_{err}$, esta función genera otra función, la log verosimilitud, que es la que queremos optimizar.
+
+Supongamos entonces que sacamos 20 registros al azar y observamos 10 incorrectos. La función
+de verosimilitud es
+
+```{r}
+log_vero <- construir_log_verosim(20, 10)
+log_vero
+```
+
+
+```{r, fig.width = 4, fig.height=3}
+curve(log_vero)
+abline(v = 0.5, col = "red")
+```
+
+
+
+#### Ejemplo {-}
+
+Supongamos que en una población de transacciones hay un porcentaje $p$ (desconocido) 
+que son fraudulentas. Tenemos un sistema de clasificación humana que que marca transacciones como sospechosas. 
+Con este sistema hemos medido que la proporción de transacciones normales que son marcadas como sospechosas es de 0.1%, y que la proporción de transacciones fraudulentas que son marcadas
+como sospechosas es de 98%. Supongamos que extraemos una muestra de 2000 transacciones, de manera que todas ellas tiene la misma probabilidad de ser fraudulentas. El sistema de clasificación marca 6 transacciones como fraudulentas. ¿Cómo estimamos la proporción de transacciones fraudulentas en la población?
+
+Solución: sea $p$ la proporción de transacciones fraudulentas. Entonces la probabilidad
+de que una transacción sea marcada como sospechosa es (proba total):
+
+$$0.98p + 0.001(1-p)$$
+
+Pues tenemos que contar 98% de la proporción $p$ de fraudulentas 
+(correctamente detectadas) más 0.1% de la proporción $(1-p)$ de fraudulentas.
+Escribimos entonces nuestra función de verosimilitud
+
+```{r}
+crear_log_verosim <- function(n, n_sosp){
+  # devolver la función log verosimilitud 
+  log_verosimilitud_pct <- function(pct){
+    # sup que pct es la proporcentaje de fraudes,
+    # que es el parámetro que queremos estimar
+    prob_sosp <- 0.98 * pct / 100 + 0.001 * (1 - pct / 100)
+    log_prob <- n_sosp * log(prob_sosp) + (n - n_sosp) * log(1- prob_sosp)
+    log_prob
+  }
+  log_verosimilitud_pct
+}
+```
+
+La verosimilitud es una función de $p$
+
+```{r}
+log_verosim <- crear_log_verosim(n = 2000, n_sosp = 4)
+log_verosim
+```
+
+Calculamos algunos valores:
+
+```{r}
+log_verosim(5)
+```
+
+```{r}
+log_verosim(2) 
+```
+
+
+
+Si graficamos:
+
+```{r}
+curve(log_verosim, from = 0, to = 10, xname = "Porcentaje fraudulentas")
+```
+
+No se ve muy claro dónde ocurre el máximo, pero podemos ampliar cerca de cero la 
+misma gráfica:
+
+```{r}
+curve(log_verosim, from = 0, to = 0.5, xname = "Porcentaje fraudulentas")
+```
+
+
+
+- Vemos que alrededor de 0.1% maximiza la probabilidad de haber observado 4 
+transacciones sospechosas. 
+- Notamos sin embargo que varios valores alrededor de este valor tienen probabilidad similar,
+así que también son consistentes con los datos (por ejemplo, valores como 0.05 o 0.15 tienen probabilidad similar). Tendremos que considerar esto para evaluar la incertidumbre en nuestra estimación.
+- Obsérvese adicionalmente que si no tomáramos en cuenta las probabilidades de falsos
+negativos y falsos positivos la estimación simple daría $6/2000 = 0.003$ (0.3%), que es
+tres veces más grande que nuestra estimación puntual por máxima verosimilitud.
+
+
+
+
+## Máxima verosimilitud para más de un parámetro {-}
+
+Si nuestro modelo contiene más de un parámetro desconocido podemos también usar
+máxima verosimilitud. En este caso, optimizamos sobre todos los parámetros usando
+cálculo o alguna rutina numérica
+
+### Ejemplo {-}
+
+Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron un
+examen de opción múltiple al azar (1 de 5), y otros contestaron las preguntas intentando
+sacar una buena calificación. Suponemos que una vez que conocemos el tipo de 
+estudiante, todas las preguntas tienen la misma probabilidad de ser contestadas
+correctamente, de manera independiente. El modelo
+teórico está representado por la siguiente simulación:
+
+```{r}
+sim_formas <- function(p_azar, p_corr){
+  tipo <- rbinom(1, 1, 1 - p_azar)
+  if(tipo==0){
+    # al azar
+    x <- rbinom(1, 10, 1/5)
+  } else {
+    # no al azar
+    x <- rbinom(1, 10, p_corr)
+  }
+  x
+}
+```
+
+Y una muestra se ve como sigue:
+
+```{r}
+set.seed(12)
+muestra <- map_dbl(1:200, ~ sim_formas(0.3, 0.75))
+qplot(muestra)
+```
+
+Supongamos que no conocemos la probabildad de contestar correctamente  ni la
+proporción de estudiantes que contestó al azar. ¿Como estimamos estas dos cantidades?
+
+Escribimos la verosimilitud:
+
+```{r}
+crear_log_p <- function(x){
+
+  log_p <- function(pars){
+    p_azar = pars[1]
+    p_corr = pars[2]
+    sum(log(p_azar * dbinom(x, 10, 1/5) + (1 - p_azar) * dbinom(x, 10, p_corr)))
+  }  
+  log_p
+}
+```
+
+Creamos la función de verosimilitud con los datos
+
+```{r}
+log_p <- crear_log_p(muestra)
+```
+
+y optimizamos
+
+```{r}
+res <- optim(c(0.5, 0.5), log_p, control = list(fnscale = -1))
+res$par
+```
+
+En este caso, obtenemos estimaciones razonables de ambos parámetros. 
+Nota: dependiendo de los datos, este problema
+puede estar mal condicionado. Por ejemplo, ¿qué pasa si la probabilidad de acertar
+cuando se contesta bien está cercano al azar?
+
+
