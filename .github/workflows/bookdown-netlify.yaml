@@ -17,6 +17,7 @@ jobs:
         uses: r-lib/actions/setup-r@master
         with:
           crayon.enabled: 'FALSE'
+
       - name: Install pandoc and pandoc citeproc
         run: |
           brew install pandoc
