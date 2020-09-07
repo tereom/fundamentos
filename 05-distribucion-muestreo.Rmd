@@ -461,7 +461,7 @@ $$\bar{X} \xrightarrow{} N \left (\mu, \frac{\sigma}{\sqrt{n}} \right)$$
 Adicionalmente, la distribución de la
 media estandarizada converge a una distribución normal
 estándar cuando $n$ es grande:
-$$\sqrt{n} \, \frac{\bar{X}-\mu}{\sigma} \xrightarrow{}  N(0, 1)$$
+$$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  N(0, 1)$$
 
 ```
 
