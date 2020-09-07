@@ -4,7 +4,7 @@ author: "Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
-bibliography: [book.bib, packages.bib]
+bibliography: [bibs/book.bib, bibs/packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: tereom/fundamentos
@@ -21,11 +21,11 @@ correcciones mediante [pull requests](https://github.com/tereom/fundamentos).
 
 #### Ligas {-}
 
-- Notas: https://fundamentos-est.netlify.app/, https://tereom.github.io/fundamentos/
+- Notas: https://tereom.github.io/fundamentos  
 - Correos: <teresa.ortiz.mancera@gmail.com>, <alfredo.garbuno@itam.mx>.  
 - GitHub: https://github.com/tereom/fundamentos  
 - Foros de discusion:  
-        - Grupo Teresa:  [slack](https://fundamentos-est.slack.com)  
+        - Grupo Teresa:  [slack](fundamentos-est.slack.com)  
         - Grupo Alfredo: [canvas](https://itam.instructure.com/)
 
 </br>
