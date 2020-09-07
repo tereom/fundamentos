@@ -14,12 +14,10 @@ jobs:
         with:
           crayon.enabled: 'FALSE'
       - uses: r-lib/actions/setup-pandoc@v1
-      - name: Install dependencies
-        run: sudo apt-get install libssl-dev libxml2-dev libcurl4-openssl-dev
       - name: Install packages
         run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra","timeDate","here","nullabor"))'
       - name: Render book
-        run: Rscript -e 'rmarkdown::render_site(output_format = "bookdown::gitbook", encoding = "UTF-8")'
+        run: Rscript -e 'bookdown::render_book("index.Rmd")'
       - uses: actions/upload-artifact@v1
         with:
           name: _book
