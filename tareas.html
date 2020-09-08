@@ -586,7 +586,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb165-11"><a href="tareas.html#cb165-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb165-12"><a href="tareas.html#cb165-12"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media_dif =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb165-13"><a href="tareas.html#cb165-13"></a><span class="st">  </span><span class="kw">pull</span>(media_dif)</span></code></pre></div>
-<pre><code>## [1] -0.3</code></pre>
+<pre><code>## [1] 0.18</code></pre>
 <div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="tareas.html#cb167-1"></a><span class="co"># Lo hacemos una función </span></span>
 <span id="cb167-2"><a href="tareas.html#cb167-2"></a>calcula_est &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
 <span id="cb167-3"><a href="tareas.html#cb167-3"></a>  dormir_perm &lt;-<span class="st"> </span>dormir_larga <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -601,7 +601,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb167-12"><a href="tareas.html#cb167-12"></a>}</span>
 <span id="cb167-13"><a href="tareas.html#cb167-13"></a><span class="co"># La llamamos 1000 veces</span></span>
 <span id="cb167-14"><a href="tareas.html#cb167-14"></a><span class="kw">calcula_est</span>()</span></code></pre></div>
-<pre><code>## [1] 0.88</code></pre>
+<pre><code>## [1] 0.46</code></pre>
 <div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="tareas.html#cb169-1"></a>difs &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">1000</span>, <span class="kw">calcula_est</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">flatten_dbl</span>()</span></code></pre></div>
 <ul>
 <li>Haz una gráfica de la distribución de referencia y grafica encima el valor
