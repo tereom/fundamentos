@@ -2,8 +2,9 @@
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
+library(purrr)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=4)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -45,9 +46,7 @@ sean razonables.
 esto, usando supuestos y modelos requeriremos calcular la probabilidad de un conjunto
 de observaciones.
 
-#### Ejemplo 1 {-}
-
-Adaptado de [@Chihara]. Supongamos que una máquina produce dos tipos de bolsas de 25 galletas: la mitad de las veces produce una bolsa con 5 galletas de avena y 20 de chispas de chocolate, y
+**Ejemplo.** Adaptado de [@Chihara]. Supongamos que una máquina produce dos tipos de bolsas de 25 galletas: la mitad de las veces produce una bolsa con 5 galletas de avena y 20 de chispas de chocolate, y
 la otra mitad produce galletas con 23 galletas de avena y 2 de chispas de chocolate. 
 
 Tomamos una bolsa, y no sabemos qué tipo de bolsa es (parámetro desconocido). Extraemos al azar una de las galletas, y es de chispas de chocolate (observación).
@@ -87,8 +86,7 @@ distribución y por $x_1, \ldots, x_n$ los valores observados de esta muestra al
 ```
 
 
-#### Ejemplo {-}
-Supongamos que queremos saber qué proporción de registros de una base de datos tiene algún error menor de captura. No podemos revisar todos los registros, así que tomamos una muestra
+**Ejemplo.** Supongamos que queremos saber qué proporción de registros de una base de datos tiene algún error menor de captura. No podemos revisar todos los registros, así que tomamos una muestra
 de 8 registros, escogiendo uno por uno al azar de manera independiente. Revisamos los
 8 registros, y obtenemos los siguientes datos:
 
@@ -128,7 +126,7 @@ Ahora la idea es **encontrar la p que maximiza la probabilidad de lo que observa
 este caso se puede hacer con cálculo, pero vamos a ver una gráfica de esta función y
 cómo resolverla de manera numérica.
 
-```{r, fig.width = 4, fig.height=3}
+```{r}
 verosimilitud <- function(p){
   p^2 * (1-p)^6
 }
@@ -159,6 +157,61 @@ Esta función nos da dice qué tan creible es el valor del parámetro $\theta$ d
 A veces también la denotamos por $\mathcal{L}_n(\theta)$.
 ```
 
+**Ejemplo.** Consideremos lo siguiente. Supongamos que tenemos una sucesión de experimentos donde sólo registramos éxito o fracaso. Consideremos este escenario como el de una muestra de $n$ observaciones de una variable aleatoria Bernoulli. Es decir, $X_1, \ldots, X_n \sim \textsf{Bernoulli}(p)$. El párametro de interés es la probabilidad de éxito $p.$ Cada experimento que ocurre tiene función de densidad 
+$$
+  f(x; p) = p^x (1-p)^{1-x},
+$$
+por lo que la función de verosimilitud se calcula como 
+\begin{align}
+  \mathcal{L}_n(p) &=  \prod_{i = 1}^n p^{x_i} (1-p)^{1-xi} \\
+    &= p^{\sum_i x_i} (1-p)^{n - \sum_i x_i} \\
+    &= p^{S} (1-p)^{n - S},
+\end{align}
+
+donde $S = \sum_i x_i.$ La siguiente figura muestra las curvas de verosimilitud 
+para los casos $p = 0.3$ y $n = 10, 10^2, 10^3.$ Podemos notar cómo se concentra la verosimilitud 
+conforme el número de observaciones crece, y a su vez, notamos que para valor pequeños de muestra
+el estimador puede estar lejos. Estas propiedades las estudiaremos más a fondo en el futuro. 
+
+```{r bernoulli, cache = TRUE, echo = FALSE}
+# define la log-verosimilitud para una muestra dada
+logver_bernoulli <- function(X){
+  S <- sum(X)
+  n <- length(X)
+  function(p){
+    S * log(p) + (n - S) * log(1-p)
+  }
+}
+
+# calcula experimento para n variable
+experimento <- function(n = 20){
+  x <- purrr::rbernoulli(n, p = 0.3)
+  logver_bernoulli(x)
+}
+
+likeli_curve <- function(n = 20){
+  logver <- experimento(n)
+  dt <- tibble(x = seq(0,1, 0.001), nobs = as.factor(n) ) %>%
+    mutate(prob = map_dbl(x, logver)) %>%
+    mutate(prob = exp(prob - max(prob)))
+  dt
+}
+```
+
+```{r, echo = FALSE}
+
+set.seed(100)
+
+c(10, 100, 1000) %>%
+  map_dfr(likeli_curve) %>%
+  ggplot(aes(x = x, y = prob)) +
+    geom_line(aes(group = nobs, colour = nobs))
+
+```
+
+
+
+
 ```{block mle, type = 'mathblock'}
 **Definición.** El estimador de máxima verosimilitud lo denotamos por $\hat \theta_{\textsf{MLE}}$ y es el valor que satisface 
 \begin{align}
@@ -185,9 +238,9 @@ y resolvimos el problema de estimación convirtiéndolo en uno de optimización.
 
 Probamos esta idea con un proceso más complejo.
 
-#### Ejemplo 2 {-}
+---
 
-Supongamos que una máquina puede estar funcionando correctamente o no en cada
+**Ejemplo.** Supongamos que una máquina puede estar funcionando correctamente o no en cada
 corrida. Cada corrida se producen 500 productos, y se muestrean 10 para
 detectar defectos. Cuando la máquina funciona correctamente, la tasa de defectos
 es de 3%. Cuando la máquina no está funcionando correctamente la tasa de defectos
@@ -239,7 +292,7 @@ verosim <- calc_verosim(c(1, 0, 0, 3, 0, 0, 0, 2, 1, 0, 0))
 verosim(0.1)
 ```
 
-```{r, fig.width = 5, fig.height=4}
+```{r}
 dat_verosim <- tibble(x = seq(0,1, 0.001)) %>% mutate(prob = map_dbl(x, verosim))
 ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
   geom_vline(xintercept = 0.8, color = "red") +
@@ -296,11 +349,9 @@ le das a la ecuación resultante? ¿La has visto en algunos otros ejemplos en se
 
 ---
 
-#### Ejemplo {-}
+**Ejemplo.** En nuestro primer ejemplo,
 
-En nuestro primer ejemplo,
-
-```{r, fig.width = 4, fig.height=3}
+```{r}
 log_verosimilitud <- function(p){
   2*log(p) + 6*log(1-p)
 }
@@ -333,7 +384,7 @@ log_verosim <- calc_log_verosim(c(1, 0, 0, 3, 0, 0, 0, 2, 1, 0, 0))
 log_verosim(0.1)
 ```
 
-```{r, fig.width = 5, fig.height=4}
+```{r}
 dat_verosim <- tibble(x = seq(0,1, 0.001)) %>% mutate(log_verosimilitud = map_dbl(x, log_verosim))
 ggplot(dat_verosim, aes(x = x, y = log_verosimilitud)) + geom_line() +
   geom_vline(xintercept = 0.775, color = "red") +
@@ -371,20 +422,18 @@ de verosimilitud es
 
 ```{r}
 log_vero <- construir_log_verosim(20, 10)
-log_vero
 ```
 
 
 ```{r}
-curve(log_vero)
-abline(v = 0.5, col = "red")
+tibble(x = seq(0,1,0.001)) %>% 
+  mutate(log_ver = log_vero(x)) %>% 
+  ggplot(aes(x = x, y = log_ver)) + 
+    geom_line() +
+    geom_vline(xintercept = 0.5, color = 'red')
 ```
 
-
-
-#### Ejemplo {-}
-
-Supongamos que en una población de transacciones hay un porcentaje $p$ (desconocido) 
+**Ejemplo.** Supongamos que en una población de transacciones hay un porcentaje $p$ (desconocido) 
 que son fraudulentas. Tenemos un sistema de clasificación humana que que marca transacciones como sospechosas. 
 Con este sistema hemos medido que la proporción de transacciones normales que son marcadas como sospechosas es de 0.1%, y que la proporción de transacciones fraudulentas que son marcadas
 como sospechosas es de 98%. Supongamos que extraemos una muestra de 2000 transacciones, de manera que todas ellas tiene la misma probabilidad de ser fraudulentas. El sistema de clasificación marca 6 transacciones como fraudulentas. ¿Cómo estimamos la proporción de transacciones fraudulentas en la población?
@@ -412,36 +461,31 @@ crear_log_verosim <- function(n, n_sosp){
 }
 ```
 
-La verosimilitud es una función de $p$
+La verosimilitud es una función de $p$.
 
 ```{r}
 log_verosim <- crear_log_verosim(n = 2000, n_sosp = 4)
-log_verosim
 ```
 
-Calculamos algunos valores:
+A continuación la mostramos de manera gráfica.
 
-```{r}
-log_verosim(5)
-```
-
-```{r}
-log_verosim(2) 
-```
-
-
-
-Si graficamos:
-
-```{r}
-curve(log_verosim, from = 0, to = 10, xname = "Porcentaje fraudulentas")
+```{r, echo = FALSE}
+tibble(x = seq(0,10,0.001)) %>% 
+  mutate(log_ver = log_verosim(x)) %>% 
+  ggplot(aes(x = x, y = log_ver)) + 
+    geom_line() +
+    xlab("Porcentaje fraudulentas")
 ```
 
 No se ve muy claro dónde ocurre el máximo, pero podemos ampliar cerca de cero la 
 misma gráfica:
 
-```{r}
-curve(log_verosim, from = 0, to = 0.5, xname = "Porcentaje fraudulentas")
+```{r, echo = FALSE}
+tibble(x = seq(0,0.5,0.001)) %>% 
+  mutate(log_ver = log_verosim(x)) %>% 
+  ggplot(aes(x = x, y = log_ver)) + 
+    geom_line() +
+    xlab("Porcentaje fraudulentas")
 ```
 
 
@@ -455,24 +499,22 @@ negativos y falsos positivos la estimación simple daría $6/2000 = 0.003$ (0.3%
 tres veces más grande que nuestra estimación puntual por máxima verosimilitud.
 
 
-#### Ejemplo {-}
-
-Hasta ahora hemos visto ejemplos sencillos dónde la *receta* consiste en maximizar la
+**Ejemplo.** Hasta ahora hemos visto ejemplos sencillos dónde la *receta* consiste en maximizar la
 verosimilitud (o log-verosimilitud). Sin embargo consideremos el siguiente caso. Supongamos
 que nuestros datos son generados por medio de una distribución uniforme en el intervalo $[0,b].$
 Contamos con una muestra de $n$ observaciones generadas 
-de manera independiendte $X_i \sim U[0,b]$ para $i= 1, \ldots, n.$
+de manera independiente $X_i \sim U[0,b]$ para $i= 1, \ldots, n.$
 Sin embargo, no conocemos el valor de $b$. 
 
 Lo podemos estimar al maximizar la función de verosimilitud, la cual escribimos como
 \begin{align}
-\mathcal{L}(b; x_1, \ldots, x_n) = \Pi_{i = 1}^n f(x_i; b),
+\mathcal{L}(b; x_1, \ldots, x_n) = \prod_{i = 1}^n f(x_i; b),
 \end{align}
 dado que los datos son generados de manera idéntica e independiente. Notemos que podemos 
 utilizar la función de densidad de una variable aleatoria uniforme para escribir la verosimilitud 
 de la muestra como:
 \begin{align}
-\mathcal{L}(b; x_1, \ldots, x_n) = \Pi_{i = 1}^n 1_{[0,b]}(x_i) \frac1b. 
+\mathcal{L}(b; x_1, \ldots, x_n) = \prod_{i = 1}^n 1_{[0,b]}(x_i) \frac1b. 
 \end{align}
 
 Sin embargo notemos algo. Una variable aleatoria uniforme sólo tiene **soporte** en el intervalo $[0,b]$.
@@ -488,7 +530,23 @@ $$ \hat b_{\textsf{MLE}} = x_{\sigma(n)},$$
 notemos que cualquier valor observado necesariamente satisface 
 $$x_i \leq \hat b_{\textsf{MLE}},$$ 
 y por lo tanto todas las funciones indicadoras están *encendidas*. El valor de la verosimilitud es igual a 
-$$\mathcal{L}(b; x_1, \ldots, x_n) = \left(\frac{1}{x_{\sigma(n)}}\right)^n.$$
+$$\mathcal{L}(b; x_1, \ldots, x_n) = \left(\frac{1}{x_{\sigma(n)}}\right)^n.$$ Esta función se muestra en la figura de abajo. 
+
+```{r, echo = FALSE, fig.height = 2}
+eye <- function(x){
+  ifelse(x <= 5, 0, (1/x)^10)
+}
+
+tibble(x = seq(0, 10, 0.001)) %>% 
+  mutate(verosimilitud = eye(x)) %>% 
+  ggplot(aes(x = x, y = verosimilitud)) + 
+    geom_line() + 
+    xlab('x_(n)') + 
+    theme(axis.text.x=element_blank(),
+          axis.text.y=element_blank())
+  
+```
+
 
 **Importante.** Este es un ejemplo clásico para ilustrar el *peligro* de seguir la *receta* sin considerar los 
 detalles. En este caso la función a optimizar tiene una dependencia *complicada* para aplicar algoritmos de 
@@ -500,9 +558,7 @@ Si nuestro modelo contiene más de un parámetro desconocido podemos también us
 máxima verosimilitud. En este caso, optimizamos sobre todos los parámetros usando
 cálculo o alguna rutina numérica
 
-#### Ejemplo {-}
-
-Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron un
+**Ejemplo.** Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron un
 examen de opción múltiple al azar (1 de 5), y otros contestaron las preguntas intentando
 sacar una buena calificación. Suponemos que una vez que conocemos el tipo de 
 estudiante, todas las preguntas tienen la misma probabilidad de ser contestadas
@@ -565,3 +621,23 @@ En este caso, obtenemos estimaciones razonables de ambos parámetros.
 Nota: dependiendo de los datos, este problema
 puede estar mal condicionado. Por ejemplo, ¿qué pasa si la probabilidad de acertar
 cuando se contesta bien está cercano al azar?
+
+**Ejemplo.** (Tomado de [@zuev]). Considera el caso de $n$ muestras iid de un modelo Gaussiano. Es decir, 
+$X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2).$ Consideremos que ambos parámetros son desconocidos y nos gustaria 
+encontrar el $\textsf{MLE}$. Para este problema denotamos $\theta \in \mathbb{R}^2$, donde $\theta_1 = \mu$ y $\theta_2 = \sigma^2.$ 
+
+La función de verosimiltud se puede calcular (ignorando algunas constantes multiplicativas) como 
+\begin{align}
+\mathcal{L}_n(\theta) &= \prod_{i = 1}^n \frac{1}{\sigma} \, \exp\left( - \frac{(x_i - \mu)^2}{2\sigma^2}\right) \\
+  &= \theta_2^{-\frac{n}{2}}\exp\left( - \frac{1}{2 \theta_2} \sum_{i = 1}^n (x_i - \theta_1)^2 \right).
+\end{align}
+
+A continuación mostramos la representación gráfica de la función de verosimilitud de este ejemplo. 
+Notamos lo mismo que para los ejemplos anteriores. Conforme más datos tenemos, más nos acercamos a los valores 
+reales que no conocemos. 
+
+```{r, echo=FALSE}
+knitr::include_graphics('images/mle-normal.png', auto_pdf = TRUE )
+```
+
+En las siguientes secciones veremos los métodos clásicos para encontrar el $\textsf{MLE}$. Y mas adelante, estudiaremos los propiedades teóricas que hacen a estos estimadores tan útiles y prácticos en aplicaciones. 
