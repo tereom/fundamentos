@@ -1,4 +1,4 @@
-# Estimación y distribución de muestreo
+# Estimación y distribución de muestreo {#S:distribucion-muestreo}
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)

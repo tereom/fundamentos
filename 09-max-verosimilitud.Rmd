@@ -1,8 +1,17 @@
-# Estimación: máxima verosimilitud (parte 1)
+# Estimación por máxima verosimilitud
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+source("R/funciones_auxiliares.R")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=4)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
 
 Los ejemplos que hemos visto han sido todos de estimadores *plug-in* (o por sustitución): 
 si queremos saber una cantidad poblacional, y tenemos una muestra dada, entonces
-calculamos la estadística de interés "como si la muestra fuera la población". Por ejemplo,
+calculamos la estadística de interés *como si la muestra fuera la población*. Por ejemplo,
 para estimar la mediana poblacional usamos la mediana muestral, si queremos estimar
 la media poblacional usamos la media muestral, y así sucesivamente. Estos estimadores
 usualmente dan resultados razonables (pero hay que checar usando muestra bootstraps, por ejemplo,
@@ -10,22 +19,22 @@ y pensar lo que estamos haciendo).
 
 Cuando sabemos más acerca de la población y usamos un modelo teórico es posible
 hacer más: dependiendo de qué cantidades se quieren estimar, podemos construir estimadores
-que sean *óptimos* en algún sentido - siempre y cuando se cumplan los supuestos teóricos-, como veremos ahora. 
+que sean *óptimos* en algún sentido ---siempre y cuando se cumplan los supuestos teóricos---, como veremos ahora. 
 
 Por ejemplo: ¿deberíamos estimar el centro de una distribución simétrica con la
 media o con la mediana, o quizá con una media recortada?
 
 En esta parte construiremos la teoría básica de estimación cuando trabajamos con 
-modelos teóricos conocidos. El objetivo es entender **las ideas básicas** de estos procedimientos, y cómo evaluar sus resultados.
-
+modelos teóricos conocidos. El objetivo es entender **las ideas básicas** de estos procedimientos, 
+y cómo evaluar sus resultados.
 
 **Recordatorio**: las ventajas de usar modelos teóricos para describir distribuciones de
 datos está en que es posible comprimir más eficientemente la información, es posible construir
 modelos más complejos juntando varios de estos modelos y de sus dependencias, y de que es
-posible hacer más teoría útil que nos guíe. La desventaja es que es neceario que esos supuestos teóricos sean razonables.
+posible hacer más teoría útil que nos guíe. La desventaja es que es necesario que esos supuestos teóricos sean razonables.
 
 
-## Intro a estimación por máxima verosimilitud {-}
+## Introducción a estimación por máxima verosimilitud {-}
 
 Uno de los procedimientos más estándar en esta situación es el **método 
 de máxima verosimilitud**. Los estimadores de máxima verosimilitud tienen propiedades
@@ -38,7 +47,7 @@ de observaciones.
 
 #### Ejemplo 1 {-}
 
-(Adaptado de @chihara). Supongamos que una máquina produce dos tipos de bolsas de 25 galletas: la mitad de las veces produce una bolsa con 5 galletas de avena y 20 de chispas de chocolate, y
+Adaptado de [@Chihara]. Supongamos que una máquina produce dos tipos de bolsas de 25 galletas: la mitad de las veces produce una bolsa con 5 galletas de avena y 20 de chispas de chocolate, y
 la otra mitad produce galletas con 23 galletas de avena y 2 de chispas de chocolate. 
 
 Tomamos una bolsa, y no sabemos qué tipo de bolsa es (parámetro desconocido). Extraemos al azar una de las galletas, y es de chispas de chocolate (observación).
@@ -56,8 +65,8 @@ o población real.
 
 Nuestro propósito es:
 
-4. Extraemos observaciones del proceso:  
-$$x_1, x_2, \ldots, x_n$$
+4. Extraemos observaciones del proceso  
+$$x_1, x_2, \ldots, x_n.$$
 5. Queremos aprender de los parámetros desconocidos del proceso para calcular cantidades de interés acerca del sistema o población real
 
 
@@ -65,11 +74,17 @@ En principio, los modelos que consideramos pueden ser complicados y tener varias
 usando máxima verosimilitud.
 
 **Nota**: Cuando decimos *muestra* en general nos referimos a observaciones
-independientes obtenidas del mismo proceso (ver la sección anterior para ver qué 
+independientes obtenidas del mismo proceso (ver la sección \@ref(S:distribucion-muestreo) para ver qué 
 significa que sea independientes). Este esquema es un supuesto
 que simplifica mucho los cálculos, como discutimos antes. Muchas veces este supuesto
 sale del diseño de la muestra o del estudio, pero en todo caso es importante considerar
 si es razonable o no para nuestro problema particular.
+
+```{block, type = 'mathblock'}
+Denotemos por $f(x; \theta)$ la función de densidad para una variable aleatoria continua con párametro 
+asociado $\theta.$ Denotamos por $X_1, \ldots, X_n,$ una muestra aleatoria de $n$ observaciones de esta 
+distribución y por $x_1, \ldots, x_n$ los valores observados de esta muestra aleatoria.
+```
 
 
 #### Ejemplo {-}
@@ -96,12 +111,9 @@ $$P(x_1 = 0, x_2 = 1, x_3 = 0, x_4 = 0, x_5 =1, x_6 =0, x_7 =0, x_8 =0)$$
 es igual a
 
 $$P(x_1 = 0)P(x_2 = 1)P(x_3 = 0)P( x_4 = 0)P(x_5 =1)P(x_6 =0)P(x_7 =0)P(x_8 =0)$$
-pues la probabilidad de que cada observación sea 0 o 1 no depende de las observaciones restantes (la muestra se extrajo de manera independiente).érvese que para hacer esto usamos:
+pues la probabilidad de que cada observación sea 0 o 1 no depende de las observaciones restantes (la muestra se extrajo de manera independiente).
 
-Un modelo teórico de cómo es la población con parámetros y
-Información de como se extrajo la muestra,
-
-Esta ultima cantidad tiene un parámetro que no conocemos: la proporcion $p$ de registros
+Esta última cantidad tiene un parámetro que no conocemos: la proporcion $p$ de registros
 con errores. Así que lo denotamos como una cantidad desconocida $p$. Nótese
 entonces que $P(x_2=1) = p$, $P(X_3=0) = 1-p$ y así sucesivamente, así que la cantidad
 de arriba es igual a
@@ -110,7 +122,7 @@ $$p(1-p)p(1-p)(1-p)p(1-p)(1-p)(1-p) $$
 
 que se simplifica a 
 
-$$ L(p) = p^2(1-p)^6$$
+$$ \mathcal{L}(p) = p^2(1-p)^6$$
 
 Ahora la idea es **encontrar la p que maximiza la probabilidad de lo que observamos**. En
 este caso se puede hacer con cálculo, pero vamos a ver una gráfica de esta función y
@@ -136,16 +148,42 @@ ver las regiones donde la probabilidad es relativamente alta.
 - Así que el estimador de máxima verosimilitud es $\hat{p} = 0.25$, **que es también
 el estimador usual de plugin** en este caso.
 
+
+```{block verosimilitud, type = 'mathblock'}
+**Definición.** La función de verosimilitud del párametro de interés $\theta$ está definida como 
+\begin{align}
+\mathcal{L}(\theta; x_1, \ldots, x_n) = f(x_1; \theta) \, f(x_2; \theta) \, \cdots \, f(x_n;\theta). 
+\end{align}
+
+Esta función nos da dice qué tan creible es el valor del parámetro $\theta$ dada la muestra observada. 
+A veces también la denotamos por $\mathcal{L}_n(\theta)$.
+```
+
+```{block mle, type = 'mathblock'}
+**Definición.** El estimador de máxima verosimilitud lo denotamos por $\hat \theta_{\textsf{MLE}}$ y es el valor que satisface 
+\begin{align}
+\hat \theta_{\textsf{MLE}} =  \underset{\theta \, \in \, \Theta}{\arg\max}\,  \mathcal{L}(\theta; x_1, \ldots, x_n),
+\end{align}
+donde $\theta$ denota el espacio parametral. Es decir, el espacio válido de búsqueda. 
+```
+
+```{block, type = 'ejercicio'}
+
+- Considera el caso de una normal con media y varianza desconocidas. ¿Cuáles son los espacios parametrales para efectuar $\mathsf{MLE}$?
+- Considera el caso de una Binomial con parámetros $N$ y $p$ desconocidos. ¿Cuáles son los espacios parametrales para la búsqueda del $\mathsf{MLE}$?
+```
+
+
 ---
 
-Obsérvese que para hacer esto usamos:
+Obsérvese que para hacer esto usamos:  
 
-- Un modelo teórico de cómo es la población con parámetros y 
-- Información de como se extrajo la muestra,
+- Un modelo teórico de cómo es la población con parámetros e  
+- Información de cómo se extrajo la muestra,  
 
 y resolvimos el problema de estimación convirtiéndolo en uno de optimización.
 
-Probamos esta idea con un proceso más complejo:
+Probamos esta idea con un proceso más complejo.
 
 #### Ejemplo 2 {-}
 
@@ -155,8 +193,8 @@ detectar defectos. Cuando la máquina funciona correctamente, la tasa de defecto
 es de 3%. Cuando la máquina no está funcionando correctamente la tasa de defectos
 es de 10%
 
-Supongamos que escogemos al azar 11 corridas, y obervamos los siguientes datos
-de número de defectuosos:
+Supongamos que escogemos al azar 11 corridas, y obervamos los siguientes
+número de defectuosos:
 
 $$1, 0, 0, 3 ,0, 0, 0, 2, 1, 0, 0$$
 
@@ -170,7 +208,7 @@ cuando la máquina está funcionando correctamente.
 
 Si la máquina está fallando, la misma probabilidad es 
 
-$$0.2^r(0.8)^{(10-r)}$$
+$$0.2^r(0.8)^{(10-r)}.$$
 
 Ahora supongamos que la máquina trabaja
 correctamente en una proporción $p$ de las corridas. Entonces la probabilidad
@@ -210,9 +248,13 @@ ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
 
 Y nuestra estimación puntual sería de alrededor de 80%.
 
-## Aspectos numéricos: parte 1 {-}
+## Aspectos numéricos {-}
 
-Cuando calculamos la verosimilitud arriba, nótese que estamos multiplicando
+Encontrar el estimador de máxima verosimilitud ($\textsf{MLE}$) es automático en la mayoría de los casos.
+En teoría, podemos reutilizar la misma rutina numérica para encontrar el estimador sin ninguna ayuda de la analista. 
+Esto contrasta con otras técnicas de estimación en donde se requieren cálculos y manipulación de ecuaciones. 
+
+Sin embargo, hay situaciones que se pueden evitar de manera general. Por ejemplo, cuando calculamos la verosimilitud arriba, nótese que estamos multiplicando
 números que pueden ser muy chicos (por ejemplo $p^6$, etc). Esto puede producir
 desbordes numéricos fácilmente. Por ejemplo para un tamaño de muestra de 1000, podríamos
 tener que calcular
@@ -223,7 +265,7 @@ proba <- (p ^ 800)*(1-p)^200
 proba
 ```
 
-En estos casos, es mejor hacer los cálculos en la escala logarítmica. El logaritmo
+En estos casos, es mejor hacer los cálculos en escala logarítmica. El logaritmo
 convierte productos en sumas, y baja exponentes multiplicando. Si calculamos en escala
 logaritmica la cantidad de arriba, no tenemos problema:
 
@@ -234,11 +276,25 @@ log_proba
 
 Ahora notemos que 
 
-- Maximizar la verosimilitud **es lo mismo** que maximizar la log-verosimilitud,  pues el logaritmo es una función creciente. Si $x_{max}$ es el máximo de $f$, tenemos que $f(x_{max})>f(x)$ para cualquier $x$, entonces tomando logaritmo,
-$$log(f(x_{max}))>log(f(x))$$ para cualquier $x$, pues el logaritmo respeta la desigualdad por ser creciente.
-- Usualmente usamos la log verosimilitud para encontrar estimador de máxima verosimilitud
+- Maximizar la verosimilitud **es lo mismo** que maximizar la log-verosimilitud,  pues el logaritmo es una función creciente. Si $x_{\max}$ es el máximo de $f$, tenemos que $f(x_{\max})>f(x)$ para cualquier $x$, entonces tomando logaritmo,
+$$\log(f(x_{max}))>\log(f(x)),$$ para cualquier $x.$ Pues el logaritmo respeta la desigualdad por ser creciente.
+- Usualmente usamos la log-verosimilitud para encontrar el estimador de máxima verosimilitud.
 - Hay razónes teóricas y de interpretación por las que también es conveniente hacer esto.
 
+```{block log-like, type = 'mathblock'}
+**Definición.** La log-verosimilitud la denotamos usualmente por 
+$$l(\theta) = \log \left(\mathcal{L}_n(\theta)\right),$$
+donde hemos suprimido la dependencia en la muestra por conveniencia.
+```
+
+```{block, type = 'ejercicio'}
+Considera una muestra de variables aleatorias Gaussianas con media $\mu$ y varianza $\sigma^2.$ Escribe la 
+verosimilitud para una muestra de tamaño $n,$ y después escribe la función de log-verosimilitud. ¿Que interpetación 
+le das a la ecuación resultante? ¿La has visto en algunos otros ejemplos en secciones anteriores?  
+*Pista.* Recuerda la sección de regresión local.  
+```
+
+---
 
 #### Ejemplo {-}
 
@@ -284,7 +340,7 @@ ggplot(dat_verosim, aes(x = x, y = log_verosimilitud)) + geom_line() +
   xlab("prop funcionado")
 ```
 
-## Aspectos numéricos: parte 2 {-}
+---
 
 En la función de verosimilitud los datos están fijos y optimizamos con respecto a
 las variables que no conocemos. ¿Cómo construimos esta función en general, para cualquier
@@ -308,7 +364,7 @@ construir_log_verosim <- function(n, n_err){
 }
 ```
 
-Cuando fijamos $n$ y $n_{err}$, esta función genera otra función, la log verosimilitud, que es la que queremos optimizar.
+Cuando fijamos $n$ y $n_{\textsf{err}}$, esta función genera otra función, la log verosimilitud, que es la que queremos optimizar.
 
 Supongamos entonces que sacamos 20 registros al azar y observamos 10 incorrectos. La función
 de verosimilitud es
@@ -319,7 +375,7 @@ log_vero
 ```
 
 
-```{r, fig.width = 4, fig.height=3}
+```{r}
 curve(log_vero)
 abline(v = 0.5, col = "red")
 ```
@@ -399,7 +455,44 @@ negativos y falsos positivos la estimación simple daría $6/2000 = 0.003$ (0.3%
 tres veces más grande que nuestra estimación puntual por máxima verosimilitud.
 
 
+### Ejemplo {-}
 
+Hasta ahora hemos visto ejemplos sencillos dónde la *receta* consiste en maximizar la
+verosimilitud (o log-verosimilitud). Sin embargo consideremos el siguiente caso. Supongamos
+que nuestros datos son generados por medio de una distribución uniforme en el intervalo $[0,b].$
+Contamos con una muestra de $n$ observaciones generadas 
+de manera independiendte $X_i \sim U[0,b]$ para $i= 1, \ldots, n.$
+Sin embargo, no conocemos el valor de $b$. 
+
+Lo podemos estimar al maximizar la función de verosimilitud, la cual escribimos como
+\begin{align}
+\mathcal{L}(b; x_1, \ldots, x_n) = \Pi_{i = 1}^n f(x_i; b),
+\end{align}
+dado que los datos son generados de manera idéntica e independiente. Notemos que podemos 
+utilizar la función de densidad de una variable aleatoria uniforme para escribir la verosimilitud 
+de la muestra como:
+\begin{align}
+\mathcal{L}(b; x_1, \ldots, x_n) = \Pi_{i = 1}^n 1_{[0,b]}(x_i) \frac1b. 
+\end{align}
+
+Sin embargo notemos algo. Una variable aleatoria uniforme sólo tiene **soporte** en el intervalo $[0,b]$.
+Es decir, si observáramos un valor negativo $x_i < 0,$ inmediatamente sabríamos que nuestra muestra 
+no es consistente con el modelo uniforme que hemos supuesto. Esto lo escribimos como 
+$$\mathcal{L}(b; x_1, \ldots, x_n) = 0,$$
+o de forma más impresionante
+$$l(b; x_1, \ldots, x_n) = -\infty,$$
+si al menos una de las $x_i$-s fuera negativa (existe al menos una indicadora que se *apaga*). Entonces, de igual forma, podríamos argumentar que no podríamos observar ningún valor por arriba de $b.$ Pero el problema es que éste número no lo conocemos! 
+
+¿Qué número informado por nuestra muestra maximiza la función de verosimilitud? Por los puntos anteriores sabemos que todas las observaciones $x_i$ que hemos realizado necesariamente tienen que estar incluidas en el soporte. Si consideramos 
+$$ \hat b_{\textsf{MLE}} = x_{\sigma(n)},$$
+notemos que cualquier valor observado necesariamente satisface 
+$$x_i \leq \hat b_{\textsf{MLE}},$$ 
+y por lo tanto todas las funciones indicadoras están *encendidas*. El valor de la verosimilitud es igual a 
+$$\mathcal{L}(b; x_1, \ldots, x_n) = \left(\frac{1}{x_{\sigma(n)}}\right)^n.$$
+
+**Importante.** Este es un ejemplo clásico para ilustrar el *peligro* de seguir la *receta* sin considerar los 
+detalles. En este caso la función a optimizar tiene una dependencia *complicada* para aplicar algoritmos de 
+optimización y métodos de búsqueda local por descenso en gradiente podrían ser ineficientes.
 
 ## Máxima verosimilitud para más de un parámetro {-}
 
@@ -474,3 +567,4 @@ puede estar mal condicionado. Por ejemplo, ¿qué pasa si la probabilidad de ace
 cuando se contesta bien está cercano al azar?
 
 
+## Propiedades teóricas de MLE {-}
