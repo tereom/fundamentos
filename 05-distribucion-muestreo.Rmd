@@ -451,7 +451,11 @@ es suficientemente grande.
   Si $X_1,X_2, \ldots, X_n$ son independientes e idénticamente distribuidas con
 media $\mu$ y desviación estándar $\sigma$ finitas.
 
-Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media $\bar{X}$ es aproximadamente normal con media $\mu$ y desviación estándar $\sigma/\sqrt{n}$,
+Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media 
+
+$$\bar{X} = \frac{X_1 + X_2 +\cdots + X_n}{n}$$ 
+  
+  es aproximadamente normal con media $\mu$ y desviación estándar $\sigma/\sqrt{n}$,
 que escribimos como
 
 $$\bar{X} \xrightarrow{} N \left (\mu, \frac{\sigma}{\sqrt{n}} \right)$$
@@ -481,7 +485,7 @@ obtener una aproximación "buena".
 
 - En algunos textos se afirma que $n\geq 30$ es suficiente para que la
 aproximación del Teorema central del límite (TCL) sea buena siempre y cuando
-la distribución poblacional no sea muy sesgada. Esta regla es bastante arbitraria
+la distribución poblacional no sea muy sesgada. Esta regla es más o menos arbitraria
 y es mejor no confiarse, pues fácilmente puede fallar. En la práctica es importante
 checar este supuesto, por ejemplo usando remuestreo (que veremos más adelante)
 
@@ -595,7 +599,7 @@ graf_1 + graf_2
 ¿Cuáles son los datos aproximadamente normales? ¿Cómo interpretas las desviaciones de 
 la segunda gráfica en términos de la forma de la distribución normal?
 
-### Prueba de hipótesis de normalidad {-}
+## Prueba de hipótesis de normalidad {-}
 
 Para interpretar las gráficas de cuantiles normales se requiere práctica, 
 pues claramente los datos, aún cuando provengan de una distribución normal, no
@@ -637,7 +641,7 @@ Los datos verdaderos están en
 attr(lineup_normal, "pos")
 ```
 
-### Ejemplo
+### Ejemplo {-}
 
 Consideremos el problema de estimar el total poblacional de los precios de las casas
 que se vendieron. El estimador que usamos fue la suma muestral expandida por un 
@@ -666,6 +670,75 @@ s <- sd(replicaciones_2$est_total_millones)
 c(mu = mu, s = s) %>% round(2)
 ```
 Estas cantidades están en millones de dólares.
+
+### Ejemplo {-}
+
+Supongamos que queremos calcular la probabilidad que la suma de 30 variables
+uniformes en $[0,1]$ independientes sea mayor que 18. Podríamos aproximar esta
+cantidad usando simulación. Otra manera de aproximar esta cantidad es con
+el TCL, de la siguiente forma:
+
+Si $S=X_1 + X_2 + X_30$, entonces la media de $S$ es 15 (¿cómo se calcula')
+y su desviación estándar es $\sqrt{\frac{30}{12}}$. La suma es entonces
+aproximadamente $N \left (15, \sqrt{\frac{30}{12}}\right)$. Entonces
+
+$$P(S > 50) = P \left (\frac{S - 15}{\sqrt{\frac{30}{12}}}  > \frac{18 - 15}{\sqrt{\frac{30}{12}}}\right) \approx P(Z > 1.897)$$
+
+donde $Z$ es normal estándar. Esta última cantidad la calculamos
+usando la función de distribución de la normal estándar, y nuestra aproximación es
+
+```{r}
+1 - pnorm(1.897)
+```
+
+Podemos checar nuestro cálculo usando simulación:
+
+```{r}
+tibble(n_sim = 1:100000) %>% 
+  mutate(suma = map_dbl(n_sim, ~ sum(runif(30)))) %>% 
+  summarise(prob_may_18 = mean(suma > 18))
+```
+Y vemos que la aproximación normal es buena para fines prácticos.
+
+```{block, type='ejercicio'}
+Usando simulaciones haz un histograma que aproxime la distribución de muestreo de $S$. 
+Haz una gráfica de cuantiles normales para checar la normalidad de esta distribución.
+```
+
+## Ejemplo {-}
+Cuando el sesgo de la distribución poblacional es grande, puede ser necesario
+que $n$ sea muy grande para que la aproximación normal sea aceptable para el 
+promedio o la suma. Por ejemplo, is tomamos una gamma con parámetro de forma chico,
+$n = 30$ no es suficientemente bueno, especialmente si quisiéramos 
+aproximar probabilidades en las colas de la distribución:
+
+
+```{r}
+sims_gamma <- tibble(n_sim = 1:2000) %>% 
+  mutate(suma = map_dbl(n_sim, ~ mean(rgamma(30, 0.1, 1))))
+ggplot(sims_gamma, aes(x = suma)) + geom_histogram()
+```
+
+## Más del Teorema central del límit {-}
+
+- El teorema central del límite aplica a situaciones más generales que
+las del enunciado del teorema básico. Por ejemplo, aplica a poblaciones
+finitas (como vimos en el ejemplo de las casas) bajo muestreo sin
+reemplazo, y aplica también a otras estadísticas como los cuantiles muestrales.
+
+- Es importante notar que la calidad de la aproximación del TCL depende de características
+de la población y también del tamaño de muestra $n$. Para ver si el TCL aplica, podemos hacer ejercicios de simulación bajo diferentes supuestos acerca de la población. 
+También veremos más adelante, con remuestreo, maneras de checar si es factible el TCL dependiendo del análisis de una muestra dada que tengamos.
+
+- El TCL era particularmente importante en la práctica antes de que pudiéramos
+hacer simulación por computadora. Era la única manera de aproximar y entender la distribución muestral fuera de cálculos analíticos (como los que hicimos para
+el máximo de un conjunto de uniformes, por ejemplo). 
+
+- Hoy en día, veremos que podemos hacer simulación para obtener respuestas más
+exactas, particularmente en la construcción de intervalos de confianza, por ejemplo. Dependemos menos de **resultados asintóticos**, como el TCL.
+
+- Cuando aproximamos una distribución discreta mediante la distribución normal,
+conviene hacer *correcciones de continuidad*, como se explica en [@Chihara], 4.3.2. 
 
 
 
