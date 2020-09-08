@@ -283,7 +283,7 @@ $$\log(f(x_{max}))>\log(f(x)),$$ para cualquier $x.$ Pues el logaritmo respeta l
 
 ```{block log-like, type = 'mathblock'}
 **Definición.** La log-verosimilitud la denotamos usualmente por 
-$$l(\theta) = \log \left(\mathcal{L}_n(\theta)\right),$$
+$$\ell_n(\theta) = \log \left(\mathcal{L}_n(\theta)\right),$$
 donde hemos suprimido la dependencia en la muestra por conveniencia.
 ```
 
@@ -455,7 +455,7 @@ negativos y falsos positivos la estimación simple daría $6/2000 = 0.003$ (0.3%
 tres veces más grande que nuestra estimación puntual por máxima verosimilitud.
 
 
-### Ejemplo {-}
+#### Ejemplo {-}
 
 Hasta ahora hemos visto ejemplos sencillos dónde la *receta* consiste en maximizar la
 verosimilitud (o log-verosimilitud). Sin embargo consideremos el siguiente caso. Supongamos
@@ -500,7 +500,7 @@ Si nuestro modelo contiene más de un parámetro desconocido podemos también us
 máxima verosimilitud. En este caso, optimizamos sobre todos los parámetros usando
 cálculo o alguna rutina numérica
 
-### Ejemplo {-}
+#### Ejemplo {-}
 
 Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron un
 examen de opción múltiple al azar (1 de 5), y otros contestaron las preguntas intentando
@@ -565,6 +565,3 @@ En este caso, obtenemos estimaciones razonables de ambos parámetros.
 Nota: dependiendo de los datos, este problema
 puede estar mal condicionado. Por ejemplo, ¿qué pasa si la probabilidad de acertar
 cuando se contesta bien está cercano al azar?
-
-
-## Propiedades teóricas de MLE {-}
