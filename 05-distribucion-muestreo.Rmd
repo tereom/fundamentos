@@ -215,7 +215,7 @@ Para el primer caso hacemos:
 ```{r}
 # simular
 replicar_muestreo_unif <- function(est = estimador_1, m, n = 15){
-  valores_est <- map_dbl(1:m, ~ est(runif(n)))
+  valores_est <- map_dbl(1:m, ~est(runif(n)))
   tibble(id_muestra = 1:m, estimacion = valores_est)
 }
 sim_estimador_1 <- replicar_muestreo_unif(mean, 4000, 15)
