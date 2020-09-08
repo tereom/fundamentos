@@ -224,9 +224,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
-<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>2. Loess</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>2. Loess</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-series-de-tiempo"><i class="fa fa-check"></i>Solución: Series de tiempo</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tipos-de-estudio-y-pgd"><i class="fa fa-check"></i>3. Tipos de estudio y PGD</a></li>
-<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#pruebas-de-hipótesis-visuales-y-permutación"><i class="fa fa-check"></i>4. Pruebas de hipótesis visuales y permutación</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#pruebas-de-hipótesis-visuales-y-permutación"><i class="fa fa-check"></i>4. Pruebas de hipótesis visuales y permutación</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-pruebas-pareadas"><i class="fa fa-check"></i>Solución: Pruebas pareadas</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
 <li class="divider"></li>
@@ -268,6 +272,208 @@ en un archvio de R Markdown, para los que son nuevos con R Markdown deben
 escribir su código en los bloques de código (secciones grises entre
 ```{r} codigo ```) una vez que escriban sus respuestas pueden generar el reporte tejiendo el documento, para esto deben presionar el botón <em>Knit</em>. Envíen el
 reporte por correo electrónico (con título fundamentos-tarea02).</p>
+<div id="solución-series-de-tiempo" class="section level3 unnumbered">
+<h3>Solución: Series de tiempo</h3>
+<p>Podemos usar el suavizamiento loess para entender y describir el comportamiento
+de series de tiempo, en las cuales intentamos entender la dependencia de una
+serie de mediciones indexadas por el tiempo. Típicamente es necesario utilizar
+distintas <em>componentes</em> para describir exitosamente una serie de tiempo, y para
+esto usamos distintos tipos de suavizamientos. Veremos que distintas
+<em>componentes</em> varían en distintas escalas de tiempo (unas muy lentas, cono la
+tendencia, otras más rapidamente, como variación quincenal, etc.).</p>
+<p>En el siguiente ejemplo consideramos la ventas semanales de un producto a lo
+largo de 5 años. Veamos que existe una tendencia a largo plazo (crecimientos
+anuales) y también que existen patrones de variación estacionales.</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="tareas.html#cb127-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb127-2"><a href="tareas.html#cb127-2"></a>ventas &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;./data/ventas_semanal.csv&quot;</span>)</span>
+<span id="cb127-3"><a href="tareas.html#cb127-3"></a><span class="kw">head</span>(ventas)</span></code></pre></div>
+<pre><code>##   period sales.kg
+## 1      1  685.537
+## 2      2  768.234
+## 3      3  894.643
+## 4      4  773.501
+## 5      5  954.600
+## 6      6  852.853</code></pre>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="tareas.html#cb129-1"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> sales.kg)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>)</span></code></pre></div>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-1-1.png" width="528" /></p>
+<p>Intentaremos usar suavizamiento para capturar los distintos tipos de variación
+que observamos en la serie. En primer lugar, si suavizamos poco (por ejemplo
+<span class="math inline">\(\aplha = 0.1\)</span>), vemos que capturamos en parte la tendencia y en parte la
+variación estacional.</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="tareas.html#cb130-1"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> <span class="kw">log</span>(sales.kg))) <span class="op">+</span></span>
+<span id="cb130-2"><a href="tareas.html#cb130-2"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb130-3"><a href="tareas.html#cb130-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.1</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb130-4"><a href="tareas.html#cb130-4"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb130-5"><a href="tareas.html#cb130-5"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-2-1.png" width="528" /></p>
+<p>Es mejor comenzar capturando la tendencia, y poco de la componente estacional:</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="tareas.html#cb132-1"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> <span class="kw">log</span>(sales.kg))) <span class="op">+</span></span>
+<span id="cb132-2"><a href="tareas.html#cb132-2"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb132-3"><a href="tareas.html#cb132-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.3</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb132-4"><a href="tareas.html#cb132-4"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb132-5"><a href="tareas.html#cb132-5"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-3-1.png" width="528" /></p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="tareas.html#cb134-1"></a>ajuste.trend<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(<span class="kw">log</span>(sales.kg) <span class="op">~</span><span class="st"> </span>period, ventas, <span class="dt">span =</span> <span class="fl">0.3</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb134-2"><a href="tareas.html#cb134-2"></a>ventas<span class="op">$</span>trend<span class="fl">.1</span> &lt;-<span class="st"> </span>ajuste.trend<span class="fl">.1</span><span class="op">$</span>fitted</span>
+<span id="cb134-3"><a href="tareas.html#cb134-3"></a>ventas<span class="op">$</span>res.trend<span class="fl">.1</span> &lt;-<span class="st"> </span>ajuste.trend<span class="fl">.1</span><span class="op">$</span>residuals</span></code></pre></div>
+<p>Ahora calculamos los residuales de este ajuste e intentamos describirlos
+mediante un suavizamiento más fino. Verificamos que hemos estimado la mayor
+parte de la tendencia, e intentamos capturar la variación estacional de los
+residuales.</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="tareas.html#cb135-1"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> res.trend<span class="fl">.1</span>)) <span class="op">+</span></span>
+<span id="cb135-2"><a href="tareas.html#cb135-2"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb135-3"><a href="tareas.html#cb135-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.15</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb135-4"><a href="tareas.html#cb135-4"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb135-5"><a href="tareas.html#cb135-5"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-4-1.png" width="528" /></p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="tareas.html#cb137-1"></a>ajuste.est1<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(res.trend<span class="fl">.1</span> <span class="op">~</span><span class="st"> </span>period, ventas, <span class="dt">span =</span> <span class="fl">0.15</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb137-2"><a href="tareas.html#cb137-2"></a>ventas<span class="op">$</span>est1<span class="fl">.1</span> &lt;-<span class="st"> </span>ajuste.est1<span class="fl">.1</span><span class="op">$</span>fitted</span>
+<span id="cb137-3"><a href="tareas.html#cb137-3"></a>ventas<span class="op">$</span>res.est1<span class="fl">.1</span> &lt;-<span class="st"> </span>ajuste.est1<span class="fl">.1</span><span class="op">$</span>residuals</span></code></pre></div>
+<p>Y graficamos los residuales obtenidos después de ajustar el componente
+estacional para estudiar la componente de mayor frecuencia.</p>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="tareas.html#cb138-1"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> res.est1<span class="fl">.1</span>)) <span class="op">+</span></span>
+<span id="cb138-2"><a href="tareas.html#cb138-2"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb138-3"><a href="tareas.html#cb138-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.06</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb138-4"><a href="tareas.html#cb138-4"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb138-5"><a href="tareas.html#cb138-5"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-5-1.png" width="528" /></p>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="tareas.html#cb140-1"></a>ajuste.est2<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(res.est1<span class="fl">.1</span> <span class="op">~</span><span class="st"> </span>period, ventas, <span class="dt">span =</span> <span class="fl">0.06</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb140-2"><a href="tareas.html#cb140-2"></a>ventas<span class="op">$</span>est2<span class="fl">.1</span> &lt;-<span class="st"> </span>ajuste.est2<span class="fl">.1</span><span class="op">$</span>fitted</span>
+<span id="cb140-3"><a href="tareas.html#cb140-3"></a>ventas<span class="op">$</span>res.est2<span class="fl">.1</span> &lt;-<span class="st"> </span>ajuste.est2<span class="fl">.1</span><span class="op">$</span>residuals</span></code></pre></div>
+<p>Ahora que tenemos nuestra primera estimación de cada una de las componentes,
+podemos regresar a hacer una mejor estimación de la tendencia. La ventaja de
+volver es que ahora podemos suavizar más sin que en nuestra muestra compita
+tanto la variación estacional. Por tanto podemos suavizar menos:</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="tareas.html#cb141-1"></a>ventas<span class="op">$</span>sales.sin.est<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">log</span>(ventas<span class="op">$</span>sales.kg) <span class="op">-</span><span class="st"> </span>ajuste.est1<span class="fl">.1</span><span class="op">$</span>fitted <span class="op">-</span><span class="st"> </span></span>
+<span id="cb141-2"><a href="tareas.html#cb141-2"></a><span class="st">  </span>ajuste.est2<span class="fl">.1</span><span class="op">$</span>fitted</span>
+<span id="cb141-3"><a href="tareas.html#cb141-3"></a></span>
+<span id="cb141-4"><a href="tareas.html#cb141-4"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> sales.sin.est<span class="fl">.1</span>)) <span class="op">+</span></span>
+<span id="cb141-5"><a href="tareas.html#cb141-5"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb141-6"><a href="tareas.html#cb141-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.09</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb141-7"><a href="tareas.html#cb141-7"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb141-8"><a href="tareas.html#cb141-8"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-6-1.png" width="528" /></p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="tareas.html#cb143-1"></a>ajuste.trend<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(sales.sin.est<span class="fl">.1</span> <span class="op">~</span><span class="st"> </span>period, ventas, <span class="dt">span =</span> <span class="fl">0.08</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb143-2"><a href="tareas.html#cb143-2"></a>ventas<span class="op">$</span>trend<span class="fl">.2</span> &lt;-<span class="st"> </span>ajuste.trend<span class="fl">.2</span><span class="op">$</span>fitted</span>
+<span id="cb143-3"><a href="tareas.html#cb143-3"></a>ventas<span class="op">$</span>res.trend<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">log</span>(ventas<span class="op">$</span>sales.kg) <span class="op">-</span><span class="st"> </span>ventas<span class="op">$</span>trend<span class="fl">.2</span></span></code></pre></div>
+<p>Y ahora nos concentramos en la componente anual.</p>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="tareas.html#cb144-1"></a>ventas<span class="op">$</span>sales.sin.est<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">log</span>(ventas<span class="op">$</span>sales.kg) <span class="op">-</span><span class="st"> </span>ajuste.trend<span class="fl">.2</span><span class="op">$</span>fitted <span class="op">-</span></span>
+<span id="cb144-2"><a href="tareas.html#cb144-2"></a><span class="st">  </span>ajuste.est2<span class="fl">.1</span><span class="op">$</span>fitted</span>
+<span id="cb144-3"><a href="tareas.html#cb144-3"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> sales.sin.est<span class="fl">.2</span>)) <span class="op">+</span></span>
+<span id="cb144-4"><a href="tareas.html#cb144-4"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb144-5"><a href="tareas.html#cb144-5"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.15</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">2</span>), </span>
+<span id="cb144-6"><a href="tareas.html#cb144-6"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb144-7"><a href="tareas.html#cb144-7"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-7-1.png" width="528" /></p>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="tareas.html#cb146-1"></a>ajuste.est1<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(sales.sin.est<span class="fl">.2</span> <span class="op">~</span><span class="st"> </span>period, ventas, <span class="dt">span =</span> <span class="fl">0.15</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb146-2"><a href="tareas.html#cb146-2"></a>ventas<span class="op">$</span>est1<span class="fl">.2</span> &lt;-<span class="st"> </span>ajuste.est1<span class="fl">.2</span><span class="op">$</span>fitted</span>
+<span id="cb146-3"><a href="tareas.html#cb146-3"></a>ventas<span class="op">$</span>res.est1<span class="fl">.2</span> &lt;-<span class="st"> </span>ajuste.est1<span class="fl">.2</span><span class="op">$</span>residuals</span></code></pre></div>
+<p>Finalmente volvemos a ajustar la componente de frecuencia más alta:</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="tareas.html#cb147-1"></a>ventas<span class="op">$</span>sales.sin.est<span class="fl">.3</span> &lt;-<span class="st"> </span><span class="kw">log</span>(ventas<span class="op">$</span>sales.kg) <span class="op">-</span><span class="st"> </span>ajuste.trend<span class="fl">.2</span><span class="op">$</span>fitted <span class="op">-</span></span>
+<span id="cb147-2"><a href="tareas.html#cb147-2"></a><span class="st">  </span>ajuste.est1<span class="fl">.2</span><span class="op">$</span>fitted</span>
+<span id="cb147-3"><a href="tareas.html#cb147-3"></a></span>
+<span id="cb147-4"><a href="tareas.html#cb147-4"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> sales.sin.est<span class="fl">.3</span>)) <span class="op">+</span></span>
+<span id="cb147-5"><a href="tareas.html#cb147-5"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb147-6"><a href="tareas.html#cb147-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">span =</span> <span class="fl">0.06</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb147-7"><a href="tareas.html#cb147-7"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>, <span class="dt">size =</span> <span class="dv">1</span>, </span>
+<span id="cb147-8"><a href="tareas.html#cb147-8"></a>    <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-8-1.png" width="528" /></p>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="tareas.html#cb149-1"></a>ajuste.est2<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(sales.sin.est<span class="fl">.3</span> <span class="op">~</span><span class="st"> </span>period, ventas, <span class="dt">span =</span> <span class="fl">0.06</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb149-2"><a href="tareas.html#cb149-2"></a>ventas<span class="op">$</span>est2<span class="fl">.2</span> &lt;-<span class="st"> </span>ajuste.est2<span class="fl">.2</span><span class="op">$</span>fitted</span>
+<span id="cb149-3"><a href="tareas.html#cb149-3"></a>ventas<span class="op">$</span>res.est2<span class="fl">.2</span> &lt;-<span class="st"> </span>ajuste.est2<span class="fl">.2</span><span class="op">$</span>residuals</span></code></pre></div>
+<p>Verificamos nuestra descomposición y visualizamos el ajuste:</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="tareas.html#cb150-1"></a>ventas<span class="op">$</span>log.sales &lt;-<span class="st"> </span><span class="kw">log</span>(ventas<span class="op">$</span>sales.kg)</span>
+<span id="cb150-2"><a href="tareas.html#cb150-2"></a>ventas<span class="fl">.2</span> &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(ventas, period, trend<span class="fl">.2</span>, est1<span class="fl">.2</span>, est2<span class="fl">.2</span>, res.est2<span class="fl">.2</span>, </span>
+<span id="cb150-3"><a href="tareas.html#cb150-3"></a>  log.sales)</span>
+<span id="cb150-4"><a href="tareas.html#cb150-4"></a><span class="kw">max</span>(<span class="kw">abs</span>(<span class="kw">apply</span>(ventas<span class="fl">.2</span>[, <span class="dv">2</span><span class="op">:</span><span class="dv">4</span>], <span class="dv">1</span>, sum) <span class="op">-</span><span class="st"> </span>ventas<span class="fl">.2</span><span class="op">$</span>log.sales))</span></code></pre></div>
+<pre><code>## [1] 0.240316</code></pre>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="tareas.html#cb152-1"></a>ventas.<span class="fl">2.</span>m &lt;-<span class="st"> </span><span class="kw">gather</span>(ventas<span class="fl">.2</span>, componente, valor, <span class="op">-</span>period)</span>
+<span id="cb152-2"><a href="tareas.html#cb152-2"></a></span>
+<span id="cb152-3"><a href="tareas.html#cb152-3"></a>ventas.<span class="fl">2.</span>m.c &lt;-<span class="st"> </span>ventas.<span class="fl">2.</span>m <span class="op">%&gt;%</span></span>
+<span id="cb152-4"><a href="tareas.html#cb152-4"></a><span class="st">  </span><span class="kw">group_by</span>(componente) <span class="op">%&gt;%</span></span>
+<span id="cb152-5"><a href="tareas.html#cb152-5"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb152-6"><a href="tareas.html#cb152-6"></a>    <span class="dt">valor.c =</span> valor <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(valor), </span>
+<span id="cb152-7"><a href="tareas.html#cb152-7"></a>    <span class="dt">componente =</span> <span class="kw">factor</span>(componente, <span class="kw">c</span>(<span class="st">&quot;trend.2&quot;</span>, <span class="st">&quot;est1.2&quot;</span>, <span class="st">&quot;est2.2&quot;</span>, </span>
+<span id="cb152-8"><a href="tareas.html#cb152-8"></a>                                           <span class="st">&quot;res.est2.2&quot;</span>, <span class="st">&quot;log.sales&quot;</span>))</span>
+<span id="cb152-9"><a href="tareas.html#cb152-9"></a>  )</span>
+<span id="cb152-10"><a href="tareas.html#cb152-10"></a></span>
+<span id="cb152-11"><a href="tareas.html#cb152-11"></a><span class="kw">ggplot</span>(ventas.<span class="fl">2.</span>m.c, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> valor.c)) <span class="op">+</span></span>
+<span id="cb152-12"><a href="tareas.html#cb152-12"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">52</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">52</span> <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">52</span> <span class="op">*</span><span class="st"> </span><span class="dv">3</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">52</span> <span class="op">*</span><span class="st"> </span><span class="dv">4</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">color =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
+<span id="cb152-13"><a href="tareas.html#cb152-13"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb152-14"><a href="tareas.html#cb152-14"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>componente, <span class="dt">ncol =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-9-1.png" width="528" /></p>
+<p>Y vemos que es razonable describir los residuales con una distribución normal
+(con desviación estándar alrededor de 8% sobre el valor ajustado):</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="tareas.html#cb153-1"></a><span class="kw">sd</span>(ventas<span class="op">$</span>res.est2<span class="fl">.2</span>)</span></code></pre></div>
+<pre><code>## [1] 0.08093687</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="tareas.html#cb155-1"></a>ventas.ord &lt;-<span class="st"> </span><span class="kw">arrange</span>(ventas, res.est2<span class="fl">.2</span>)</span>
+<span id="cb155-2"><a href="tareas.html#cb155-2"></a>ventas.ord<span class="op">$</span>q.normal &lt;-<span class="st"> </span><span class="kw">qnorm</span>((<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(ventas) <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">/</span><span class="st"> </span><span class="kw">nrow</span>(ventas))</span>
+<span id="cb155-3"><a href="tareas.html#cb155-3"></a><span class="kw">ggplot</span>(ventas.ord, <span class="kw">aes</span>(<span class="dt">x =</span> q.normal, <span class="dt">y =</span> res.est2<span class="fl">.2</span>)) <span class="op">+</span></span>
+<span id="cb155-4"><a href="tareas.html#cb155-4"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">1.2</span>) <span class="op">+</span></span>
+<span id="cb155-5"><a href="tareas.html#cb155-5"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-10-1.png" width="345.6" /></p>
+<p>Aún no estamos convencidos de que podemos hacer <em>pooling</em> de los residuales.
+Para checar esto, vemos la gráfica de dependencia de residuales.</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="tareas.html#cb157-1"></a><span class="kw">ggplot</span>(ventas, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> res.est2<span class="fl">.2</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb157-2"><a href="tareas.html#cb157-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">1.2</span>)</span></code></pre></div>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-11-1.png" width="528" /></p>
+<p>¿Puedes notar alguna dependencia en los residuales?</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="tareas.html#cb158-1"></a><span class="kw">library</span>(nullabor)</span>
+<span id="cb158-2"><a href="tareas.html#cb158-2"></a>ventas.res &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(ventas, period, res.est2<span class="fl">.2</span>)</span>
+<span id="cb158-3"><a href="tareas.html#cb158-3"></a>ventas.null &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="kw">null_dist</span>(<span class="dt">var =</span> <span class="st">&#39;res.est2.2&#39;</span>, <span class="dt">dist =</span> <span class="st">&#39;normal&#39;</span>, </span>
+<span id="cb158-4"><a href="tareas.html#cb158-4"></a>  <span class="dt">params =</span> <span class="kw">list</span>(<span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="fl">0.08</span>)), <span class="dt">n =</span> <span class="dv">10</span>, ventas.res)</span></code></pre></div>
+<pre><code>## decrypt(&quot;bhMq KJPJ 62 sSQ6P6S2 ua&quot;)</code></pre>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="tareas.html#cb160-1"></a><span class="kw">ggplot</span>(ventas.null, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> res.est2<span class="fl">.2</span>)) <span class="op">+</span></span>
+<span id="cb160-2"><a href="tareas.html#cb160-2"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>.sample, <span class="dt">ncol =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb160-3"><a href="tareas.html#cb160-3"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
+<span id="cb160-4"><a href="tareas.html#cb160-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">52</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">52</span> <span class="op">*</span><span class="st"> </span><span class="dv">2</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">52</span> <span class="op">*</span><span class="st"> </span><span class="dv">3</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">52</span> <span class="op">*</span><span class="st"> </span><span class="dv">4</span> <span class="op">-</span><span class="st"> </span><span class="dv">1</span>), <span class="dt">color =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb160-5"><a href="tareas.html#cb160-5"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">1.2</span>) </span></code></pre></div>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-12-1.png" width="960" /></p>
+<p>Hay dos cosas que nos falta explicar, en primer lugar, las caídas alrededor de
+principios/finales de cada año (que son de hasta -0.2), y segundo que esta
+gráfica parece oscilar demasiado. La estructura que aún no hemos explicado se
+debe a que las semanas que caen en quincena tienden a tener compras más
+grandes que las que están justo antes de quincena o fin de mes.</p>
+<p>Por el momento detendremos el análisis aquí y explicamos un proceso iterativo
+para proceder en nuestro análisis exploratorio:</p>
+<div class="caja">
+<p><strong>Iterando ajuste de loess.</strong> Cuando queremos ajustar con tres componentes:
+tendencia, estacionalidad y residuales, podemos seguir el siguiente proceso,</p>
+<ol style="list-style-type: decimal">
+<li><p>Ajustar la primera componente a los datos (tendencia).</p></li>
+<li><p>Ajustar la segunda componente a los residuales del paso anterior
+(estacionalidad).</p></li>
+<li><p>Restar de los datos originales la segunda componente ajustada
+(estacionalidad).</p></li>
+<li><p>Ajustar a los residuales del paso anterior una nueva componente (tendencia).</p></li>
+<li><p>Restar a los datos originales la componente ajustada en el paso anterior.</p></li>
+<li><p>Ajustar a los residuales del paso anterior una nueva componente
+(estacionalidad).</p></li>
+<li><p>Checar ajuste y si es necesario iterar de 3 a 6 con las nuevas componentes.</p></li>
+</ol>
+</div>
+<p>La idea es que cada componente compite para explicar los datos (cada una gana
+más al bajar el parámetro <span class="math inline">\(\alpha\)</span>). El conflicto es que si suavizamos mucho
+cada componente (por ejemplo la tendencia), entonces parte de la variación
+que debería ir en ella queda en los residuales, y se intenta ajustar
+posteriormente por una componente distinta (estacionalidad). Sin embargo, si
+suavizamos poco, entonces parte de la variación de la segunda componente es
+explicada por el ajuste de la primera. Entonces, la solución es ir poco a poco
+adjudicando variación a cada componente. En nuestro ejemplo de arriba, podemos
+comenzar suavizando de menos el primer ajsute de la tendencia, luego ajustar
+estacionalidad, restar a los datos originales esta estacionalidad, y ajustar a
+estos datos una componente más suave de tandencia. Es posible suavizar más la
+tendencia justamente porque ya hemos eliminado una buena parte de la
+estacionalidad.</p>
+</div>
 </div>
 <div id="tipos-de-estudio-y-pgd" class="section level2 unnumbered">
 <h2>3. Tipos de estudio y PGD</h2>
@@ -317,7 +523,97 @@ aleatoria?</p></li>
 <p>La tarea 4 es el proyecto de RStudio.Cloud con este nombre, el ejercicio está
 en un archvio de R Markdown. Envíen el reporte por correo electrónico (con
 título fundamentos-tarea04).</p>
+<div id="solución-pruebas-pareadas" class="section level3 unnumbered">
+<h3>Solución: Pruebas pareadas</h3>
+<p>En este ejemplo buscamos comparar la diferencia entre dos medicinas
+para dormir.
+- ID es el identificador de paciente, y medicina_1 y medicina_2 son las
+horas extras de sueño vs. no usar medicina.<br />
+- Examina los datos.</p>
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="tareas.html#cb161-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb161-2"><a href="tareas.html#cb161-2"></a></span>
+<span id="cb161-3"><a href="tareas.html#cb161-3"></a>dormir &lt;-<span class="st"> </span>sleep <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb161-4"><a href="tareas.html#cb161-4"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> group, </span>
+<span id="cb161-5"><a href="tareas.html#cb161-5"></a>              <span class="dt">names_prefix =</span> <span class="st">&quot;medicina_&quot;</span>,</span>
+<span id="cb161-6"><a href="tareas.html#cb161-6"></a>              <span class="dt">values_from =</span> extra)</span>
+<span id="cb161-7"><a href="tareas.html#cb161-7"></a></span>
+<span id="cb161-8"><a href="tareas.html#cb161-8"></a>dormir</span></code></pre></div>
+<pre><code>## # A tibble: 10 x 3
+##    ID    medicina_1 medicina_2
+##    &lt;fct&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+##  1 1            0.7        1.9
+##  2 2           -1.6        0.8
+##  3 3           -0.2        1.1
+##  4 4           -1.2        0.1
+##  5 5           -0.1       -0.1
+##  6 6            3.4        4.4
+##  7 7            3.7        5.5
+##  8 8            0.8        1.6
+##  9 9            0          4.6
+## 10 10           2          3.4</code></pre>
+<p>La pregunta de interés es si una medicina es mejor que otra para prolongar el
+sueño. Nótese que en este caso, no tenemos grupos, sino mediciones repetidas.</p>
+<ul>
+<li>Escribe la hipótesis nula.</li>
+</ul>
+<p><strong>No hay diferencia entre las medicinas.</strong></p>
+<ul>
+<li>Nuestra estadśtica de interés es media de las diferencias entre las medicinas. Calcula la diferencia observada.</li>
+</ul>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="tareas.html#cb163-1"></a>dif_obs &lt;-<span class="st"> </span>dormir <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-2"><a href="tareas.html#cb163-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-3"><a href="tareas.html#cb163-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">dif_obs =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb163-4"><a href="tareas.html#cb163-4"></a><span class="st">  </span><span class="kw">pull</span>(dif_obs)</span>
+<span id="cb163-5"><a href="tareas.html#cb163-5"></a>dif_obs</span></code></pre></div>
+<pre><code>## [1] -1.58</code></pre>
+<ul>
+<li>Hay variación entre los pacientes. ¿Tenemos evidencia para rechazar que son
+iguales? ¿Cómo hacemos nuestra distribución de referencia?</li>
+</ul>
+<p><strong>Bajo la hipótesis nula las medicinas son intercambiables, debemos
+la columna de medicina <em>por individuo</em> pues cada uno debe
+tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="tareas.html#cb165-1"></a>dormir_larga &lt;-<span class="st"> </span>dormir <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-2"><a href="tareas.html#cb165-2"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="kw">contains</span>(<span class="st">&quot;medicina&quot;</span>))</span>
+<span id="cb165-3"><a href="tareas.html#cb165-3"></a><span class="co"># Hacemos una permutación </span></span>
+<span id="cb165-4"><a href="tareas.html#cb165-4"></a>dormir_perm &lt;-<span class="st"> </span>dormir_larga <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-5"><a href="tareas.html#cb165-5"></a><span class="st">  </span><span class="kw">group_by</span>(ID) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-6"><a href="tareas.html#cb165-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">name =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;medicina_1&quot;</span>, <span class="st">&quot;medicina_2&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-7"><a href="tareas.html#cb165-7"></a><span class="st">  </span><span class="kw">ungroup</span>()</span>
+<span id="cb165-8"><a href="tareas.html#cb165-8"></a><span class="co"># Calculamos la estadística en esta permutación</span></span>
+<span id="cb165-9"><a href="tareas.html#cb165-9"></a>dormir_perm <span class="op">%&gt;%</span></span>
+<span id="cb165-10"><a href="tareas.html#cb165-10"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;name&quot;</span>, <span class="dt">values_from =</span> <span class="st">&quot;value&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-11"><a href="tareas.html#cb165-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-12"><a href="tareas.html#cb165-12"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media_dif =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb165-13"><a href="tareas.html#cb165-13"></a><span class="st">  </span><span class="kw">pull</span>(media_dif)</span></code></pre></div>
+<pre><code>## [1] -0.3</code></pre>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="tareas.html#cb167-1"></a><span class="co"># Lo hacemos una función </span></span>
+<span id="cb167-2"><a href="tareas.html#cb167-2"></a>calcula_est &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
+<span id="cb167-3"><a href="tareas.html#cb167-3"></a>  dormir_perm &lt;-<span class="st"> </span>dormir_larga <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb167-4"><a href="tareas.html#cb167-4"></a><span class="st">    </span><span class="kw">group_by</span>(ID) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb167-5"><a href="tareas.html#cb167-5"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">name =</span> <span class="kw">sample</span>(<span class="kw">c</span>(<span class="st">&quot;medicina_1&quot;</span>, <span class="st">&quot;medicina_2&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb167-6"><a href="tareas.html#cb167-6"></a><span class="st">    </span><span class="kw">ungroup</span>()</span>
+<span id="cb167-7"><a href="tareas.html#cb167-7"></a>  dormir_perm <span class="op">%&gt;%</span></span>
+<span id="cb167-8"><a href="tareas.html#cb167-8"></a><span class="st">    </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> <span class="st">&quot;name&quot;</span>, <span class="dt">values_from =</span> <span class="st">&quot;value&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb167-9"><a href="tareas.html#cb167-9"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb167-10"><a href="tareas.html#cb167-10"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">media_dif =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb167-11"><a href="tareas.html#cb167-11"></a><span class="st">    </span><span class="kw">pull</span>(media_dif)</span>
+<span id="cb167-12"><a href="tareas.html#cb167-12"></a>}</span>
+<span id="cb167-13"><a href="tareas.html#cb167-13"></a><span class="co"># La llamamos 1000 veces</span></span>
+<span id="cb167-14"><a href="tareas.html#cb167-14"></a><span class="kw">calcula_est</span>()</span></code></pre></div>
+<pre><code>## [1] 0.88</code></pre>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="tareas.html#cb169-1"></a>difs &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">1000</span>, <span class="kw">calcula_est</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">flatten_dbl</span>()</span></code></pre></div>
+<ul>
+<li>Haz una gráfica de la distribución de referencia y grafica encima el valor
+observado en los datos originales.</li>
+</ul>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="tareas.html#cb170-1"></a>perms &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">sims =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>, <span class="dt">difs =</span> difs)</span>
+<span id="cb170-2"><a href="tareas.html#cb170-2"></a><span class="kw">ggplot</span>(perms, <span class="kw">aes</span>(<span class="dt">x =</span> difs)) <span class="op">+</span></span>
+<span id="cb170-3"><a href="tareas.html#cb170-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.15</span>) <span class="op">+</span></span>
+<span id="cb170-4"><a href="tareas.html#cb170-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> dif_obs, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="98-tareas_files/figure-html/unnamed-chunk-16-1.png" width="336" /></p>
 
+</div>
 </div>
 </div>
 <h3>Referencias</h3>
