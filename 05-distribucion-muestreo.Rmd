@@ -3,7 +3,7 @@
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center',fig.width = 5, fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -181,9 +181,11 @@ graf_1 + graf_2
 
 ```{block, type = 'comentario'}
 **Observación**: a veces este concepto se confunde la distribución
-poblacional de las $X_i$. Esto es muy diferente. Por ejemplo, en nuestro
-caso, el histograma de la distribución de valores poblacionales es
+poblacional de las $X_i$. Esto es muy diferente. 
+
 ```
+
+Por ejemplo, en nuestro caso, el histograma de la distribución de valores poblacionales es
 
 ```{r, fig.width = 5, fig.height=3}
 ggplot(marco_casas, aes(x = precio_miles)) + geom_histogram()
@@ -356,9 +358,9 @@ caso, es fácil calcular su función de distribución acumulada de manera exacta
 $$F_{\max}(x) = P(\max\{X_1,X_2,\ldots X_n\} \leq x)$$
 El máximo es menor o igual a $x$ si y sólo si todas las $X_i$ son menores
 o iguales a $x$, así que
-$$F_\max (x) = P(X_1\leq x, X_2\leq x, \cdots, X_n\leq x)$$
+$$F_{\max} (x) = P(X_1\leq x, X_2\leq x, \cdots, X_n\leq x)$$
 como las $X_i$'s son independientes entonces
-$$F_\max(x) = P(X_1\leq x)P(X_2\leq x)\cdots P(X_n\leq x) = x^n$$
+$$F_{\max}(x) = P(X_1\leq x)P(X_2\leq x)\cdots P(X_n\leq x) = x^n$$
 para $x\in [0,1]$, pues para cada $X_i$ tenemos $P(X_i\leq x) = x$ (demuéstralo).
 Así que no es necesario usar simulación para conocer esta distribución de muestreo.
 Derivando esta distribución acumulada obtenemos su densidad, que es
