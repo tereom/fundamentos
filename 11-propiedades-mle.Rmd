@@ -1,0 +1,6 @@
+# Propiedades teóricas de MLE
+
+1. The MLE is consistent.
+2. The MLE is equivariant.
+3. The MLE is asymptotically Normal.
+4. The MLE is asymptotically optimal or efficient.
