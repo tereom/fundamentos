@@ -217,7 +217,7 @@ c(10, 100, 1000) %>%
 \begin{align}
 \hat \theta_{\textsf{MLE}} =  \underset{\theta \, \in \, \Theta}{\arg\max}\,  \mathcal{L}(\theta; x_1, \ldots, x_n),
 \end{align}
-donde $\theta$ denota el espacio parametral. Es decir, el espacio válido de búsqueda. 
+donde $\theta$ denota el espacio parametral. Es decir, el espacio válido de búsqueda congruente con la definición del modelo. 
 ```
 
 ```{block, type = 'ejercicio'}
@@ -522,7 +522,7 @@ Es decir, si observáramos un valor negativo $x_i < 0,$ inmediatamente sabríamo
 no es consistente con el modelo uniforme que hemos supuesto. Esto lo escribimos como 
 $$\mathcal{L}(b; x_1, \ldots, x_n) = 0,$$
 o de forma más impresionante
-$$l(b; x_1, \ldots, x_n) = -\infty,$$
+$$\ell(b; x_1, \ldots, x_n) = -\infty,$$
 si al menos una de las $x_i$-s fuera negativa (existe al menos una indicadora que se *apaga*). Entonces, de igual forma, podríamos argumentar que no podríamos observar ningún valor por arriba de $b.$ Pero el problema es que éste número no lo conocemos! 
 
 ¿Qué número informado por nuestra muestra maximiza la función de verosimilitud? Por los puntos anteriores sabemos que todas las observaciones $x_i$ que hemos realizado necesariamente tienen que estar incluidas en el soporte. Si consideramos 
@@ -550,7 +550,34 @@ tibble(x = seq(0, 10, 0.001)) %>%
 
 **Importante.** Este es un ejemplo clásico para ilustrar el *peligro* de seguir la *receta* sin considerar los 
 detalles. En este caso la función a optimizar tiene una dependencia *complicada* para aplicar algoritmos de 
-optimización y métodos de búsqueda local por descenso en gradiente podrían ser ineficientes.
+optimización y métodos de búsqueda local por ascenso en gradiente podrían ser ineficientes.
+
+### El método de momentos {-}
+
+Un método alternativo para estimación de parámetros es el método de momentos ($\textsf{MOM}$). Para esto 
+creamos un sistema de ecuaciones de cardinalidad igual al número de parámetros a estimar. 
+Es decir, consideramos $\theta \in \mathbb{R}^p;$ los momentos teoricos
+\begin{align}
+  m_k(\theta) = \mathbb{E}_f[X^k] = \int_{\mathcal{X}} x^k \, f(x; \theta) \, \text{d} x;
+\end{align}
+los momentos empíricos 
+\begin{align}
+  \hat m_k(\theta) = \frac1n \sum_{i = 1}^n X_i^k;
+\end{align}
+y creamos el siguiente sistema de ecuaciones: 
+\begin{align}
+  m_k(\theta) = \hat m_k(\theta), \qquad k = 1, \ldots, p.
+\end{align}
+Este sistema explota la aproximación $m_k(\theta) \approx \hat m_k(\theta),$ cuya justificación está determinada
+por la *Ley de los grandes números.*
+
+**Ejemplo.** *(continuación).* Para el caso de  $n$ observaciones $X_i \sim U[0,b],$ el método de momentos 
+arroja un estimador de la forma
+$$\hat b_{\textsf{MOM}} = 2 \bar X_n.$$
+```{block , type = 'ejercicio'}
+Considera el caso de una muestra de tamaño $n = 3,$ con observaciones $X_1 = X_2 = 1$ y $X_3= 7$. ¿Cuál es el estimador $\textsf{MOM}$? ¿Qué implicaciones tiene sobre la observación $X_3$?
+```
+
 
 ## Máxima verosimilitud para más de un parámetro {-}
 
