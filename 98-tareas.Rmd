@@ -396,3 +396,8 @@ ggplot(perms, aes(x = difs)) +
 ```
 
 
+## 5. Distribución muestral y remuestreo {-}
+
+La tarea 5 es el proyecto de RStudio.Cloud con este nombre, el ejercicio está
+en un archvio de R Markdown. Envíen el reporte por correo electrónico (con 
+título fundamentos-tarea05).

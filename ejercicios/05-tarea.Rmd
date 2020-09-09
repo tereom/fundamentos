@@ -1,0 +1,87 @@
+
+```{r, eval=FALSE, echo=FALSE}
+#Generar datos para tarea
+library(estcomp)
+# universo
+enlace <- enlacep_2013 %>% 
+    janitor::clean_names() %>% 
+    mutate(id = 1:n()) %>% 
+    select(id, cve_ent, turno, tipo, esp_3 = punt_esp_3, esp_6 = punt_esp_6, 
+        n_eval_3 = alum_eval_3, n_eval_6 = alum_eval_6) %>% 
+    na.omit() %>% 
+    filter(esp_3 > 0, esp_6 > 0, n_eval_3 > 0, n_eval_6 > 0, cve_ent == "15")  
+
+write_csv(enlace, path = "data/enlace_15.csv")
+```
+
+
+1. **Proporciones.** Usaremos datos de reincidencia en conducta criminal del
+estado de Iowa, este estado sigue a los delincuentes por un periodo de 3 años y
+registra el número de días hasta reincidencia para aquellos que son readmitidos 
+en prisión. El deprtamento de correcciones utiliza los datos de
+reincidencia para evaluar sus programas de prevención de recaída en 
+conducta criminal.
+
+Los datos Recidivism contienen información de todos los delincuentes 
+condenados por dos tipos de delito durante 2010 (*Recid* indica
+si recayeron en conducta criminal).
+
+* De éstos $31.6\%$ reincidieron y volvieron a prisión. Utiliza simulación
+para aproximar la simulación muestral de $\hat{p}$, la proporción 
+de delincuentes que reincidieron para muestras de tamaño 25.
+
+* Calcula el error estándar de $\hat{p}$, y compáralo con el teórico
+$\sqrt{p(1-p)/n}$.
+
+* Repite para muestras de tamaño 250 y compara.
+
+```{r, eval=FALSE}
+library(tidyverse)
+recidivism <- read_csv("Recidivism.csv")
+```
+
+2. **El error estándar de una media.** Supongamos que $x$ es una variable
+aleatoria que toma valores en los reales con distribución de probabilidad $F$.
+Denotamos por $\mu$ y $\sigma^2$ la media y varianza de $F$,
+
+$$\mu = E(x),$$ 
+$$\sigma^2=var(x)=E[(x-\mu)^2]$$
+
+
+Ahora, sea $(X_1,...,X_n)$ una muestra aleatoria de $F$, de tamaño $n$, 
+la media de la muestra $\bar{X}=\sum_{i=1}^nX_i/n$ tiene:
+
+* esperanza $\mu$,
+
+* varianza $\sigma^2/n$.
+
+En palabras: la esperanza de $\bar{X}$ es la misma que la esperanza de $x$, pero
+la varianza de $\bar{X}$ es $1/n$ veces la varianza de $x$, así que entre
+mayor es la $n$ tenemos una mejor estimación de $\mu$.
+
+En el caso del estimador de la media $\bar{X}$, el error estándar quedaría
+
+$$ee(\bar{X}) = [var(\bar{X})]^{1/2}= \sigma/ \sqrt{n}.$$
+Entonces, 
+
+* Consideramos los datos de ENLACE edo. de México (ENLACE era una prueba estandarizada que se aplicaba a todos los alumnos de primaria en México), y la columna de calificaciones de español 3^o^ de primaria (`esp_3`). 
+
+```{r, eval=FALSE}
+enlace <- read_csv("enlace_15.csv")
+```
+- Genera un histograma de las calificaciones de 3^o^ de primaria. Calcula la 
+media y la desviación estándar.
+
+- Para tamaños de muestra $n = 10, 100, 1000$:
+
+- Aproximareos la distribución muestral: 
+i) simula 5,000 muestras aleatorias, ii) calcula la media en cada muestra, iii)
+Realiza un histograma de la distribución muestral de las medias (las medias del
+paso anterior) iv) aproxima el error estándar calculando la desviación estándar
+de las medias del paso ii.
+
+- Calcula el error estándar de la media para cada tamaño de muestra usando la
+fórmula derivada arriba y compara con tus simulaciones.
+
+- ¿Cómo se comparan los errores estándar correspondientes a los distintos 
+tamaños de muestra? 
