@@ -310,7 +310,7 @@ ventas.null <- lineup(null_dist(var = 'res.est2.2', dist = 'normal',
 ```
 
 ```
-## decrypt("bhMq KJPJ 62 sSQ6P6S2 ua")
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 uT")
 ```
 
 ```r
@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] 0.18
+## [1] 0.68
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] 0.46
+## [1] -0.06
 ```
 
 ```r
@@ -548,3 +548,8 @@ ggplot(perms, aes(x = difs)) +
 <img src="98-tareas_files/figure-html/unnamed-chunk-16-1.png" width="336" />
 
 
+## 5. Distribución muestral y remuestreo {-}
+
+La tarea 5 es el proyecto de RStudio.Cloud con este nombre, el ejercicio está
+en un archvio de R Markdown. Envíen el reporte por correo electrónico (con 
+título fundamentos-tarea05).
