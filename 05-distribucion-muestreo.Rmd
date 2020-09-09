@@ -463,7 +463,7 @@ $$\bar{X} \xrightarrow{} N \left (\mu, \frac{\sigma}{\sqrt{n}} \right)$$
 Adicionalmente, la distribución de la
 media estandarizada converge a una distribución normal
 estándar cuando $n$ es grande:
-$$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  N(0, 1)$$
+$$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  \mathsf{N}(0, 1)$$
 
 ```
 
@@ -554,8 +554,8 @@ g_normal_50 + g_normal_90
 
 Como todas las distribuciones normales tienen la misma forma, y para obtener una de otra
 solo basta reescalar y desplazar, para calcular los cuantiles de una 
-variable con distribución normal $N(\mu, \sigma)$
-sólo tenemos que saber los cuantiles de la distribución normal estándar $N(0,1)$ y escalarlos
+variable con distribución normal $\mathsf{N}(\mu, \sigma)$
+sólo tenemos que saber los cuantiles de la distribución normal estándar $\mathsf{N}(0,1)$ y escalarlos
 apropiadamente por su media y desviación estándar
 
 $$q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$ 
@@ -565,8 +565,8 @@ $$P(X\leq q(f, \mu, \sigma)) = f \implies P\left (Z\leq \frac{q(f,\mu,\sigma) - 
 y esto implica que
 $$q(f, 0, 1) =  \frac{q(f,\mu,\sigma) - \mu}{\sigma} \implies q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$
 
-De modo que si graficáramos los cuantiles de una distribución $N(\mu, \sigma)$ contra
-los cuantiles de una distribución $N(0,1)$, estos cuantiles aparecen en una línea recta:
+De modo que si graficáramos los cuantiles de una distribución $\mathsf{N}(\mu, \sigma)$ contra
+los cuantiles de una distribución $\mathsf{N}(0,1)$, estos cuantiles aparecen en una línea recta:
 
 ```{r, fig.width=4,fig.height=3}
 comparacion_tbl <- tibble(f = seq(0.01, 0.99, 0.01)) %>% 
@@ -579,7 +579,7 @@ ggplot(comparacion_tbl, aes(cuantiles_norm_estandar, cuantiles_normal)) +
 Ahora supongamos que tenemos una muestra $X_1, \ldots, X_n$. ¿Cómo podemos
 checar si estos datos tienen una distribución aproximadamente normal? 
 
-- Si la muestra tiene una distribución aproximadamente $N(\mu, \sigma)$, entonces
+- Si la muestra tiene una distribución aproximadamente $\mathsf{N}(\mu, \sigma)$, entonces
 sus cuantiles muestrales y los cuantiles respectivos de la normal estándar están aproximadamente
 en una línea recta.
 
@@ -613,7 +613,7 @@ quisiéramos. La hipótesis nula es la siguiente:
 - Los datos provienen de una distribución normal, y las desviaciones que observamos
 de una línea recta se deben a variación muestral.
 - Podemos generar datos nulos tomando la media y desviación estándar muestrales, y
-generando muestras normales $N(\bar{x}, s)$.
+generando muestras normales $\mathsf{N}(\bar{x}, s)$.
 - Usamos el *lineup*, produciendo datos bajo la hipótesis nula y viendo si
 podemos distinguir los datos. Por ejemplo:
 
@@ -719,7 +719,7 @@ sims_gamma <- tibble(n_sim = 1:2000) %>%
 ggplot(sims_gamma, aes(x = suma)) + geom_histogram()
 ```
 
-## Más del Teorema central del límit {-}
+## Más del Teorema central del límite {-}
 
 - El teorema central del límite aplica a situaciones más generales que
 las del enunciado del teorema básico. Por ejemplo, aplica a poblaciones
