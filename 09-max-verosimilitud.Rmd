@@ -20,7 +20,7 @@ y pensar lo que estamos haciendo).
 
 Cuando sabemos más acerca de la población y usamos un modelo teórico es posible
 hacer más: dependiendo de qué cantidades se quieren estimar, podemos construir estimadores
-que sean *óptimos* en algún sentido ---siempre y cuando se cumplan los supuestos teóricos---, como veremos ahora. 
+que sean *óptimos* en algún sentido siempre y cuando se cumplan los supuestos teóricos, como veremos ahora. 
 
 Por ejemplo: ¿deberíamos estimar el centro de una distribución simétrica con la
 media o con la mediana, o quizá con una media recortada?
@@ -53,7 +53,7 @@ Tomamos una bolsa, y no sabemos qué tipo de bolsa es (parámetro desconocido). 
 
 Por máxima verosimilitud, inferimos que la bolsa que estamos considerando tiene 5 galletas de avena. Esto es porque es más probable observar una galleta de chispas en las bolsas que contienen 5 galletas de avena que en las bolsas que contienen 23 galletas de avena. Podemos cuantificar la probabilidad que "acertemos" en nuestra inferencia.
 
----
+
 
 Cómo se aprecia en el ejemplo anterior, el esquema general es:
 
@@ -239,7 +239,7 @@ donde $\theta$ denota el espacio parametral. Es decir, el espacio válido de bú
 ```
 
 
----
+
 
 Obsérvese que para hacer esto usamos:  
 
@@ -250,7 +250,7 @@ y resolvimos el problema de estimación convirtiéndolo en uno de optimización.
 
 Probamos esta idea con un proceso más complejo.
 
----
+
 
 **Ejemplo.** Supongamos que una máquina puede estar funcionando correctamente o no en cada
 corrida. Cada corrida se producen 500 productos, y se muestrean 10 para
@@ -383,7 +383,7 @@ le das a la ecuación resultante? ¿La has visto en algunos otros ejemplos en se
 *Pista.* Recuerda la sección de regresión local.  
 ```
 
----
+
 
 **Ejemplo.** En nuestro primer ejemplo,
 
@@ -427,7 +427,7 @@ ggplot(dat_verosim, aes(x = x, y = log_verosimilitud)) + geom_line() +
   xlab("prop funcionado")
 ```
 
----
+
 
 En la función de verosimilitud los datos están fijos y optimizamos con respecto a
 las variables que no conocemos. ¿Cómo construimos esta función en general, para cualquier
