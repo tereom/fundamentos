@@ -148,16 +148,28 @@ el estimador usual de plugin** en este caso.
 
 
 ```{block verosimilitud, type = 'mathblock'}
-**Definición.** La función de verosimilitud del párametro de interés $\theta$ está definida como 
+**Definición.** Sean $X_1, \ldots, X_n$ una muestra de una distribución con valores 
+discretos y función de masa de probabilidad $f(x; \theta).$ La función de distribución
+conjunta de la muestra se escribe como sigue:
 \begin{align}
-\mathcal{L}(\theta; x_1, \ldots, x_n) = f(x_1; \theta) \, f(x_2; \theta) \, \cdots \, f(x_n;\theta). 
+  P(X_1, \ldots, X_n | \theta) = \prod_{i = 1}^n P(X_i|\theta) =  \prod_{i = 1}^n f(X_i; \theta).
 \end{align}
 
-Esta función nos da dice qué tan creible es el valor del parámetro $\theta$ dada la muestra observada. 
-A veces también la denotamos por $\mathcal{L}_n(\theta)$.
+La *función de verosimilitud* del párametro de interés $\theta$ está definida por 
+\begin{align}
+\mathcal{L}(\theta; x_1, \ldots, x_n) = \prod_{i = 1}^n f(X_i; \theta). 
+\end{align}
+
+Esta función nos dice qué tan creible es el valor del parámetro $\theta$ dada la muestra observada. 
+A veces también la denotamos por $\mathcal{L}_n(\theta)$. 
 ```
 
-**Ejemplo.** Consideremos lo siguiente. Supongamos que tenemos una sucesión de experimentos donde sólo registramos éxito o fracaso. Consideremos este escenario como el de una muestra de $n$ observaciones de una variable aleatoria Bernoulli. Es decir, $X_1, \ldots, X_n \sim \textsf{Bernoulli}(p)$. El párametro de interés es la probabilidad de éxito $p.$ Cada experimento que ocurre tiene función de densidad 
+Nota que la función de verosimilitud considera la función conjunta de probabilidad *como función del parámetro* $\theta.$
+Aunque parecen ser la misma ecuación la interpretación y el concepto son distintos. Cuando consideramos la 
+función de masa de probabilidad $f(x; \theta),$ la interpretamos como una función de $x$ con $\theta$ fija. Cuando hablamos de la verosimilitud 
+$\mathcal{L}(\theta; X_1, \ldots, X_n)$ la consideramos una función de $\theta$ con datos fijos (observados). Es decir, $\mathcal{L}(\theta_1; X_1, \ldots, X_n)$ es la probabilidad de observar los datos cuando $\theta = \theta_1;$ $\mathcal{L}(\theta_2; X_1, \ldots, X_n)$ es la probabilidad de observar los datos cuando $\theta = \theta_2;$ y así sucesivamente. La notación de $\mathcal{L}_n(\theta)$ hace enfásis en interpretar la verosimilitud como función del parámetro $\theta.$
+
+**Ejemplo.** Consideremos lo siguiente. Supongamos que tenemos una sucesión de experimentos donde sólo registramos éxito o fracaso. Consideremos este escenario como el de una muestra de $n$ observaciones de una variable aleatoria Bernoulli. Es decir, $X_1, \ldots, X_n \sim \textsf{Bernoulli}(p)$. El párametro de interés es la probabilidad de éxito $p.$ Cada experimento que ocurre tiene función de masa de probalidad
 $$
   f(x; p) = p^x (1-p)^{1-x},
 $$
@@ -300,6 +312,30 @@ ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
 ```
 
 Y nuestra estimación puntual sería de alrededor de 80%.
+
+```{block, type = 'mathblock'}
+**Definición$^\dagger$.** Consideremos nuestra muestra como variables aleatorias continuas. 
+En este caso sabemos que en particular $P(X = x | \theta) = 0.$ Sin embargo, podemos
+escribir para pequeños valores $\epsilon \ll 1$
+\begin{align}
+  P(x - \epsilon < X < x + \epsilon | \theta) = \int_{x - \epsilon}^{x + \epsilon} f(t; \theta) \, \text{d} t \approx 2 \epsilon f(x; \theta),
+\end{align}
+donde $f(x; \theta)$ es la función de densidad de $X.$ Por lo tanto, 
+\begin{align}
+\begin{split}
+  P&(x_1 - \epsilon < X_1 < x_1 + \epsilon, \ldots, x_n - \epsilon < X_n < x_n + \epsilon | \theta) \\
+  &= \prod_{i = 1}^n P(x_i - \epsilon < X_i < x_i + \epsilon | \theta) \\
+  &= \prod_{i = 1}^n 2 \epsilon f(x_i; \theta) = (2\epsilon)^n \prod_{i = 1}^n f(x_i; \theta).
+\end{split}
+\end{align}
+Notemos que si $\epsilon \rightarrow 0$ la ecuación rápidamente converge a cero. Pero para pequeños 
+valores de $\epsilon$ la ecuación que nos interesa es proporcional a $\prod_{i = 1}^n f(x_i; \theta).$
+Esto nos lleva a definir la verosimilitud en el caso continuo como 
+\begin{align}
+  \mathcal{L}_n(\theta) = \prod_{i = 1}^n f(x_i; \theta).
+\end{align}
+```
+
 
 ## Aspectos numéricos {-}
 
