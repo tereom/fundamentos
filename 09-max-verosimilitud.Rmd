@@ -1,4 +1,4 @@
-# Estimación por máxima verosimilitud
+# Estimación por máxima verosimilitud {#S:max-verosimilitud}
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)

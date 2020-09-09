@@ -1,6 +1,124 @@
 # Propiedades teóricas de MLE
 
-1. The MLE is consistent.
-2. The MLE is equivariant.
-3. The MLE is asymptotically Normal.
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(patchwork)
+source("R/funciones_auxiliares.R")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=4)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
+El método de máxima verosimiltud es uno de los métodos más utilizados en inferencia estadística paramétrica. 
+En esta sección estudiaremos las propiedades teóricas que cumplen los estimadores de máxima verosimilitud ($\textsf{MLE}$). 
+Siempre y cuando el modelo $f(x; \theta)$ satisfaga ciertas condiciones de regularidad, los estimadores de máxima verosimilitud serán: 
+consistentes, asintóticamente normales, asintóticamente insesgados, asintóticamente eficientes, y equivariantes. 
+
+A lo largo de esta sección asumiremos muestras 
+\begin{align}
+  X_1, \ldots, X_n \sim f(x; \theta),
+\end{align}
+donde $\theta^*$ es el valor verdadero ---que suponemos desconocido pero fijo--- del parámetro $\theta \in \Theta$, y sea 
+$\hat \theta_n$ el estimador de máxima verosimilitud de $\theta.$
+
+**Ejemplo.** Consideremos el caso de una muestra de variables binarias que registran el éxito o fracaso de un experimento. 
+Es decir, $X_1, \ldots, X_n \sim \textsf{Bernoulli}(p),$ donde el párametro desconocido es el procentaje de éxitos. Este ejemplo
+lo hemos estudiado en secciones pasadas (ver Sección \@ref(S:max-verosimilitud)), y sabemos que 
+\begin{align}
+  \hat p_n = \frac{S_n}{n} = \bar X_n,
+\end{align}
+donde $S_n= \sum_i X_i$ es el número total de éxitos en la muestra. 
+
+1. El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el estimador se vuelve más preciso conforme obtengamos más información. 
+En general esta es una propiedad que usualmente los estimadores deben satisfacer para ser útiles en la práctica. La figura siguiente muestra el estimador $\hat p_n$ como función del número de muestras utilizado. Distintas curvas corresponden a distintas colecciones ($B = 500$).
+
+```{r, echo = FALSE}
+p_true <- .25
+
+extrae_muestras <- function(index, n = 10){
+  tibble(x = rbernoulli(n, p = p_true), muestra = index)
+}
+
+set.seed(108727)
+n_muestra <- 4**5
+
+```
+
+```{r consistency, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
+TOL <- p_true/4
+
+dt <- 1:500 %>% 
+  map_dfr(extrae_muestras, n = n_muestra) 
+
+g1 <- dt %>% 
+  group_by(muestra) %>% 
+  mutate(media = cummean(x), n = 1:n_muestra) %>% 
+  ggplot(aes(x = n, y = media)) + 
+  geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true + TOL ), alpha = .3) + 
+  geom_line(aes(group = muestra), alpha = .05) + 
+  geom_hline(yintercept = p_true, lty = 2, color = 'red') +
+  scale_x_log10()
+
+
+g2 <- dt %>% 
+  group_by(muestra) %>% 
+  mutate(media = cummean(x), n = 1:n_muestra) %>% 
+  ggplot(aes(x = n, y = media)) + 
+  geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true+ TOL ), alpha = .3) + 
+  geom_line(aes(group = muestra), alpha = .05) + 
+  geom_hline(yintercept = p_true, lty = 2, color = 'red') +
+  xlim(100, n_muestra) + 
+  ylim(p_true - 2 * TOL, p_true + 2 * TOL)
+
+g1 + g2
+
+```
+
+2. El estimador $\hat p_n$ es **equivariante.** Esta propiedad es general para cualquier tamaño de muestra, y establece que cualquier función ---bien comportada--- de nuestro párametro es también un $\textsf{MLE}.$ En nuestro ejemplo, supongamos que nos interesa estimar el momio de éxitos (bastante común en casas de apuestas). El momio está definido como 
+$$ \theta = \frac{p}{1-p},$$
+y podemos rescribir la función de verosimilitud en términos de este parámetro. Sustituyendo $p = \frac{\theta}{1+\theta}$ en $\mathcal{L}_n(p)$ 
+obtenemos 
+\begin{align}
+  \mathcal{L}_n(\theta) = \left( \frac{\theta}{1 + \theta} \right)^{S_n} \left(\frac{1}{1 + \theta} \right)^{n - S_n}, 
+\end{align}
+cuya función encuentra su máximo en 
+\begin{align}
+ \hat \theta_n = \frac{\bar X_n}{ 1 - \bar X_n}.
+\end{align}
+
+2. El estimador $\hat \theta_n$ es **asintóticamente normal.** Esta propiedad la hemos visto anteriormente para un caso muy particular. Lo vimos 
+en el TLC para el caso de promedios $\bar X_n$ que en nuestro ejemplo corresponde a $\hat p_n$. Sin embargo, esta propiedad la satisface cualquier otro estimador que sea máximo verosímil. Por ejemplo, podemos utilizar el $\mathsf{MLE}$ de los momios. La figura que sigue muestra la distribución de $\hat \theta_n$ para las distintas remuestras ($B = 500$) con distintos valores de $n.$ 
+
+```{r, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
+
+theta_true      <- p_true/(1 - p_true)
+fisher_true_inv <- ((1+theta_true)**2) * theta_true
+se_true         <- sqrt(fisher_true_inv)
+
+dt %>% 
+  group_by(muestra) %>% 
+  mutate(n = 1:n_muestra) %>% 
+  mutate(momios = sqrt(n) * (cummean(x)/(1-cummean(x)) - theta_true )/se_true) %>% 
+  filter(floor(logb(n, 4)) - logb(n, 4) == 0) %>% 
+  filter(n > 1) %>% 
+  ggplot(aes(x = momios)) + 
+    geom_histogram(aes(y = ..density.. ), bins = 20) +
+    stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) + 
+    facet_wrap(~n, scale = 'free', ncol = 3)
+
+
+# dt %>% 
+#   group_by(muestra) %>% 
+#   mutate(n = 1:n_muestra) %>% 
+#   mutate(media = sqrt(n) * (cummean(x) - p_true)/sqrt(p_true * (1-p_true))) %>% 
+#   filter(floor(logb(n, 4)) - logb(n, 4) == 0) %>% 
+#   filter(n > 1) %>% 
+#   ggplot(aes(x = media)) + 
+#     geom_histogram(aes(y = ..density.. ), bins = 20) + 
+#     stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) + 
+#     facet_wrap(~n, scale = 'free', ncol = 3)
+
+```
+
+
 4. The MLE is asymptotically optimal or efficient.
