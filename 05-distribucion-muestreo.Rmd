@@ -144,12 +144,12 @@ Con muy alta probabilidad  el error no será de más de unos 30 millones de dól
 
 ```{block, type='mathblock'}
 **Definición** Sea $X_1, X_2, \ldots X_n$ una muestra,
-y $T = t(X_1, X_2, \ldots, X_n)$ una estadística.
+y $t = t(X_1, X_2, \ldots, X_n)$ una estadística.
 
-La **distribución de muestreo** de $T$ es la función de distribución de $T$. Esta
+La **distribución de muestreo** de $t$ es la función de distribución de $t$. Esta
 distribución es sobre todas las posibles muestras que se pueden obtener.
 
-Cuando usamos $T$ para estimar algún parámetro poblacional $\theta$, decimos
+Cuando usamos $t$ para estimar algún parámetro poblacional $\theta$, decimos
 informalmente que el estimador es **preciso** si su distribución de muestreo está
 muy concentrada alrededor del valor $\theta$ que queremos estimar.
 ```
