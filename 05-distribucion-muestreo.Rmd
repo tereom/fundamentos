@@ -3,7 +3,7 @@
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center',fig.width = 5, fig.height=3)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -169,7 +169,7 @@ Graficamos las dos distribuciones de muestreo juntas, y vemos cómo
 con mayor muestra obtenemos un estimador más preciso, y sin considerar el costo,
 preferimos el estimador **mejor concentrado alrededor del valor que buscamos estimar**.
 
-```{r, fig.width = 8, fig.height = 4}
+```{r, out.width = '95%'}
 library(patchwork)
 graf_2 <- ggplot(replicaciones_2, aes(x = est_total_millones)) +
   geom_histogram() +
@@ -258,8 +258,8 @@ se le llama error estándar:
 
 ```{block, type='mathblock'}
 **Definición** A la desviación estándar de una estadística $T$ le llamamos
-su **error estándar**, y la denotamos por $\text{ee}(T)$. A cualquier estimador
-de este error estándar lo denotamos como $\hat{\text{ee}}(T)$.
+su **error estándar**, y la denotamos por $\textsf{ee}(T)$. A cualquier estimador
+de este error estándar lo denotamos como $\hat{\textsf{ee}}(T)$.
 
 ```
 
@@ -365,7 +365,7 @@ para $x\in [0,1]$, pues para cada $X_i$ tenemos $P(X_i\leq x) = x$ (demuéstralo
 Así que no es necesario usar simulación para conocer esta distribución de muestreo.
 Derivando esta distribución acumulada obtenemos su densidad, que es
 
-$$f(x) = nx^{n-1}$$
+$$f_{\max}(x) = nx^{n-1}$$
 
 para $x\in [0,1]$, y es cero en otro caso.
 
@@ -414,9 +414,9 @@ ggplot(sim_estimador_3) +
 ### Ejemplo {-}
 
 Supongamos que las $X_i$'s son independientes y exponenciales con tasa $\lambda > 0$.
-¿Cuál es la distribución de muestreo de la suma $S = X_1 + \cdots + X_n$? Sabemos que la suma
+¿Cuál es la distribución de muestreo de la suma $S_n = X_1 + \cdots + X_n$? Sabemos que la suma
 de exponenciales independientes es una distribución gamma con parámetros $(n, \lambda)$,
-y esta es la distribución de muestreo de nuestra estadística $S$ bajo las hipótesis
+y esta es la distribución de muestreo de nuestra estadística $S_n$ bajo las hipótesis
 que hicimos.
 
 Podemos checar este resultado con simulación, por ejemplo para una
@@ -455,12 +455,12 @@ media $\mu$ y desviación estándar $\sigma$ finitas.
 
 Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media 
 
-$$\bar{X} = \frac{X_1 + X_2 +\cdots + X_n}{n}$$ 
+$$\bar{X}_n = \frac{X_1 + X_2 +\cdots + X_n}{n}$$ 
   
   es aproximadamente normal con media $\mu$ y desviación estándar $\sigma/\sqrt{n}$,
 que escribimos como
 
-$$\bar{X} \xrightarrow{} \mathsf{N}\left( \mu, \frac{\sigma}{\sqrt{n}} \right)$$
+$$\bar{X}_n \xrightarrow{} \mathsf{N}\left( \mu, \frac{\sigma}{\sqrt{n}} \right)$$
 
 Adicionalmente, la distribución de la
 media estandarizada converge a una distribución normal
@@ -469,24 +469,24 @@ $$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  \mathsf{
 
 ```
 
-- El error estándar de $\bar{X}$ es
-$\text{ee}(\bar{X}) = \frac{\sigma}{\sqrt{n}}$. Si tenemos una muestra, podemos
+- El error estándar de $\bar{X}_n$ es
+$\textsf{ee}(\bar{X}_n) = \frac{\sigma}{\sqrt{n}}$. Si tenemos una muestra, podemos
 estimar $\sigma$ con de la siguiente forma:
-$$\hat{\sigma} =\sqrt{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2}$$
+$$\hat{\sigma}_n =\sqrt{\frac{1}{n}\sum_{i=1}^n (X_i - \bar{X})^2}$$
 o el más común (que explicaremos más adelante)
-$$\hat{s} = \sqrt{\frac{1}{n-1}\sum_{i=1}^n (X_i - \bar{X})^2}$$
+$$\hat{s}_n = \sqrt{\frac{1}{n-1}\sum_{i=1}^n (X_i - \bar{X})^2}$$
 
 - Este hecho junto con el teorema del límite central nos dice cuál es la dispersión,
 y cómo se distribuyen las posibles desviaciones de la media muestral alrededor
 de la verdadera media poblacional.
 
-- ¿Qué tan grande debe ser $n$. Depende de cómo es la población. Cuando la población
+- ¿Qué tan grande debe ser $n$? Depende de cómo es la población. Cuando la población
 tiene una distribución muy sesgada, por ejemplo, $n$ típicamente
 necesita ser más grande que cuando la población es simétrica si queremos
 obtener una aproximación "buena".
 
 - En algunos textos se afirma que $n\geq 30$ es suficiente para que la
-aproximación del Teorema central del límite (TCL) sea buena siempre y cuando
+aproximación del Teorema central del límite ($\textsf{TCL}$) sea buena siempre y cuando
 la distribución poblacional no sea muy sesgada. Esta regla es más o menos arbitraria
 y es mejor no confiarse, pues fácilmente puede fallar. En la práctica es importante
 checar este supuesto, por ejemplo usando remuestreo (que veremos más adelante)
@@ -556,8 +556,8 @@ g_normal_50 + g_normal_90
 
 Como todas las distribuciones normales tienen la misma forma, y para obtener una de otra
 solo basta reescalar y desplazar, para calcular los cuantiles de una 
-variable con distribución normal $\mathsf{N}(\mu, \sigma)$
-sólo tenemos que saber los cuantiles de la distribución normal estándar $\mathsf{N}(0,1)$ y escalarlos
+variable con distribución normal $X \sim \mathsf{N}(\mu, \sigma)$
+sólo tenemos que saber los cuantiles de la distribución normal estándar $Z \sim \mathsf{N}(0,1)$ y escalarlos
 apropiadamente por su media y desviación estándar
 
 $$q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$ 
@@ -619,7 +619,7 @@ generando muestras normales $\mathsf{N}(\bar{x}, s)$.
 - Usamos el *lineup*, produciendo datos bajo la hipótesis nula y viendo si
 podemos distinguir los datos. Por ejemplo:
 
-```{r}
+```{r, fig.height = 4, out.width = '95%'}
 library(nullabor)
 lineup_normal <- lineup(null_dist("x_2", dist = "normal"), muestra)
 ggplot(lineup_normal, aes(sample = x_2)) +
@@ -630,7 +630,7 @@ ggplot(lineup_normal, aes(sample = x_2)) +
 En esta gráfica claramente rechazaríamos la hipótesis de normalidad. Sin embargo, para
 la primera muestra, obtenemos:
 
-```{r}
+```{r, fig.height = 4, out.width = '95%'}
 lineup_normal <- lineup(null_dist("x_1", dist = "normal"), muestra)
 ggplot(lineup_normal, aes(sample = x_1)) +
   geom_qq(distribution = stats::qnorm) +
@@ -655,11 +655,11 @@ replicaciones_2
 ```
 
 
-```{r, fig.width = 4, fig.height=3}
+```{r}
 ggplot(replicaciones_2, aes(sample = est_total_millones)) +
   geom_qq(alpha = 0.3) + geom_qq_line(colour = "red")
 ```
-Y vemos que en efecto el TCL aplica en este ejemplo, y la aproximación es buena.
+Y vemos que en efecto el $\textsf{TCL}$ aplica en este ejemplo, y la aproximación es buena.
 Aunque la población original es sesgada, la descripción de la distribución de
 muestreo es sorprendemente compacta:
 
@@ -678,9 +678,9 @@ Estas cantidades están en millones de dólares.
 Supongamos que queremos calcular la probabilidad que la suma de 30 variables
 uniformes en $[0,1]$ independientes sea mayor que 18. Podríamos aproximar esta
 cantidad usando simulación. Otra manera de aproximar esta cantidad es con
-el TCL, de la siguiente forma:
+el $\textsf{TCL}$, de la siguiente forma:
 
-Si $S=X_1 + X_2 + X_30$, entonces la media de $S$ es 15 (¿cómo se calcula')
+Si $S_{30}=X_1 + X_2 + X_{30}$, entonces la media de $S_{30}$ es 15 (¿cómo se calcula')
 y su desviación estándar es $\sqrt{\frac{30}{12}}$. La suma es entonces
 aproximadamente $\mathsf{N}\left(15, \sqrt{\frac{30}{12}}\right)$. Entonces
 
@@ -703,7 +703,7 @@ tibble(n_sim = 1:100000) %>%
 Y vemos que la aproximación normal es buena para fines prácticos.
 
 ```{block, type='ejercicio'}
-Usando simulaciones haz un histograma que aproxime la distribución de muestreo de $S$. 
+Usando simulaciones haz un histograma que aproxime la distribución de muestreo de $S_n$. 
 Haz una gráfica de cuantiles normales para checar la normalidad de esta distribución.
 ```
 
@@ -728,16 +728,16 @@ las del enunciado del teorema básico. Por ejemplo, aplica a poblaciones
 finitas (como vimos en el ejemplo de las casas) bajo muestreo sin
 reemplazo, y aplica también a otras estadísticas como los cuantiles muestrales.
 
-- Es importante notar que la calidad de la aproximación del TCL depende de características
-de la población y también del tamaño de muestra $n$. Para ver si el TCL aplica, podemos hacer ejercicios de simulación bajo diferentes supuestos acerca de la población. 
-También veremos más adelante, con remuestreo, maneras de checar si es factible el TCL dependiendo del análisis de una muestra dada que tengamos.
+- Es importante notar que la calidad de la aproximación del $\textsf{TCL}$ depende de características
+de la población y también del tamaño de muestra $n$. Para ver si el $\textsf{TCL}$ aplica, podemos hacer ejercicios de simulación bajo diferentes supuestos acerca de la población. 
+También veremos más adelante, con remuestreo, maneras de checar si es factible el $\textsf{TCL}$ dependiendo del análisis de una muestra dada que tengamos.
 
-- El TCL era particularmente importante en la práctica antes de que pudiéramos
+- El $\textsf{TCL}$ era particularmente importante en la práctica antes de que pudiéramos
 hacer simulación por computadora. Era la única manera de aproximar y entender la distribución muestral fuera de cálculos analíticos (como los que hicimos para
 el máximo de un conjunto de uniformes, por ejemplo). 
 
 - Hoy en día, veremos que podemos hacer simulación para obtener respuestas más
-exactas, particularmente en la construcción de intervalos de confianza, por ejemplo. Dependemos menos de **resultados asintóticos**, como el TCL.
+exactas, particularmente en la construcción de intervalos de confianza, por ejemplo. Dependemos menos de **resultados asintóticos**, como el $\textsf{TCL}$.
 
 - Cuando aproximamos una distribución discreta mediante la distribución normal,
 conviene hacer *correcciones de continuidad*, como se explica en [@Chihara], 4.3.2. 
