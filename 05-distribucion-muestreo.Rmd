@@ -1,9 +1,9 @@
-# Estimación y distribución de muestreo
+# Estimación y distribución de muestreo {#S:distribucion-muestreo}
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center',fig.width = 5, fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -181,9 +181,11 @@ graf_1 + graf_2
 
 ```{block, type = 'comentario'}
 **Observación**: a veces este concepto se confunde la distribución
-poblacional de las $X_i$. Esto es muy diferente. Por ejemplo, en nuestro
-caso, el histograma de la distribución de valores poblacionales es
+poblacional de las $X_i$. Esto es muy diferente. 
+
 ```
+
+Por ejemplo, en nuestro caso, el histograma de la distribución de valores poblacionales es
 
 ```{r, fig.width = 5, fig.height=3}
 ggplot(marco_casas, aes(x = precio_miles)) + geom_histogram()
