@@ -1,5 +1,13 @@
 # Intervalos de confianza y remuestreo
 
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+source("R/funciones_auxiliares.R")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
 En la sección anterior, vimos el concepto de distribución de muestreo
 de una estadística que queremos utilizar para estimar un valor poblacional, y
 vimos que con esta distribución podíamos evaluar qué tan preciso es nuestro
@@ -30,9 +38,12 @@ acerca de la diferencia de sus medianas. En lugar de hacer pruebas de permutacio
 podríamos considerar qué tan precisa es cada una de nuestras estimaciones
 para las medianas de los grupos.
 
-Nuestros resultados podríamos presentarlos como sigue:
+Nuestros resultados podríamos presentarlos como sigue. Este código lo explicaremos
+más adelante, por el momento consideramos la gŕafica resultante:
 
-```{r, echo = FALSE, message = FALSE}
+```{r, message = FALSE}
+library(tidyverse)
+library(patchwork)
 set.seed(8)
 pob_tab <- tibble(id = 1:2000, x = rgamma(2000, 4, 1), 
     grupo = sample(c("a","b", "c"), 2000, prob = c(4,2,1), replace = T))
@@ -42,7 +53,7 @@ g_1 <- ggplot(muestra_tab, aes(x = grupo, y = x)) + geom_boxplot(outlier.alpha =
       labs(subtitle = "Muestra \n") + ylim(c(0,14))
 ## Hacemos bootstrap
 fun_boot <- function(datos){
-    datos %>% group_by(grupo) %>% sample_n(n(), replace = T)
+    datos %>% group_by(grupo) %>% sample_n(n(), replace = TRUE)
 }
 reps_boot <- map(1:2000, function(i){
     medianas <- muestra_tab %>% 
@@ -90,10 +101,10 @@ cubre al valor poblacional.
 - Intervalos más anchos nos dan más incertidumbre acerca de dónde está el verdadero valor poblacional
 (y al revés para intervalos más angostos)
 
-Existen también "intervalos creíbles" (de 90\% de probabilidad, por ejemplo), que se interpetan de
+Existen también "intervalos de credibilidad" (de 90\% de probabilidad, por ejemplo), que se interpetan de
 forma bayesiana:
 
-- Con 90\% de probabilidad (relativamente alta),creemos que el valor poblacional está dentro del intervalo creíble.
+- Con 90\% de probabilidad (relativamente alta), creemos que el valor poblacional está dentro del intervalo de credibilidad.
 
 **Las técnicas que veremos a continuación se puede interpretar de las dos maneras**. 
 
@@ -135,7 +146,7 @@ la distribución de muestreo de nuestro estimador, y así entender su variabilid
 
 **Mundo bootstrap**
 
-4. Si usamos la estimación del inciso anterior, entonces usando 1 podríamos tomar muestras
+4. Si usamos la estimación del inciso 3, entonces usando el inciso 1 podríamos tomar muestras
 de nuestros datos muestrales, como si fueran de la población, y usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de manera que produzcamos muestras independientes de la misma "población estimada", que es la muestra.
 5. A la distribución resultante le llamamos **distribución bootstrap** de la muestra
 6. Usamos la distribución bootstrap de la muestra para estimar la variabilidad en nuestra
@@ -144,29 +155,29 @@ estimación con **la muestra original**.
 
 Veamos que sucede para un ejemplo concreto. Primero extraemos nuestra muestra:
 
-```{r}
+```{r, cache=TRUE}
 set.seed(2112)
-muestra <- sample_n(casas_pob, 150, replace = T)
+poblacion_casas <- read_csv("data/casas.csv")
+muestra <- sample_n(poblacion_casas, 150, replace = TRUE)
 ```
 
 Esta muestra nos da nuestro estimador de la distribución poblacional:
 
 ```{r,  fig.width =5, fig.height = 3}
 bind_rows(muestra %>% mutate(tipo = "muestra"),
-    casas_pob %>% mutate(tipo = "población")) %>% 
+    poblacion_casas %>% mutate(tipo = "población")) %>% 
 ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) + 
-    geom_qq(distribution = stats::qunif, alpha = 0.4, size = 1) + 
-    scale_color_colorblind()
+    geom_qq(distribution = stats::qunif, alpha = 0.4, size = 1) +
+  facet_wrap(~ tipo)
 ```
 
 O con histogramas:
 
 ```{r,  fig.width =5, fig.height = 3}
 bind_rows(muestra %>% mutate(tipo = "muestra"),
-    casas_pob %>% mutate(tipo = "población")) %>% 
+    poblacion_casas %>% mutate(tipo = "población")) %>% 
 ggplot(aes(x = precio_miles, group = tipo)) + 
     geom_histogram(aes(y=..density..), binwidth = 50) + 
-    scale_color_colorblind() +
     facet_wrap(~ tipo)
 ```
 
@@ -174,11 +185,20 @@ Y vemos que la aproximación es razonable, especialmente en las partes centrales
 distribución. Usamos nuestra muestra para estimar
 la población.
 
-Para evaluar ahora la variabilidad de nuestro estimador, podemos extraer un número
-grande de muestras con reemplazo de tamaño 150 **de la muestra** - estamos en el mundo
-Bootstrap! 
+Ahora recordemos que para aproximar la distribución de muestreo
+podíamos muestrear repetidamente la población y calcular el valor del
+estimador en cada una de estas muestras. Aquí no tenemos la población,
+**pero tenemos una estimación de la población**: la muestra obtenida.
 
-```{r}
+Así que para 
+evaluar la variabilidad de nuestro estimador, entramos en el
+mundo boostrap, y consideramos que la población es nuestra muestra.
+
+Podemos entonces extraer un número
+grande de muestras con reemplazo de tamaño 150 **de la muestra**: el muestreo
+debe ser análogo al que se tomó para nuestra muestra original.
+
+```{r, cache = TRUE}
 mediana_muestras <- map_dbl(1:5000, ~ muestra %>%  
     sample_n(150, replace = T) %>%
     summarise(mediana_precio = median(precio_miles)) %>% pull(mediana_precio)) 
@@ -201,6 +221,17 @@ limites_ic
 
 Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la mediana es
 `r median(muestra$precio_miles)`, con un intervalo de confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
+
+
+
+
+
+
+
+
+
+
+
 
 ```{block2, type='comentario'}
 Los **intervalos de confianza bootstrap de percentiles** se calculan remuestreando la muestra
