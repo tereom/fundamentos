@@ -157,7 +157,7 @@ de un parámetro, escribimos $$f(x ;\theta)$$
 
 ```{block verosimilitud, type = 'mathblock'}
 **Definición.** Sean $X_1, \ldots, X_n$ una muestra de una densidad  $f(x; \theta)$
-y sea $x_1,x_2,\ldots, x_n$ son los valores observados. 
+y sean $x_1,x_2,\ldots, x_n$ los valores observados. 
 
 La *función de verosimilitud* del párametro de interés $\theta$ está definida por 
 \begin{align}
@@ -504,7 +504,7 @@ tres veces más grande que nuestra estimación puntual por máxima verosimilitud
 
 **Ejemplo.** Este es un ejemplo donde mostramos que cuando el soporte
 de las densidades teóricas es acotado hay que tener cuidado en la definición de la 
-verosimilitud. Supongamos
+verosimilitud. En particular, el soporte de la variable aleatoria es el párametro de interés. Supongamos
 que nuestros datos son generados por medio de una distribución uniforme en el intervalo $[0,b].$
 Contamos con una muestra de $n$ observaciones generadas 
 de manera independiente $X_i \sim U[0,b]$ para $i= 1, \ldots, n.$
@@ -566,12 +566,12 @@ Podemos escribir en una fórmula como:
 Y podríamos resolver analíticamente como sigue:
 
 Si consideramos 
-$$ \hat b_{\textsf{MLE}} = x_\max = \max\{x_i\},$$
+$$ \hat b_{\textsf{MLE}} = x_{\max} = \max\{x_i\},$$
 notemos que cualquier valor observado necesariamente satisface 
 $$x_i \leq \hat b_{\textsf{MLE}},$$ 
 y por lo tanto todas las funciones indicadoras están *encendidas*. El valor de la verosimilitud es igual a 
-$$\mathcal{L}(\hat b_{\textsf{MLE}}; x_1, \ldots, x_n) = \left(\frac{1}{x_{max}}\right)^n \geq \left (\frac1b\right )^n$$ 
-pra cualquier $b\geq x_\max$. Como la verosimilitud para $b<x_\max$ es igual
+$$\mathcal{L}(\hat b_{\textsf{MLE}}; x_1, \ldots, x_n) = \left(\frac{1}{x_{\max}}\right)^n \geq \left (\frac1b\right )^n$$ 
+para cualquier $b\geq x_{\max}$. Como la verosimilitud para $b<x_{\max}$ es igual
 a cero, esto demuestra que el máximo de la muestra es el estimador de máxima
 verosimilitud de $b$.
 
