@@ -575,6 +575,15 @@ para cualquier $b\geq x_{\max}$. Como la verosimilitud para $b<x_{\max}$ es igua
 a cero, esto demuestra que el máximo de la muestra es el estimador de máxima
 verosimilitud de $b$.
 
+**Observación.** Este ejemplo también tiene dificultades numéricas, pues
+la verosimilitud presenta discontinuidades y regiones con derivada igual a cero, y
+la mayoria de los algoritmos numéricos no tienen garantías buenas de 
+covergencia al máximo en estos casos.
+Si aplicamos sin cuidado descenso en gradiente, por ejemplo, podríamos comenzar
+incorrectamente en un valor $b_0 < x_{\max}$ y el algoritmo no avanzaría
+al máximo. 
+
+
 
 ### El método de momentos {-}
 
