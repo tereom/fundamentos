@@ -47,8 +47,17 @@ n_muestra <- 4**5
 ```{r consistency, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
 TOL <- p_true/4
 
+# extraigo 500 muestras diferentes de tamaño n_muestra
 dt <- 1:500 %>% 
   map_dfr(extrae_muestras, n = n_muestra) 
+
+# calculo el valor esperado a lo largo de las distintas 
+# 500 muestras
+esperado <- dt %>% 
+  group_by(muestra) %>% 
+  mutate(media = cummean(x), n = 1:n_muestra) %>% 
+  group_by(n) %>% 
+  summarise(media = mean(media))
 
 g1 <- dt %>% 
   group_by(muestra) %>% 
@@ -57,6 +66,7 @@ g1 <- dt %>%
   geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true + TOL ), alpha = .3) + 
   geom_line(aes(group = muestra), alpha = .05) + 
   geom_hline(yintercept = p_true, lty = 2, color = 'red') +
+  # geom_line(data = esperado, aes(x = 1:n_muestra, y = media), lty = 1, color = 'lightblue') +
   scale_x_log10()
 
 
@@ -67,6 +77,7 @@ g2 <- dt %>%
   geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true+ TOL ), alpha = .3) + 
   geom_line(aes(group = muestra), alpha = .05) + 
   geom_hline(yintercept = p_true, lty = 2, color = 'red') +
+  # geom_line(data = esperado, aes(x = 1:n_muestra, y = media), lty = 1, color = 'lightblue') +
   xlim(100, n_muestra) + 
   ylim(p_true - 2 * TOL, p_true + 2 * TOL)
 
@@ -121,4 +132,19 @@ dt %>%
 ```
 
 
-4. The MLE is asymptotically optimal or efficient.
+4. El estimador $\hat \theta_n$ es **asintóticamente óptimo o eficiente.** Hemos visto que, cuando $n$ es suficientemente grande, 
+el $\textsf{MLE}$ es asintóticamente insesgado. Una pregunta *natural* en este contexto es: ¿Cuál es la varianza mas pequeña que 
+puede tener un estimador insesgado?   
+La respuesta yace en la *desigualdad de Cramer-Rao.* Sea $\tilde \theta_n$ *cualquier* estimador insesgado de $\theta$ cuyo valor 
+verdadero es $\theta^*,$ entonces 
+\begin{align}
+  \mathbb{V}(\tilde \theta_n) \geq \frac{1}{n I(\theta^*)}.
+\end{align}
+Un estimador insesgado que satisfaga esta desigualdad se dice que es *eficiente.* Nota que el lado derecho de la desigualdad es precisamente
+la varianza asintótica del $\textsf{MLE}.$ Por lo tanto, éste es *asintóticamente eficiente.* 
+
+
+```{r, out.width = '95%', echo = FALSE}
+knitr::include_graphics('images/mle-mapa-mental.jpg')
+```
+
