@@ -10,8 +10,8 @@ theme_set(theme_minimal())
 
 En la sección anterior, vimos el concepto de distribución de muestreo
 de una estadística que queremos utilizar para estimar un valor poblacional, y
-vimos que con esta distribución podíamos evaluar qué tan preciso es nuestro
-estimador evaluando qué tan concentrada está esta distribución alrededor
+vimos que con esta distribución podíamos evaluar **qué tan preciso es nuestro
+estimador** evaluando qué tan concentrada está esta distribución alrededor
 del valor poblacion que queremos estimar.
 
 Sin embargo, en los ejemplos que vimos la población era conocida: ya sea
@@ -89,58 +89,13 @@ de hipótesis.**
 
 
 
-## Interpretación de intervalos de confianza {-}
-
-Aunque veremos con más detalle el concepto de intervalo de confianza más 
-adelante, empezamos con una discusión acerca su interpretación. En primer
-lugar, deben entenderse como cuantificaciones probabilísticas 
-de la incertidumbre que tenemos acerca de una estimación particular. La interpretación
-precisa de esas cuantificaciones depende de la interpretación de probabilidad
-que estamos considerando: frecuentista o bayesiana.
-
-Generalmente,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
-término frecuentista, que significa:
-
-- **Cada muestra produce un intervalo distinto**. Para el 90\% de las muestras posibles, el intervalo
-cubre al valor poblacional.
-- Así que con *alta probabilidad*, el valor poblacional está dentro del intervalo.
-- Intervalos más anchos nos dan más incertidumbre acerca de dónde está el verdadero valor poblacional
-(y al revés para intervalos más angostos)
-
-Existen también "intervalos de credibilidad" (de 90\% de probabilidad, por ejemplo), que se interpetan de
-forma bayesiana:
-
-- Con 90\% de probabilidad (relativamente alta), creemos que el valor poblacional está dentro del intervalo de credibilidad.
-
-**Las técnicas que veremos en esta sección se puede interpretar de las dos maneras**. 
-
-- La interpretación bayesiana puede ser más natural
-- La interpretación frecuentista nos da maneras empíricas de probar si los intervalos de
-confianza están bien calibrados o no: es un mínimo que "intervalos del 90\%" debería satisfacer.
-
-Así que tomamos el punto de vista bayesiano en la intepretación, pero 
-buscamos que nuestros intervalos cumplan o 
-aproximen bien garantías frecuentistas (discutimos esto más adelante). 
-
-### Cómo producir intervalos para estimación {-}
-
-Existen muchas técnicas para construir estos intervalos que muestran la incertidumbre
-en nuestras estimaciones: métodos basados en distribuciones estándar, métodos paramétricos
-y no paramétricos, distintos métodos bayesianos (entonces se llaman intervalos
-creíbles o de probabilidad), etc.
-
-En este curso, como ejemplo, y también por ser una técnica versátil, presentaremos
-el **bootstrap no paramétrico** (ver @bootefron), donde utilizaremos simulación (y poder de cómputo) para producir
-este tipo de intervalos, bajo ciertas condiciones de extracción de la muestra que discutiremos
-más adelante.
-
-
 ## La idea del bootstrap {-}
 
 
 Como explicamos, el problema que tenemos ahora es que normalmente sólo tenemos una muestra, 
 así que
-no es posible calcular las distribuciones de muestreo como hicimos arriba. Sin embargo,
+no es posible calcular las distribuciones de muestreo como hicimos arriba y evaluar
+qué tan preciso es nuestro estimador. Sin embargo,
 podemos hacer lo siguiente:
 
 Supongamos que tenemos una muestra $X_1,X_2,\dots, X_n$ independientes de alguna
@@ -193,8 +148,8 @@ ggplot(aes(x = precio_miles, group = tipo)) +
     facet_wrap(~ tipo)
 ```
 
-Y vemos que la aproximación es razonable, especialmente en las partes centrales de la 
-distribución.
+Y vemos que la aproximación es razonable en las partes centrales de la 
+distribución. 
 
 Ahora supongamos que nos interesa cuantificar la precisión de nuestra
 estimación de la media poblacional de precios de casas, y usaremos la media
@@ -206,7 +161,7 @@ media
 ```
 
 
-Ahora recordemos que para aproximar la distribución de muestreo
+Y recordamos que para aproximar la distribución de muestreo
 podíamos muestrear repetidamente la población y calcular el valor del
 estimador en cada una de estas muestras. Aquí no tenemos la población,
 **pero tenemos una estimación de la población**: la muestra obtenida.
@@ -310,13 +265,130 @@ Y el proceso que hacemos es:
 
 ## El principio de plug-in
 
-Una primera idea detraś del bootstrap es el principio de pulg-in: si queremos
+La idea básica detraś del bootstrap es el principio de plug-in para estimar
+parámetros poblacionales: si queremos
 estimar una cantidad poblacional, calculamos esa cantidad poblacional con la muestra
-obtenida.
+obtenida. Es un principio común en estadística. 
+
+Por ejemplo, si queremos estimar
+la media o desviación estándar poblacional, usamos la media muestral o la desviación
+estándar muestral. Si queremos estimar un cuantil de la población usamos el cuantil
+correspondiente de la muestra, y así sucesivamente.
+
+En todos estos casos, lo que estamos haciendo es:
+
+- Tenemos una fórmula para la cantidad poblacional de interés en términos de la distribución
+poblacional.  
+- Tenemos una muestra, que usamos para estimar la cantidad poblacional. La distribución
+que da una muestra se llama distribución *empírica**
+- Contruimos nuestro estimador "enchufando" la distribución empírica de la muestra 
+en la fórmula del estimador.
+
+En el bootstrap aplicamos este principio simple a la **distribución de 
+muestreo**:
+
+- *Si tenemos la población*, podemos *calcular* la distribución de muestreo de nuestro estimador
+tomando muchas muestras de la *población*.
+- Estimamos la *poblacion* con la *muestra* y enchufamos en la frase anterior:
+- Podemos *estimar* la distribucion de muestreo de nuestro estimador
+tomando muchas muestras de la *muestra* (bootstrap).
+
+Nótese que el proceso de muestreo en el último paso **debe ser el mismo** que
+se usó para tomar la muestra original. Estas dos imágenes de @Chihara muestran lo
+que acabamos de describir:
+
+![Mundo real](./images/dist_muestreo_chihara.png)
+
+![Mundo bootstrap](./images/dist_bootstrap_chihara.png)
 
 
 
 
-## Intervalos de percentiles
+
+**Observación 1**. Veremos ejemplos más complejos, pero nótese que si la muestra
+original son observaciones independientes obtenidas de la distribución poblacional,
+entonces logramos esto en las remuestras tomando observaciones con reemplazo
+de la muestra. Igalmente, las remuestras deben ser del mismo tamaño que la muestra
+original.
+
+```{block2,type='ejercicio}
+- ¿Qué no funcionaría tomar muestras sin reemplazo? Piensa si hay independencia
+entre las observaciones de la remuestra, y cómo serían las remuestras sin reemplazo.
+- ¿Por qué no se puede hacer bootstrap si no conocemos cómo se obtuvo la muestra original?
+```
+
+
+**Observación 2**. Estos argumentos se pueden escribir con fórmulas usando por
+ejemplo la función de distribución acumulada $F$ de la población y su estimador,
+que es la función empírica $\hat{F}$, como en @Efron. 
+Si $\theta = t(F)$ es una
+cantidad poblacional que queremos estimar, su estimador plug-in es
+$\hat{\theta} = t(\hat{F})$. 
+
+**Observación 3**: La distribución empírica $\hat{F}$ es un estimador "razonable" de
+la distribución poblacional $F$, pues por el teorema de Glivenko-Cantelli (ver @Wasserman,
+o [aquí](https://en.wikipedia.org/wiki/Glivenko-Cantelli_theorem)), 
+$\hat{F}$ converge a $F$ cuando el tamaño de muestra $n\to\infty$, lo cual es
+intuitivamente claro.
+
+
+
+### Ejemplo
+En el ejemplo de tomadores de té, podemos estimar la proporción de tomadores
+de té que prefiere el té negro usando nuestra muestra:
+
+```{r}
+te <- read_csv("data/tea.csv") %>%
+  rowid_to_column() %>% 
+  select(rowid, Tea, sugar)
+te %>% mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
+  summarise(prop_negro = mean(negro), n = length(negro))
+```
+
+¿Cómo evaluamos la precisión de este estimador? Supondremos que el estudio se
+hizo tomando una muestra aleatoria simple de tamaño 300 de la población de tomadores de té que
+nos interesa. Podemos entonces usar el boostrap:
+
+```{r}
+# paso 1: define el estimador
+calc_estimador <- function(datos){
+  prop_negro <- datos %>% 
+    mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
+    summarise(prop_negro = mean(negro), n = length(negro)) %>% 
+    pull(prop_negro)
+  prop_negro
+}
+# paso 2: define el proceso de remuestreo
+muestra_boot <- function(datos){
+  #tomar muestra con reemplazo del mismo tamaño
+  sample_n(datos, size = nrow(datos), replace = TRUE)
+}
+# paso 3: remuestrea y calcula el estimador
+prop_negro_tbl <- map_dbl(1:2000,  ~ calc_estimador(muestra_boot(datos = te))) %>% 
+  tibble(prop_negro = .)
+# paso 4: examina la distribución bootstrap
+prop_negro_tbl %>% 
+  ggplot(aes(x = prop_negro)) +
+  geom_histogram(bins = 15)
+```
+
+Y podemos evaluar varios aspectos, centro y dispersión 
+
+```{r}
+prop_negro_tbl %>% 
+  summarise(media = mean(prop_negro),
+            sesgo = mean(prop_negro) - 0.2499,
+            ee = sd(prop_negro),
+            cuantil_75 = quantile(prop_negro, 0.75), 
+            cuantil_25 = quantile(prop_negro, 0.25)) %>% 
+  mutate(across(where(is.numeric), round, 3)) %>% 
+  pivot_longer(cols = everything())
+```
+
+
+
+
+
+
 
 
