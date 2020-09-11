@@ -490,7 +490,7 @@ distribución de interés (por ejemplo media, moda, varianza). Para una hipótes
 nula del estilo $H_0: \theta = \theta_0,$ la hipótesis a contrastar se puede
 denominar como:
 
-- *Hipótesis alternativa de una cola* $H_1: \theta > \theta_0$   
+- *Hipótesis alternativa de una cola* $H_1: \theta \gt \theta_0$   
 - *Hipótesis alternativa de dos colas* $H_1: \theta \neq \theta_0$
 ```
 
