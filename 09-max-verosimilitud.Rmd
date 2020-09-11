@@ -104,16 +104,16 @@ de que un registro tenga un error. Entonces calculamos
 
 Probabilidad de observar la muestra:
 
-$$P(x_1 = 0, x_2 = 1, x_3 = 0, x_4 = 0, x_5 =1, x_6 =0, x_7 =0, x_8 =0)$$
+$$P(X_1 = 0, X_2 = 1, X_3 = 0, X_4 = 0, X_5 =1, X_6 =0, X_7 =0, X_8 =0)$$
 
 es igual a
 
-$$P(x_1 = 0)P(x_2 = 1)P(x_3 = 0)P( x_4 = 0)P(x_5 =1)P(x_6 =0)P(x_7 =0)P(x_8 =0)$$
+$$P(X_1 = 0)P(X_2 = 1)P(X_3 = 0)P( X_4 = 0)P(X_5 =1)P(X_6 =0)P(X_7 =0)P(X_8 =0)$$
 pues la probabilidad de que cada observación sea 0 o 1 no depende de las observaciones restantes (la muestra se extrajo de manera independiente).
 
 Esta última cantidad tiene un parámetro que no conocemos: la proporcion $p$ de registros
 con errores. Así que lo denotamos como una cantidad desconocida $p$. Nótese
-entonces que $P(x_2=1) = p$, $P(X_3=0) = 1-p$ y así sucesivamente, así que la cantidad
+entonces que $P(X_2=1) = p$, $P(X_3=0) = 1-p$ y así sucesivamente, así que la cantidad
 de arriba es igual a
 
 $$p(1-p)p(1-p)(1-p)p(1-p)(1-p)(1-p) $$
@@ -147,85 +147,33 @@ ver las regiones donde la probabilidad es relativamente alta.
 el estimador usual de plugin** en este caso.
 
 
+Para uniformizar la notación con el caso continuo que veremos más adelante, usaremos
+la notación 
+
+$$P(X=x) = f(x)$$
+donde $f$ es la función de densidad (en este caso, función de masa de probabilidad) de $X$. Si esta función depende
+de un parámetro, escribimos $$f(x ;\theta)$$
+
+
 ```{block verosimilitud, type = 'mathblock'}
-**Definición.** Sean $X_1, \ldots, X_n$ una muestra de una distribución con valores 
-discretos y función de masa de probabilidad $f(x; \theta).$ La función de distribución
-conjunta de la muestra se escribe como sigue:
-\begin{align}
-  P(X_1, \ldots, X_n | \theta) = \prod_{i = 1}^n P(X_i|\theta) =  \prod_{i = 1}^n f(X_i; \theta).
-\end{align}
+**Definición.** Sean $X_1, \ldots, X_n$ una muestra de una densidad  $f(x; \theta)$
+y sean $x_1,x_2,\ldots, x_n$ los valores observados. 
 
 La *función de verosimilitud* del párametro de interés $\theta$ está definida por 
 \begin{align}
-\mathcal{L}(\theta; x_1, \ldots, x_n) = \prod_{i = 1}^n f(X_i; \theta). 
+\mathcal{L}(\theta; x_1, \ldots, x_n) = \prod_{i = 1}^n f(x_i; \theta). 
 \end{align}
 
 Esta función nos dice qué tan creible es el valor del parámetro $\theta$ dada la muestra observada. 
 A veces también la denotamos por $\mathcal{L}_n(\theta)$. 
 ```
 
-Nota que la función de verosimilitud considera la función conjunta de probabilidad *como función del parámetro* $\theta.$
-Aunque parecen ser la misma ecuación la interpretación y el concepto son distintos. Cuando consideramos la 
-función de masa de probabilidad $f(x; \theta),$ la interpretamos como una función de $x$ con $\theta$ fija. Cuando hablamos de la verosimilitud 
-$\mathcal{L}(\theta; X_1, \ldots, X_n)$ la consideramos una función de $\theta$ con datos fijos (observados). Es decir, $\mathcal{L}(\theta_1; X_1, \ldots, X_n)$ es la probabilidad de observar los datos cuando $\theta = \theta_1;$ $\mathcal{L}(\theta_2; X_1, \ldots, X_n)$ es la probabilidad de observar los datos cuando $\theta = \theta_2;$ y así sucesivamente. La notación de $\mathcal{L}_n(\theta)$ hace enfásis en interpretar la verosimilitud como función del parámetro $\theta.$
 
-**Ejemplo.** Consideremos lo siguiente. Supongamos que tenemos una sucesión de experimentos donde sólo registramos éxito o fracaso. Consideremos este escenario como el de una muestra de $n$ observaciones de una variable aleatoria Bernoulli. Es decir, $X_1, \ldots, X_n \sim \textsf{Bernoulli}(p)$. El párametro de interés es la probabilidad de éxito $p.$ Cada experimento que ocurre tiene función de masa de probalidad
-$$
-  f(x; p) = p^x (1-p)^{1-x},
-$$
-por lo que la función de verosimilitud se calcula como 
-\begin{align}
-  \mathcal{L}_n(p) &=  \prod_{i = 1}^n p^{x_i} (1-p)^{1-xi} \\
-    &= p^{\sum_i x_i} (1-p)^{n - \sum_i x_i} \\
-    &= p^{S} (1-p)^{n - S},
-\end{align}
-
-donde $S = \sum_i x_i.$ La siguiente figura muestra las curvas de verosimilitud 
-para los casos $p = 0.3$ y $n = 10, 10^2, 10^3.$ Podemos notar cómo se concentra la verosimilitud 
-conforme el número de observaciones crece, y a su vez, notamos que para valor pequeños de muestra
-el estimador puede estar lejos. Estas propiedades las estudiaremos más a fondo en el futuro. 
-
-```{r bernoulli, cache = TRUE, echo = FALSE}
-# define la log-verosimilitud para una muestra dada
-logver_bernoulli <- function(X){
-  S <- sum(X)
-  n <- length(X)
-  function(p){
-    S * log(p) + (n - S) * log(1-p)
-  }
-}
-
-# calcula experimento para n variable
-experimento <- function(n = 20){
-  x <- purrr::rbernoulli(n, p = 0.3)
-  logver_bernoulli(x)
-}
-
-likeli_curve <- function(n = 20){
-  logver <- experimento(n)
-  dt <- tibble(x = seq(0,1, 0.001), nobs = as.factor(n) ) %>%
-    mutate(prob = map_dbl(x, logver)) %>%
-    mutate(prob = exp(prob - max(prob)))
-  dt
-}
-```
-
-```{r, echo = FALSE}
-
-set.seed(100)
-
-c(10, 100, 1000) %>%
-  map_dfr(likeli_curve) %>%
-  ggplot(aes(x = x, y = prob)) +
-    geom_line(aes(group = nobs, colour = nobs))
-
-```
-
-
+Ahora definimos qué es un estimador de máxima verosimilitud.
 
 
 ```{block mle, type = 'mathblock'}
-**Definición.** El estimador de máxima verosimilitud lo denotamos por $\hat \theta_{\textsf{MLE}}$ y es el valor que satisface 
+**Definición.** Un estimador de máxima verosimilitud lo denotamos por $\hat \theta_{\textsf{MLE}}$ y es un valor que satisface 
 \begin{align}
 \hat \theta_{\textsf{MLE}} =  \underset{\theta \, \in \, \Theta}{\arg\max}\,  \mathcal{L}(\theta; x_1, \ldots, x_n),
 \end{align}
@@ -239,17 +187,16 @@ donde $\theta$ denota el espacio parametral. Es decir, el espacio válido de bú
 ```
 
 
-
-
-Obsérvese que para hacer esto usamos:  
+Obsérvese que para construir la verosimilitud y en consecuencia buscar por
+estimadores de máxima verosimlitud necesitamos:
 
 - Un modelo teórico de cómo es la población con parámetros e  
 - Información de cómo se extrajo la muestra,  
 
-y resolvimos el problema de estimación convirtiéndolo en uno de optimización.
+y entonces podemos resolver nuestro problema de estimación 
+convirtiéndolo en uno de optimización.
 
 Probamos esta idea con un proceso más complejo.
-
 
 
 **Ejemplo.** Supongamos que una máquina puede estar funcionando correctamente o no en cada
@@ -313,9 +260,14 @@ ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
 
 Y nuestra estimación puntual sería de alrededor de 80%.
 
-```{block, type = 'mathblock'}
-**Definición$^\dagger$.** Consideremos nuestra muestra como variables aleatorias continuas. 
-En este caso sabemos que en particular $P(X = x | \theta) = 0.$ Sin embargo, podemos
+
+## Máxima verosimilitud para observaciones continuas
+
+Cuando las observaciones $x_1,\ldots, x_n$ provienen de una distribución
+continua, no tiene sentido considerar $P(X = x_i)$, pues siempre es igual
+a cero. 
+
+Sin embargo, podemos
 escribir para pequeños valores $\epsilon \ll 1$
 \begin{align}
   P(x - \epsilon < X < x + \epsilon | \theta) = \int_{x - \epsilon}^{x + \epsilon} f(t; \theta) \, \text{d} t \approx 2 \epsilon f(x; \theta),
@@ -328,13 +280,28 @@ donde $f(x; \theta)$ es la función de densidad de $X.$ Por lo tanto,
   &= \prod_{i = 1}^n 2 \epsilon f(x_i; \theta) = (2\epsilon)^n \prod_{i = 1}^n f(x_i; \theta).
 \end{split}
 \end{align}
+
 Notemos que si $\epsilon \rightarrow 0$ la ecuación rápidamente converge a cero. Pero para pequeños 
 valores de $\epsilon$ la ecuación que nos interesa es proporcional a $\prod_{i = 1}^n f(x_i; \theta).$
-Esto nos lleva a definir la verosimilitud en el caso continuo como 
-\begin{align}
-  \mathcal{L}_n(\theta) = \prod_{i = 1}^n f(x_i; \theta).
-\end{align}
-```
+
+De esta forma, nuestra definición de máxima verosimilitud y estimadores
+de máxima verosimilitud es la misma para el caso continuo (verifica las definiciones
+de la sección anterior).
+
+**Ejemplo.** Supongamos que tenemos una muestra $x_1\ldots, x_n$ extraidas de una distribución
+exponencial con tasa $\lambda>0$ donde no conocemos $\lambda$. ¿Cuál es 
+el estimador de máxima verosimilitud de $\lambda$?
+
+Para $\lambda>0$, tenemos que
+
+$${\mathcal L}(\lambda) = \prod_{i=1}^n \lambda e^{\lambda x_i}$$
+de modo que
+
+$${\mathcal L}(\lambda) = \lambda^n e^{\lambda \sum_{i=1}^nx_i} = \lambda^n e^{n\lambda\bar{x}} = e^{n(\log\lambda + \lambda\bar{x})}$$
+Que podemos maximizar usando cálculo para obtener 
+$\hat{\lambda}_{\mathsf{ML}} = \frac{1}{\bar{x}}$ (demuéstralo). Discute
+por qué esto es intuitivamente razonable: ¿cuál es
+el valor esperado de una exponencial con parámetro $\lambda$?
 
 
 ## Aspectos numéricos {-}
@@ -535,58 +502,88 @@ negativos y falsos positivos la estimación simple daría $6/2000 = 0.003$ (0.3%
 tres veces más grande que nuestra estimación puntual por máxima verosimilitud.
 
 
-**Ejemplo.** Hasta ahora hemos visto ejemplos sencillos dónde la *receta* consiste en maximizar la
-verosimilitud (o log-verosimilitud). Sin embargo consideremos el siguiente caso. Supongamos
+**Ejemplo.** Este es un ejemplo donde mostramos que cuando el soporte
+de las densidades teóricas es acotado hay que tener cuidado en la definición de la 
+verosimilitud. En particular, el soporte de la variable aleatoria es el párametro de interés. Supongamos
 que nuestros datos son generados por medio de una distribución uniforme en el intervalo $[0,b].$
 Contamos con una muestra de $n$ observaciones generadas 
 de manera independiente $X_i \sim U[0,b]$ para $i= 1, \ldots, n.$
 Sin embargo, no conocemos el valor de $b$. 
 
-Lo podemos estimar al maximizar la función de verosimilitud, la cual escribimos como
-\begin{align}
-\mathcal{L}(b; x_1, \ldots, x_n) = \prod_{i = 1}^n f(x_i; b),
-\end{align}
-dado que los datos son generados de manera idéntica e independiente. Notemos que podemos 
-utilizar la función de densidad de una variable aleatoria uniforme para escribir la verosimilitud 
-de la muestra como:
+¿Cómo es la función de log verosimilitud ${\mathcal L}_n(b)$ para este caso? Nótese
+que cuando el parámetro $b$ es menor que alguna $x_i$, tenemos que
+${\mathcal L}_n(b) = 0$: la verosimilitud es cero si tomamos una $b$ más chica
+que algún dato, pues este valor es incosistente del todo con los datos observados.
+En otro caso,
+
+$${\mathcal L}_n(b) = \frac{1}{b^n},$$
+pues la función de densidad de una uniforme en $[0,b]$ es igual a $1/b$ en 
+el intervalo $[0,b]$, y 0 en otro caso. Podemos escribir entonces:
+
+
+```{r}
+crear_verosim <- function(x){
+  n <- length(x)
+  verosim <- function(b){
+    indicadora <- ifelse(all(x <= b), 1, 0)
+    indicadora / b^n
+  }
+}
+```
+
+
+
+Ahora podemos hacer máxima verosimilitud para un ejemplo:
+
+```{r}
+set.seed(234)
+x <- runif(10, 0, 3)
+verosim <- crear_verosim(x)
+res_opt <- optimize(verosim, c(-1000, 1000), maximum = TRUE)
+res_opt$maximum
+```
+Y nótese que, como esperaríamos, este valor es el máximo de la muestra:
+```{r}
+max(x)
+```
+
+La gráfica de la función de verosimilitud es:
+
+```{r}
+tibble(b = seq(-1, 5, 0.001)) %>% 
+  mutate(verosim_1 = map_dbl(b, ~ verosim(.x))) %>% 
+ggplot() + 
+  geom_line(aes(x = b, y = verosim_1)) +
+  geom_rug(data = tibble(x = x), aes(x = x), colour = "red")
+```
+
+Podemos escribir en una fórmula como:
+
 \begin{align}
 \mathcal{L}(b; x_1, \ldots, x_n) = \prod_{i = 1}^n 1_{[0,b]}(x_i) \frac1b. 
 \end{align}
 
-Sin embargo notemos algo. Una variable aleatoria uniforme sólo tiene **soporte** en el intervalo $[0,b]$.
-Es decir, si observáramos un valor negativo $x_i < 0,$ inmediatamente sabríamos que nuestra muestra 
-no es consistente con el modelo uniforme que hemos supuesto. Esto lo escribimos como 
-$$\mathcal{L}(b; x_1, \ldots, x_n) = 0,$$
-o de forma más impresionante
-$$\ell(b; x_1, \ldots, x_n) = -\infty,$$
-si al menos una de las $x_i$-s fuera negativa (existe al menos una indicadora que se *apaga*). Entonces, de igual forma, podríamos argumentar que no podríamos observar ningún valor por arriba de $b.$ Pero el problema es que éste número no lo conocemos! 
+Y podríamos resolver analíticamente como sigue:
 
-¿Qué número informado por nuestra muestra maximiza la función de verosimilitud? Por los puntos anteriores sabemos que todas las observaciones $x_i$ que hemos realizado necesariamente tienen que estar incluidas en el soporte. Si consideramos 
-$$ \hat b_{\textsf{MLE}} = x_{\sigma(n)},$$
+Si consideramos 
+$$ \hat b_{\textsf{MLE}} = x_{\max} = \max\{x_i\},$$
 notemos que cualquier valor observado necesariamente satisface 
 $$x_i \leq \hat b_{\textsf{MLE}},$$ 
 y por lo tanto todas las funciones indicadoras están *encendidas*. El valor de la verosimilitud es igual a 
-$$\mathcal{L}(b; x_1, \ldots, x_n) = \left(\frac{1}{x_{\sigma(n)}}\right)^n.$$ Esta función se muestra en la figura de abajo. 
+$$\mathcal{L}(\hat b_{\textsf{MLE}}; x_1, \ldots, x_n) = \left(\frac{1}{x_{\max}}\right)^n \geq \left (\frac1b\right )^n$$ 
+para cualquier $b\geq x_{\max}$. Como la verosimilitud para $b<x_{\max}$ es igual
+a cero, esto demuestra que el máximo de la muestra es el estimador de máxima
+verosimilitud de $b$.
 
-```{r, echo = FALSE, fig.height = 2}
-eye <- function(x){
-  ifelse(x <= 5, 0, (1/x)^10)
-}
-
-tibble(x = seq(0, 10, 0.001)) %>% 
-  mutate(verosimilitud = eye(x)) %>% 
-  ggplot(aes(x = x, y = verosimilitud)) + 
-    geom_line() + 
-    xlab('x_(n)') + 
-    theme(axis.text.x=element_blank(),
-          axis.text.y=element_blank())
-  
-```
+**Observación.** Este ejemplo también tiene dificultades numéricas, pues
+la verosimilitud presenta discontinuidades y regiones con derivada igual a cero, y
+la mayoria de los algoritmos numéricos no tienen garantías buenas de 
+covergencia al máximo en estos casos.
+Si aplicamos sin cuidado descenso en gradiente, por ejemplo, podríamos comenzar
+incorrectamente en un valor $b_0 < x_{\max}$ y el algoritmo no avanzaría
+al máximo. 
 
 
-**Importante.** Este es un ejemplo clásico para ilustrar el *peligro* de seguir la *receta* sin considerar los 
-detalles. En este caso la función a optimizar tiene una dependencia *complicada* para aplicar algoritmos de 
-optimización y métodos de búsqueda local por ascenso en gradiente podrían ser ineficientes.
 
 ### El método de momentos {-}
 
