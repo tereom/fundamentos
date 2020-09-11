@@ -87,13 +87,19 @@ grupo b tenga una mediana poblacional considerablemente más alta que a o c. **E
 es más útil presentar la información de esta manera que usando alguna prueba
 de hipótesis.**
 
-Primero discutiremos cómo se interpretan y la idea básica que hay detrás de la construcción
-de estos intervalos.
 
-### Interpretación de intervalos de confianza {-}
 
-Generalmente,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) significa, desde
-el punto de vista frecuentista:
+## Interpretación de intervalos de confianza {-}
+
+Aunque veremos con más detalle el concepto de intervalo de confianza más 
+adelante, empezamos con una discusión acerca su interpretación. En primer
+lugar, deben entenderse como cuantificaciones probabilísticas 
+de la incertidumbre que tenemos acerca de una estimación particular. La interpretación
+precisa de esas cuantificaciones depende de la interpretación de probabilidad
+que estamos considerando: frecuentista o bayesiana.
+
+Generalmente,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
+término frecuentista, que significa:
 
 - **Cada muestra produce un intervalo distinto**. Para el 90\% de las muestras posibles, el intervalo
 cubre al valor poblacional.
@@ -106,7 +112,7 @@ forma bayesiana:
 
 - Con 90\% de probabilidad (relativamente alta), creemos que el valor poblacional está dentro del intervalo de credibilidad.
 
-**Las técnicas que veremos a continuación se puede interpretar de las dos maneras**. 
+**Las técnicas que veremos en esta sección se puede interpretar de las dos maneras**. 
 
 - La interpretación bayesiana puede ser más natural
 - La interpretación frecuentista nos da maneras empíricas de probar si los intervalos de
@@ -114,7 +120,7 @@ confianza están bien calibrados o no: es un mínimo que "intervalos del 90\%" d
 
 Así que tomamos el punto de vista bayesiano en la intepretación, pero 
 buscamos que nuestros intervalos cumplan o 
-aproximen bien garantías frecuentistas (discutimos esto más adelante).
+aproximen bien garantías frecuentistas (discutimos esto más adelante). 
 
 ### Cómo producir intervalos para estimación {-}
 
@@ -132,12 +138,15 @@ más adelante.
 ## La idea del bootstrap {-}
 
 
-Como explicamos, el problema que tenemos ahora es que normalmente sólo tenemos una muestra, así que
+Como explicamos, el problema que tenemos ahora es que normalmente sólo tenemos una muestra, 
+así que
 no es posible calcular las distribuciones de muestreo como hicimos arriba. Sin embargo,
 podemos hacer lo siguiente:
 
 Supongamos que tenemos una muestra $X_1,X_2,\dots, X_n$ independientes de alguna
 población desconocida y un estimador $T=t(X_1,\dots, X_n)$
+
+**Mundo poblacional**
 
 1. Si tuviéramos la distribución poblacional, simulamos muestras iid para aproximar
 la distribución de muestreo de nuestro estimador, y así entender su variabilidad.
@@ -148,17 +157,20 @@ la distribución de muestreo de nuestro estimador, y así entender su variabilid
 
 4. Si usamos la estimación del inciso 3, entonces usando el inciso 1 podríamos tomar muestras
 de nuestros datos muestrales, como si fueran de la población, y usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de manera que produzcamos muestras independientes de la misma "población estimada", que es la muestra.
-5. A la distribución resultante le llamamos **distribución bootstrap** de la muestra
-6. Usamos la distribución bootstrap de la muestra para estimar la variabilidad en nuestra
+5. Evaluamos nuestra estadística en cada una de estas remuestras.
+6. A la distribución resultante le llamamos **distribución bootstrap** o **distribución de remuestreo** del estimador
+7. Usamos la distribución bootstrap de la muestra para estimar la variabilidad en nuestra
 estimación con **la muestra original**.
 
 
-Veamos que sucede para un ejemplo concreto. Primero extraemos nuestra muestra:
+Veamos que sucede para un ejemplo concreto, donde  nos interesa estimar
+la media de los precios de venta de una población de casas. Tenemos nuestra muestra:
 
 ```{r, cache=TRUE}
 set.seed(2112)
 poblacion_casas <- read_csv("data/casas.csv")
-muestra <- sample_n(poblacion_casas, 150, replace = TRUE)
+muestra <- sample_n(poblacion_casas, 200, replace = TRUE)
+mean(muestra$precio_miles)
 ```
 
 Esta muestra nos da nuestro estimador de la distribución poblacional:
@@ -182,8 +194,17 @@ ggplot(aes(x = precio_miles, group = tipo)) +
 ```
 
 Y vemos que la aproximación es razonable, especialmente en las partes centrales de la 
-distribución. Usamos nuestra muestra para estimar
-la población.
+distribución.
+
+Ahora supongamos que nos interesa cuantificar la precisión de nuestra
+estimación de la media poblacional de precios de casas, y usaremos la media
+muestral para hacer esto. Para nuestra muestra, nuestra estimación puntual es:
+
+```{r}
+media <- mean(muestra$precio_miles)
+media
+```
+
 
 Ahora recordemos que para aproximar la distribución de muestreo
 podíamos muestrear repetidamente la población y calcular el valor del
@@ -195,39 +216,42 @@ evaluar la variabilidad de nuestro estimador, entramos en el
 mundo boostrap, y consideramos que la población es nuestra muestra.
 
 Podemos entonces extraer un número
-grande de muestras con reemplazo de tamaño 150 **de la muestra**: el muestreo
-debe ser análogo al que se tomó para nuestra muestra original.
+grande de muestras con reemplazo de tamaño 200 **de la muestra**: el muestreo
+debe ser análogo al que se tomó para nuestra muestra original. Evaluamos nuestra
+estadística (en este caso la media) en cada una de estas remuestras:
 
 ```{r, cache = TRUE}
-mediana_muestras <- map_dbl(1:5000, ~ muestra %>%  
-    sample_n(150, replace = T) %>%
-    summarise(mediana_precio = median(precio_miles)) %>% pull(mediana_precio)) 
+media_muestras <- map_dbl(1:5000, ~ muestra %>%  
+    sample_n(200, replace = T) %>%
+    summarise(media_precio = mean(precio_miles)) %>% pull(media_precio)) 
 ```
 
-Y nuestra estimación de la distribución de muestreo para la mediana es entonces:
+Y nuestra estimación de la distribución de muestreo para la media es entonces:
 
-```{r, fig.width =4, fig.height = 3}
-bootstrap <- tibble(mediana = mediana_muestras)
-ggplot(bootstrap, aes(sample = mediana)) + geom_qq(distribution = stats::qunif)
+```{r, fig.width =6, fig.height = 4}
+bootstrap <- tibble(media = media_muestras)
+g_cuantiles <- ggplot(bootstrap, aes(sample = media)) + geom_qq(distribution = stats::qunif)
+g_histograma <- ggplot(bootstrap, aes(x = media)) + geom_histogram(binwidth = 2)
+g_cuantiles + g_histograma
 ```
-A esta le llamamos la distribución de remuestreo de la mediana, que definimos más abajo.
+A esta le llamamos la distribución de remuestreo de la media, que definimos más abajo.
 Ahora podemos calcular un intervalo de confianza del 90\% simplemente calculando los cuantiles de
 esta distribución (no son los cuantiles de la muestra original!):
 
 ```{r}
-limites_ic <- quantile(mediana_muestras, c(0.05,  0.95)) %>% round
+limites_ic <- quantile(media_muestras, c(0.05,  0.95)) %>% round
 limites_ic
 ```
 
 Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la mediana es
-`r median(muestra$precio_miles)`, con un intervalo de confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
+`r mean(muestra$precio_miles)`, con un intervalo de confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
 
 Otra cosa que podríamos hacer para describir la dispersión de nuestro estimador
 es calcular el error estándar de remuestreo, que estima el error estándar de
 la distribución de muestreo:
 
 ```{r}
-ee_boot <- sd(mediana_muestras)
+ee_boot <- sd(media_muestras)
 round(ee_boot, 2)
 ```
 
@@ -282,11 +306,15 @@ Y el proceso que hacemos es:
 (dónde está centrada, dispersión y forma).
 ```
 
-**Ejemplo.**
-
 
 
 ## El principio de plug-in
+
+Una primera idea detraś del bootstrap es el principio de pulg-in: si queremos
+estimar una cantidad poblacional, calculamos esa cantidad poblacional con la muestra
+obtenida.
+
+
 
 
 ## Intervalos de percentiles
