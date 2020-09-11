@@ -481,28 +481,6 @@ poblacion_casas %>% summarise(media = mean(precio_miles))
 ```
 
 
-```{r}
-# paso 1: define el estimador
-calc_estimador <- function(datos){
-  prop_negro <- datos %>% 
-    mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
-    summarise(prop_negro = mean(negro), n = length(negro)) %>% 
-    pull(prop_negro)
-  prop_negro
-}
-# paso 2: define el proceso de remuestreo
-muestra_boot <- function(datos){
-  #tomar muestra con reemplazo del mismo tamaño
-  sample_n(datos, size = nrow(datos), replace = TRUE)
-}
-# paso 3: remuestrea y calcula el estimador
-prop_negro_tbl <- map_dbl(1:2000,  ~ calc_estimador(muestra_boot(datos = te))) %>% 
-  tibble(prop_negro = .)
-```
-
-
-
-
 
 
 
