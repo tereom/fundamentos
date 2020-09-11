@@ -372,7 +372,8 @@ prop_negro_tbl %>%
   geom_histogram(bins = 15)
 ```
 
-Y podemos evaluar varios aspectos, centro y dispersión 
+Y podemos evaluar varios aspectos, por ejemplo dónde está centrada y 
+qué tan dispersa es la distribución bootstrap:
 
 ```{r}
 prop_negro_tbl %>% 
@@ -384,6 +385,79 @@ prop_negro_tbl %>%
   mutate(across(where(is.numeric), round, 3)) %>% 
   pivot_longer(cols = everything())
 ```
+
+
+## Discusión: propiedades de la distribución bootstrap
+
+Uasremos la distribución bootstrap principalmente para evaluar la variabilidad
+de nuestros estimadores (y también otros aspectos como sesgo) estimando
+la dispersión de la distribución de muestreo. Sin embargo, es importante notar
+que no la usamos, por ejemplo, para saber dónde está centrada la distribución 
+de muestreo, o para "mejorar" la estimación remuestreando.
+
+### Ejemplo {-}
+
+En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 100, y
+vemos cómo se ve la aproximación a la distribución de la población:
+
+```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3}
+set.seed(911)
+muestras <- map(1:20, function(x) {
+    muestra <- sample_n(poblacion_casas, 200, replace = T) %>% 
+        mutate(rep = x, tipo = "muestras")}) %>% bind_rows
+dat <- poblacion_casas %>% mutate(tipo = "población", rep = 1)
+datos <- bind_rows(dat, muestras)
+
+ggplot(datos, aes(sample = precio_miles, group = interaction(tipo, rep))) + 
+    geom_qq(distribution = stats::qunif, alpha = 0.7, size = 0.5, geom = "line") + 
+geom_qq(data = dat, aes(sample = precio_miles), colour = "red", size = 1,
+        distribution = stats::qunif, geom="point") +
+  scale_y_log10(breaks = c(50, 100, 200, 400, 800)) 
+```
+
+Podemos calcular las distribuciones de remuestreo para cada muestra bootstrap,
+y compararlas con la distribución de muestreo real.
+
+```{r,  fig.width =4, fig.height = 3}
+rep_boot <- function(x, n){
+  sample(x, n, replace = T) %>% mean
+}
+aprox_dist_muestreo <- function(datos, n){
+  datos %>% select(precio_miles, tipo, rep) %>% 
+  group_by(rep) %>% nest() %>% 
+  mutate(precio_miles = map(data, function(df){
+    map_dbl(1:5000, ~ rep_boot(df$precio_miles, n))
+  })) %>% select(rep, precio_miles) %>% 
+  unnest(cols = c(precio_miles))
+}
+dist_boot <- aprox_dist_muestreo(datos %>% filter(tipo == "muestras"), n = 150)
+dist_muestreo <- aprox_dist_muestreo(datos %>% filter(tipo == "población"), n = 150)
+```
+
+
+```{r, echo = FALSE, fig.width =4, fig.height = 3}
+ggplot(dist_boot, aes(sample = precio_miles, group = interaction(rep))) + 
+    geom_qq(distribution = stats::qunif, size = 0.1, alpha = 0.02) + 
+geom_qq(data = dist_muestreo, aes(sample = precio_miles), colour = "red",
+        distribution = stats::qunif, alpha = 0.02) +
+  ylim(c(125, 230)) +
+  labs(subtitle = "Estimaciones de distribución \n de muestreo (media)")
+```
+
+Obsérvese que:
+
+- En algunos casos la aproximación  es mejor que en otros (a veces
+la muestra tiene valores ligeramente más altos o más bajos). 
+- La dispersión de cada una de estas distribuciones bootstrap es similar a la de la verdadera
+distribución de muestreo (en rojo), pero puede está desplazada dependiendo
+de la muestra original que utilizamos.
+- Adicionalmente, los valores centrales de la distribución de bootstrap
+tiende cubrir el verdadero valor que buscamos estimar, que es:
+
+```{r}
+poblacion_casas %>% summarise(media = mean(precio_miles))
+```
+
 
 
 
