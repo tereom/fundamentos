@@ -41,7 +41,7 @@ para las medianas de los grupos.
 Nuestros resultados podríamos presentarlos como sigue. Este código lo explicaremos
 más adelante, por el momento consideramos la gŕafica resultante:
 
-```{r, message = FALSE}
+```{r, message = FALSE, cache = TRUE}
 library(tidyverse)
 library(patchwork)
 set.seed(8)
@@ -311,7 +311,7 @@ entonces logramos esto en las remuestras tomando observaciones con reemplazo
 de la muestra. Igalmente, las remuestras deben ser del mismo tamaño que la muestra
 original.
 
-```{block2,type='ejercicio}
+```{block2,type='ejercicio'}
 - ¿Qué no funcionaría tomar muestras sin reemplazo? Piensa si hay independencia
 entre las observaciones de la remuestra, y cómo serían las remuestras sin reemplazo.
 - ¿Por qué no se puede hacer bootstrap si no conocemos cómo se obtuvo la muestra original?
@@ -387,7 +387,7 @@ prop_negro_tbl %>%
 ```
 
 
-## Discusión: propiedades de la distribución bootstrap
+## Discusión: propiedades de la distribución bootstrap {-}
 
 Uasremos la distribución bootstrap principalmente para evaluar la variabilidad
 de nuestros estimadores (y también otros aspectos como sesgo) estimando
@@ -397,7 +397,7 @@ de muestreo, o para "mejorar" la estimación remuestreando.
 
 ### Ejemplo {-}
 
-En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 100, y
+En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 200, y
 vemos cómo se ve la aproximación a la distribución de la población:
 
 ```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3}
@@ -405,12 +405,12 @@ set.seed(911)
 muestras <- map(1:20, function(x) {
     muestra <- sample_n(poblacion_casas, 200, replace = T) %>% 
         mutate(rep = x, tipo = "muestras")}) %>% bind_rows
-dat <- poblacion_casas %>% mutate(tipo = "población", rep = 1)
-datos <- bind_rows(dat, muestras)
+dat_pob <- poblacion_casas %>% mutate(tipo = "población", rep = 1)
+datos_sim <- bind_rows(dat_pob, muestras)
 
-ggplot(datos, aes(sample = precio_miles, group = interaction(tipo, rep))) + 
+ggplot(datos_sim, aes(sample = precio_miles, group = interaction(tipo, rep))) + 
     geom_qq(distribution = stats::qunif, alpha = 0.7, size = 0.5, geom = "line") + 
-geom_qq(data = dat, aes(sample = precio_miles), colour = "red", size = 1,
+geom_qq(data = dat_pob, aes(sample = precio_miles), colour = "red", size = 1,
         distribution = stats::qunif, geom="point") +
   scale_y_log10(breaks = c(50, 100, 200, 400, 800)) 
 ```
@@ -419,27 +419,49 @@ Podemos calcular las distribuciones de remuestreo para cada muestra bootstrap,
 y compararlas con la distribución de muestreo real.
 
 ```{r,  fig.width =4, fig.height = 3}
-rep_boot <- function(x, n){
-  sample(x, n, replace = T) %>% mean
+# paso 1: define el estimador
+calc_estimador <- function(datos){
+  media_precio <- datos %>% 
+    summarise(media = mean(precio_miles)) %>% 
+    pull(media)
+  media_precio
 }
-aprox_dist_muestreo <- function(datos, n){
-  datos %>% select(precio_miles, tipo, rep) %>% 
+# paso 2: define el proceso de remuestreo
+muestra_boot <- function(datos, n = NULL){
+  #tomar muestra con reemplazo del mismo tamaño
+  if(is.null(n)){
+    m <- sample_n(datos, size = nrow(datos), replace = TRUE)}
+  else {
+    m <- sample_n(datos, size = n, replace = TRUE)
+  }
+  m
+}
+dist_boot <- datos_sim %>%
+  filter(tipo == "muestras") %>% 
+  select(precio_miles, rep) %>% 
   group_by(rep) %>% nest() %>% 
-  mutate(precio_miles = map(data, function(df){
-    map_dbl(1:5000, ~ rep_boot(df$precio_miles, n))
-  })) %>% select(rep, precio_miles) %>% 
-  unnest(cols = c(precio_miles))
-}
-dist_boot <- aprox_dist_muestreo(datos %>% filter(tipo == "muestras"), n = 150)
-dist_muestreo <- aprox_dist_muestreo(datos %>% filter(tipo == "población"), n = 150)
+  mutate(precio_miles =  map(data, function(data){
+    tibble(precio_miles = map_dbl(1:1000, ~ calc_estimador(muestra_boot(data))))
+  })) %>% 
+  select(rep, precio_miles) %>% 
+  unnest()
+  
+dist_muestreo <- datos_sim %>% 
+  filter(tipo == "población") %>% 
+  group_by(rep) %>% nest() %>% 
+  mutate(precio_miles =  map(data, function(data){
+    tibble(precio_miles = map_dbl(1:1000, ~ calc_estimador(muestra_boot(data, n = 200))))
+  })) %>% 
+  select(rep, precio_miles) %>% 
+  unnest()
 ```
 
 
 ```{r, echo = FALSE, fig.width =4, fig.height = 3}
 ggplot(dist_boot, aes(sample = precio_miles, group = interaction(rep))) + 
-    geom_qq(distribution = stats::qunif, size = 0.1, alpha = 0.02) + 
+    geom_qq(distribution = stats::qunif, size = 0.1, alpha = 0.1) + 
 geom_qq(data = dist_muestreo, aes(sample = precio_miles), colour = "red",
-        distribution = stats::qunif, alpha = 0.02) +
+        distribution = stats::qunif, alpha = 0.1) +
   ylim(c(125, 230)) +
   labs(subtitle = "Estimaciones de distribución \n de muestreo (media)")
 ```
@@ -459,6 +481,24 @@ poblacion_casas %>% summarise(media = mean(precio_miles))
 ```
 
 
+```{r}
+# paso 1: define el estimador
+calc_estimador <- function(datos){
+  prop_negro <- datos %>% 
+    mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
+    summarise(prop_negro = mean(negro), n = length(negro)) %>% 
+    pull(prop_negro)
+  prop_negro
+}
+# paso 2: define el proceso de remuestreo
+muestra_boot <- function(datos){
+  #tomar muestra con reemplazo del mismo tamaño
+  sample_n(datos, size = nrow(datos), replace = TRUE)
+}
+# paso 3: remuestrea y calcula el estimador
+prop_negro_tbl <- map_dbl(1:2000,  ~ calc_estimador(muestra_boot(datos = te))) %>% 
+  tibble(prop_negro = .)
+```
 
 
 
