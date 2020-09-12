@@ -103,14 +103,11 @@ Empezamos repitiendo 10 veces y examinamos cómo varía nuestra estadística:
 replicar_muestreo <- function(marco_casas, m = 500, n){
   # n es el tamaño de muestra que se saca de marco_casas
   # m es el número de veces que repetimos el muestro de tamaño n
-  resultados <- map(1:m,
+  resultados <- map_df(1:m,
       function(id) {
         sample_n(marco_casas, n) %>%
-          estimar_total(N) %>%
-          mutate(id_muestra = id) %>%
-          select(id_muestra, everything())
-      })
-  resultados %>% bind_rows
+          estimar_total(N) 
+      }, .id = "id_muestra")
 }
 replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   mutate(across(where(is.numeric), round, 1)) %>%
@@ -139,7 +136,6 @@ graf_1
 
 Con muy alta probabilidad  el error no será de más de unos 30 millones de dólares
 (o no más de 20% del valor poblacional).
-
 
 
 ```{block, type='mathblock'}
@@ -698,7 +694,7 @@ Podemos checar nuestro cálculo usando simulación:
 ```{r}
 tibble(n_sim = 1:100000) %>% 
   mutate(suma = map_dbl(n_sim, ~ sum(runif(30)))) %>% 
-  summarise(prob_may_18 = mean(suma > 18))
+  summarise(prob_may_18 = mean(suma > 18), .groups = "drop")
 ```
 Y vemos que la aproximación normal es buena para fines prácticos.
 
@@ -716,8 +712,8 @@ aproximar probabilidades en las colas de la distribución:
 
 
 ```{r}
-sims_gamma <- tibble(n_sim = 1:2000) %>% 
-  mutate(suma = map_dbl(n_sim, ~ mean(rgamma(30, 0.1, 1))))
+sims_gamma <- map_df(1:2000, ~ tibble(suma = mean(rgamma(30, 0.1, 1))), 
+                     .id = "n_sim")
 ggplot(sims_gamma, aes(x = suma)) + geom_histogram()
 ```
 
