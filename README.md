@@ -6,7 +6,7 @@ maestría en Ciencia de Datos del ITAM sitio: https://fundamentos-est.netlify.ap
 
 ---
 
-## Instrucciones para generar las notas en `pdf`
+## Instrucciones para generar las notas de manera local.
 
 1. Asgurate de tener instalados tanto [`R`](https://cloud.r-project.org/) como
 [`Rstudio`](https://rstudio.com/products/rstudio/download/) en tu máquina (en
@@ -25,7 +25,7 @@ install.packages(rmarkdown)
 de manera local. `rmarkdown` es el compilador de las notas.
 
 3. Una vez instalados, reinicia `Rstudio` y abre el repositorio como un projecto.
-![]('/images/rstudio-project.png')
+![]('./images/rstudio-project.png')
 
 4. Una vez que estés en el proyecto de las notas, sincroniza tú colección de librerías con las que utilizamos para generar el documento. Esto lo hacemos (la primera vez) con:  
 
