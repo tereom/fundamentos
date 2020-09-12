@@ -261,7 +261,7 @@ ggplot(dat_verosim, aes(x = x, y = prob)) + geom_line() +
 Y nuestra estimación puntual sería de alrededor de 80%.
 
 
-## Máxima verosimilitud para observaciones continuas
+## Máxima verosimilitud para observaciones continuas {-}
 
 Cuando las observaciones $x_1,\ldots, x_n$ provienen de una distribución
 continua, no tiene sentido considerar $P(X = x_i)$, pues siempre es igual
