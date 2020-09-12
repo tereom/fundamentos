@@ -758,3 +758,42 @@ aproximen bien garantías frecuentistas (discutimos esto más adelante). Los int
 que producimos en esta sección pueden interpretarse de las dos maneras.
 
 
+## Intervalos bootstrap de percentiles {-}
+
+Otra opción común que se usa específicamente cuando la distribución bootstrap 
+no es muy cercana a la normal son los intervalos de percentiles bootstrap:
+
+```{block2, type='mathblock'}
+*Definición*. El **intervalo de percentiles bootstrap** al 95\% de confianza
+está dado por
+$$[q_{0.025}, q_{0.975}]$$
+donde $q_f$ es el percentil $f$ de la distribución bootstrap. 
+```
+
+Otros intervalos comunes son el de 80% o 90% de confianza, por ejemplo,
+que corresponden a $[q_{0.10}, q_{0.90}]$ y $[q_{0.05}, q_{0.95}]$. *Ojo*: 
+intervalos de confianza muy alta (por ejemplo 99.5%) pueden tener mala calibración
+o ser muy variables en su longitud pues dependen del comportamiento en las colas de la
+distribución.
+
+### Ejemplo {-}
+
+Para el ejemplo de las casas, calcularíamos simplemente
+
+```{r}
+intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975))
+(intervalo_95 / 1000) %>% round(1)
+```
+que está en millones de pesos. Nótese que es simililar al intervalo de error estándar.
+
+```{block2, type='ejercicio'}
+Explica por qué cuando la aproximación normal es apropiada, el intervalo de percentiles
+al 95% es muy similar al intervalo normal de 2 errores estándar.
+```
+
+
+
+
+
+
+
