@@ -198,7 +198,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-hipótesis-tradicionales"><i class="fa fa-check"></i>Pruebas de hipótesis tradicionales</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-continuación"><i class="fa fa-check"></i>Tomadores de té (continuación)</a></li>
-<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación."><i class="fa fa-check"></i>Pruebas de permutación: Implementación.</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación"><i class="fa fa-check"></i>Pruebas de permutación: Implementación</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-continuación"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión (continuación)</a></li>
 <li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
@@ -544,7 +544,7 @@ permutadas.</li>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="pruebas-de-hipótesis.html#cb67-1"></a>dif_obs &lt;-<span class="st"> </span>te_azucar <span class="op">%&gt;%</span></span>
 <span id="cb67-2"><a href="pruebas-de-hipótesis.html#cb67-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">usa_azucar =</span> <span class="kw">as.numeric</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb67-3"><a href="pruebas-de-hipótesis.html#cb67-3"></a><span class="st">  </span><span class="kw">group_by</span>(how) <span class="op">%&gt;%</span></span>
-<span id="cb67-4"><a href="pruebas-de-hipótesis.html#cb67-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="ot">NULL</span>) <span class="op">%&gt;%</span></span>
+<span id="cb67-4"><a href="pruebas-de-hipótesis.html#cb67-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb67-5"><a href="pruebas-de-hipótesis.html#cb67-5"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> how, <span class="dt">values_from =</span> prop_azucar) <span class="op">%&gt;%</span></span>
 <span id="cb67-6"><a href="pruebas-de-hipótesis.html#cb67-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diferencia_prop =</span> bolsa_exclusivo <span class="op">-</span><span class="st"> `</span><span class="dt">suelto o bolsa</span><span class="st">`</span>) <span class="op">%&gt;%</span></span>
 <span id="cb67-7"><a href="pruebas-de-hipótesis.html#cb67-7"></a><span class="st">  </span><span class="kw">pull</span>(diferencia_prop)</span></code></pre></div>
@@ -556,7 +556,7 @@ permutadas.</li>
 <span id="cb70-2"><a href="pruebas-de-hipótesis.html#cb70-2"></a>valores_ref &lt;-<span class="st"> </span>reps <span class="op">%&gt;%</span></span>
 <span id="cb70-3"><a href="pruebas-de-hipótesis.html#cb70-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">usa_azucar =</span> <span class="kw">as.numeric</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb70-4"><a href="pruebas-de-hipótesis.html#cb70-4"></a><span class="st">  </span><span class="kw">group_by</span>(.sample, how) <span class="op">%&gt;%</span></span>
-<span id="cb70-5"><a href="pruebas-de-hipótesis.html#cb70-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="ot">NULL</span>) <span class="op">%&gt;%</span></span>
+<span id="cb70-5"><a href="pruebas-de-hipótesis.html#cb70-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb70-6"><a href="pruebas-de-hipótesis.html#cb70-6"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> how, <span class="dt">values_from =</span> prop_azucar) <span class="op">%&gt;%</span></span>
 <span id="cb70-7"><a href="pruebas-de-hipótesis.html#cb70-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diferencia =</span> bolsa_exclusivo <span class="op">-</span><span class="st"> `</span><span class="dt">suelto o bolsa</span><span class="st">`</span>)</span></code></pre></div>
 <p>Y graficamos nuestros resultados (con un histograma y una gráfica de cuantiles, por ejemplo). la
@@ -834,7 +834,7 @@ diferencia que vemos se puede atribuir a variación muestral.</p>
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="pruebas-de-hipótesis.html#cb77-1"></a>dif_obs &lt;-<span class="st"> </span>te_azucar <span class="op">%&gt;%</span></span>
 <span id="cb77-2"><a href="pruebas-de-hipótesis.html#cb77-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">usa_azucar =</span> <span class="kw">as.numeric</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb77-3"><a href="pruebas-de-hipótesis.html#cb77-3"></a><span class="st">  </span><span class="kw">group_by</span>(Tea) <span class="op">%&gt;%</span></span>
-<span id="cb77-4"><a href="pruebas-de-hipótesis.html#cb77-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="ot">NULL</span>) <span class="op">%&gt;%</span></span>
+<span id="cb77-4"><a href="pruebas-de-hipótesis.html#cb77-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb77-5"><a href="pruebas-de-hipótesis.html#cb77-5"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> Tea, <span class="dt">values_from =</span> prop_azucar) <span class="op">%&gt;%</span></span>
 <span id="cb77-6"><a href="pruebas-de-hipótesis.html#cb77-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diferencia_prop =</span> <span class="st">`</span><span class="dt">Earl Grey</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>black) <span class="op">%&gt;%</span></span>
 <span id="cb77-7"><a href="pruebas-de-hipótesis.html#cb77-7"></a><span class="st">  </span><span class="kw">pull</span>(diferencia_prop)</span></code></pre></div>
@@ -846,7 +846,7 @@ diferencia que vemos se puede atribuir a variación muestral.</p>
 <span id="cb79-3"><a href="pruebas-de-hipótesis.html#cb79-3"></a>valores_ref &lt;-<span class="st"> </span>reps <span class="op">%&gt;%</span></span>
 <span id="cb79-4"><a href="pruebas-de-hipótesis.html#cb79-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">usa_azucar =</span> <span class="kw">as.numeric</span>(sugar <span class="op">==</span><span class="st"> &quot;sugar&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb79-5"><a href="pruebas-de-hipótesis.html#cb79-5"></a><span class="st">  </span><span class="kw">group_by</span>(.sample, Tea) <span class="op">%&gt;%</span></span>
-<span id="cb79-6"><a href="pruebas-de-hipótesis.html#cb79-6"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="ot">NULL</span>) <span class="op">%&gt;%</span></span>
+<span id="cb79-6"><a href="pruebas-de-hipótesis.html#cb79-6"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_azucar =</span> <span class="kw">mean</span>(usa_azucar), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb79-7"><a href="pruebas-de-hipótesis.html#cb79-7"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> Tea, <span class="dt">values_from =</span> prop_azucar) <span class="op">%&gt;%</span></span>
 <span id="cb79-8"><a href="pruebas-de-hipótesis.html#cb79-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">diferencia =</span> <span class="st">`</span><span class="dt">Earl Grey</span><span class="st">`</span> <span class="op">-</span><span class="st"> </span>black)</span></code></pre></div>
 <p>Y podemos graficar la distribución de referencia otra vez marcando el valor observado</p>
@@ -868,8 +868,8 @@ Calcula el valor <em>p</em> (dos colas).
 </ul>
 </div>
 </div>
-<div id="pruebas-de-permutación-implementación." class="section level2 unnumbered">
-<h2>Pruebas de permutación: Implementación.</h2>
+<div id="pruebas-de-permutación-implementación" class="section level2 unnumbered">
+<h2>Pruebas de permutación: Implementación</h2>
 <p>Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
 extender las pruebas de permutación a <span class="math inline">\(\bar{X}\)</span> (la media de la primera muestra),
 <span class="math inline">\(n\bar{X}\)</span> (la suma de las observaciones en la primera muestra), y más.</p>
@@ -972,7 +972,7 @@ para medir su diferencia</p>
 <span id="cb80-17"><a href="pruebas-de-hipótesis.html#cb80-17"></a>  fun &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
 <span id="cb80-18"><a href="pruebas-de-hipótesis.html#cb80-18"></a>    datos <span class="op">%&gt;%</span></span>
 <span id="cb80-19"><a href="pruebas-de-hipótesis.html#cb80-19"></a><span class="st">      </span><span class="kw">group_by</span>(nv.vv) <span class="op">%&gt;%</span></span>
-<span id="cb80-20"><a href="pruebas-de-hipótesis.html#cb80-20"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>(time), <span class="dt">.groups =</span> <span class="ot">NULL</span>) <span class="op">%&gt;%</span></span>
+<span id="cb80-20"><a href="pruebas-de-hipótesis.html#cb80-20"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>(time), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb80-21"><a href="pruebas-de-hipótesis.html#cb80-21"></a><span class="st">      </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> nv.vv, <span class="dt">values_from =</span> est) <span class="op">%&gt;%</span></span>
 <span id="cb80-22"><a href="pruebas-de-hipótesis.html#cb80-22"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">dif =</span> VV <span class="op">/</span><span class="st"> </span>NV ) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dif)</span>
 <span id="cb80-23"><a href="pruebas-de-hipótesis.html#cb80-23"></a>  }</span>
@@ -1128,7 +1128,7 @@ de “aceptación de datos en la muestra”, que simulamos tomando una submuestr
 <span id="cb85-2"><a href="pruebas-de-hipótesis.html#cb85-2"></a>  fun &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
 <span id="cb85-3"><a href="pruebas-de-hipótesis.html#cb85-3"></a>    datos <span class="op">%&gt;%</span></span>
 <span id="cb85-4"><a href="pruebas-de-hipótesis.html#cb85-4"></a><span class="st">      </span><span class="kw">group_by</span>(nv.vv) <span class="op">%&gt;%</span></span>
-<span id="cb85-5"><a href="pruebas-de-hipótesis.html#cb85-5"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>({{ trans }}(time)), <span class="dt">.groups =</span> <span class="ot">NULL</span>) <span class="op">%&gt;%</span></span>
+<span id="cb85-5"><a href="pruebas-de-hipótesis.html#cb85-5"></a><span class="st">      </span><span class="kw">summarise</span>(<span class="dt">est =</span> <span class="kw">stat_fusion</span>({{ trans }}(time)), <span class="dt">.groups =</span> <span class="st">&#39;drop&#39;</span>) <span class="op">%&gt;%</span></span>
 <span id="cb85-6"><a href="pruebas-de-hipótesis.html#cb85-6"></a><span class="st">      </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> nv.vv, <span class="dt">values_from =</span> est) <span class="op">%&gt;%</span></span>
 <span id="cb85-7"><a href="pruebas-de-hipótesis.html#cb85-7"></a><span class="st">      </span><span class="kw">mutate</span>(<span class="dt">dif =</span> {{ comparacion }}) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(dif)</span>
 <span id="cb85-8"><a href="pruebas-de-hipótesis.html#cb85-8"></a>  }</span>

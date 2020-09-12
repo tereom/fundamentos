@@ -324,7 +324,7 @@ permutadas.
 dif_obs <- te_azucar %>%
   mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
   group_by(how) %>%
-  summarise(prop_azucar = mean(usa_azucar), .groups = NULL) %>%
+  summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
   pivot_wider(names_from = how, values_from = prop_azucar) %>%
   mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>%
   pull(diferencia_prop)
@@ -349,7 +349,7 @@ reps <- lineup(null_permute("how"), te_azucar, n = 10000)
 valores_ref <- reps %>%
   mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
   group_by(.sample, how) %>%
-  summarise(prop_azucar = mean(usa_azucar), .groups = NULL) %>%
+  summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
   pivot_wider(names_from = how, values_from = prop_azucar) %>%
   mutate(diferencia = bolsa_exclusivo - `suelto o bolsa`)
 ```
@@ -624,7 +624,7 @@ Escribimos la función que calcula diferencias para cada muestra:
 dif_obs <- te_azucar %>%
   mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
   group_by(Tea) %>%
-  summarise(prop_azucar = mean(usa_azucar), .groups = NULL) %>%
+  summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
   pivot_wider(names_from = Tea, values_from = prop_azucar) %>%
   mutate(diferencia_prop = `Earl Grey` - black) %>%
   pull(diferencia_prop)
@@ -646,7 +646,7 @@ reps <- lineup(null_permute("Tea"), te_azucar, n = 10000)
 valores_ref <- reps %>%
   mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
   group_by(.sample, Tea) %>%
-  summarise(prop_azucar = mean(usa_azucar), .groups = NULL) %>%
+  summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
   pivot_wider(names_from = Tea, values_from = prop_azucar) %>%
   mutate(diferencia = `Earl Grey` - black)
 ```
@@ -672,7 +672,7 @@ El valor *p* es cercano a 0.
 </div>
 
 
-## Pruebas de permutación: Implementación. {-}
+## Pruebas de permutación: Implementación {-}
 
 Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
 extender las pruebas de permutación a $\bar{X}$ (la media de la primera muestra),
@@ -793,7 +793,7 @@ calc_fusion <- function(stat_fusion){
   fun <- function(datos){
     datos %>%
       group_by(nv.vv) %>%
-      summarise(est = stat_fusion(time), .groups = NULL) %>%
+      summarise(est = stat_fusion(time), .groups = 'drop') %>%
       pivot_wider(names_from = nv.vv, values_from = est) %>%
       mutate(dif = VV / NV ) %>% pull(dif)
   }
@@ -980,7 +980,7 @@ calc_fusion <- function(stat_fusion, trans, comparacion){
   fun <- function(datos){
     datos %>%
       group_by(nv.vv) %>%
-      summarise(est = stat_fusion({{ trans }}(time)), .groups = NULL) %>%
+      summarise(est = stat_fusion({{ trans }}(time)), .groups = 'drop') %>%
       pivot_wider(names_from = nv.vv, values_from = est) %>%
       mutate(dif = {{ comparacion }}) %>% pull(dif)
   }
