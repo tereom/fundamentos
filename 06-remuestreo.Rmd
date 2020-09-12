@@ -695,23 +695,26 @@ simular_intervalos <- function(rep, size = 150){
     mutate(rep = rep)
   totales_boot
 }
-sims_intervalos <- map(1:100, ~ simular_intervalos(rep = .x))
+sims_intervalos <- map(1:200, ~ simular_intervalos(rep = .x))
 ```
 
-```{r}
-sims_tbl <- sims_intervalos %>% bind_rows
+```{r, fig.width =8, fig.height=4}
+sims_tbl <- sims_intervalos %>% 
+  bind_rows %>%
+  mutate(cubre = inf < total & total < sup) 
 ggplot(sims_tbl, aes(x = rep)) +
   geom_hline(yintercept = sum(poblacion_casas$precio_miles), colour = "red") +
-  geom_linerange(aes(ymin = inf, ymax = sup)) 
+  geom_linerange(aes(ymin = inf, ymax = sup, colour = cubre)) 
 ```
 La cobertura para estos 100 intervalos simulados da
 
 ```{r}
 total <- sum(poblacion_casas$precio_miles)
-sims_tbl %>% mutate(cubre = inf < total & total < sup) %>% 
+sims_tbl %>% 
   summarise(cobertura = mean(cubre))
 ```
-que es consistente con una cobertura real del 95%.
+que es consistente con una cobertura real del 95% (¿qué significa "consistente"? ¿Cómo puedes
+checarlo con el bootstrap?)
 
 **Observación.** En este caso teníamos la población real, y pudimos verificar
 la cobertura de nuestros intervalos. En general no la tenemos. Estos ejercicios
