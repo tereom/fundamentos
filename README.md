@@ -33,4 +33,5 @@ renv::init()
 ```
 dónde se te pedirá confirmación para descargar todos los paquetes en su versión
 correcta.  
+
 **Nota:** esto sólo lo tienes que hacer la primera vez.
