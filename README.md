@@ -17,8 +17,8 @@ git clone https://github.com/tereom/fundamentos.git
 
 2. Inicia `Rstudio` e instala los siguientes paquetes de `R`.
 ```{r}
-install.packages(renv)
-install.packages(rmarkdown)
+install.packages("renv")
+install.packages("rmarkdown")
 ```
 
 `renv` nos permitirá sincronizar la paquetería necesaria para correr las notas
