@@ -79,6 +79,13 @@
       "Repository": "CRAN",
       "Hash": "7e2c62de2799dc212e5b52526c288e72"
     },
+    "animation": {
+      "Package": "animation",
+      "Version": "2.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "b726b7119ba99cc79dfdd24cb4ee6894"
+    },
     "anytime": {
       "Package": "anytime",
       "Version": "0.3.9",
@@ -484,6 +491,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "6c04c31012c1be39783bebbbfc27b3a3"
+    },
+    "magick": {
+      "Package": "magick",
+      "Version": "2.4.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "40a9efbb0418902cf6b663a1529a975a"
     },
     "magrittr": {
       "Package": "magrittr",
