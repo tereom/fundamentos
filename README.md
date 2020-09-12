@@ -27,10 +27,10 @@ de manera local. `rmarkdown` es el compilador de las notas.
 3. Una vez instalados, reinicia `Rstudio` y abre el repositorio como un projecto.
 ![rstudio-project](images/rstudio-project.png)
 
-4. Una vez que estés en el proyecto de las notas, sincroniza tú colección de librerías con las que utilizamos para generar el documento. Esto lo hacemos (la primera vez) con:  
+4. Una vez que estés en el proyecto de las notas, sincroniza tú colección de librerías con las que utilizamos para generar el documento. Esto lo hacemos (la primera vez) con:
 ```{r}
 renv::init()
-```  
+```
 dónde se te pedirá confirmación para descargar todos los paquetes en su versión
 correcta.  
-**Nota:** esto sólo lo tienes que hacer la primera vez. 
+**Nota:** esto sólo lo tienes que hacer la primera vez.
