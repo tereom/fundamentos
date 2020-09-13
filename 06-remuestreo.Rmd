@@ -211,7 +211,7 @@ round(ee_boot, 2)
 
 
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 **Definición**. Sea $X_1,X_2,\ldots,X_n$ una muestra independiente y idénticamente
 distribuida, y $T=t(X_1, X_2, \ldots, X_n)$ una estadística. Supongamos que sus valores
 que obervamos son $x_1, x_2,\ldots, x_n$.
@@ -241,7 +241,7 @@ Nótese que algunos valores de la muestra original pueden aparecer varias veces,
 
 
 
-```{block2, type='comentario'}
+```{block, type='comentario'}
 **La idea del bootstrap**. La muestra original es una aproximación de la población
 de donde fue extraída. Así que remuestrear la muestra aproxima lo que pasaría si
 tomáramos muestras de la población. La **distribución de remuestreo** de una estadística,
@@ -251,7 +251,7 @@ de la estadística.
 
 Y el proceso que hacemos es:
 
-```{block2, type='comentario'}
+```{block, type='comentario'}
 **Remuestreo para una población.** Dada una muestra de tamaño $n$ de una población, 
 
 1. Obtenemos una remuestra de tamaño $n$ sin reemplazo de la muestra original
@@ -412,7 +412,7 @@ entonces logramos esto en las remuestras tomando observaciones con reemplazo
 de la muestra. Igalmente, las remuestras deben ser del mismo tamaño que la muestra
 original.
 
-```{block2,type='ejercicio'}
+```{block,type='ejercicio'}
 - ¿Qué no funcionaría tomar muestras sin reemplazo? Piensa si hay independencia
 entre las observaciones de la remuestra, y cómo serían las remuestras sin reemplazo.
 - ¿Por qué no se puede hacer bootstrap si no conocemos cómo se obtuvo la muestra original?
