@@ -4,7 +4,7 @@
 library(tidyverse)
 library(patchwork)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -129,7 +129,7 @@ mean(muestra$precio_miles)
 
 Esta muestra nos da nuestro estimador de la distribución poblacional:
 
-```{r,  fig.width =5, fig.height = 3}
+```{r, fig.height = 3, out.width="95%"}
 bind_rows(muestra %>% mutate(tipo = "muestra"),
     poblacion_casas %>% mutate(tipo = "población")) %>% 
 ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) + 
@@ -139,7 +139,7 @@ ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) +
 
 O con histogramas:
 
-```{r,  fig.width =5, fig.height = 3}
+```{r, fig.height = 3, out.width="95%"}
 bind_rows(muestra %>% mutate(tipo = "muestra"),
     poblacion_casas %>% mutate(tipo = "población")) %>% 
 ggplot(aes(x = precio_miles, group = tipo)) + 
@@ -182,7 +182,7 @@ media_muestras <- map_dbl(1:5000, ~ muestra %>%
 
 Y nuestra estimación de la distribución de muestreo para la media es entonces:
 
-```{r, fig.width =6, fig.height = 4}
+```{r, fig.height = 3, out.width="95%"}
 bootstrap <- tibble(media = media_muestras)
 g_cuantiles <- ggplot(bootstrap, aes(sample = media)) + geom_qq(distribution = stats::qunif)
 g_histograma <- ggplot(bootstrap, aes(x = media)) + geom_histogram(binwidth = 2)
@@ -298,7 +298,7 @@ se usó para tomar la muestra original. Estas dos imágenes de @Chihara muestran
 que acabamos de describir:
 
 
-```{r mundo-real, warning=FALSE, fig.cap='Mundo Real', echo = FALSE}
+```{r mundo-real, warning=FALSE, fig.cap='Mundo Real', echo = FALSE, out.width="95%"}
 library(LaplacesDemon)
 library(patchwork)
 # En este ejemplo la población es una mezcla de normales
@@ -349,7 +349,7 @@ dist_muestral_plot <- ggplot(samples_dist, aes(x = mu_hat)) +
 ```
 
 
-```{r mundo-bootstrap, warning=FALSE, fig.cap='Mundo Bootstrap', echo = FALSE}
+```{r mundo-bootstrap, warning=FALSE, fig.cap='Mundo Bootstrap', echo = FALSE, out.width="95%"}
 dist_empirica <- tibble(id = 1:30, obs = samples$sims[[1]])
 
 dist_empirica_plot <- ggplot(dist_empirica, aes(x = obs)) +
@@ -451,7 +451,7 @@ te %>% mutate(negro = ifelse(Tea == "black", 1, 0)) %>%
 hizo tomando una muestra aleatoria simple de tamaño 300 de la población de tomadores de té que
 nos interesa. Podemos entonces usar el boostrap:
 
-```{r}
+```{r, out.width="95%"}
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   prop_negro <- datos %>% 
@@ -502,7 +502,7 @@ de muestreo, o para "mejorar" la estimación remuestreando.
 En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 200, y
 vemos cómo se ve la aproximación a la distribución de la población:
 
-```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3, cache = TRUE}
+```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3, cache = TRUE, out.width="95%"}
 set.seed(911)
 muestras <- map(1:20, function(x) {
     muestra <- sample_n(poblacion_casas, 200, replace = T) %>% 
@@ -520,7 +520,7 @@ geom_qq(data = dat_pob, aes(sample = precio_miles), colour = "red", size = 1,
 Podemos calcular las distribuciones de remuestreo para cada muestra bootstrap,
 y compararlas con la distribución de muestreo real.
 
-```{r,  fig.width =4, fig.height = 3, cache = TRUE}
+```{r,  fig.width =4, fig.height = 3, cache = TRUE, out.width="95%"}
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   media_precio <- datos %>% 
@@ -559,7 +559,7 @@ dist_muestreo <- datos_sim %>%
 ```
 
 
-```{r, echo = FALSE, fig.width =4, fig.height = 3}
+```{r, echo = FALSE, fig.width =4, fig.height = 3, out.width="95%"}
 ggplot(dist_boot, aes(sample = precio_miles, group = interaction(rep))) + 
     geom_qq(distribution = stats::qunif, size = 0.1, alpha = 0.1) + 
 geom_qq(data = dist_muestreo, aes(sample = precio_miles), colour = "red",
