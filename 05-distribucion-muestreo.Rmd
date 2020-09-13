@@ -1,4 +1,4 @@
-# Estimación y distribución de muestreo
+# Estimación y distribución de muestreo {#S:distribucion-muestreo}
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
@@ -103,14 +103,11 @@ Empezamos repitiendo 10 veces y examinamos cómo varía nuestra estadística:
 replicar_muestreo <- function(marco_casas, m = 500, n){
   # n es el tamaño de muestra que se saca de marco_casas
   # m es el número de veces que repetimos el muestro de tamaño n
-  resultados <- map(1:m,
+  resultados <- map_df(1:m,
       function(id) {
         sample_n(marco_casas, n) %>%
-          estimar_total(N) %>%
-          mutate(id_muestra = id) %>%
-          select(id_muestra, everything())
-      })
-  resultados %>% bind_rows
+          estimar_total(N)
+      }, .id = "id_muestra")
 }
 replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   mutate(across(where(is.numeric), round, 1)) %>%
@@ -139,7 +136,6 @@ graf_1
 
 Con muy alta probabilidad  el error no será de más de unos 30 millones de dólares
 (o no más de 20% del valor poblacional).
-
 
 
 ```{block, type='mathblock'}
@@ -181,7 +177,7 @@ graf_1 + graf_2
 
 ```{block, type = 'comentario'}
 **Observación**: a veces este concepto se confunde la distribución
-poblacional de las $X_i$. Esto es muy diferente. 
+poblacional de las $X_i$. Esto es muy diferente.
 
 ```
 
@@ -449,14 +445,14 @@ es suficientemente grande.
 
 ```{block2, type="mathblock"}
 **Teorema central del límite**
- 
+
   Si $X_1,X_2, \ldots, X_n$ son independientes e idénticamente distribuidas con
 media $\mu$ y desviación estándar $\sigma$ finitas.
 
-Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media 
+Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media
 
-$$\bar{X}_n = \frac{X_1 + X_2 +\cdots + X_n}{n}$$ 
-  
+$$\bar{X}_n = \frac{X_1 + X_2 +\cdots + X_n}{n}$$
+
   es aproximadamente normal con media $\mu$ y desviación estándar $\sigma/\sqrt{n}$,
 que escribimos como
 
@@ -505,7 +501,7 @@ cerca o lejos de una distribución normal?
 
 Para checar si una distribución de datos dada es similar a la normal, la herramienta
 mas común en estádística es la gráfica de cuantiles teóricos, que es una generalización
-de la gráfica de cuantiles que vimos anteriormente. 
+de la gráfica de cuantiles que vimos anteriormente.
 
 En primer lugar, definimos la función de cuantiles de una distribución teórica,
 que es análoga a la que definimos para conjuntos de datos:
@@ -524,8 +520,8 @@ Por ejemplo, para una densidad normal, abajo mostramos los cuantiles $f=0.5$ (me
 y $f=0.95$
 
 ```{r}
-densidad_tbl <- tibble(x = seq(0, 10, 0.01)) %>% 
-  mutate(densidad = dnorm(x, 5, 1)) 
+densidad_tbl <- tibble(x = seq(0, 10, 0.01)) %>%
+  mutate(densidad = dnorm(x, 5, 1))
 ```
 
 
@@ -534,19 +530,19 @@ densidad_tbl <- tibble(x = seq(0, 10, 0.01)) %>%
 cuantil_50 <- qnorm(0.50, 5, 1)
 cuantil_90 <- qnorm(0.95, 5, 1)
 # graficamos
-densidad_tbl <- densidad_tbl %>% 
-  mutate(menor_50 = x >= cuantil_50) %>% 
+densidad_tbl <- densidad_tbl %>%
+  mutate(menor_50 = x >= cuantil_50) %>%
   mutate(menor_90 = x >= cuantil_90)
-g_normal_50 <- ggplot(densidad_tbl, aes(y = densidad)) + 
-  ylab('f(x)') + 
-  geom_area(aes(x = x, fill = menor_50)) + 
+g_normal_50 <- ggplot(densidad_tbl, aes(y = densidad)) +
+  ylab('f(x)') +
+  geom_area(aes(x = x, fill = menor_50)) +
   geom_line(aes(x = x), alpha = 0.1) +
   geom_vline(xintercept = cuantil_50) + theme(legend.position = "none") +
   annotate("text", 4.3, 0.2, label = "50%") +
   labs(subtitle = paste0("q(0.5)=", round(cuantil_50,1)))
-g_normal_90 <- ggplot(densidad_tbl, aes(y = densidad)) + 
-  ylab('f(x)') + 
-  geom_area(aes(x = x, fill = menor_90)) + 
+g_normal_90 <- ggplot(densidad_tbl, aes(y = densidad)) +
+  ylab('f(x)') +
+  geom_area(aes(x = x, fill = menor_90)) +
   geom_line(aes(x = x), alpha = 0.1) +
   geom_vline(xintercept = cuantil_90) + theme(legend.position = "none") +
   annotate("text", 5.0, 0.2, label = "95%") +
@@ -555,12 +551,12 @@ g_normal_50 + g_normal_90
 ```
 
 Como todas las distribuciones normales tienen la misma forma, y para obtener una de otra
-solo basta reescalar y desplazar, para calcular los cuantiles de una 
+solo basta reescalar y desplazar, para calcular los cuantiles de una
 variable con distribución normal $X \sim \mathsf{N}(\mu, \sigma)$
 sólo tenemos que saber los cuantiles de la distribución normal estándar $Z \sim \mathsf{N}(0,1)$ y escalarlos
 apropiadamente por su media y desviación estándar
 
-$$q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$ 
+$$q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$
 Puedes demostrar esto sin mucha dificultad empezando con $P(X\leq q) = f$ y estandarizando:
 
 $$P(X\leq q(f, \mu, \sigma)) = f \implies P\left (Z\leq \frac{q(f,\mu,\sigma) - \mu}{\sigma}\right)=f$$
@@ -571,21 +567,21 @@ De modo que si graficáramos los cuantiles de una distribución $\mathsf{N}(\mu,
 los cuantiles de una distribución $\mathsf{N}(0,1)$, estos cuantiles aparecen en una línea recta:
 
 ```{r, fig.width=4,fig.height=3}
-comparacion_tbl <- tibble(f = seq(0.01, 0.99, 0.01)) %>% 
+comparacion_tbl <- tibble(f = seq(0.01, 0.99, 0.01)) %>%
   mutate(cuantiles_normal = qnorm(f, 5, 3),
          cuantiles_norm_estandar = qnorm(f, 0, 1))
-ggplot(comparacion_tbl, aes(cuantiles_norm_estandar, cuantiles_normal)) + 
+ggplot(comparacion_tbl, aes(cuantiles_norm_estandar, cuantiles_normal)) +
   geom_point()
 ```
 
 Ahora supongamos que tenemos una muestra $X_1, \ldots, X_n$. ¿Cómo podemos
-checar si estos datos tienen una distribución aproximadamente normal? 
+checar si estos datos tienen una distribución aproximadamente normal?
 
 - Si la muestra tiene una distribución aproximadamente $\mathsf{N}(\mu, \sigma)$, entonces
 sus cuantiles muestrales y los cuantiles respectivos de la normal estándar están aproximadamente
 en una línea recta.
 
-Primero veamos un ejemplo donde los datos son generados según una normal. 
+Primero veamos un ejemplo donde los datos son generados según una normal.
 
 ```{r, fig.width=7, fig.height=3}
 set.seed(21)
@@ -598,18 +594,18 @@ graf_2 <- ggplot(muestra, aes(sample = x_2)) +
   geom_qq_line(colour = "red")
 graf_1 + graf_2
 ```
-¿Cuáles son los datos aproximadamente normales? ¿Cómo interpretas las desviaciones de 
+¿Cuáles son los datos aproximadamente normales? ¿Cómo interpretas las desviaciones de
 la segunda gráfica en términos de la forma de la distribución normal?
 
 ## Prueba de hipótesis de normalidad {-}
 
-Para interpretar las gráficas de cuantiles normales se requiere práctica, 
+Para interpretar las gráficas de cuantiles normales se requiere práctica,
 pues claramente los datos, aún cuando provengan de una distribución normal, no
 van a caer justo sobre una línea recta y observaremos variabilidad. Esto no descarta
 neceariamente que los datos sean aproximadamente normales. Con la práctica, generalmente
 esta gráfica nos da una buena indicación si el supuesto de normalidad es apropiado.
 
-Sin embargo, podemos hacer una prueba de hipótesis formal de normalidad si 
+Sin embargo, podemos hacer una prueba de hipótesis formal de normalidad si
 quisiéramos. La hipótesis nula es la siguiente:
 
 - Los datos provienen de una distribución normal, y las desviaciones que observamos
@@ -646,7 +642,7 @@ attr(lineup_normal, "pos")
 ### Ejemplo {-}
 
 Consideremos el problema de estimar el total poblacional de los precios de las casas
-que se vendieron. El estimador que usamos fue la suma muestral expandida por un 
+que se vendieron. El estimador que usamos fue la suma muestral expandida por un
 factor. Vamos a checar qué tan cerca de la normalidad está la distribución de
 meustreo de esta estadística ($n=250$):
 
@@ -696,28 +692,28 @@ usando la función de distribución de la normal estándar, y nuestra aproximaci
 Podemos checar nuestro cálculo usando simulación:
 
 ```{r}
-tibble(n_sim = 1:100000) %>% 
-  mutate(suma = map_dbl(n_sim, ~ sum(runif(30)))) %>% 
-  summarise(prob_may_18 = mean(suma > 18))
+tibble(n_sim = 1:100000) %>%
+  mutate(suma = map_dbl(n_sim, ~ sum(runif(30)))) %>%
+  summarise(prob_may_18 = mean(suma > 18), .groups = "drop")
 ```
 Y vemos que la aproximación normal es buena para fines prácticos.
 
 ```{block, type='ejercicio'}
-Usando simulaciones haz un histograma que aproxime la distribución de muestreo de $S_n$. 
+Usando simulaciones haz un histograma que aproxime la distribución de muestreo de $S_n$.
 Haz una gráfica de cuantiles normales para checar la normalidad de esta distribución.
 ```
 
 ## Ejemplo {-}
 Cuando el sesgo de la distribución poblacional es grande, puede ser necesario
-que $n$ sea muy grande para que la aproximación normal sea aceptable para el 
+que $n$ sea muy grande para que la aproximación normal sea aceptable para el
 promedio o la suma. Por ejemplo, is tomamos una gamma con parámetro de forma chico,
-$n = 30$ no es suficientemente bueno, especialmente si quisiéramos 
+$n = 30$ no es suficientemente bueno, especialmente si quisiéramos
 aproximar probabilidades en las colas de la distribución:
 
 
 ```{r}
-sims_gamma <- tibble(n_sim = 1:2000) %>% 
-  mutate(suma = map_dbl(n_sim, ~ mean(rgamma(30, 0.1, 1))))
+sims_gamma <- map_df(1:2000, ~ tibble(suma = mean(rgamma(30, 0.1, 1))),
+                     .id = "n_sim")
 ggplot(sims_gamma, aes(x = suma)) + geom_histogram()
 ```
 
@@ -729,22 +725,15 @@ finitas (como vimos en el ejemplo de las casas) bajo muestreo sin
 reemplazo, y aplica también a otras estadísticas como los cuantiles muestrales.
 
 - Es importante notar que la calidad de la aproximación del $\textsf{TCL}$ depende de características
-de la población y también del tamaño de muestra $n$. Para ver si el $\textsf{TCL}$ aplica, podemos hacer ejercicios de simulación bajo diferentes supuestos acerca de la población. 
+de la población y también del tamaño de muestra $n$. Para ver si el $\textsf{TCL}$ aplica, podemos hacer ejercicios de simulación bajo diferentes supuestos acerca de la población.
 También veremos más adelante, con remuestreo, maneras de checar si es factible el $\textsf{TCL}$ dependiendo del análisis de una muestra dada que tengamos.
 
 - El $\textsf{TCL}$ era particularmente importante en la práctica antes de que pudiéramos
 hacer simulación por computadora. Era la única manera de aproximar y entender la distribución muestral fuera de cálculos analíticos (como los que hicimos para
-el máximo de un conjunto de uniformes, por ejemplo). 
+el máximo de un conjunto de uniformes, por ejemplo).
 
 - Hoy en día, veremos que podemos hacer simulación para obtener respuestas más
 exactas, particularmente en la construcción de intervalos de confianza, por ejemplo. Dependemos menos de **resultados asintóticos**, como el $\textsf{TCL}$.
 
 - Cuando aproximamos una distribución discreta mediante la distribución normal,
-conviene hacer *correcciones de continuidad*, como se explica en [@Chihara], 4.3.2. 
-
-
-
-
-
-
-
+conviene hacer *correcciones de continuidad*, como se explica en [@Chihara], 4.3.2.
