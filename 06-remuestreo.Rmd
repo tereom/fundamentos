@@ -824,6 +824,20 @@ de simulación se pueden hacer con poblaciones sintéticas simuladas que tengan
 las características que creemos va a tener nuestra población (por ejemplo, sesgo,
 colas largas, etc.).
 
+```{block2 ,type='comentario'}
+En general, no importa qué tipo de estimadores o intervalos de confianza usemos, 
+requerimos
+checar la calibración. Esto puede hacerse con ejercicios de simulación con poblaciones
+sintéticas y tanto los procedimientos de muestreo como 
+los tamaños de muestra que nos interesa usar. 
+```
+
+Algunos casos son bien entendidos, como estimaciones para poblaciones teóricas particulares,
+distribuciones simétricas con colas no muy largas o estimación de proporciones que no
+son muy cercanas a 0 o 1, y en estos casos los procedimientos usuales funcionan bien.
+
+
+
 ## Interpretación de intervalos de confianza
 
 Como hemos visto,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
