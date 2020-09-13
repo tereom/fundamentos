@@ -1218,6 +1218,9 @@ natalidad <- readRDS("./data/nacimientos/natalidad.rds") %>%
     mutate(mes = month(fecha)) %>% ungroup %>%
     mutate(dia_semana = recode(dia_semana, Monday = "Lunes", Tuesday = "Martes", Wednesday = "Miércoles",
                                Thursday = "Jueves", Friday = "Viernes", Saturday = "Sábado", Sunday = "Domingo")) %>%
+    #necesario pues el LOCALE puede cambiar
+    mutate(dia_semana = recode(dia_semana, lunes = "Lunes", martes = "Martes", miércoles = "Miércoles",
+                               jueves = "Jueves", viernes = "Viernes", sábado = "Sábado", domingo = "Domingo")) %>%
     mutate(dia_semana = fct_relevel(dia_semana, c("Lunes", "Martes", "Miércoles",
                                                   "Jueves", "Viernes", "Sábado", "Domingo")))
 ```
@@ -1483,10 +1486,10 @@ Podemos empezar con una curosidad. Los días Viernes o Martes 13, ¿nacen menos 
 datos_dia <- datos_dia %>%
   ungroup %>%
   mutate(dia_mes = day(datos_dia$fecha)) %>%
-  mutate(viernes_13 = ifelse(dia_mes == 13 & dia_semana == "viernes", "Viernes 13", "Otro Día")) %>%
-  mutate(martes_13 = ifelse(dia_mes == 13 & dia_semana == "martes", "Martes 13", "Otro Día")) %>%
+  mutate(viernes_13 = ifelse(dia_mes == 13 & dia_semana == "Viernes", "Viernes 13", "Otro Día")) %>%
+  mutate(martes_13 = ifelse(dia_mes == 13 & dia_semana == "Martes", "Martes 13", "Otro Día")) %>%
   mutate(en_semana_santa = ifelse(semana_santa, "Sí", "No"))
-datos_13 <- datos_dia %>% filter(dia_semana == "martes" | dia_semana == "viernes") %>%
+datos_13 <- datos_dia %>% filter(dia_semana == "Martes" | dia_semana == "Viernes") %>%
   mutate(tipo_dia_13 = ifelse(martes_13 == "Martes 13", "Martes 13",
       ifelse(viernes_13 == "Viernes 13", "Viernes 13", "Otro Martes o Viernes")))
 ggplot(datos_13,
