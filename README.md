@@ -9,8 +9,8 @@ maestría en Ciencia de Datos del ITAM sitio: https://fundamentos-est.netlify.ap
 ## Instrucciones para generar las notas de manera local.
 
 **Importante.** Si tienes una computadora `Mac` échale un ojo a la siguiente
-sección para asegurar que tienes todas las dependencias instaladas tener `R`
-en tu máquina.
+sección antes de instalar `R`. Esto garantizará que tienes todas las dependencias
+instaladas que necesita `R` en tu máquina.
 
 1. Asegúrate de tener instalados tanto [`R`](https://cloud.r-project.org/) como
 [`Rstudio`](https://rstudio.com/products/rstudio/download/) en tu máquina (en
