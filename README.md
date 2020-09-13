@@ -38,7 +38,8 @@ correcta.
 
 ## Consideraciones adicionales para `MacOS`.
 
-De preferencia antes de instalar `R` considera las siguientes pasos.
+De preferencia antes de instalar `R` considera las siguientes pasos. Esto es por
+que en `MacOS` necesitamos compiladores de `fortran`, `c++`, etc., para algunas librerías.
 
 1. Habilita las herramientas de línea de comandos de `xcode`:
 ```{bash}
