@@ -59,7 +59,7 @@ reps_boot <- map(1:2000, function(i){
     medianas <- muestra_tab %>% 
         fun_boot %>% 
         group_by(grupo) %>% 
-        summarise(mediana = median(x))
+        summarise(mediana = median(x), .groups = "drop")
     medianas %>% mutate(rep = i)
 }) %>% bind_rows
 resumen_boot <- reps_boot %>% group_by(grupo) %>% 
@@ -400,7 +400,7 @@ de muestreo, o para "mejorar" la estimación remuestreando.
 En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 200, y
 vemos cómo se ve la aproximación a la distribución de la población:
 
-```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3}
+```{r, echo = FALSE, message = FALSE, cache=TRUE, fig.width =4, fig.height = 3}
 set.seed(911)
 muestras <- map(1:20, function(x) {
     muestra <- sample_n(poblacion_casas, 200, replace = T) %>% 
@@ -695,15 +695,16 @@ simular_intervalos <- function(rep, size = 150){
     mutate(rep = rep)
   totales_boot
 }
-sims_intervalos <- map(1:200, ~ simular_intervalos(rep = .x))
+sims_intervalos <- map(1:100, ~ simular_intervalos(rep = .x))
 ```
 
 ```{r, fig.width =8, fig.height=4}
+total <- sum(poblacion_casas$precio_miles)
 sims_tbl <- sims_intervalos %>% 
   bind_rows %>%
   mutate(cubre = inf < total & total < sup) 
 ggplot(sims_tbl, aes(x = rep)) +
-  geom_hline(yintercept = sum(poblacion_casas$precio_miles), colour = "red") +
+  geom_hline(yintercept = total, colour = "red") +
   geom_linerange(aes(ymin = inf, ymax = sup, colour = cubre)) 
 ```
 La cobertura para estos 100 intervalos simulados da
@@ -790,6 +791,60 @@ que está en millones de pesos. Nótese que es similar al intervalo de error est
 Explica por qué cuando la aproximación normal es apropiada, el intervalo de percentiles
 al 95% es muy similar al intervalo normal de 2 errores estándar.
 ```
+
+### Ejemplo {-}
+
+Consideramos los datos de propinas. Queremos estimar la media de cuentas
+totales para la comida y la cena. Podemos hacer bootstrap de cada grupo
+por separado:
+
+```{r}
+# en este ejemplo usamos rsample, pero puedes
+# escribir tu propio código
+library(rsample)
+propinas <- read_csv("data/propinas.csv")
+estimador <- function(split, ...){
+  muestra <- analysis(split) %>% group_by(momento)
+  muestra %>% 
+    summarise(estimate = mean(cuenta_total)) %>% 
+    mutate(term = momento)
+}
+intervalo_propinas_90 <- bootstraps(propinas, strata = momento, 1000) %>% 
+  mutate(res_boot = map(splits, estimador)) %>% 
+  int_pctl(res_boot, alpha = 0.10) %>% 
+  mutate(across(where(is.numeric), round, 2))
+intervalo_propinas_90
+```
+
+Nota: *.estimate* es la media de los valores de la estadística sobre las remuestras, **no** es
+el estimador original.
+
+De la tabla anterior inferimos que la media en la cuenta en la cena es más grande que la de la comida.
+Podemos graficar agregando los estimadores plugin:
+
+```{r}
+estimadores <- propinas %>% 
+  group_by(momento) %>% 
+  rename(term = momento) %>% 
+  summarise(media = mean(cuenta_total))
+
+ggplot(intervalo_propinas_90, aes(x = term)) +
+  geom_linerange(aes(ymin = .lower, ymax = .upper)) +
+  geom_point(data = estimadores, aes(y = media), colour = "red", size = 3) +
+  xlab("Momento") + ylab("Media de cuenta total (dólares)") +
+  labs(subtitle = "Intervalos de 90% para la media")
+```
+
+Nótese que el bootstrap lo hicimos por separado en cada momento del día (por eso
+el argumento *strata* en la llamada a **bootstraps**):
+
+```{block2, type='ejercicio'}
+Justifica el procedimiento de hacer el bootstrap separado para cada grupo. ¿Qué supuestos
+acerca del muestreo se deben satisfacer? ¿Deben ser muestras aleatorias simples 
+de cada momento del día, por ejemplo? ¿Qué harías si no fuera así, por ejemplo, si 
+se escogieron al azar tickets de todos los disponibles en un periodo?
+```
+
 
 
 
