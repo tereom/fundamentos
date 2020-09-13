@@ -771,7 +771,7 @@ Como solo tenemos una muestra, la calibración depende de argumentos teóricos o
 estudios de simulación previos. Para nuestro ejemplo de casas tenemos la
 población, así que podemos checar qué cobertura real tienen los intervalos normales:
 
-```{r, cache = TRUE}
+```{r, cache = FALSE}
 simular_intervalos <- function(rep, size = 150){
   muestra_casas <- sample_n(poblacion_casas, size = size)
   N <- nrow(poblacion_casas)
@@ -796,7 +796,11 @@ simular_intervalos <- function(rep, size = 150){
     mutate(rep = rep)
   totales_boot
 }
-sims_intervalos <- map(1:100, ~ simular_intervalos(rep = .x))
+# Para recrear, correr:
+# sims_intervalos <- map(1:100, ~ simular_intervalos(rep = .x))
+# write_rds(sims_intervalos, "cache/sims_intervalos.rds")
+# Para usar resultados en cache:
+sims_intervalos <- read_rds("cache/sims_intervalos.rds")
 ```
 
 ```{r, fig.width =8, fig.height=4}
@@ -900,7 +904,7 @@ Para el ejemplo de las casas, calcularíamos simplemente
 intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975))
 (intervalo_95 / 1000) %>% round(1)
 ```
-que está en millones de pesos. Nótese que es similar al intervalo de error estándar.
+que está en millones de dólares. Nótese que es similar al intervalo de error estándar.
 
 ```{block2, type='ejercicio'}
 Explica por qué cuando la aproximación normal es apropiada, el intervalo de percentiles
