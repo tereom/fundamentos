@@ -11,7 +11,8 @@ Imports:
     lubridate, 
     gridExtra, 
     here, 
-    broom, 
+    broom,
+    LaplacesDemon,
     nullabor
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
