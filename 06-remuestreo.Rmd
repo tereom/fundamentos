@@ -46,25 +46,30 @@ más adelante, por el momento consideramos la gŕafica resultante:
 set.seed(8)
 pob_tab <- tibble(id = 1:2000, x = rgamma(2000, 4, 1), 
     grupo = sample(c("a","b", "c"), 2000, prob = c(4,2,1), replace = T))
-muestra_tab <- pob_tab %>% sample_n(125)
-g_1 <- ggplot(muestra_tab, aes(x = grupo, y = x)) + geom_boxplot(outlier.alpha = 0) +
-    geom_jitter(alpha = 0.3) + 
-      labs(subtitle = "Muestra \n") + ylim(c(0,14))
+muestra_tab <- pob_tab %>% 
+  sample_n(125)
+g_1 <- ggplot(muestra_tab, aes(x = grupo, y = x)) + 
+  geom_boxplot(outlier.alpha = 0) +
+  geom_jitter(alpha = 0.3) + 
+  labs(subtitle = "Muestra \n") + ylim(c(0,14))
 ## Hacemos bootstrap
 fun_boot <- function(datos){
     datos %>% group_by(grupo) %>% sample_n(n(), replace = TRUE)
 }
-reps_boot <- map(1:2000, function(i){
-    medianas <- muestra_tab %>% 
-        fun_boot %>% 
-        group_by(grupo) %>% 
-        summarise(mediana = median(x), .groups = "drop")
-    medianas %>% mutate(rep = i)
-}) %>% bind_rows
+reps_boot <- map_df(1:2000, function(i){
+  muestra_tab %>% 
+    fun_boot %>% 
+    group_by(grupo) %>% 
+    summarise(mediana = median(x), .groups = "drop")}, 
+  .id = 'rep') 
 resumen_boot <- reps_boot %>% group_by(grupo) %>% 
-    summarise(ymin = quantile(mediana, 0.025), ymax = quantile(mediana, 0.975)) %>% 
-    left_join(muestra_tab %>% group_by(grupo) %>% summarise(mediana = median(x)))
-g_2 <- ggplot(resumen_boot, aes(x = grupo, y = mediana, ymin = ymin, ymax = ymax)) +
+    summarise(ymin = quantile(mediana, 0.025), 
+              ymax = quantile(mediana, 0.975), .groups = "drop") %>% 
+    left_join(muestra_tab %>% 
+                group_by(grupo) %>% 
+                summarise(mediana = median(x)), .groups = "drop")
+g_2 <- ggplot(resumen_boot, aes(x = grupo, y = mediana, ymin = ymin, 
+                                ymax = ymax)) +
     geom_linerange() +
     geom_point(colour = "red", size = 2) +  ylim(c(0,14)) +
     labs(subtitle = "Intervalos de 95% \n para la mediana")
@@ -102,17 +107,21 @@ población desconocida y un estimador $T=t(X_1,\dots, X_n)$
 
 **Mundo poblacional**
 
-1. Si tuviéramos la distribución poblacional, simulamos muestras iid para aproximar
-la distribución de muestreo de nuestro estimador, y así entender su variabilidad.
-2. Pero **no** tenemos la distribución poblacional
-3. **Sin embargo, podemos estimar la distribución poblacional con nuestros valores muestrales**
+1. Si tuviéramos la distribución poblacional, simulamos muestras iid para
+aproximar la distribución de muestreo de nuestro estimador, y así entender su
+variabilidad.
+2. Pero **no** tenemos la distribución poblacional.
+3. **Sin embargo, podemos estimar la distribución poblacional con nuestros valores muestrales**.
 
 **Mundo bootstrap**
 
-4. Si usamos la estimación del inciso 3, entonces usando el inciso 1 podríamos tomar muestras
-de nuestros datos muestrales, como si fueran de la población, y usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de manera que produzcamos muestras independientes de la misma "población estimada", que es la muestra.
+4. Si usamos la estimación del inciso 3, entonces usando el inciso 1 podríamos
+tomar muestras de nuestros datos muestrales, como si fueran de la población, y
+usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de 
+manera que produzcamos muestras independientes de la misma "población estimada",
+que es la muestra.
 5. Evaluamos nuestra estadística en cada una de estas remuestras.
-6. A la distribución resultante le llamamos **distribución bootstrap** o **distribución de remuestreo** del estimador
+6. A la distribución resultante le llamamos **distribución bootstrap** o **distribución de remuestreo** del estimador.
 7. Usamos la distribución bootstrap de la muestra para estimar la variabilidad en nuestra
 estimación con **la muestra original**.
 
@@ -177,7 +186,7 @@ estadística (en este caso la media) en cada una de estas remuestras:
 ```{r, cache = TRUE}
 media_muestras <- map_dbl(1:5000, ~ muestra %>%  
     sample_n(200, replace = T) %>%
-    summarise(media_precio = mean(precio_miles)) %>% pull(media_precio)) 
+    summarise(media_precio = mean(precio_miles), .groups = "drop") %>% pull(media_precio)) 
 ```
 
 Y nuestra estimación de la distribución de muestreo para la media es entonces:
@@ -198,7 +207,7 @@ limites_ic
 ```
 
 Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la mediana es
-`r mean(muestra$precio_miles)`, con un intervalo de confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
+`r round(mean(muestra$precio_miles), 1)`, con un intervalo de confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
 
 Otra cosa que podríamos hacer para describir la dispersión de nuestro estimador
 es calcular el error estándar de remuestreo, que estima el error estándar de
@@ -254,7 +263,7 @@ Y el proceso que hacemos es:
 ```{block2, type='comentario'}
 **Remuestreo para una población.** Dada una muestra de tamaño $n$ de una población, 
 
-1. Obtenemos una remuestra de tamaño $n$ sin reemplazo de la muestra original
+1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original
 2. Repetimos este remuestreo muchas veces (por ejemplo, 10,000).
 3. Construímos la distribución bootstrap, y examinamos sus características 
 (dónde está centrada, dispersión y forma).
@@ -264,7 +273,7 @@ Y el proceso que hacemos es:
 
 ## El principio de plug-in {-}
 
-La idea básica detraś del bootstrap es el principio de plug-in para estimar
+La idea básica detrás del bootstrap es el principio de plug-in para estimar
 parámetros poblacionales: si queremos
 estimar una cantidad poblacional, calculamos esa cantidad poblacional con la muestra
 obtenida. Es un principio común en estadística. 
@@ -279,7 +288,7 @@ En todos estos casos, lo que estamos haciendo es:
 - Tenemos una fórmula para la cantidad poblacional de interés en términos de la distribución
 poblacional.  
 - Tenemos una muestra, que usamos para estimar la cantidad poblacional. La distribución
-que da una muestra se llama distribución *empírica**
+que da una muestra se llama distribución *empírica*
 - Contruimos nuestro estimador "enchufando" la distribución empírica de la muestra 
 en la fórmula del estimador.
 
@@ -293,8 +302,8 @@ tomando muchas muestras de la *población*.
 tomando muchas muestras de la *muestra* (bootstrap).
 
 Nótese que el proceso de muestreo en el último paso **debe ser el mismo** que
-se usó para tomar la muestra original. Estas dos imágenes de @Chihara muestran lo
-que acabamos de describir:
+se usó para tomar la muestra original. Estas dos imágenes simuladas con base en 
+un ejemplo de @Chihara muestran lo que acabamos de describir:
 
 
 ```{r mundo-real, warning=FALSE, fig.cap='Mundo Real', echo = FALSE}
@@ -409,11 +418,11 @@ boot_muestral_plot <- ggplot(boot_dist, aes(x = mu_hat_star)) +
 **Observación 1**. Veremos ejemplos más complejos, pero nótese que si la muestra
 original son observaciones independientes obtenidas de la distribución poblacional,
 entonces logramos esto en las remuestras tomando observaciones con reemplazo
-de la muestra. Igalmente, las remuestras deben ser del mismo tamaño que la muestra
+de la muestra. Igualmente, las remuestras deben ser del mismo tamaño que la muestra
 original.
 
 ```{block2,type='ejercicio'}
-- ¿Qué no funcionaría tomar muestras sin reemplazo? Piensa si hay independencia
+- ¿Porqué no funcionaría tomar muestras sin reemplazo? Piensa si hay independencia
 entre las observaciones de la remuestra, y cómo serían las remuestras sin reemplazo.
 - ¿Por qué no se puede hacer bootstrap si no conocemos cómo se obtuvo la muestra original?
 ```
@@ -443,7 +452,7 @@ te <- read_csv("data/tea.csv") %>%
   rowid_to_column() %>% 
   select(rowid, Tea, sugar)
 te %>% mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
-  summarise(prop_negro = mean(negro), n = length(negro))
+  summarise(prop_negro = mean(negro), n = length(negro), .groups = "drop")
 ```
 
 ¿Cómo evaluamos la precisión de este estimador? Supondremos que el estudio se
@@ -455,7 +464,7 @@ nos interesa. Podemos entonces usar el boostrap:
 calc_estimador <- function(datos){
   prop_negro <- datos %>% 
     mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
-    summarise(prop_negro = mean(negro), n = length(negro)) %>% 
+    summarise(prop_negro = mean(negro), n = length(negro), .groups = "drop") %>% 
     pull(prop_negro)
   prop_negro
 }
@@ -482,7 +491,8 @@ prop_negro_tbl %>%
             sesgo = mean(prop_negro) - 0.2499,
             ee = sd(prop_negro),
             cuantil_75 = quantile(prop_negro, 0.75), 
-            cuantil_25 = quantile(prop_negro, 0.25)) %>% 
+            cuantil_25 = quantile(prop_negro, 0.25),
+            .groups = "drop") %>% 
   mutate(across(where(is.numeric), round, 3)) %>% 
   pivot_longer(cols = everything())
 ```
@@ -523,7 +533,7 @@ y compararlas con la distribución de muestreo real.
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   media_precio <- datos %>% 
-    summarise(media = mean(precio_miles)) %>% 
+    summarise(media = mean(precio_miles), .groups = "drop") %>% 
     pull(media)
   media_precio
 }
@@ -578,7 +588,7 @@ de la muestra original que utilizamos.
 tiende cubrir el verdadero valor que buscamos estimar, que es:
 
 ```{r}
-poblacion_casas %>% summarise(media = mean(precio_miles))
+poblacion_casas %>% summarise(media = mean(precio_miles), .groups = "drop")
 ```
 
 
