@@ -310,7 +310,7 @@ ventas.null <- lineup(null_dist(var = 'res.est2.2', dist = 'normal',
 ```
 
 ```
-## decrypt("bhMq KJPJ 62 sSQ6P6S2 7Z")
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 un")
 ```
 
 ```r
@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] 0.5
+## [1] -0.68
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] -0.14
+## [1] 0.6
 ```
 
 ```r

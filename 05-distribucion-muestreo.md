@@ -1,4 +1,4 @@
-# Estimación y distribución de muestreo
+# Estimación y distribución de muestreo {#S:distribucion-muestreo}
 
 
 
@@ -139,14 +139,11 @@ Empezamos repitiendo 10 veces y examinamos cómo varía nuestra estadística:
 replicar_muestreo <- function(marco_casas, m = 500, n){
   # n es el tamaño de muestra que se saca de marco_casas
   # m es el número de veces que repetimos el muestro de tamaño n
-  resultados <- map(1:m,
+  resultados <- map_df(1:m,
       function(id) {
         sample_n(marco_casas, n) %>%
-          estimar_total(N) %>%
-          mutate(id_muestra = id) %>%
-          select(id_muestra, everything())
-      })
-  resultados %>% bind_rows
+          estimar_total(N) 
+      }, .id = "id_muestra")
 }
 replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   mutate(across(where(is.numeric), round, 1)) %>%
@@ -155,18 +152,18 @@ replicar_muestreo(marco_casas, m = 10, n = 100) %>%
 
 
 
-| id_muestra| total_muestra| factor_exp| est_total_millones|
-|----------:|-------------:|----------:|------------------:|
-|          1|       17594.8|       11.4|              201.3|
-|          2|       17423.9|       11.4|              199.3|
-|          3|       18444.3|       11.4|              211.0|
-|          4|       17696.6|       11.4|              202.4|
-|          5|       17275.8|       11.4|              197.6|
-|          6|       17867.6|       11.4|              204.4|
-|          7|       18450.8|       11.4|              211.1|
-|          8|       18187.2|       11.4|              208.1|
-|          9|       18604.2|       11.4|              212.8|
-|         10|       19144.4|       11.4|              219.0|
+|id_muestra | total_muestra| factor_exp| est_total_millones|
+|:----------|-------------:|----------:|------------------:|
+|1          |       17594.8|       11.4|              201.3|
+|2          |       17423.9|       11.4|              199.3|
+|3          |       18444.3|       11.4|              211.0|
+|4          |       17696.6|       11.4|              202.4|
+|5          |       17275.8|       11.4|              197.6|
+|6          |       17867.6|       11.4|              204.4|
+|7          |       18450.8|       11.4|              211.1|
+|8          |       18187.2|       11.4|              208.1|
+|9          |       18604.2|       11.4|              212.8|
+|10         |       19144.4|       11.4|              219.0|
 
 Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora
@@ -190,11 +187,10 @@ graf_1 <- ggplot(replicaciones_1, aes(x = est_total_millones)) +
 graf_1
 ```
 
-<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" />
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" />
 
 Con muy alta probabilidad  el error no será de más de unos 30 millones de dólares
 (o no más de 20% del valor poblacional).
-
 
 
 <div class="mathblock">
@@ -233,8 +229,10 @@ graf_1 + graf_2
 <img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-10-1.png" width="768" style="display: block; margin: auto;" />
 
 <div class="comentario">
-<p><strong>Observación</strong>: a veces este concepto se confunde la distribución poblacional de las <span class="math inline">\(X_i\)</span>. Esto es muy diferente. Por ejemplo, en nuestro caso, el histograma de la distribución de valores poblacionales es</p>
+<p><strong>Observación</strong>: a veces este concepto se confunde la distribución poblacional de las <span class="math inline">\(X_i\)</span>. Esto es muy diferente.</p>
 </div>
+
+Por ejemplo, en nuestro caso, el histograma de la distribución de valores poblacionales es
 
 
 ```r
@@ -268,7 +266,7 @@ Para el primer caso hacemos:
 ```r
 # simular
 replicar_muestreo_unif <- function(est = estimador_1, m, n = 15){
-  valores_est <- map_dbl(1:m, ~est(runif(n)))
+  valores_est <- map_dbl(1:m, ~ est(runif(n)))
   tibble(id_muestra = 1:m, estimacion = valores_est)
 }
 sim_estimador_1 <- replicar_muestreo_unif(mean, 4000, 15)
@@ -278,7 +276,7 @@ ggplot(sim_estimador_1, aes(x = estimacion)) +
   xlim(c(0, 1))
 ```
 
-<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-14-1.png" width="672" style="display: block; margin: auto;" />
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;" />
 
 
 ```r
@@ -291,7 +289,7 @@ ggplot(sim_estimador_2, aes(x = estimacion)) +
   xlim(c(0, 1))
 ```
 
-<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" />
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" />
 
 
 \BeginKnitrBlock{ejercicio}<div class="ejercicio">Supón que tenemos una muestra de 30 observaciones de una distribución
@@ -356,7 +354,8 @@ map_dbl(1:10000, ~ max(runif(15))) %>% sd
 ```
 
 \BeginKnitrBlock{ejercicio}<div class="ejercicio">Como ejercicio para contrastar estos conceptos,
-puedes considerar: ¿Qué pasa con la desviación estándar de una muestra muy grande de uniformes? ¿Qué pasa con el error estándar de la media muestral de una muestra muy grande de uniformes?</div>\EndKnitrBlock{ejercicio}
+puedes considerar: ¿Qué pasa con la desviación estándar de una muestra muy 
+grande de uniformes? ¿Qué pasa con el error estándar de la media muestral de una muestra muy grande de uniformes?</div>\EndKnitrBlock{ejercicio}
 
 
 
@@ -375,6 +374,7 @@ round(ee_2, 1)
 ```
 ## [1] 5.2
 ```
+
 que está en millones de pesos y cuantifica la dispersión de la distribución de
 muestreo del estimador del total.
 
@@ -431,9 +431,9 @@ caso, es fácil calcular su función de distribución acumulada de manera exacta
 $$F_{\max}(x) = P(\max\{X_1,X_2,\ldots X_n\} \leq x)$$
 El máximo es menor o igual a $x$ si y sólo si todas las $X_i$ son menores
 o iguales a $x$, así que
-$$F_\max (x) = P(X_1\leq x, X_2\leq x, \cdots, X_n\leq x)$$
+$$F_{\max} (x) = P(X_1\leq x, X_2\leq x, \cdots, X_n\leq x)$$
 como las $X_i$'s son independientes entonces
-$$F_\max(x) = P(X_1\leq x)P(X_2\leq x)\cdots P(X_n\leq x) = x^n$$
+$$F_{\max}(x) = P(X_1\leq x)P(X_2\leq x)\cdots P(X_n\leq x) = x^n$$
 para $x\in [0,1]$, pues para cada $X_i$ tenemos $P(X_i\leq x) = x$ (demuéstralo).
 Así que no es necesario usar simulación para conocer esta distribución de muestreo.
 Derivando esta distribución acumulada obtenemos su densidad, que es
@@ -457,7 +457,7 @@ ggplot(sim_estimador_3) +
             colour = "red", size = 1.3)
 ```
 
-<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-24-1.png" width="672" style="display: block; margin: auto;" />
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;" />
 
 Y vemos que con la simulación obtuvimos una buena aproximación
 
@@ -488,7 +488,7 @@ ggplot(sim_estimador_3) +
             colour = "red", size = 1.3)
 ```
 
-<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" />
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-25-1.png" width="480" style="display: block; margin: auto;" />
 
 ### Ejemplo {-}
 
@@ -516,11 +516,11 @@ ggplot(sim_estimador_1) +
   geom_line(data = teorica, aes(x = x, y = f_dens), colour = "red", size = 1.2)
 ```
 
-<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" />
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;" />
 
 ## Teorema central del límite {-}
 
-Si consideramos los ejemplos de arriba donde consideramos estimadores
+Si consideramos los ejemplos de arriba donde tratamos con estimadores
 basados en una suma, total o una media ---y en menor medida cuantiles muestrales---,
 vimos que las distribución de
 muestreo de las estadísticas que usamos tienden a tener una forma común.
@@ -534,15 +534,19 @@ es suficientemente grande.
   Si $X_1,X_2, \ldots, X_n$ son independientes e idénticamente distribuidas con
 media $\mu$ y desviación estándar $\sigma$ finitas.
 
-Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media $\bar{X}$ es aproximadamente normal con media $\mu$ y desviación estándar $\sigma/\sqrt{n}$,
+Si el tamaño de muestra $n$ es grande,  entonces la distribución de muestreo de la media 
+
+$$\bar{X} = \frac{X_1 + X_2 +\cdots + X_n}{n}$$ 
+  
+  es aproximadamente normal con media $\mu$ y desviación estándar $\sigma/\sqrt{n}$,
 que escribimos como
 
-$$\bar{X} \xrightarrow{} N \left (\mu, \frac{\sigma}{\sqrt{n}} \right)$$
+$$\bar{X} \xrightarrow{} \mathsf{N}\left( \mu, \frac{\sigma}{\sqrt{n}} \right)$$
 
 Adicionalmente, la distribución de la
 media estandarizada converge a una distribución normal
 estándar cuando $n$ es grande:
-$$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  N(0, 1)$$
+$$\sqrt{n} \, \left( \frac{\bar{X}-\mu}{\sigma} \right) \xrightarrow{}  \mathsf{N}(0, 1)$$
 </div>\EndKnitrBlock{mathblock}
 
 - El error estándar de $\bar{X}$ es
@@ -560,3 +564,325 @@ de la verdadera media poblacional.
 tiene una distribución muy sesgada, por ejemplo, $n$ típicamente
 necesita ser más grande que cuando la población es simétrica si queremos
 obtener una aproximación "buena".
+
+- En algunos textos se afirma que $n\geq 30$ es suficiente para que la
+aproximación del Teorema central del límite (TCL) sea buena siempre y cuando
+la distribución poblacional no sea muy sesgada. Esta regla es más o menos arbitraria
+y es mejor no confiarse, pues fácilmente puede fallar. En la práctica es importante
+checar este supuesto, por ejemplo usando remuestreo (que veremos más adelante)
+
+<div class="ejercicio">
+<p>Revisa los ejemplos que hemos visto hasta ahora (precios de casas, simulaciones de uniformes y exponenciales según las distintas estadísticas que consideramos). ¿Qué distribuciones de muestreo parecen tener una distribución normal? ¿Cómo juzgamos si estas distribuciones están cerca o lejos de una distribución normal?</p>
+</div>
+
+## Normalidad y gráficas de cuantiles normales {-}
+
+Para checar si una distribución de datos dada es similar a la normal, la herramienta
+mas común en estádística es la gráfica de cuantiles teóricos, que es una generalización
+de la gráfica de cuantiles que vimos anteriormente. 
+
+En primer lugar, definimos la función de cuantiles de una distribución teórica,
+que es análoga a la que definimos para conjuntos de datos:
+
+Supongamos que tenemos una distribución acumulada teórica $\Phi$. Podemos
+definir el cuantil-$f$ $q(f)$ de $\Phi$  como
+el valor $q(f)$ tal que
+$$q(f) = \text{argmin}\{x \,| \, \Phi(x)\geq f \}$$
+
+En el caso de que $\Phi$ tiene densidad $\phi$, y su soporte es un intervalo (que puede
+ser de longitud infinita), entonces podemos también escribir $q(f)$
+como el valor único donde acumulamos $f$ de la probabilidad
+
+$$\int_{-\infty}^{q(f)} \phi(x)\,dx= f$$
+Por ejemplo, para una densidad normal, abajo mostramos los cuantiles $f=0.5$ (mediana)
+y $f=0.95$
+
+
+```r
+densidad_tbl <- tibble(x = seq(0, 10, 0.01)) %>% 
+  mutate(densidad = dnorm(x, 5, 1)) 
+```
+
+
+```r
+# qnorm es la función de cuantiles de una normal
+cuantil_50 <- qnorm(0.50, 5, 1)
+cuantil_90 <- qnorm(0.95, 5, 1)
+# graficamos
+densidad_tbl <- densidad_tbl %>% 
+  mutate(menor_50 = x >= cuantil_50) %>% 
+  mutate(menor_90 = x >= cuantil_90)
+g_normal_50 <- ggplot(densidad_tbl, aes(y = densidad)) + 
+  ylab('f(x)') + 
+  geom_area(aes(x = x, fill = menor_50)) + 
+  geom_line(aes(x = x), alpha = 0.1) +
+  geom_vline(xintercept = cuantil_50) + theme(legend.position = "none") +
+  annotate("text", 4.3, 0.2, label = "50%") +
+  labs(subtitle = paste0("q(0.5)=", round(cuantil_50,1)))
+g_normal_90 <- ggplot(densidad_tbl, aes(y = densidad)) + 
+  ylab('f(x)') + 
+  geom_area(aes(x = x, fill = menor_90)) + 
+  geom_line(aes(x = x), alpha = 0.1) +
+  geom_vline(xintercept = cuantil_90) + theme(legend.position = "none") +
+  annotate("text", 5.0, 0.2, label = "95%") +
+  labs(subtitle = paste0("q(0.95)=", round(cuantil_90,1)))
+g_normal_50 + g_normal_90
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;" />
+
+Como todas las distribuciones normales tienen la misma forma, y para obtener una de otra
+solo basta reescalar y desplazar, para calcular los cuantiles de una 
+variable con distribución normal $\mathsf{N}(\mu, \sigma)$
+sólo tenemos que saber los cuantiles de la distribución normal estándar $\mathsf{N}(0,1)$ y escalarlos
+apropiadamente por su media y desviación estándar
+
+$$q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$ 
+Puedes demostrar esto sin mucha dificultad empezando con $P(X\leq q) = f$ y estandarizando:
+
+$$P(X\leq q(f, \mu, \sigma)) = f \implies P\left (Z\leq \frac{q(f,\mu,\sigma) - \mu}{\sigma}\right)=f$$
+y esto implica que
+$$q(f, 0, 1) =  \frac{q(f,\mu,\sigma) - \mu}{\sigma} \implies q(f, \mu, \sigma) = \mu + \sigma q(f, 0, 1)$$
+
+De modo que si graficáramos los cuantiles de una distribución $\mathsf{N}(\mu, \sigma)$ contra
+los cuantiles de una distribución $\mathsf{N}(0,1)$, estos cuantiles aparecen en una línea recta:
+
+
+```r
+comparacion_tbl <- tibble(f = seq(0.01, 0.99, 0.01)) %>% 
+  mutate(cuantiles_normal = qnorm(f, 5, 3),
+         cuantiles_norm_estandar = qnorm(f, 0, 1))
+ggplot(comparacion_tbl, aes(cuantiles_norm_estandar, cuantiles_normal)) + 
+  geom_point()
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-31-1.png" width="384" style="display: block; margin: auto;" />
+
+Ahora supongamos que tenemos una muestra $X_1, \ldots, X_n$. ¿Cómo podemos
+checar si estos datos tienen una distribución aproximadamente normal? 
+
+- Si la muestra tiene una distribución aproximadamente $\mathsf{N}(\mu, \sigma)$, entonces
+sus cuantiles muestrales y los cuantiles respectivos de la normal estándar están aproximadamente
+en una línea recta.
+
+Primero veamos un ejemplo donde los datos son generados según una normal. 
+
+
+```r
+set.seed(21)
+muestra <- tibble(x_1 = rnorm(60, 10, 3), x_2 = rgamma(60, 2, 5))
+graf_1 <- ggplot(muestra, aes(sample = x_1)) +
+  geom_qq(distribution = stats::qnorm) +
+  geom_qq_line(colour = "red")
+graf_2 <- ggplot(muestra, aes(sample = x_2)) +
+  geom_qq(distribution = stats::qnorm) +
+  geom_qq_line(colour = "red")
+graf_1 + graf_2
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;" />
+¿Cuáles son los datos aproximadamente normales? ¿Cómo interpretas las desviaciones de 
+la segunda gráfica en términos de la forma de la distribución normal?
+
+## Prueba de hipótesis de normalidad {-}
+
+Para interpretar las gráficas de cuantiles normales se requiere práctica, 
+pues claramente los datos, aún cuando provengan de una distribución normal, no
+van a caer justo sobre una línea recta y observaremos variabilidad. Esto no descarta
+neceariamente que los datos sean aproximadamente normales. Con la práctica, generalmente
+esta gráfica nos da una buena indicación si el supuesto de normalidad es apropiado.
+
+Sin embargo, podemos hacer una prueba de hipótesis formal de normalidad si 
+quisiéramos. La hipótesis nula es la siguiente:
+
+- Los datos provienen de una distribución normal, y las desviaciones que observamos
+de una línea recta se deben a variación muestral.
+- Podemos generar datos nulos tomando la media y desviación estándar muestrales, y
+generando muestras normales $\mathsf{N}(\bar{x}, s)$.
+- Usamos el *lineup*, produciendo datos bajo la hipótesis nula y viendo si
+podemos distinguir los datos. Por ejemplo:
+
+
+```r
+library(nullabor)
+lineup_normal <- lineup(null_dist("x_2", dist = "normal"), muestra)
+ggplot(lineup_normal, aes(sample = x_2)) +
+  geom_qq(distribution = stats::qnorm) +
+  geom_qq_line(colour = "red") +
+  facet_wrap(~ .sample)
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;" />
+
+En esta gráfica claramente rechazaríamos la hipótesis de normalidad. Sin embargo, para
+la primera muestra, obtenemos:
+
+
+```r
+lineup_normal <- lineup(null_dist("x_1", dist = "normal"), muestra)
+ggplot(lineup_normal, aes(sample = x_1)) +
+  geom_qq(distribution = stats::qnorm) +
+  geom_qq_line(colour = "red") +
+  facet_wrap(~ .sample)
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;" />
+
+Los datos verdaderos están en
+
+
+```r
+attr(lineup_normal, "pos")
+```
+
+```
+## [1] 4
+```
+
+### Ejemplo {-}
+
+Consideremos el problema de estimar el total poblacional de los precios de las casas
+que se vendieron. El estimador que usamos fue la suma muestral expandida por un 
+factor. Vamos a checar qué tan cerca de la normalidad está la distribución de
+meustreo de esta estadística ($n=250$):
+
+
+```r
+replicaciones_2
+```
+
+```
+## # A tibble: 1,500 x 4
+##    id_muestra total_muestra factor_exp est_total_millones
+##    <chr>              <dbl>      <dbl>              <dbl>
+##  1 1                 47089.       4.58               215.
+##  2 2                 45654.       4.58               209.
+##  3 3                 43973.       4.58               201.
+##  4 4                 45665.       4.58               209.
+##  5 5                 43551.       4.58               199.
+##  6 6                 46066.       4.58               211.
+##  7 7                 46626.       4.58               213.
+##  8 8                 47944.       4.58               219.
+##  9 9                 45381.       4.58               208.
+## 10 10                46519.       4.58               213.
+## # … with 1,490 more rows
+```
+
+
+
+```r
+ggplot(replicaciones_2, aes(sample = est_total_millones)) +
+  geom_qq(alpha = 0.3) + geom_qq_line(colour = "red")
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-37-1.png" width="384" style="display: block; margin: auto;" />
+Y vemos que en efecto el TCL aplica en este ejemplo, y la aproximación es buena.
+Aunque la población original es sesgada, la descripción de la distribución de
+muestreo es sorprendemente compacta:
+
+- La distribución de muestreo de nuestro estimador del total $\hat{t}$ es
+aproximadamente normal con media $\bar{x}$ y desviación estándar $s$, donde:
+
+
+```r
+mu <- mean(replicaciones_2$est_total_millones)
+s <- sd(replicaciones_2$est_total_millones)
+c(mu = mu, s = s) %>% round(2)
+```
+
+```
+##     mu      s 
+## 209.90   5.24
+```
+Estas cantidades están en millones de dólares.
+
+### Ejemplo {-}
+
+Supongamos que queremos calcular la probabilidad que la suma de 30 variables
+uniformes en $[0,1]$ independientes sea mayor que 18. Podríamos aproximar esta
+cantidad usando simulación. Otra manera de aproximar esta cantidad es con
+el TCL, de la siguiente forma:
+
+Si $S=X_1 + X_2 + X_30$, entonces la media de $S$ es 15 (¿cómo se calcula')
+y su desviación estándar es $\sqrt{\frac{30}{12}}$. La suma es entonces
+aproximadamente $\mathsf{N}\left(15, \sqrt{\frac{30}{12}}\right)$. Entonces
+
+$$P(S > 50) = P \left (\frac{S - 15}{\sqrt{\frac{30}{12}}}  > \frac{18 - 15}{\sqrt{\frac{30}{12}}}\right) \approx P(Z > 1.897)$$
+
+donde $Z$ es normal estándar. Esta última cantidad la calculamos
+usando la función de distribución de la normal estándar, y nuestra aproximación es
+
+
+```r
+1 - pnorm(1.897)
+```
+
+```
+## [1] 0.02891397
+```
+
+Podemos checar nuestro cálculo usando simulación:
+
+
+```r
+tibble(n_sim = 1:100000) %>% 
+  mutate(suma = map_dbl(n_sim, ~ sum(runif(30)))) %>% 
+  summarise(prob_may_18 = mean(suma > 18), .groups = "drop")
+```
+
+```
+## # A tibble: 1 x 1
+##   prob_may_18
+##         <dbl>
+## 1      0.0280
+```
+Y vemos que la aproximación normal es buena para fines prácticos.
+
+<div class="ejercicio">
+<p>Usando simulaciones haz un histograma que aproxime la distribución de muestreo de <span class="math inline">\(S\)</span>. Haz una gráfica de cuantiles normales para checar la normalidad de esta distribución.</p>
+</div>
+
+## Ejemplo {-}
+Cuando el sesgo de la distribución poblacional es grande, puede ser necesario
+que $n$ sea muy grande para que la aproximación normal sea aceptable para el 
+promedio o la suma. Por ejemplo, is tomamos una gamma con parámetro de forma chico,
+$n = 30$ no es suficientemente bueno, especialmente si quisiéramos 
+aproximar probabilidades en las colas de la distribución:
+
+
+
+```r
+sims_gamma <- map_df(1:2000, ~ tibble(suma = mean(rgamma(30, 0.1, 1))), 
+                     .id = "n_sim")
+ggplot(sims_gamma, aes(x = suma)) + geom_histogram()
+```
+
+<img src="05-distribucion-muestreo_files/figure-html/unnamed-chunk-42-1.png" width="480" style="display: block; margin: auto;" />
+
+## Más del Teorema central del límite {-}
+
+- El teorema central del límite aplica a situaciones más generales que
+las del enunciado del teorema básico. Por ejemplo, aplica a poblaciones
+finitas (como vimos en el ejemplo de las casas) bajo muestreo sin
+reemplazo, y aplica también a otras estadísticas como los cuantiles muestrales.
+
+- Es importante notar que la calidad de la aproximación del TCL depende de características
+de la población y también del tamaño de muestra $n$. Para ver si el TCL aplica, podemos hacer ejercicios de simulación bajo diferentes supuestos acerca de la población. 
+También veremos más adelante, con remuestreo, maneras de checar si es factible el TCL dependiendo del análisis de una muestra dada que tengamos.
+
+- El TCL era particularmente importante en la práctica antes de que pudiéramos
+hacer simulación por computadora. Era la única manera de aproximar y entender la distribución muestral fuera de cálculos analíticos (como los que hicimos para
+el máximo de un conjunto de uniformes, por ejemplo). 
+
+- Hoy en día, veremos que podemos hacer simulación para obtener respuestas más
+exactas, particularmente en la construcción de intervalos de confianza, por ejemplo. Dependemos menos de **resultados asintóticos**, como el TCL.
+
+- Cuando aproximamos una distribución discreta mediante la distribución normal,
+conviene hacer *correcciones de continuidad*, como se explica en [@Chihara], 4.3.2. 
+
+
+
+
+
+
+
