@@ -803,7 +803,7 @@ uniformes en $[0,1]$ independientes sea mayor que 18. Podríamos aproximar esta
 cantidad usando simulación. Otra manera de aproximar esta cantidad es con
 el TCL, de la siguiente forma:
 
-Si $S=X_1 + X_2 + X_30$, entonces la media de $S$ es 15 (¿cómo se calcula')
+Si $S=X_1 + X_2 + X_{30}$, entonces la media de $S$ es 15 (¿cómo se calcula')
 y su desviación estándar es $\sqrt{\frac{30}{12}}$. La suma es entonces
 aproximadamente $\mathsf{N}\left(15, \sqrt{\frac{30}{12}}\right)$. Entonces
 
@@ -845,7 +845,7 @@ Y vemos que la aproximación normal es buena para fines prácticos.
 ## Ejemplo {-}
 Cuando el sesgo de la distribución poblacional es grande, puede ser necesario
 que $n$ sea muy grande para que la aproximación normal sea aceptable para el 
-promedio o la suma. Por ejemplo, is tomamos una gamma con parámetro de forma chico,
+promedio o la suma. Por ejemplo, si tomamos una gamma con parámetro de forma chico,
 $n = 30$ no es suficientemente bueno, especialmente si quisiéramos 
 aproximar probabilidades en las colas de la distribución:
 

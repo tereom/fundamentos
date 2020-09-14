@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="pruebas-de-hipótesis.html"/>
-<link rel="next" href="tareas.html"/>
+<link rel="next" href="intervalos-de-confianza-y-remuestreo.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -228,6 +228,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-4"><i class="fa fa-check"></i>Ejemplo</a></li>
 <li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-del-teorema-central-del-límite"><i class="fa fa-check"></i>Más del Teorema central del límite</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html"><i class="fa fa-check"></i><b>6</b> Intervalos de confianza y remuestreo</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-introductorio"><i class="fa fa-check"></i>Ejemplo introductorio</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#la-idea-del-bootstrap"><i class="fa fa-check"></i>La idea del bootstrap</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#el-principio-de-plug-in"><i class="fa fa-check"></i>El principio de plug-in</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#discusión-propiedades-de-la-distribución-bootstrap"><i class="fa fa-check"></i>Discusión: propiedades de la distribución bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-1"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
@@ -903,7 +913,7 @@ aproximadamente normal con media <span class="math inline">\(\bar{x}\)</span> y 
 uniformes en <span class="math inline">\([0,1]\)</span> independientes sea mayor que 18. Podríamos aproximar esta
 cantidad usando simulación. Otra manera de aproximar esta cantidad es con
 el TCL, de la siguiente forma:</p>
-<p>Si <span class="math inline">\(S=X_1 + X_2 + X_30\)</span>, entonces la media de <span class="math inline">\(S\)</span> es 15 (¿cómo se calcula’)
+<p>Si <span class="math inline">\(S=X_1 + X_2 + X_{30}\)</span>, entonces la media de <span class="math inline">\(S\)</span> es 15 (¿cómo se calcula’)
 y su desviación estándar es <span class="math inline">\(\sqrt{\frac{30}{12}}\)</span>. La suma es entonces
 aproximadamente <span class="math inline">\(\mathsf{N}\left(15, \sqrt{\frac{30}{12}}\right)\)</span>. Entonces</p>
 <p><span class="math display">\[P(S &gt; 50) = P \left (\frac{S - 15}{\sqrt{\frac{30}{12}}}  &gt; \frac{18 - 15}{\sqrt{\frac{30}{12}}}\right) \approx P(Z &gt; 1.897)\]</span></p>
@@ -931,7 +941,7 @@ Usando simulaciones haz un histograma que aproxime la distribución de muestreo 
 <h2>Ejemplo</h2>
 <p>Cuando el sesgo de la distribución poblacional es grande, puede ser necesario
 que <span class="math inline">\(n\)</span> sea muy grande para que la aproximación normal sea aceptable para el
-promedio o la suma. Por ejemplo, is tomamos una gamma con parámetro de forma chico,
+promedio o la suma. Por ejemplo, si tomamos una gamma con parámetro de forma chico,
 <span class="math inline">\(n = 30\)</span> no es suficientemente bueno, especialmente si quisiéramos
 aproximar probabilidades en las colas de la distribución:</p>
 <div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="S-distribucion-muestreo.html#cb143-1"></a>sims_gamma &lt;-<span class="st"> </span><span class="kw">map_df</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">tibble</span>(<span class="dt">suma =</span> <span class="kw">mean</span>(<span class="kw">rgamma</span>(<span class="dv">30</span>, <span class="fl">0.1</span>, <span class="dv">1</span>))), </span>
@@ -972,7 +982,7 @@ conviene hacer <em>correcciones de continuidad</em>, como se explica en <span cl
         </div>
       </div>
 <a href="pruebas-de-hipótesis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tareas.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="intervalos-de-confianza-y-remuestreo.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
