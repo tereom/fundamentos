@@ -288,7 +288,8 @@ map_dbl(1:10000, ~ max(runif(15))) %>% sd
 
 ```{block2, type='ejercicio'}
 Como ejercicio para contrastar estos conceptos,
-puedes considerar: ¿Qué pasa con la desviación estándar de una muestra muy grande de uniformes? ¿Qué pasa con el error estándar de la media muestral de una muestra muy grande de uniformes?
+puedes considerar: ¿Qué pasa con la desviación estándar de una muestra muy
+grande de uniformes? ¿Qué pasa con el error estándar de la media muestral de una muestra muy grande de uniformes?
 ```
 
 
@@ -303,6 +304,7 @@ simulación la distribución de muestreo, podemos hacer:
 ee_2 <- replicaciones_2 %>% pull(est_total_millones) %>% sd
 round(ee_2, 1)
 ```
+
 que está en millones de pesos y cuantifica la dispersión de la distribución de
 muestreo del estimador del total.
 
@@ -434,7 +436,7 @@ ggplot(sim_estimador_1) +
 
 ## Teorema central del límite {-}
 
-Si consideramos los ejemplos de arriba donde consideramos estimadores
+Si consideramos los ejemplos de arriba donde tratamos con estimadores
 basados en una suma, total o una media ---y en menor medida cuantiles muestrales---,
 vimos que las distribución de
 muestreo de las estadísticas que usamos tienden a tener una forma común.
@@ -495,8 +497,6 @@ parecen tener una distribución normal? ¿Cómo juzgamos si estas distribuciones
 cerca o lejos de una distribución normal?
 ```
 
-
-
 ## Normalidad y gráficas de cuantiles normales {-}
 
 Para checar si una distribución de datos dada es similar a la normal, la herramienta
@@ -523,7 +523,6 @@ y $f=0.95$
 densidad_tbl <- tibble(x = seq(0, 10, 0.01)) %>%
   mutate(densidad = dnorm(x, 5, 1))
 ```
-
 
 ```{r, fig.width=7, fig.height=3}
 # qnorm es la función de cuantiles de una normal
@@ -623,6 +622,7 @@ ggplot(lineup_normal, aes(sample = x_2)) +
   geom_qq_line(colour = "red") +
   facet_wrap(~ .sample)
 ```
+
 En esta gráfica claramente rechazaríamos la hipótesis de normalidad. Sin embargo, para
 la primera muestra, obtenemos:
 
@@ -676,7 +676,7 @@ uniformes en $[0,1]$ independientes sea mayor que 18. Podríamos aproximar esta
 cantidad usando simulación. Otra manera de aproximar esta cantidad es con
 el $\textsf{TCL}$, de la siguiente forma:
 
-Si $S_{30}=X_1 + X_2 + X_{30}$, entonces la media de $S_{30}$ es 15 (¿cómo se calcula')
+Si $S_{30}=X_1 + X_2 + \ldots + X_{30}$, entonces la media de $S_{30}$ es 15 (¿cómo se calcula?)
 y su desviación estándar es $\sqrt{\frac{30}{12}}$. La suma es entonces
 aproximadamente $\mathsf{N}\left(15, \sqrt{\frac{30}{12}}\right)$. Entonces
 
@@ -706,7 +706,7 @@ Haz una gráfica de cuantiles normales para checar la normalidad de esta distrib
 ## Ejemplo {-}
 Cuando el sesgo de la distribución poblacional es grande, puede ser necesario
 que $n$ sea muy grande para que la aproximación normal sea aceptable para el
-promedio o la suma. Por ejemplo, is tomamos una gamma con parámetro de forma chico,
+promedio o la suma. Por ejemplo, si tomamos una gamma con parámetro de forma chico,
 $n = 30$ no es suficientemente bueno, especialmente si quisiéramos
 aproximar probabilidades en las colas de la distribución:
 
