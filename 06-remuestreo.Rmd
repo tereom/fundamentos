@@ -43,9 +43,6 @@ Nuestros resultados podríamos presentarlos como sigue. Este código lo explicar
 más adelante, por el momento consideramos la gŕafica resultante:
 
 ```{r, message = FALSE, cache = TRUE}
-library(tidyverse)
-library(patchwork)
-
 set.seed(8)
 pob_tab <- tibble(id = 1:2000, x = rgamma(2000, 4, 1), 
     grupo = sample(c("a","b", "c"), 2000, prob = c(4,2,1), replace = T))
@@ -268,7 +265,7 @@ Y el proceso que hacemos es:
 
 
 
-## El principio de plug-in
+## El principio de plug-in {-}
 
 La idea básica detraś del bootstrap es el principio de plug-in para estimar
 parámetros poblacionales: si queremos
@@ -433,14 +430,14 @@ cantidad poblacional que queremos estimar, su estimador plug-in es
 $\hat{\theta} = t(\hat{F})$. 
 
 **Observación 3**: La distribución empírica $\hat{F}$ es un estimador "razonable" de
-la distribución poblacional $F$, pues por el teorema de Glivenko-Cantelli (ver @Wasserman,
+la distribución poblacional $F,$ pues por el teorema de Glivenko-Cantelli (ver @Wasserman,
 o [aquí](https://en.wikipedia.org/wiki/Glivenko-Cantelli_theorem)), 
 $\hat{F}$ converge a $F$ cuando el tamaño de muestra $n\to\infty$, lo cual es
 intuitivamente claro.
 
 
 
-### Ejemplo
+### Ejemplo {-}
 En el ejemplo de tomadores de té, podemos estimar la proporción de tomadores
 de té que prefiere el té negro usando nuestra muestra:
 
@@ -508,7 +505,7 @@ de muestreo, o para "mejorar" la estimación remuestreando.
 En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 200, y
 vemos cómo se ve la aproximación a la distribución de la población:
 
-```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3}
+```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3, cache = TRUE}
 set.seed(911)
 muestras <- map(1:20, function(x) {
     muestra <- sample_n(poblacion_casas, 200, replace = T) %>% 
@@ -526,7 +523,7 @@ geom_qq(data = dat_pob, aes(sample = precio_miles), colour = "red", size = 1,
 Podemos calcular las distribuciones de remuestreo para cada muestra bootstrap,
 y compararlas con la distribución de muestreo real.
 
-```{r,  fig.width =4, fig.height = 3}
+```{r,  fig.width =4, fig.height = 3, cache = TRUE}
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   media_precio <- datos %>% 

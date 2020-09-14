@@ -1218,6 +1218,9 @@ natalidad <- readRDS("./data/nacimientos/natalidad.rds") %>%
     mutate(mes = month(fecha)) %>% ungroup %>%
     mutate(dia_semana = recode(dia_semana, Monday = "Lunes", Tuesday = "Martes", Wednesday = "Miércoles",
                                Thursday = "Jueves", Friday = "Viernes", Saturday = "Sábado", Sunday = "Domingo")) %>%
+    #necesario pues el LOCALE puede cambiar
+    mutate(dia_semana = recode(dia_semana, lunes = "Lunes", martes = "Martes", miércoles = "Miércoles",
+                               jueves = "Jueves", viernes = "Viernes", sábado = "Sábado", domingo = "Domingo")) %>%
     mutate(dia_semana = fct_relevel(dia_semana, c("Lunes", "Martes", "Miércoles",
                                                   "Jueves", "Viernes", "Sábado", "Domingo")))
 ```
