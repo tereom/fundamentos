@@ -2,6 +2,7 @@
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
+library(patchwork)
 source("R/funciones_auxiliares.R")
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
 comma <- function(x) format(x, digits = 2, big.mark = ",")
@@ -44,6 +45,7 @@ más adelante, por el momento consideramos la gŕafica resultante:
 ```{r, message = FALSE, cache = TRUE}
 library(tidyverse)
 library(patchwork)
+
 set.seed(8)
 pob_tab <- tibble(id = 1:2000, x = rgamma(2000, 4, 1), 
     grupo = sample(c("a","b", "c"), 2000, prob = c(4,2,1), replace = T))
@@ -59,12 +61,15 @@ reps_boot <- map(1:2000, function(i){
     medianas <- muestra_tab %>% 
         fun_boot %>% 
         group_by(grupo) %>% 
-        summarise(mediana = median(x))
+        summarise(mediana = median(x), .groups = "drop")
     medianas %>% mutate(rep = i)
 }) %>% bind_rows
 resumen_boot <- reps_boot %>% group_by(grupo) %>% 
-    summarise(ymin = quantile(mediana, 0.025), ymax = quantile(mediana, 0.975)) %>% 
-    left_join(muestra_tab %>% group_by(grupo) %>% summarise(mediana = median(x)))
+    summarise(ymin = quantile(mediana, 0.025), 
+              ymax = quantile(mediana, 0.975), .groups = "drop") %>% 
+    left_join(muestra_tab %>% 
+                group_by(grupo) %>% 
+                summarise(mediana = median(x)), .groups = "drop")
 g_2 <- ggplot(resumen_boot, aes(x = grupo, y = mediana, ymin = ymin, ymax = ymax)) +
     geom_linerange() +
     geom_point(colour = "red", size = 2) +  ylim(c(0,14)) +
@@ -178,7 +183,7 @@ estadística (en este caso la media) en cada una de estas remuestras:
 ```{r, cache = TRUE}
 media_muestras <- map_dbl(1:5000, ~ muestra %>%  
     sample_n(200, replace = T) %>%
-    summarise(media_precio = mean(precio_miles)) %>% pull(media_precio)) 
+    summarise(media_precio = mean(precio_miles), .groups = "drop") %>% pull(media_precio)) 
 ```
 
 Y nuestra estimación de la distribución de muestreo para la media es entonces:
@@ -444,7 +449,7 @@ te <- read_csv("data/tea.csv") %>%
   rowid_to_column() %>% 
   select(rowid, Tea, sugar)
 te %>% mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
-  summarise(prop_negro = mean(negro), n = length(negro))
+  summarise(prop_negro = mean(negro), n = length(negro), .groups = "drop")
 ```
 
 ¿Cómo evaluamos la precisión de este estimador? Supondremos que el estudio se
@@ -456,7 +461,7 @@ nos interesa. Podemos entonces usar el boostrap:
 calc_estimador <- function(datos){
   prop_negro <- datos %>% 
     mutate(negro = ifelse(Tea == "black", 1, 0)) %>% 
-    summarise(prop_negro = mean(negro), n = length(negro)) %>% 
+    summarise(prop_negro = mean(negro), n = length(negro), .groups = "drop") %>% 
     pull(prop_negro)
   prop_negro
 }
@@ -483,7 +488,8 @@ prop_negro_tbl %>%
             sesgo = mean(prop_negro) - 0.2499,
             ee = sd(prop_negro),
             cuantil_75 = quantile(prop_negro, 0.75), 
-            cuantil_25 = quantile(prop_negro, 0.25)) %>% 
+            cuantil_25 = quantile(prop_negro, 0.25),
+            .groups = "drop") %>% 
   mutate(across(where(is.numeric), round, 3)) %>% 
   pivot_longer(cols = everything())
 ```
@@ -524,7 +530,7 @@ y compararlas con la distribución de muestreo real.
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   media_precio <- datos %>% 
-    summarise(media = mean(precio_miles)) %>% 
+    summarise(media = mean(precio_miles), .groups = "drop") %>% 
     pull(media)
   media_precio
 }
@@ -579,7 +585,7 @@ de la muestra original que utilizamos.
 tiende cubrir el verdadero valor que buscamos estimar, que es:
 
 ```{r}
-poblacion_casas %>% summarise(media = mean(precio_miles))
+poblacion_casas %>% summarise(media = mean(precio_miles), .groups = "drop")
 ```
 
 
