@@ -61,7 +61,7 @@ propinas <- tips %>%
          dia = day, momento = time,
          num_personas = size) %>%
   mutate(sexo = recode(sexo, Female = "Mujer", Male = "Hombre"),
-         fumador = recode(fumador, No = "No", Si = "Si"),
+         fumador = recode(fumador, No = "No", Yes = "Si"),
          dia = recode(dia, Sun = "Dom", Sat = "Sab", Thur = "Jue", Fri = "Vie"),
          momento = recode(momento, Dinner = "Cena", Lunch = "Comida")) %>%
   select(-sexo) %>%
