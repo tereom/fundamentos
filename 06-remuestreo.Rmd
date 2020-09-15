@@ -15,17 +15,17 @@ vimos que con esta distribución podíamos evaluar **qué tan preciso es nuestro
 estimador** evaluando qué tan concentrada está esta distribución alrededor
 del valor poblacion que queremos estimar.
 
-Sin embargo, en los ejemplos que vimos la población era conocida: ya sea
-que tuviéramos toda la población finita disponible (como el ejemplo de las casas),
-o donde la población estaba definida por un modelo teórico de probabilidad
-(como los ejemplos de las distribuciones uniforme o exponencial).
+Sin embargo, en los ejemplos que vimos la población era conocida: ya sea que
+tuviéramos toda la población finita disponible (como el ejemplo de las casas), o
+donde la población estaba definida por un modelo teórico de probabilidad (como
+los ejemplos de las distribuciones uniforme o exponencial).
 
-Ahora vemos qué hacer en el caso que realmente nos interesa: solo tenemos
-una muestra disponible, y la población es desconocida. Todo lo que tenemos
-es una muestra y una estimación basada en la muestra, y requerimos estimar
-la distribución de muestreo de la estadística de interés. El enfoque
-que presentaremos aquí es uno de los más flexibles y poderosos que están
-disponible para este problema: el método **bootstrap** o de **remuestreo**.
+Ahora vemos qué hacer en el caso que realmente nos interesa: solo tenemos una
+muestra disponible, y la población es desconocida. Todo lo que tenemos es una
+muestra y una estimación basada en la muestra, y requerimos estimar la
+distribución de muestreo de la estadística de interés. El enfoque que
+presentaremos aquí es uno de los más flexibles y poderosos que están disponibles
+para este problema: el método **bootstrap** o de **remuestreo**.
 
 En primer lugar explicamos el concepto de intervalo de confianza, que es una
 manera resumida de evaluar la precisión de nuestras estimaciones.
@@ -85,21 +85,20 @@ para nuestra estimación de la mediana: esto quiere decir que
 los valores poblacionales tienen probabilidad aproximada de 95\% de estar
 dentro del intervalo.
 
-Este análisis comunica correctamente que tenemos **incertidumbre** alta acerca de nuestras
-estimaciones (especialmente grupos b y c), y que no tenemos mucha evidencia de que el
-grupo b tenga una mediana poblacional considerablemente más alta que a o c. **En muchos casos
-es más útil presentar la información de esta manera que usando alguna prueba
-de hipótesis.**
+Este análisis comunica correctamente que tenemos **incertidumbre** alta acerca
+de nuestras estimaciones (especialmente grupos b y c), y que no tenemos mucha
+evidencia de que el grupo b tenga una mediana poblacional considerablemente más
+alta que a o c. **En muchos casos es más útil presentar la información de esta
+manera que usando alguna prueba de hipótesis.**
 
 
 
 ## La idea del bootstrap {-}
 
 
-Como explicamos, el problema que tenemos ahora es que normalmente sólo tenemos una muestra,
-así que
-no es posible calcular las distribuciones de muestreo como hicimos arriba y evaluar
-qué tan preciso es nuestro estimador. Sin embargo,
+Como explicamos, el problema que tenemos ahora es que normalmente sólo tenemos
+una muestra, así que no es posible calcular las distribuciones de muestreo como
+hicimos arriba y evaluar qué tan preciso es nuestro estimador. Sin embargo,
 podemos hacer lo siguiente:
 
 Supongamos que tenemos una muestra $X_1,X_2,\dots, X_n$ independientes de alguna
@@ -121,9 +120,10 @@ usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de
 manera que produzcamos muestras independientes de la misma "población estimada",
 que es la muestra.
 5. Evaluamos nuestra estadística en cada una de estas remuestras.
-6. A la distribución resultante le llamamos **distribución bootstrap** o **distribución de remuestreo** del estimador.
-7. Usamos la distribución bootstrap de la muestra para estimar la variabilidad en nuestra
-estimación con **la muestra original**.
+6. A la distribución resultante le llamamos **distribución bootstrap** o
+**distribución de remuestreo** del estimador.
+7. Usamos la distribución bootstrap de la muestra para estimar la variabilidad
+en nuestra estimación con **la muestra original**.
 
 
 Veamos que sucede para un ejemplo concreto, donde  nos interesa estimar
@@ -174,14 +174,13 @@ podíamos muestrear repetidamente la población y calcular el valor del
 estimador en cada una de estas muestras. Aquí no tenemos la población,
 **pero tenemos una estimación de la población**: la muestra obtenida.
 
-Así que para
-evaluar la variabilidad de nuestro estimador, entramos en el
-mundo boostrap, y consideramos que la población es nuestra muestra.
+Así que para evaluar la variabilidad de nuestro estimador, entramos en el mundo
+boostrap, y consideramos que la población es nuestra muestra.
 
-Podemos entonces extraer un número
-grande de muestras con reemplazo de tamaño 200 **de la muestra**: el muestreo
-debe ser análogo al que se tomó para nuestra muestra original. Evaluamos nuestra
-estadística (en este caso la media) en cada una de estas remuestras:
+Podemos entonces extraer un número grande de muestras con reemplazo de tamaño
+200 **de la muestra**: el muestreo debe ser análogo al que se tomó para nuestra
+muestra original. Evaluamos nuestra estadística (en este caso la media) en cada
+una de estas remuestras:
 
 ```{r, cache = TRUE}
 media_muestras <- map_dbl(1:5000, ~ muestra %>%  
@@ -197,21 +196,23 @@ g_cuantiles <- ggplot(bootstrap, aes(sample = media)) + geom_qq(distribution = s
 g_histograma <- ggplot(bootstrap, aes(x = media)) + geom_histogram(binwidth = 2)
 g_cuantiles + g_histograma
 ```
-A esta le llamamos la distribución de remuestreo de la media, que definimos más abajo.
-Ahora podemos calcular un intervalo de confianza del 90\% simplemente calculando los cuantiles de
-esta distribución (no son los cuantiles de la muestra original!):
+A esta le llamamos la distribución de remuestreo de la media, que definimos más
+abajo. Ahora podemos calcular un intervalo de confianza del 90\% simplemente
+calculando los cuantiles de esta distribución (no son los cuantiles de la
+muestra original!):
 
 ```{r}
 limites_ic <- quantile(media_muestras, c(0.05,  0.95)) %>% round
 limites_ic
 ```
 
-Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la mediana es
-`r round(mean(muestra$precio_miles), 1)`, con un intervalo de confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
+Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la
+mediana es `r round(mean(muestra$precio_miles), 1)`, con un intervalo de
+confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
 
 Otra cosa que podríamos hacer para describir la dispersión de nuestro estimador
-es calcular el error estándar de remuestreo, que estima el error estándar de
-la distribución de muestreo:
+es calcular el error estándar de remuestreo, que estima el error estándar de la
+distribución de muestreo:
 
 ```{r}
 ee_boot <- sd(media_muestras)
@@ -266,7 +267,7 @@ Y el proceso que hacemos es:
 1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original
 2. Repetimos este remuestreo muchas veces (por ejemplo, 10,000).
 3. Construímos la distribución bootstrap, y examinamos sus características
-(dónde está centrada, dispersión y forma).   
+(dónde está centrada, dispersión y forma).
 
 ```
 
@@ -275,29 +276,29 @@ Y el proceso que hacemos es:
 ## El principio de plug-in {-}
 
 La idea básica detrás del bootstrap es el principio de plug-in para estimar
-parámetros poblacionales: si queremos
-estimar una cantidad poblacional, calculamos esa cantidad poblacional con la muestra
-obtenida. Es un principio común en estadística.
+parámetros poblacionales: si queremos estimar una cantidad poblacional,
+calculamos esa cantidad poblacional con la muestra obtenida. Es un principio
+común en estadística.
 
-Por ejemplo, si queremos estimar
-la media o desviación estándar poblacional, usamos la media muestral o la desviación
-estándar muestral. Si queremos estimar un cuantil de la población usamos el cuantil
-correspondiente de la muestra, y así sucesivamente.
+Por ejemplo, si queremos estimar la media o desviación estándar poblacional,
+usamos la media muestral o la desviación estándar muestral. Si queremos estimar
+un cuantil de la población usamos el cuantil correspondiente de la muestra, y
+así sucesivamente.
 
 En todos estos casos, lo que estamos haciendo es:
 
-- Tenemos una fórmula para la cantidad poblacional de interés en términos de la distribución
-poblacional.  
-- Tenemos una muestra, que usamos para estimar la cantidad poblacional. La distribución
-que da una muestra se llama distribución *empírica*
-- Contruimos nuestro estimador "enchufando" la distribución empírica de la muestra
-en la fórmula del estimador.
+- Tenemos una fórmula para la cantidad poblacional de interés en términos de la
+distribución poblacional.  
+- Tenemos una muestra, que usamos para estimar la cantidad poblacional. La
+distribución que da una muestra se llama distribución *empírica*.
+- Contruimos nuestro estimador "enchufando" la distribución empírica de la
+muestra en la fórmula del estimador.
 
 En el bootstrap aplicamos este principio simple a la **distribución de
 muestreo**:
 
-- *Si tenemos la población*, podemos *calcular* la distribución de muestreo de nuestro estimador
-tomando muchas muestras de la *población*.
+- *Si tenemos la población*, podemos *calcular* la distribución de muestreo de
+nuestro estimador tomando muchas muestras de la *población*.
 - Estimamos la *poblacion* con la *muestra* y enchufamos en la frase anterior:
 - Podemos *estimar* la distribucion de muestreo de nuestro estimador
 tomando muchas muestras de la *muestra* (bootstrap).
