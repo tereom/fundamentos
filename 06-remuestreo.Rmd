@@ -857,7 +857,7 @@ bien estudiado para algunos casos. Por ejemplo, cuando trabajamos con estimacion
 poblaciones teóricas. En particular sabemos los procedimientos funcionan bien en casos: 
 
 - con distribuciones simétricas que tengan colas no muy largas; 
-- estimación de proporciones donde no tratamos con casos raros o casos seguros ---probabilidees cercanas a 0 o 1---.
+- estimación de proporciones donde no tratamos con casos raros o casos seguros ---probabilidades cercanas a 0 o 1---.
 
 ## Interpretación de intervalos de confianza {-}
 
@@ -866,7 +866,8 @@ término *frecuentista*, que significa:
 
 - **Cada muestra produce un intervalo distinto**. Para el 90\% de las muestras posibles, el intervalo
 cubre al valor poblacional.
-- Así que con *alta probabilidad*, el valor poblacional está dentro del intervalo.
+- La afirmación es *sobre el intervalo y el mecanismo para construirlo.*
+- Así que con *alta probabilidad*, el intervalo contiene el valor poblacional.
 - Intervalos más anchos nos dan más incertidumbre acerca de dónde está el verdadero valor poblacional
 (y al revés para intervalos más angostos).
 
