@@ -839,7 +839,7 @@ checarlo con el bootstrap?)
 
 **Observación.** En este caso teníamos la población real, y pudimos verificar
 la cobertura de nuestros intervalos. En general no la tenemos. Estos ejercicios
-de simulación se pueden hacer con poblaciones sintéticas simuladas que tengan
+de simulación se pueden hacer con poblaciones sintéticas que se generen con 
 las características que creemos va a tener nuestra población (por ejemplo, sesgo,
 colas largas, etc.).
 
@@ -852,11 +852,12 @@ como los tamaños de muestra que nos interesa usar.
 
 ```
 
-Algunos casos son bien entendidos, como estimaciones para poblaciones teóricas particulares,
-distribuciones simétricas con colas no muy largas o estimación de proporciones que no
-son muy cercanas a 0 o 1, y en estos casos los procedimientos usuales funcionan bien.
+Verificar la cobertura de nuestros intervalos de confianza por medio simulación está
+bien estudiado para algunos casos. Por ejemplo, cuando trabajamos con estimaciones para 
+poblaciones teóricas. En particular sabemos los procedimientos funcionan bien en casos: 
 
-
+- con distribuciones simétricas que tengan colas no muy largas; 
+- estimación de proporciones donde no tratamos con casos raros o casos seguros ---probabilidees cercanas a 0 o 1---.
 
 ## Interpretación de intervalos de confianza {-}
 
