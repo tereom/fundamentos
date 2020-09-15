@@ -4,7 +4,7 @@
 library(tidyverse)
 library(patchwork)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', cache=TRUE)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -221,7 +221,8 @@ round(ee_boot, 2)
 
 
 ```{block2, type='mathblock'}
-**Definición**. Sea $X_1,X_2,\ldots,X_n$ una muestra independiente y idénticamente
+
+**Definición.** Sea $X_1,X_2,\ldots,X_n$ una muestra independiente y idénticamente
 distribuida, y $T=t(X_1, X_2, \ldots, X_n)$ una estadística. Supongamos que sus valores
 que obervamos son $x_1, x_2,\ldots, x_n$.
 
@@ -592,7 +593,7 @@ poblacion_casas %>% summarise(media = mean(precio_miles), .groups = "drop")
 ```
 
 
-## Error estándar bootstrap e intervalos normales
+## Error estándar bootstrap e intervalos normales {-}
 
 Ahora podemos construir nuestra primera versión de intervalos de confianza
 basados en la distribución bootstrap. 
@@ -622,11 +623,13 @@ $$\hat{\mathsf{ee}}_{\textrm{boot}}(\hat{\theta})$$
 que es la desviación estándar de la **distribución bootsrap**.
 
 ```{block2, type='mathblock'}
-*Definición*. El **error estándar bootstrap**  $\hat{\mathsf{ee}}_{\textrm{boot}}(\hat{\theta})$ se
+
+**Definición.** El **error estándar bootstrap**  $\hat{\mathsf{ee}}_{\textrm{boot}}(\hat{\theta})$ se
 define como la desviación estándar de la distribución bootstrap de $\theta$. 
 
 El **intervalo de confianza normal bootstrap** al 95\% está dado por
-$$[\hat{\theta} - 2\mathsf{ee}(\hat{\theta}), \hat{\theta} + 2\mathsf{ee}(\hat{\theta})]$$
+$$[\hat{\theta} - 2\mathsf{ee}(\hat{\theta}), \hat{\theta} + 2\mathsf{ee}(\hat{\theta})].$$
+  
 ```
 
 Nótese que hay varias cosas qué checar aquí: que el teorema central del límite aplica y
@@ -653,7 +656,7 @@ prop_hat <- calc_estimador(te)
 prop_hat %>% round(2)
 ```
 
-Podemos graficar su distribución bootstrap (simulamos arriba)
+Podemos graficar su distribución bootstrap ---la cual simulamos arriba---.
 
 ```{r, fig.width = 7, fig.height = 4}
 g_hist <- ggplot(prop_negro_tbl, aes(x = prop_negro)) + geom_histogram(bins = 15)
@@ -661,29 +664,30 @@ g_qq_normal <- ggplot(prop_negro_tbl, aes(sample = prop_negro)) +
   geom_qq() + geom_qq_line(colour = "red")
 g_hist + g_qq_normal
 ```
-Y nótese que la distribución bootstrap es aproximadamente normal. Adicionalmente, vemos que 
+
+Y notamos que la distribución bootstrap es aproximadamente normal. 
+Adicionalmente, vemos que el sesgo tiene un valor estimado de:
 
 ```{r}
 media_boot <- prop_negro_tbl %>% pull(prop_negro) %>% mean
 media_boot - prop_hat
 ```
 
-De forma que el sesgo de la distribución bootstrap es muy chico.
+De esta forma, hemos verificado que:
 
-Verificamos que 
+- La distribución bootstrap es aproximadamente normal (ver gráfica de cuantiles normales); 
+- La distribución bootstrap es aproximadamente insesgada.
 
-- La distribución bootstrap es aproximadamente normal (ver gráfica de cuantiles normales),
-. La distribución bootstrap es aproximadamente insesgada,
-
-De forma que podemos usar los intervalos normales para construir un intervalo de 
-confianza. Estimamos el error estándar con la desviación estándar de la distribución bootstrap
+Lo cual nos lleva a construir intervalos de confianza basados en la distribución
+normal. Estimamos el error estándar con la desviación estándar de la
+distribución bootstrap
 
 ```{r}
 ee_boot <- prop_negro_tbl %>% pull(prop_negro) %>% sd
 ee_boot
 ```
 
-Y construimos un intervalo de confianza del 95%:
+y construimos un intervalo de confianza del 95%:
 
 ```{r}
 intervalo_95 <- c(prop_hat - 2 * ee_boot, prop_hat + 2 * ee_boot)
@@ -694,12 +698,12 @@ Este intervalo tiene probabilidad del 95% de capturar al verdadero poblacional. 
 *alta* probabilidad, entonces, el porcentaje de tomadores de té en la población
 está entre `r round(intervalo_95[1], 2)` y `r round(intervalo_95[2], 2)`.
 
-## Ejemplo: inventario de casas vendidas
+## Ejemplo: inventario de casas vendidas {-}
 
 Ahora consideremos el problema de estimar el total del valor de las casas
 vendidas en un periodo. Tenemos una muestra de tamaño $n=150$:
 
-```{r}
+```{r, fig.height = 3}
 # muestra original
 set.seed(121)
 muestra_casas <- sample_n(poblacion_casas, size = 150)
@@ -730,8 +734,9 @@ g_qq <- totales_boot %>%
   geom_hline(yintercept = quantile(totales_boot$total_boot, 0.025), colour = "gray") 
 g_hist + g_qq
 ```
-En este caso, distribución de muestreo presenta cierta asimetría, pero la desviación no es grande.
-En la parte central 95% central la aproximación normal es razonable. Checamos sesgo
+En este caso, distribución de muestreo presenta cierta asimetría, pero la
+desviación no es grande. En la parte central la aproximación normal es
+razonable. Procedemos a checar sesgo
 
 ```{r}
 total_est <- calc_estimador_casas(muestra_casas)
@@ -765,11 +770,11 @@ Así que con 95% de confianza el verdadero total del valor de las casas vendidas
 está entre `r round(intervalo_total[1])` y `r round(intervalo_total[2])` millones
 de dólares.
 
-**Nota.** en este ejemplo, mostraremos una alternativa de intervalos de confianza
+**Nota:** en este ejemplo mostraremos una alternativa de intervalos de confianza
 que es más apropiado cuando observamos asimetría.
 
 
-## Calibración de intervalos de confianza
+## Calibración de intervalos de confianza {-}
 
 ¿Cómo sabemos que nuestros intervalos de confianza del 95% nominal 
 tienen cobertura real de 95\%? Es decir, tenemos que checar:
@@ -839,11 +844,12 @@ las características que creemos va a tener nuestra población (por ejemplo, ses
 colas largas, etc.).
 
 ```{block2 ,type='comentario'}
-En general, no importa qué tipo de estimadores o intervalos de confianza usemos, 
-requerimos
-checar la calibración. Esto puede hacerse con ejercicios de simulación con poblaciones
-sintéticas y tanto los procedimientos de muestreo como 
-los tamaños de muestra que nos interesa usar. 
+
+En general, no importa qué tipo de estimadores o intervalos de confianza usemos,
+requerimos checar la calibración. Esto puede hacerse con ejercicios de
+simulación con poblaciones sintéticas y tanto los procedimientos de muestreo
+como los tamaños de muestra que nos interesa usar.
+
 ```
 
 Algunos casos son bien entendidos, como estimaciones para poblaciones teóricas particulares,
@@ -852,10 +858,10 @@ son muy cercanas a 0 o 1, y en estos casos los procedimientos usuales funcionan 
 
 
 
-## Interpretación de intervalos de confianza
+## Interpretación de intervalos de confianza {-}
 
 Como hemos visto,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
-término frecuentista, que significa:
+término *frecuentista*, que significa:
 
 - **Cada muestra produce un intervalo distinto**. Para el 90\% de las muestras posibles, el intervalo
 cubre al valor poblacional.
@@ -864,7 +870,7 @@ cubre al valor poblacional.
 (y al revés para intervalos más angostos).
 
 Existen también "intervalos de credibilidad" (de 90\% de probabilidad, por ejemplo), que se interpetan de
-forma bayesiana:
+forma *bayesiana*:
 
 - Con 90\% de probabilidad (relativamente alta), creemos que el valor poblacional está dentro del intervalo de credibilidad.
 
@@ -872,8 +878,8 @@ Esta última interpretación es más natural. Obsérvese que para hablar de inte
 confianza frecuentista tenemos que decir:
 
 - Este intervalo particular cubre o no al verdadero valor, pero nuestro procedimiento produce intervalos
-que para 90\% de las muestras. 
-- Esta es una interpretación relativamente débil, y muchos intervalos poco útiles pueden satisfacerla
+que contiene el verdadero valor para el 90\% de las muestras. 
+- Esta es una interpretación relativamente débil, y muchos intervalos poco útiles pueden satisfacerla.
 - La interpretación bayesiana es más natural porque expresa más claramente incertidumbre acerca
 del valor poblacional.
 
@@ -894,10 +900,12 @@ Otra opción común que se usa específicamente cuando la distribución bootstra
 no es muy cercana a la normal son los intervalos de percentiles bootstrap:
 
 ```{block2, type='mathblock'}
-*Definición*. El **intervalo de percentiles bootstrap** al 95\% de confianza
+
+**Definición.** El **intervalo de percentiles bootstrap** al 95\% de confianza
 está dado por
 $$[q_{0.025}, q_{0.975}]$$
 donde $q_f$ es el percentil $f$ de la distribución bootstrap. 
+
 ```
 
 Otros intervalos comunes son el de 80% o 90% de confianza, por ejemplo,
@@ -951,7 +959,7 @@ el estimador original.
 De la tabla anterior inferimos que la media en la cuenta en la cena es más grande que la de la comida.
 Podemos graficar agregando los estimadores plugin:
 
-```{r}
+```{r, fig.height = 3}
 estimadores <- propinas %>% 
   group_by(momento) %>% 
   rename(term = momento) %>% 
@@ -968,10 +976,12 @@ Nótese que el bootstrap lo hicimos por separado en cada momento del día (por e
 el argumento *strata* en la llamada a **bootstraps**):
 
 ```{block2, type='ejercicio'}
+
 Justifica el procedimiento de hacer el bootstrap separado para cada grupo. ¿Qué supuestos
 acerca del muestreo se deben satisfacer? ¿Deben ser muestras aleatorias simples 
 de cada momento del día, por ejemplo? ¿Qué harías si no fuera así, por ejemplo, si 
 se escogieron al azar tickets de todos los disponibles en un periodo?
+  
 ```
 
 
