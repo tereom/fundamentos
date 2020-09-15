@@ -662,7 +662,7 @@ prop_hat %>% round(2)
 
 Podemos graficar su distribución bootstrap ---la cual simulamos arriba---.
 
-```{r, fig.width = 7, fig.height = 4}
+```{r, out.width = "95%"}
 g_hist <- ggplot(prop_negro_tbl, aes(x = prop_negro)) + geom_histogram(bins = 15)
 g_qq_normal <- ggplot(prop_negro_tbl, aes(sample = prop_negro)) +
   geom_qq() + geom_qq_line(colour = "red")
@@ -707,7 +707,7 @@ está entre `r round(intervalo_95[1], 2)` y `r round(intervalo_95[2], 2)`.
 Ahora consideremos el problema de estimar el total del valor de las casas
 vendidas en un periodo. Tenemos una muestra de tamaño $n=150$:
 
-```{r, fig.height = 3}
+```{r, fig.height = 3, out.width = "95%"}
 # muestra original
 set.seed(121)
 muestra_casas <- sample_n(poblacion_casas, size = 150)
