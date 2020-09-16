@@ -143,7 +143,7 @@ observamos los datos según el orden que ocupan.
 ```{block, type='mathblock'}
 La función de cuantiles muestral esta definida por
 \begin{align}
-\hat{F}(x) = \frac1N \sum_{n = 1}^N \mathbb{1}\{x_n \leq x\},
+\hat{F}(x) = \frac1N \sum_{n = 1}^N 1\{x_n \leq x\},
 \end{align}
 donde la funcion indicadora está definida por
 \begin{align}
@@ -249,7 +249,7 @@ particiones resaltan distintos aspectos de los datos.
 compara con distintos histogramas?
 ```
 
-```{r, fig.width = 4, fig.height = 3}
+```{r, fig.width = 4, fig.height = 3, cache = TRUE}
 g_1 <- ggplot(propinas, aes(sample = propina)) + 
   geom_qq(distribution = stats::qunif) + xlab("f") + ylab("propina")
 g_1
@@ -934,60 +934,60 @@ del trabajo de "detective" al trabajo de "juez" en nuestro trabajo analítico.
 
 ## Loess {-}
 
-Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas 
-veces podemos apreciar mejor la relación entre ellas si agregamos una curva 
+Las gráficas de dispersión son la herramienta básica para describir la relación entre dos variables cuantitativas, y como vimos en ejemplo anteriores, muchas
+veces podemos apreciar mejor la relación entre ellas si agregamos una curva
 `loess` que suavice.
 
 Los siguientes datos muestran los premios ofrecidos y las ventas totales
-de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
+de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero
 indexadas). Graficamos en escalas logarítmicas y agregamos una curva `loess`.
 
 Los siguientes datos muestran los premios ofrecidos y las ventas totales
-de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero 
+de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero
 indexadas). Graficamos en escalas logarítmicas y agregamos una curva `loess`.
 
 ```{r, fig.width=3.6, fig.height=3.3, fig.align ='center', warning = FALSE, message = FALSE}
 # cargamos los datos
 load(here::here("data", "ventas_sorteo.Rdata"))
 
-ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
+ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) +
   geom_point() +
   geom_smooth(method = "loess", alpha = 0.5, degree = 1, se = FALSE)
 ```
 
-El patrón no era difícil de ver en los datos originales, sin embargo, la curva 
-lo hace más claro, el logaritmo de las ventas tiene una relación no lineal con 
-el logaritmo del premio: para premios no muy grandes no parece haber gran 
+El patrón no era difícil de ver en los datos originales, sin embargo, la curva
+lo hace más claro, el logaritmo de las ventas tiene una relación no lineal con
+el logaritmo del premio: para premios no muy grandes no parece haber gran
 diferencia, pero cuando los premios empiezan a crecer por encima de 20,000
 (aproximadamente $e^{10}$), las ventas crecen más rápidamente que para premios
-menores. Este efecto se conoce como *bola de nieve*, y es frecuente en este 
+menores. Este efecto se conoce como *bola de nieve*, y es frecuente en este
 tipo de loterías.
 
 Antes de adentrarnos a los modelos `loess` comenzamos explicando cómo se ajustan
 familias paramétricas de curvas a conjuntos de datos dados.
 
-```{block loess, type='mathblock'}
+```{block, type='mathblock'}
 
-**Ajustando familias paramétricas** El modelo de *regresion lineal* ajusta una recta 
-a un conjunto de datos. Por ejemplo, consideremos la familia 
-$$
+**Ajustando familias paramétricas** El modelo de *regresion lineal* ajusta una recta
+a un conjunto de datos. Por ejemplo, consideremos la familia
+\begin{align}
 f_{a,b} = a x + b,
-$$
-para un conjunto de datos bivariados $\{ (x_1, y_1), \ldots, (x_N, y_N)\}$. Buscamos 
+\end{align}
+para un conjunto de datos bivariados $\{ (x_1, y_1), \ldots, (x_N, y_N)\}$. Buscamos
 encontrar $a$ y $b$ tales que $f_{a,b}$ de un ajuste *óptimo* a los datos. Para esto, se minimiza
 la suma de errores cuadráticos
 \begin{align}
-\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2. 
+\frac1N \sum_{n = 1}^N ( y_n - a x_n - b)^2.
 \end{align}
 ```
 
 **Observación:** Los modelos de regresión lineal, cuando se pueden ajustar de manera razonable, son altamente deseables por su simplicidad: los datos se describen con pocos parámetros y tenemos incrementos marginales constantes en todo el rango de la variable que juega como factor, de modo que la interpretación es simple. Por esta razón, muchas veces vale la pena transformar los datos con el fin de enderezar la relación de dos variables y poder ajustar una función lineal (lo veremos más adelante).
 
 
-En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando la función de mínimos cuadrados. Nótese que podemos repetir el argumento con otras familias de funciones (por ejemplo cuadráticas). 
+En este caso, las constantes $a$ y $b$ se pueden encontrar diferenciando la función de mínimos cuadrados. Nótese que podemos repetir el argumento con otras familias de funciones (por ejemplo cuadráticas).
 
 ```{r, fig.width=3.6, fig.height=3.3, fig.align ='center', warning = FALSE, message = FALSE}
-ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) + 
+ggplot(ventas.sorteo, aes(x = log(premio), y = log(ventas.tot.1))) +
   geom_point() +
   geom_smooth(method = "lm")
 ```
@@ -999,13 +999,13 @@ mod_lineal <- lm(log(ventas.tot.1) ~ log(premio), data = ventas.sorteo)
 round(coef(mod_lineal), 2)
 ```
 
-De modo que la curva ajustada es $\log(V) = 4.6 + 0.47 \log(P)$, o en las 
-unidades originales $V = 100 P^{0.47}$, donde $V$ son las ventas y $P$ el 
-premio. Si observamos la gráfica notamos que este modelo lineal (en los 
+De modo que la curva ajustada es $\log(V) = 4.6 + 0.47 \log(P)$, o en las
+unidades originales $V = 100 P^{0.47}$, donde $V$ son las ventas y $P$ el
+premio. Si observamos la gráfica notamos que este modelo lineal (en los
 logaritmos) no es adecuado para estos datos. Podríamos experimentar con otras
 familias (por ejemplo, una cuadrática o cúbica, potencias, exponenciales, etc.);
 sin embargo, en la etapa exploratoria es mejor tomar una ruta de ajuste más
-flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo 
+flexibles (aún cuando esta no sea con funciones algebráicas), que al mismo
 tiempo sea robusto.
 
 
@@ -1014,7 +1014,7 @@ tiempo sea robusto.
 \begin{align}
 \sum_{n = 1}^N w_n(x_k) ( y_n - a x_n - b)^2,
 \end{align}
-donde $x_k \in \{x_1, \ldots, x_N\}$. 
+donde $x_k \in \{x_1, \ldots, x_N\}$.
 ```
 
 
@@ -1022,13 +1022,13 @@ donde $x_k \in \{x_1, \ldots, x_N\}$.
 **Observación:** Notemos que el ajuste tradicional por medio de mínimos cuadrados considera un ajuste *global*
 con pesos uniformes
 \begin{align}
-w_n(x) = \frac1N. 
+w_n(x) = \frac1N.
 \end{align}
 ```
 
 ```{block, type = 'mathblock'}
-**Interpretación:** En la práctica, los pesos $w_n(\cdot)$ contienen a su vez un conjunto de parámetros 
-que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta 
+**Interpretación:** En la práctica, los pesos $w_n(\cdot)$ contienen a su vez un conjunto de parámetros
+que dictan el comportamiento del ajuste local. Si por ejemplo tomamos en cuenta
 pesos Gaussianos
 \begin{align}
 w_n(x) = \text{exp}\left( -\frac{ (x - x_n)^2 }{2\sigma^2} \right),
@@ -1047,8 +1047,6 @@ de la curva. El caso de recta lineal claramente es para $p=1.$
 ```
 
 
-
-
 ### Ajustando curvas `loess` {-}
 
 La idea es producir ajustes locales de rectas o funciones cuadráticas. Consideremos especificar dos parámetros:
@@ -1056,45 +1054,42 @@ La idea es producir ajustes locales de rectas o funciones cuadráticas. Consider
 * Parámetro de suavizamiento $\alpha$: cuando $\alpha$ es más grande, la curva
 ajustada es más suave.
 
-* Grado de los polinomios locales que ajustamos $\lambda$: generalmente se 
+* Grado de los polinomios locales que ajustamos $\lambda$: generalmente se
 toma $\lambda=1,2$.
 
-Entonces, supongamos que los datos están dados por $(x_1,y_1), ..., (x_N, y_N)$,
+Entonces, supongamos que los datos están dados por $(x_1,y_1), \ldots, (x_N, y_N)$,
 y sean $\alpha$ un parámetro de suavizamiento fijo, y $\lambda=1$. Denotamos
 como $\hat{g}(x)$ la curva `loess` ajustada, y como $w_n(x)$ a una función de peso
 (que depende de x) para la observación $(x_n, y_n)$.
 
-Para poder calcular $w_n(x)$ debemos comenzar calculando 
-$q=\lfloor{N\alpha}\rfloor$ que suponemos mayor que uno. Ahora definimos la 
+Para poder calcular $w_n(x)$ debemos comenzar calculando
+$q=\lfloor{N\alpha}\rfloor$ que suponemos mayor que uno. Ahora definimos la
 función *tricubo*:
-
-$$
-\begin{equation}
-  T(u)=\begin{cases}
+\begin{align}  
+T(u)=\begin{cases}
     (1-|u|^3)^3, & \text{para $|u| < 1$}.\\
     0, & \text{en otro caso}.
   \end{cases}
-\end{equation}
-$$
+\end{align}
 
-entonces, para el punto $x$ definimos el peso correspondiente al dato $(x_n,y_n)$, 
+entonces, para el punto $x$ definimos el peso correspondiente al dato $(x_n,y_n)$,
 denotado por $w_n(x)$ como:
 
 $$w_n(x)=T\bigg(\frac{|x-x_n|}{d_q(x)}\bigg)$$
 
-donde $d_q(x)$ es el valor de la $q$-ésima distancia más chica (la más grande 
-entre las $q$ más chicas) entre los valores $|x-x_j|$, $j=1,\ldots,N$. De esta 
-forma, las observaciones $x_n$ reciben más peso cuanto más cerca estén de $x$. 
+donde $d_q(x)$ es el valor de la $q$-ésima distancia más chica (la más grande
+entre las $q$ más chicas) entre los valores $|x-x_j|$, $j=1,\ldots,N$. De esta
+forma, las observaciones $x_n$ reciben más peso cuanto más cerca estén de $x$.
 
-En palabras, de $x_1,...,x_N$ tomamos los $q$ datos más cercanos a $x$, que 
-denotamos $x_{i_1}(x) \leq x_{i_2}(x) \leq \cdots x_{i_q}(x) \leq$. Los 
+En palabras, de $x_1,...,x_N$ tomamos los $q$ datos más cercanos a $x$, que
+denotamos $x_{i_1}(x) \leq x_{i_2}(x) \leq \cdots x_{i_q}(x) \leq$. Los
 re-escalamos a $[0,1]$ haciendo corresponder $x$ a $0$ y el punto más alejado de
 $x$ (que es $x_{i_q}$) a 1.
 
 Aplicamos el tricubo (gráfica de abajo), para encontrar los pesos de cada punto.
-Los puntos que están a una distancia mayor a $d_q(x)$ reciben un peso de cero, y 
-los más cercanos un peso que depende de que tan cercanos están a $x$. Nótese que 
-$x$ es el punto ancla en dónde estamos ajustando la regresión local. 
+Los puntos que están a una distancia mayor a $d_q(x)$ reciben un peso de cero, y
+los más cercanos un peso que depende de que tan cercanos están a $x$. Nótese que
+$x$ es el punto ancla en dónde estamos ajustando la regresión local.
 
 ```{r, fig.width=3.4, fig.height=3.2, fig.align='center'}
 tricubo <- function(x) {
@@ -1103,87 +1098,87 @@ tricubo <- function(x) {
 curve(tricubo, from = -1.5, to = 1.5)
 ```
 
-Finalmente, para cada valor de $x_k$ que está en el conjunto de datos 
+Finalmente, para cada valor de $x_k$ que está en el conjunto de datos
 $\{x_1,...,x_n\}$, ajustamos una recta de mínimos cuadrados ponderados por los pesos
 $w_n(x)$, es decir, minimizamos
 
 $$\sum_{i=1}^nw_n(x_k)(y_i-ax_n-b)^2.$$
 
-**Observaciones:** 
+**Observaciones:**
 
-1. Cualquier función (continua y quizás diferenciable) con la forma de flan del tricubo que se 
-desvanece fuera de $(-1,1),$ es creciente en $(-1,0)$ y decreciente en $(0, 1)$ es un buen candidato para usarse 
-en lugar del tricubo. La razón por la que escogemos precisamente esta forma 
+1. Cualquier función (continua y quizás diferenciable) con la forma de flan del tricubo que se
+desvanece fuera de $(-1,1),$ es creciente en $(-1,0)$ y decreciente en $(0, 1)$ es un buen candidato para usarse
+en lugar del tricubo. La razón por la que escogemos precisamente esta forma
 algebráica no tiene que ver con el análisis exploratorio, sino con las ventajas
 teóricas adicionales que tiene en la inferencia.
 
-2. El caso $\lambda=2$ es similar. La única diferencia es en el paso de ajuste, 
-donde usamos funciones cuadráticas, y obtendríamos entonces tres familias de parámetros 
+2. El caso $\lambda=2$ es similar. La única diferencia es en el paso de ajuste,
+donde usamos funciones cuadráticas, y obtendríamos entonces tres familias de parámetros
 $a(x_k), b_1(x_k), b_2(x_k),$ para cada $k \in \{1, \ldots, N\}$.
 
-**Escogiendo de los parámetros.** Los parámetros $\alpha$ y $\lambda$ se 
-encuentran por ensayo y error. La idea general es que debemos encontrar una 
+**Escogiendo de los parámetros.** Los parámetros $\alpha$ y $\lambda$ se
+encuentran por ensayo y error. La idea general es que debemos encontrar una
 curva que explique patrones importantes en los datos (que *ajuste* los datos)
-pero que no muestre variaciones a escalas más chicas difíciles de explicar (que 
-pueden ser el resultado de influencias de otras variables, variación muestral, 
-ruido o errores de redondeo, por ejemplo). En el proceso de prueba y error 
-iteramos el ajuste y en cada paso hacemos análisis de residuales, con el fin 
+pero que no muestre variaciones a escalas más chicas difíciles de explicar (que
+pueden ser el resultado de influencias de otras variables, variación muestral,
+ruido o errores de redondeo, por ejemplo). En el proceso de prueba y error
+iteramos el ajuste y en cada paso hacemos análisis de residuales, con el fin
 de seleccionar un suavizamiento adecuado.
 
-Ejemplo de distintas selecciones de $\lambda$, en este ejemplo consideramos la 
-ventas semanales de un producto a lo largo de 5 años. 
+Ejemplo de distintas selecciones de $\lambda$, en este ejemplo consideramos la
+ventas semanales de un producto a lo largo de 5 años.
 
-```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE, fig.align='center'} 
-library(gganimate)
-library(broom)
-ventas <- readr::read_csv(here::here("data", "ventas_semanal.csv"))
+<!-- ```{r binsmoother-animation, echo=FALSE, warning=FALSE, message=FALSE, fig.align='center'}  -->
+<!-- library(gganimate) -->
+<!-- library(broom) -->
+<!-- ventas <- readr::read_csv(here::here("data", "ventas_semanal.csv")) -->
 
-if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){
-  # spans a considerar
-  spans <- c(.06, .10, .5, 1)
+<!-- if(!fs::file_exists(here::here("images", "02_loess-spans.gif"))){ -->
+<!--   # spans a considerar -->
+<!--   spans <- c(.06, .10, .5, 1) -->
 
-  # crear ajustes loess, uno por span
-  fits <- crossing(ventas, span = spans) %>%
-    nest_by(span) %>%
-    mutate(
-      mod = list(loess(sales.kg ~ period, data = data, degree = 1, 
-                            span = span)), 
-      data_mod = list(augment(mod))
-           )
-    
-  # calcular pesos
-  dat <- ventas %>%
-    tidyr::crossing(span = spans, center = unique(ventas$period)) %>%
-    mutate(dist = abs(period - center)) %>%
-    filter(rank(dist) / n() <= span) %>%
-    mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3)
+<!--   # crear ajustes loess, uno por span -->
+<!--   fits <- crossing(ventas, span = spans) %>% -->
+<!--     nest_by(span) %>% -->
+<!--     mutate( -->
+<!--       mod = list(loess(sales.kg ~ period, data = data, degree = 1,  -->
+<!--                             span = span)),  -->
+<!--       data_mod = list(augment(mod)) -->
+<!--            ) -->
 
-  # Crear gráfica de páneles con puntos que se mueven, ajustes locales lineales, 
-  # y líneas verticales
-  loess_spans <- ggplot(dat, aes(period, sales.kg)) +
-    geom_point(aes(alpha = weight, frame = center)) +
-    geom_smooth(aes(group = center, frame = center, weight = weight),
-                method = "lm", se = FALSE) +
-    geom_vline(aes(xintercept = center, frame = center), lty = 2) +
-    geom_point(shape = 1, data = ventas, alpha = .25) +
-    geom_line(aes(y = .fitted, frame = period, cumulative = TRUE), 
-              data = unnest(fits, cols = data_mod), color = "red") +
-    facet_wrap(~span, ncol = 1) +
-    ggtitle("x0 = ")
+<!--   # calcular pesos -->
+<!--   dat <- ventas %>% -->
+<!--     tidyr::crossing(span = spans, center = unique(ventas$period)) %>% -->
+<!--     mutate(dist = abs(period - center)) %>% -->
+<!--     filter(rank(dist) / n() <= span) %>% -->
+<!--     mutate(weight = (1 - (dist / max(dist)) ^ 3) ^ 3) -->
 
-  gganimate(loess_spans, filename = here::here("images", "02_loess-spans.gif"),
-            interval= .1)
-}
+<!--   # Crear gráfica de páneles con puntos que se mueven, ajustes locales lineales,  -->
+<!--   # y líneas verticales -->
+<!--   loess_spans <- ggplot(dat, aes(period, sales.kg)) + -->
+<!--     geom_point(aes(alpha = weight, frame = center)) + -->
+<!--     geom_smooth(aes(group = center, frame = center, weight = weight), -->
+<!--                 method = "lm", se = FALSE) + -->
+<!--     geom_vline(aes(xintercept = center, frame = center), lty = 2) + -->
+<!--     geom_point(shape = 1, data = ventas, alpha = .25) + -->
+<!--     geom_line(aes(y = .fitted, frame = period, cumulative = TRUE),  -->
+<!--               data = unnest(fits, cols = data_mod), color = "red") + -->
+<!--     facet_wrap(~span, ncol = 1) + -->
+<!--     ggtitle("x0 = ") -->
 
-knitr::include_graphics(here::here("images", "02_loess-spans.gif"))
-```
+<!--   gganimate(loess_spans, filename = here::here("images", "02_loess-spans.gif"), -->
+<!--             interval= .1) -->
+<!-- } -->
+
+<!-- knitr::include_graphics(here::here("images", "02_loess-spans.gif")) -->
+<!-- ``` -->
 
 ### Series de tiempo {-}
 
-Podemos usar el suavizamiento `loess` para entender y describir el comportamiento 
-de series de tiempo, en las cuáles intentamos entender la dependencia de una 
+Podemos usar el suavizamiento `loess` para entender y describir el comportamiento
+de series de tiempo, en las cuáles intentamos entender la dependencia de una
 serie de mediciones indexadas por el tiempo. Típicamente es necesario utilizar
-distintas componentes para describir exitosamente una serie de tiempo, y para 
+distintas componentes para describir exitosamente una serie de tiempo, y para
 esto usamos distintos tipos de suavizamientos. Veremos que distintas componentes
 varían en distintas escalas de tiempo (unas muy lentas, cono la tendencia, otras
 más rapidamente, como variación quincenal, etc.).
@@ -1223,6 +1218,9 @@ natalidad <- readRDS("./data/nacimientos/natalidad.rds") %>%
     mutate(mes = month(fecha)) %>% ungroup %>%
     mutate(dia_semana = recode(dia_semana, Monday = "Lunes", Tuesday = "Martes", Wednesday = "Miércoles",
                                Thursday = "Jueves", Friday = "Viernes", Saturday = "Sábado", Sunday = "Domingo")) %>%
+    #necesario pues el LOCALE puede cambiar
+    mutate(dia_semana = recode(dia_semana, lunes = "Lunes", martes = "Martes", miércoles = "Miércoles",
+                               jueves = "Jueves", viernes = "Viernes", sábado = "Sábado", domingo = "Domingo")) %>%
     mutate(dia_semana = fct_relevel(dia_semana, c("Lunes", "Martes", "Miércoles",
                                                   "Jueves", "Viernes", "Sábado", "Domingo")))
 ```
@@ -1257,21 +1255,21 @@ En este caso particular, asumiremos una **descomposición aditiva** de la
 serie de tiempo [@cleveland93].
 
 ```{block, type = 'mathblock'}
-En el estudio de **series de tiempo** una estructura común es considerar 
-el efecto de diversos factores como tendencia, estacionalidad, ciclicidad 
+En el estudio de **series de tiempo** una estructura común es considerar
+el efecto de diversos factores como tendencia, estacionalidad, ciclicidad
 e irregularidades de manera aditiva. Esto es, consideramos la descomposición
 \begin{align}
 y(t) = f_{t}(t) + f_{e}(t) + f_{c}(t) + \varepsilon.
 \end{align}
-Una estrategia de ajuste, como veremos más adelante, es proceder de manera 
-*modular.* Es decir, se ajustan los componentes de manera secuencial 
+Una estrategia de ajuste, como veremos más adelante, es proceder de manera
+*modular.* Es decir, se ajustan los componentes de manera secuencial
 considerando los residuales de los anteriores.
 ```
 
 
 ### Tendencia {-}
 
-Comenzamos por extraer la tendencia, haciendo promedios `loess` [@cleveland1979robust] 
+Comenzamos por extraer la tendencia, haciendo promedios `loess` [@cleveland1979robust]
 con vecindades relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
 variación lenta, pero si hacemos esto en este punto empezamos a absorber parte
 de la componente anual:
@@ -1313,7 +1311,7 @@ datos_dia <- datos_dia %>% mutate(ajuste_2 = fitted(mod_anual)) %>%
     mutate(res_2 = res_1 - ajuste_2)
 ```
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, echo = FALSE, fig.height=2.5, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 ggplot(datos_dia, aes(x = fecha)) +
     geom_point(aes(y = res_1), alpha = 0.2, size = 1) +
     geom_line(aes(y = ajuste_2), colour = "red", size = 1.2)
@@ -1339,7 +1337,7 @@ datos_dia <- datos_dia %>%
     mutate(res_3 = res_2 - ajuste_3) %>% ungroup
 ```
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 ggplot(datos_dia, aes(x = fecha)) +
     geom_point(aes(y = res_2), alpha = 0.5, colour = "gray") +
     geom_line(aes(y = ajuste_3, colour = dia_semana), size = 1) +
@@ -1350,7 +1348,7 @@ ggplot(datos_dia, aes(x = fecha)) +
 
 Por último, examinamos los residuales finales quitando los efectos ajustados:
 
-```{r, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, fig.height=2.5, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 ggplot(datos_dia, aes(x = fecha, y = res_3)) +
     geom_line() +
     geom_smooth(method = "loess", span = 0.02,
@@ -1362,7 +1360,7 @@ irregularidades interesantes. La distribución es de *colas largas*, y no se deb
 a unos cuantos datos atípicos. Esto generalmente es indicación que hay factores
 importantes que hay que examinar mas a detalle en los residuales:
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 ggplot(datos_dia, aes(sample = res_3)) +
   geom_qq(distribution = stats::qunif) +
   ylab("Nacimientos (residual)") + xlab("")
@@ -1386,7 +1384,7 @@ mod_1 <- loess(n_1 ~ as.numeric(fecha), data = datos_dia, span = 0.02, degree = 
                family = "symmetric")
 ```
 
-```{r, echo = FALSE,fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, echo = FALSE,fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 datos_dia <- datos_dia %>% ungroup %>%
     mutate(ajuste_4 = fitted(mod_1)) %>%
     mutate(res_4 = n - ajuste_4) %>%
@@ -1397,7 +1395,7 @@ ggplot(datos_dia, aes(x = fecha)) +
 ```
 
 
-```{r, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 mod_anual <- loess(n_2 ~ as.numeric(fecha), data = datos_dia,
                degree = 2,  span = 0.01, family = "symmetric")
 datos_dia <- datos_dia %>%
@@ -1406,7 +1404,7 @@ datos_dia <- datos_dia %>%
     mutate(n_3 = n - ajuste_4 - ajuste_5)
 ```
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 ggplot(datos_dia, aes(x = fecha)) +
     geom_point(aes(y = n_2), alpha = 0.2, size = 1) +
     geom_line(aes(y = ajuste_5), colour = "red", size = 1)
@@ -1414,7 +1412,7 @@ ggplot(datos_dia, aes(x = fecha)) +
 
 Y ahora repetimos con la componente de día de la semana:
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.45}
+```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 datos_dia <- datos_dia %>% group_by(dia_semana) %>% nest() %>%
     mutate(ajuste_mod = map(data, ~ loess(n_3 ~ as.numeric(fecha), data = .x, span = 0.1,
                                           degree=1, family = "symmetric"))) %>%
@@ -1583,7 +1581,7 @@ Para Semana Santa tenemos que hacer unos cálculos. Si alineamos los datos por d
 obtenemos un patrón de caída fuerte de nacimientos el Viernes de Semana Santa, y la característica forma
 de "valle con hombros" en días anteriores y posteriores estos Viernes. ¿Por qué ocurre este patrón?
 
-```{r, echo = FALSE, fig.height=3, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.55}
+```{r, echo = FALSE, fig.height=2, echo = FALSE,  out.width = '90%', fig.align= 'center', cache=TRUE, fig.asp = 0.35}
 pascuas <- tibble(pascua_dia = ymd(as.character(timeDate::Easter(1999:2017)))) %>%
     mutate(año = year(pascua_dia))
 datos_dia <- left_join(datos_dia, pascuas, by = "año") %>%
@@ -1598,5 +1596,5 @@ ggplot(datos_pascua, aes(x = dias_para_pascua, y = res_6)) +
 ```
 
 
-Nótese un defecto de nuestro modelo: el patrón de "hombros" alrededor del Viernes Santo no es suficientemente fuerte para equilibrar los nacimientos faltantes. 
+Nótese un defecto de nuestro modelo: el patrón de "hombros" alrededor del Viernes Santo no es suficientemente fuerte para equilibrar los nacimientos faltantes.
 ¿Cómo podríamos mejorar nuestra descomposición?

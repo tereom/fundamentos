@@ -377,7 +377,7 @@ permutadas.
 dif_obs <- te_azucar %>%
   mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
   group_by(how) %>%
-  summarise(prop_azucar = mean(usa_azucar)) %>%
+  summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
   pivot_wider(names_from = how, values_from = prop_azucar) %>%
   mutate(diferencia_prop = bolsa_exclusivo - `suelto o bolsa`) %>%
   pull(diferencia_prop)
@@ -396,7 +396,7 @@ reps <- lineup(null_permute("how"), te_azucar, n = 10000)
 valores_ref <- reps %>%
   mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
   group_by(.sample, how) %>%
-  summarise(prop_azucar = mean(usa_azucar)) %>%
+  summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
   pivot_wider(names_from = how, values_from = prop_azucar) %>%
   mutate(diferencia = bolsa_exclusivo - `suelto o bolsa`)
 ```
@@ -490,7 +490,7 @@ distribución de interés (por ejemplo media, moda, varianza). Para una hipótes
 nula del estilo $H_0: \theta = \theta_0,$ la hipótesis a contrastar se puede
 denominar como:
 
-- *Hipótesis alternativa de una cola* $H_1: \theta > \theta_0$   
+- *Hipótesis alternativa de una cola* $H_1: \theta \gt \theta_0$   
 - *Hipótesis alternativa de dos colas* $H_1: \theta \neq \theta_0$
 ```
 
@@ -642,7 +642,7 @@ calc_diferencia_2 <- function(datos){
   datos %>%
     mutate(usa_azucar = as.numeric(sugar == "sugar")) %>%
     group_by(Tea) %>%
-    summarise(prop_azucar = mean(usa_azucar)) %>%
+    summarise(prop_azucar = mean(usa_azucar), .groups = 'drop') %>%
     pivot_wider(names_from = Tea, values_from = prop_azucar) %>%
     mutate(diferencia_prop = `Earl Grey` - black) %>%
     pull(diferencia_prop)
@@ -705,7 +705,7 @@ El valor *p* es cercano a 0.
 
 Hasta ahora nos hemos centrado en ejemplos de diferencias en medias. Podemos
 extender las pruebas de permutación a $\bar{X}$ (la media de la primera muestra),
-$N\bar{X}$ (la suma de las observaciones en la primera muestra), y más.
+$n\bar{X}$ (la suma de las observaciones en la primera muestra), y más.
 
 ```{block, type='mathblock'}
 **Teorema.** En pruebas de permutación, si dos estadísticas de prueba $T_1$ y
@@ -728,13 +728,13 @@ alto. Por simplicidad consideramos muestras *con reemplazo* del total de
 $$m+n\choose n$$
 posibles remuestras. Por lo tanto, al remuestrar obtenemos *una muestra de la distribución nula.*
 
-**Entre más muestras, más exactitud.** Hemos usado $N = 10^3$ remuestras (`N_rep` en el código), 
+**Entre más muestras, más exactitud.** Hemos usado $B = 10^3$ remuestras (`N_rep` en el código), 
 en general entre más remuestras tendremos una mejor estimación del valor *p*. Si el
 verdadero valor es $p$ el estimado tendrá una varianza aproximadamente de
-$p(1- p)/N$ donde $N$ es el número de remuestras generadas.  
+$p(1- p)/B$ donde $B$ es el número de remuestras generadas.  
 
 **Observación.** Así como los $n$ datos originales son una muestra de la
-población, también las $N$ remuestras de la estadística son una muestra de una
+población, también las $B$ remuestras de la estadística son una muestra de una
 población, en este caso de la distribución nula.
 
 La pruebas de permutaciones son más útiles cuando nuestra hipótesis nula se refiere
@@ -839,7 +839,7 @@ calc_fusion <- function(stat_fusion){
   fun <- function(datos){
     datos %>%
       group_by(nv.vv) %>%
-      summarise(est = stat_fusion(time)) %>%
+      summarise(est = stat_fusion(time), .groups = 'drop') %>%
       pivot_wider(names_from = nv.vv, values_from = est) %>%
       mutate(dif = VV / NV ) %>% pull(dif)
   }
@@ -1049,7 +1049,7 @@ calc_fusion <- function(stat_fusion, trans, comparacion){
   fun <- function(datos){
     datos %>%
       group_by(nv.vv) %>%
-      summarise(est = stat_fusion({{ trans }}(time))) %>%
+      summarise(est = stat_fusion({{ trans }}(time)), .groups = 'drop') %>%
       pivot_wider(names_from = nv.vv, values_from = est) %>%
       mutate(dif = {{ comparacion }}) %>% pull(dif)
   }
