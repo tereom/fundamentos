@@ -771,8 +771,9 @@ está entre `r round(intervalo_total[1])` y `r round(intervalo_total[2])` millon
 de dólares.
 
 **Nota:** en este ejemplo mostraremos una alternativa de intervalos de confianza
-que es más apropiado cuando observamos asimetría.
-
+que es más apropiado cuando observamos asimetría. Sin embargo, primero tendremos
+que hablar de dos conceptos clave con respecto a intervalos de confianza:
+calibración e interpretación.
 
 ## Calibración de intervalos de confianza {-}
 
@@ -834,8 +835,8 @@ total <- sum(poblacion_casas$precio_miles)
 sims_tbl %>% 
   summarise(cobertura = mean(cubre))
 ```
-que es consistente con una cobertura real del 95% (¿qué significa "consistente"? ¿Cómo puedes
-checarlo con el bootstrap?)
+que es *consistente* con una cobertura real del 95% (¿qué significa
+"consistente"? ¿Cómo puedes checarlo con el bootstrap?)
 
 **Observación.** En este caso teníamos la población real, y pudimos verificar
 la cobertura de nuestros intervalos. En general no la tenemos. Estos ejercicios
@@ -854,14 +855,15 @@ como los tamaños de muestra que nos interesa usar.
 
 Verificar la cobertura de nuestros intervalos de confianza por medio simulación está
 bien estudiado para algunos casos. Por ejemplo, cuando trabajamos con estimaciones para 
-poblaciones teóricas. En particular sabemos los procedimientos funcionan bien en casos: 
+poblaciones teóricas. En general sabemos que los procedimientos funcionan bien en casos: 
 
 - con distribuciones simétricas que tengan colas no muy largas; 
-- estimación de proporciones donde no tratamos con casos raros o casos seguros ---probabilidades cercanas a 0 o 1---.
+- estimación de proporciones donde no tratamos con casos raros o casos seguros
+(probabilidades cercanas a 0 o 1).
 
 ## Interpretación de intervalos de confianza {-}
 
-Como hemos visto,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
+Como hemos visto, "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
 término *frecuentista*, que significa:
 
 - **Cada muestra produce un intervalo distinto**. Para el 90\% de las muestras posibles, el intervalo
@@ -921,10 +923,50 @@ distribución.
 Para el ejemplo de las casas, calcularíamos simplemente
 
 ```{r}
-intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975))
-(intervalo_95 / 1000) %>% round(1)
+intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975)) / 1000
+(intervalo_95) %>% round(1)
 ```
-que está en millones de dólares. Nótese que es similar al intervalo de error estándar.
+que está en millones de dólares. Nótese que es similar al intervalo de error estándar:
+
+```{r, echo = FALSE}
+intervalo_total %>% round(1)
+```
+
+Sin embargo, el intervalo del error éstandar está construido bajo el supuesto
+que el TCL es una buena aproximación. Anteriormente vimos que este supuesto
+parece ser cierto en este ejemplo. Aunque también notamos un grado de asimetría
+en el histograma. ¿Cómo se traduce está asimetría en la calidad del intervalo de
+confianza? Empecemos por el intervalo basado en el error éstandar. Claramente
+éste no está bien calibrado, como podemos notar en los resúmenes de cobertura
+para nuestras remuestras bootstrap:
+
+```{r, echo = FALSE}
+totales_boot %>% 
+  mutate(upper = total_boot >= max(intervalo_total * 1000), 
+         lower = total_boot <= min(intervalo_total * 1000)) %>% 
+  summarise(cobertura_inf = mean(lower), 
+            cobertura_sup = mean(upper))
+```
+
+los cuales se han calculado como el porcentaje de medias bootstrap por debajo
+(arriba) de la cota inferior (superior).
+
+En comparación, el intervalo basado en percentiles está construido para
+satisfacer está garantía (ver definición). Más aún, podemos notar que el
+intervalo bootstrap de percentiles construye un intervalo asímetrico con
+respecto a la media. Ilustramos esto con la distancia de las extremos del
+intervalo con respecto a la media:
+
+```{r}
+abs(intervalo_95 - total_est/1000)
+```
+
+Los intervalos de confianza nos permiten presentar un rango de valores posibles
+para el parámetro de interés. Esto es una notable diferencia con respecto a
+presentar sólo un candidato como estimador. Nuestra fuente de información son
+los datos. Es por esto que si vemos valores muy chicos (grandes) en nuestra
+muestra, el intervalo se tiene que extender a la izquierda (derecha) para
+compensar dichas observaciones.
 
 ```{block2, type='ejercicio'}
 Explica por qué cuando la aproximación normal es apropiada, el intervalo de percentiles
