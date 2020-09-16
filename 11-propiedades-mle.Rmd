@@ -9,28 +9,39 @@ comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
 
-El método de máxima verosimiltud es uno de los métodos más utilizados en inferencia estadística paramétrica. 
-En esta sección estudiaremos las propiedades teóricas que cumplen los estimadores de máxima verosimilitud ($\textsf{MLE}$). 
-Siempre y cuando el modelo $f(x; \theta)$ satisfaga ciertas condiciones de regularidad, los estimadores de máxima verosimilitud serán: 
-consistentes, asintóticamente normales, asintóticamente insesgados, asintóticamente eficientes, y equivariantes. 
+El método de máxima verosimiltud es uno de los métodos más utilizados en
+inferencia estadística paramétrica. En esta sección estudiaremos las propiedades
+teóricas que cumplen los estimadores de máxima verosimilitud ($\textsf{MLE}$).
+Siempre y cuando el modelo $f(x; \theta)$ satisfaga ciertas condiciones de
+regularidad, los estimadores de máxima verosimilitud serán: consistentes,
+asintóticamente normales, asintóticamente insesgados, asintóticamente
+eficientes, y equivariantes.
 
 A lo largo de esta sección asumiremos muestras 
 \begin{align}
-  X_1, \ldots, X_n \sim f(x; \theta),
+  X_1, \ldots, X_n \overset{\text{iid}}{\sim} f(x; \theta),
 \end{align}
-donde $\theta^*$ es el valor verdadero ---que suponemos desconocido pero fijo--- del parámetro $\theta \in \Theta$, y sea 
-$\hat \theta_n$ el estimador de máxima verosimilitud de $\theta.$
+donde $\theta^*$ es el valor verdadero ---que suponemos desconocido pero fijo---
+del parámetro $\theta \in \Theta$, y sea $\hat \theta_n$ el estimador de máxima
+verosimilitud de $\theta.$
 
-**Ejemplo.** Consideremos el caso de una muestra de variables binarias que registran el éxito o fracaso de un experimento. 
-Es decir, $X_1, \ldots, X_n \sim \textsf{Bernoulli}(p),$ donde el párametro desconocido es el procentaje de éxitos. Este ejemplo
-lo hemos estudiado en secciones pasadas (ver Sección \@ref(S:max-verosimilitud)), y sabemos que 
+
+**Ejemplo.** Consideremos el caso de una muestra de variables binarias que
+registran el éxito o fracaso de un experimento. Es decir, $X_1, \ldots, X_n \sim
+\textsf{Bernoulli}(p),$ donde el párametro desconocido es el procentaje de
+éxitos. Este ejemplo lo hemos estudiado en secciones pasadas (ver Sección
+\@ref(S:max-verosimilitud)), y sabemos que
 \begin{align}
   \hat p_n = \frac{S_n}{n} = \bar X_n,
 \end{align}
 donde $S_n= \sum_i X_i$ es el número total de éxitos en la muestra. 
 
-1. El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el estimador se vuelve más preciso conforme obtengamos más información. 
-En general esta es una propiedad que usualmente los estimadores deben satisfacer para ser útiles en la práctica. La figura siguiente muestra el estimador $\hat p_n$ como función del número de muestras utilizado. Distintas curvas corresponden a distintas colecciones ($B = 500$).
+1. El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el
+estimador se vuelve más preciso conforme obtengamos más información. En general
+esta es una propiedad que usualmente los estimadores deben satisfacer para ser
+útiles en la práctica. La figura siguiente muestra el estimador $\hat p_n$ como
+función del número de muestras utilizado. Distintas curvas corresponden a
+distintas colecciones ($B = 500$).
 
 ```{r, echo = FALSE}
 p_true <- .25
@@ -44,7 +55,7 @@ n_muestra <- 4**5
 
 ```
 
-```{r consistency, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
+```{r consistency, cache = TRUE, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
 TOL <- p_true/4
 
 # extraigo 500 muestras diferentes de tamaño n_muestra
@@ -57,7 +68,7 @@ esperado <- dt %>%
   group_by(muestra) %>% 
   mutate(media = cummean(x), n = 1:n_muestra) %>% 
   group_by(n) %>% 
-  summarise(media = mean(media))
+  summarise(media = mean(media), .groups = 'drop')
 
 g1 <- dt %>% 
   group_by(muestra) %>% 
@@ -85,9 +96,14 @@ g1 + g2
 
 ```
 
-2. El estimador $\hat p_n$ es **equivariante.** Esta propiedad es general para cualquier tamaño de muestra, y establece que cualquier función ---bien comportada--- de nuestro párametro es también un $\textsf{MLE}.$ En nuestro ejemplo, supongamos que nos interesa estimar el momio de éxitos (bastante común en casas de apuestas). El momio está definido como 
+2. El estimador $\hat p_n$ es **equivariante.** Esta propiedad es general para
+cualquier tamaño de muestra, y establece que cualquier función ---bien
+comportada--- de nuestro párametro es también un $\textsf{MLE}.$ En nuestro
+ejemplo, supongamos que nos interesa estimar el momio de éxitos (bastante común
+en casas de apuestas). El momio está definido como
 $$ \theta = \frac{p}{1-p},$$
-y podemos rescribir la función de verosimilitud en términos de este parámetro. Sustituyendo $p = \frac{\theta}{1+\theta}$ en $\mathcal{L}_n(p)$ 
+y podemos rescribir la función de verosimilitud en términos de este parámetro.
+Sustituyendo $p = \frac{\theta}{1+\theta}$ en $\mathcal{L}_n(p)$
 obtenemos 
 \begin{align}
   \mathcal{L}_n(\theta) = \left( \frac{\theta}{1 + \theta} \right)^{S_n} \left(\frac{1}{1 + \theta} \right)^{n - S_n}, 
@@ -97,8 +113,13 @@ cuya función encuentra su máximo en
  \hat \theta_n = \frac{\bar X_n}{ 1 - \bar X_n}.
 \end{align}
 
-2. El estimador $\hat \theta_n$ es **asintóticamente normal.** Esta propiedad la hemos visto anteriormente para un caso muy particular. Lo vimos 
-en el TLC para el caso de promedios $\bar X_n$ que en nuestro ejemplo corresponde a $\hat p_n$. Sin embargo, esta propiedad la satisface cualquier otro estimador que sea máximo verosímil. Por ejemplo, podemos utilizar el $\mathsf{MLE}$ de los momios. La figura que sigue muestra la distribución de $\hat \theta_n$ para las distintas remuestras ($B = 500$) con distintos valores de $n.$ 
+2. El estimador $\hat \theta_n$ es **asintóticamente normal.** Esta propiedad la
+hemos visto anteriormente para un caso muy particular. Lo vimos en el TLC para
+el caso de promedios $\bar X_n$ que en nuestro ejemplo corresponde a $\hat p_n$.
+Sin embargo, esta propiedad la satisface cualquier otro estimador que sea máximo
+verosímil. Por ejemplo, podemos utilizar el $\mathsf{MLE}$ de los momios. La
+figura que sigue muestra la distribución de $\hat \theta_n$ para las distintas
+remuestras ($B = 500$) con distintos valores de $n.$
 
 ```{r, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
 
@@ -132,19 +153,89 @@ dt %>%
 ```
 
 
-4. El estimador $\hat \theta_n$ es **asintóticamente óptimo o eficiente.** Hemos visto que, cuando $n$ es suficientemente grande, 
-el $\textsf{MLE}$ es asintóticamente insesgado. Una pregunta *natural* en este contexto es: ¿Cuál es la varianza mas pequeña que 
-puede tener un estimador insesgado?   
-La respuesta yace en la *desigualdad de Cramer-Rao.* Sea $\tilde \theta_n$ *cualquier* estimador insesgado de $\theta$ cuyo valor 
-verdadero es $\theta^*,$ entonces 
+4. El estimador $\hat \theta_n$ es **asintóticamente óptimo o eficiente.** Hemos
+visto que, cuando $n$ es suficientemente grande, el $\textsf{MLE}$ es
+asintóticamente insesgado. Una pregunta *natural* en este contexto es: ¿Cuál es
+la varianza mas pequeña que puede tener un estimador insesgado? La respuesta
+yace en la *desigualdad de Cramer-Rao.* Sea $\tilde \theta_n$ *cualquier*
+estimador insesgado de $\theta$ cuyo valor verdadero es $\theta^*,$ entonces
 \begin{align}
   \mathbb{V}(\tilde \theta_n) \geq \frac{1}{n I(\theta^*)}.
 \end{align}
-Un estimador insesgado que satisfaga esta desigualdad se dice que es *eficiente.* Nota que el lado derecho de la desigualdad es precisamente
-la varianza asintótica del $\textsf{MLE}.$ Por lo tanto, éste es *asintóticamente eficiente.* 
+Un estimador insesgado que satisfaga esta desigualdad se dice que es
+*eficiente.* Nota que el lado derecho de la desigualdad es precisamente la
+varianza asintótica del $\textsf{MLE}.$ Por lo tanto, éste es *asintóticamente
+eficiente.*
 
 
 ```{r, out.width = '95%', echo = FALSE}
 knitr::include_graphics('images/mle-mapa-mental.jpg')
 ```
 
+## Conexión con teoría de la información$^\dagger$ {-}
+
+Esta sección contiene una discusión similar que en la publicación de 
+[Rachel Draelos](https://glassboxmedicine.com/2019/12/07/connections-log-likelihood-cross-entropy-kl-divergence-logistic-regression-and-neural-networks/). En secciones anteriores (Sección \@ref{S:max-verosimilitud}) 
+hemos visto que la función de log-verosimilitud tiene una conexión con una 
+función de pérdida. Por ejemplo, una muestra 
+$X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2),$ donde conocemos
+la varianza pero no el promedio. La función de log-verosimilitud
+corresponde a la función de pérdida cuadrática
+$$\ell_n(\mu) = - \frac{1}{2 \sigma^2}\sum_{i = 1}^n \left( x_i - \mu \right)^2.$$
+En este caso, maximizar la log-verosimilitud corresponde a minimizar una función de 
+pérdida, o costo. La conexión con teoría de la información la podemos establecer
+a través de esta última interpretación.
+
+En teoría de la información un concepto clave es el de **entropía**. Esta
+cantidad mide el nivel de *informacion* o *sorpresa* inherente a una variable
+aleatoria. Por ejemplo, cuando lanzamos una moneda al azar y consideramos cara o
+cruz como el resultado, el máximo nivel de sorpresa es cuando la moneda es justa
+$(p = 1/2),$ pues no favorecemos un resultado sobre el otro.
+
+```{block, type = 'mathblock'}
+
+**Definición.** Sea $X$ una variable aleatoria discreta con posibles valores
+$x_1, \ldots, x_k,$ con probabilidades $P(X = x_i) = f(x_i)$ para cada $i = 1,
+\ldots, k.$ La entropía la definimos como 
+$$ H(X) = - \sum_{i = 1}^k f(x_i) \log f(x_i). $$ 
+
+```
+Con esta definición, la entropía la interpretamos como el número esperado de
+$bits$ necesarios para *comunicar* o *transferir* el mensaje que toma la
+variable $X.$ La idea es que utilicemos la función de probabilidad $f(\cdot)$ como 
+nuestro mejor código de compresión de información. El libro de @mackay2003
+contiene una discusión sobre entropía y transmisión de información muy clara en sus 
+primeros capítulos. 
+
+Ahora, supongamos que no tenemos conocimiento de la distribución de $X,$ la cual
+denotaremos por $g(\cdot)$, pero seguiremos utilizando el mejor codificador de
+información que tenemos disponible $f(\cdot).$
+
+Nuestra interpretación es la siguiente. Aunque los datos se distribuyan con la función 
+de probabilidad $g(\cdot),$ nosotros asignamos $f(\cdot)$ como nuestra mejor explicación
+disponible. Con esta consideración en mente, definimos el concepto de **entropía cruzada**.
+
+```{block cross-ent, type = 'mathblock'}
+
+**Definición.** Sea $X$ una variable aleatoria discreta. La entropía cruzada la 
+definimos como 
+$$ H (g, f) = - \sum_{i = 1}^n g(x_i) \log f(x_i).$$
+
+```
+
+En el caso que nos interesa, consideramos que los datos que observamos en
+nuestra muestra son independientes e idénticamente distribuidos. La ley de los
+grandes números nos permite asignar los pesos $1/n$ cuando $X_1, \ldots, X_n
+\sim g$ en la función de entropía cruzada. A su vez, la manera de comprimir
+la información de una variable aleatoria es a través del modelo probabilístico 
+que estamos considerando. La función $f(x; \theta)$ de nuestro modelo
+es precisamente nuestro codificador de información disponible. Estos dos
+puntos nos permiten establecer la función de entropía cruzada como
+$$ H (g, f; \theta) = - \frac1n \sum_{i = 1}^n  \log f(x_i;\theta).$$
+
+De donde establecemos que nuestra mejor compresión de información se cumple cuando
+$$\tilde \theta_n = \underset{\theta \, \in \, \Theta}{\arg\min} \, H (g, f; \theta),$$
+pues queremos minimizar la entropía (el grado de sorpresa) con respecto al
+modelo que genero los datos. Notemos que la siguiente serie de igualdades se
+satsiface
+$$ \tilde \theta_n = \underset{\theta \, \in \, \Theta}{\arg\min} \, H (g, f; \theta) = \underset{\theta \, \in \, \Theta}{\arg\max} \, \mathcal{L}_n(\theta) = \hat \theta_n.$$
