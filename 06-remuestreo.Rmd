@@ -919,23 +919,17 @@ normales por medio del error éstandar. Este intervalo está dado por
 ```{r, echo = FALSE}
 intervalo_total %>% round(1)
 ```
-y por construcción sabemos que es simétrico con respecto al valor estimado. Las
-preguntas naturales en este contexto son:
-
-- ¿Qué tan bueno puede ser un intervalo simétrico cuando la distribución
-presenta asimetría?
-- ¿Cómo afecta la asimetría la calidad del intervalo de confianza? 
-
-Para responder estos puntos podemos calcular cuántas medias bootstrap están en las colas
-de la distribución con respecto a las cotas del intervalo. Observamos que
-esto nos arroja los siguientes porcentajes en términos de cobertura
+y por construcción sabemos que es simétrico con respecto al valor estimado, pero 
+como podemos ver la distribución de muestreo no es simétrica, lo cual podemos
+confirmar por ejemplo calculando el porcentaje de muestras bootstrap que caen
+por arriba y por debajo del intervalo construido:
 
 ```{r, echo = FALSE}
 totales_boot %>% 
   mutate(upper = total_boot >= max(intervalo_total * 1000), 
          lower = total_boot <= min(intervalo_total * 1000)) %>% 
-  summarise(cobertura_inf = mean(lower), 
-            cobertura_sup = mean(upper))
+  summarise(prop_inf = mean(lower), 
+            prop_sup = mean(upper))
 ```
 
 los cuales se han calculado como el porcentaje de medias bootstrap por debajo
