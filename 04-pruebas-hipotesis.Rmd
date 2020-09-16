@@ -495,7 +495,7 @@ denominar como:
 
 En el ejemplo anterior planteamos hipótesis nula (proporciones iguales) e
 hipótesis alternativa que la proporción de tomadores de te suelto que usan
-azúcar en menor, esto corresponde a una hipótesis alternativa a dos colas:
+azúcar es menor, esto corresponde a una hipótesis alternativa a una colas:
 $H_0: p_1 = p_2$, y $H_1:p_1 > p_2$.
 
 
