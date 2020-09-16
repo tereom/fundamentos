@@ -900,6 +900,48 @@ que producimos en esta sección pueden interpretarse de las dos maneras.
 
 ## Intervalos bootstrap de percentiles {-}
 
+Retomemos nuestro ejemplo del valor total del precio de las casas. A través de
+remuestras bootstrap hemos verificado gráficamente que la distribución de
+remuestreo es *ligeramente* asimétrica (ver la figura de abajo). 
+
+```{r, fig.height = 3, out.width = "95%", echo = FALSE}
+g_hist2 <- totales_boot %>% 
+  ggplot(aes(x = total_boot)) +
+  geom_histogram(aes(y = ..density..)) + 
+  stat_function(fun = dnorm, args = list(mean = total_est, sd = ee_boot), color = 'red', lty = 2)
+
+g_hist2 + g_qq
+```
+
+Anteriormente hemos calculado intervalos de confianza basados en supuestos
+normales por medio del error éstandar. Este intervalo está dado por
+
+```{r, echo = FALSE}
+intervalo_total %>% round(1)
+```
+y por construcción sabemos que es simétrico con respecto al valor estimado. Las
+preguntas naturales en este contexto son:
+
+- ¿Qué tan bueno puede ser un intervalo simétrico cuando la distribución
+presenta asimetría?
+- ¿Cómo afecta la asimetría la calidad del intervalo de confianza? 
+
+Para responder estos puntos podemos calcular cuántas medias bootstrap están en las colas
+de la distribución con respecto a las cotas del intervalo. Observamos que
+esto nos arroja los siguientes porcentajes en términos de cobertura
+
+```{r, echo = FALSE}
+totales_boot %>% 
+  mutate(upper = total_boot >= max(intervalo_total * 1000), 
+         lower = total_boot <= min(intervalo_total * 1000)) %>% 
+  summarise(cobertura_inf = mean(lower), 
+            cobertura_sup = mean(upper))
+```
+
+los cuales se han calculado como el porcentaje de medias bootstrap por debajo
+(arriba) de la cota inferior (superior), y vemos que no coinciden con el nivel de 
+confianza prestablecido (2.5\% para cada extremo).
+
 Otra opción común que se usa específicamente cuando la distribución bootstrap 
 no es muy cercana a la normal son los intervalos de percentiles bootstrap:
 
@@ -918,44 +960,18 @@ intervalos de confianza muy alta (por ejemplo 99.5%) pueden tener mala calibraci
 o ser muy variables en su longitud pues dependen del comportamiento en las colas de la
 distribución.
 
-### Ejemplo {-}
-
 Para el ejemplo de las casas, calcularíamos simplemente
 
 ```{r}
 intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975)) / 1000
 (intervalo_95) %>% round(1)
 ```
-que está en millones de dólares. Nótese que es similar al intervalo de error estándar:
+que está en millones de dólares. Nótese que es similar al intervalo de error estándar.
 
-```{r, echo = FALSE}
-intervalo_total %>% round(1)
-```
 
-Sin embargo, el intervalo del error éstandar está construido bajo el supuesto
-que el TCL es una buena aproximación. Anteriormente vimos que este supuesto
-parece ser cierto en este ejemplo. Aunque también notamos un grado de asimetría
-en el histograma. ¿Cómo se traduce está asimetría en la calidad del intervalo de
-confianza? Empecemos por el intervalo basado en el error éstandar. Claramente
-éste no está bien calibrado, como podemos notar en los resúmenes de cobertura
-para nuestras remuestras bootstrap:
-
-```{r, echo = FALSE}
-totales_boot %>% 
-  mutate(upper = total_boot >= max(intervalo_total * 1000), 
-         lower = total_boot <= min(intervalo_total * 1000)) %>% 
-  summarise(cobertura_inf = mean(lower), 
-            cobertura_sup = mean(upper))
-```
-
-los cuales se han calculado como el porcentaje de medias bootstrap por debajo
-(arriba) de la cota inferior (superior).
-
-En comparación, el intervalo basado en percentiles está construido para
-satisfacer está garantía (ver definición). Más aún, podemos notar que el
-intervalo bootstrap de percentiles construye un intervalo asímetrico con
-respecto a la media. Ilustramos esto con la distancia de las extremos del
-intervalo con respecto a la media:
+Otro punto interesante sobre los intervalos bootstrap de percentiles es que
+lidian naturalmente con la asímetría de la distribución bootstrap. Ilustramos
+esto con la distancia de las extremos del intervalo con respecto a la media:
 
 ```{r}
 abs(intervalo_95 - total_est/1000)
