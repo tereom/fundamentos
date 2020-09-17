@@ -602,7 +602,7 @@ En el proceso de estimación bootstrap hay dos fuentes de variación pues:
 
 * Las muestras bootstrap se seleccionan con aleatoriedad de la muestra 
 original. Esto es: *La estimación bootstrap ideal es un resultado asintótico 
-$B=\infty$, en esta caso $\hat{se}_B$ iguala la estimación _plug-in_ 
+$B=\infty$, en esta caso $\hat{\textsf{se}}_B$ iguala la estimación _plug-in_ 
 $se_{P_n}$.* 
 
 En el proceso de *bootstrap* podemos controlar la variación del segundo aspecto,
@@ -611,7 +611,7 @@ Monte Carlo decrece conforme incrementamos el número de muestras.
 
 Podemos eliminar la variación Monte Carlo si seleccionamos todas las posibles
 muestras con reemplazo de tamaño $n$, hay ${2n-1}\choose{n}$ posibles muestras 
-y si seleccionamos todas obtenemos $\hat{se}_\infty$ (bootstrap ideal), sin
+y si seleccionamos todas obtenemos $\hat{\textsf{se}}_\infty$ (bootstrap ideal), sin
 embargo, en la mayor parte de los problemas no es factible proceder así.
 
 ```{r, eval = FALSE, echo=FALSE}
@@ -716,9 +716,9 @@ Entonces, ¿cuántas muestras bootstrap?
 
 1. Incluso un número chico de replicaciones bootstrap, digamos $B=25$ es 
 informativo, y $B=50$ con frecuencia es suficiente para dar una buena 
-estimación de $se_P(\hat{\theta})$ (@efron).
+estimación de $se_P(\hat{\theta})$ (@Efron).
 
-2. Cuando se busca estimar error estándar @tim recomienda $B=1000$ muestras, o 
+2. Cuando se busca estimar error estándar @Chihara recomienda $B=1000$ muestras, o 
 $B=10,000$ muestras dependiendo la presición que se busque.
 
 
@@ -1129,7 +1129,7 @@ propinas <- read_csv("data/propinas.csv")
 estimador <- function(split, ...){
   muestra <- analysis(split) %>% group_by(momento)
   muestra %>% 
-    summarise(estimate = mean(cuenta_total)) %>% 
+    summarise(estimate = mean(cuenta_total), .groups = 'drop') %>% 
     mutate(term = momento)
 }
 intervalo_propinas_90 <- bootstraps(propinas, strata = momento, 1000) %>% 
@@ -1278,7 +1278,7 @@ que en este ejemplo también podríamos hacer una prueba de hipótesis por permu
 suponiendo como hipótesis nula que las dos medicinas son equivalentes. Sin embargo, usualmente
 es más informativo presentar este tipo de intervalos para estimar la diferencia.
 
-## Bootstrap y otras estadísticas
+## Bootstrap y otras estadísticas {-}
 
 El bootstrap es una técnica versátil. Un ejemplo son **estimadores de razón**, que tienen
 la forma
@@ -1753,7 +1753,7 @@ $w_k^*$ en lugar de los originales $w_k$.
 
 4. Calculamos el error estándar como:
 
-$$\hat{se}_B = \bigg\{\frac{\sum_{b=1}^B[\hat{\theta}^*(b)-\hat{\theta}^*(\cdot)]^2 }{B}\bigg\}^{1/2}$$
+$$\hat{\textsf{se}}_B = \bigg\{\frac{\sum_{b=1}^B[\hat{\theta}^*(b)-\hat{\theta}^*(\cdot)]^2 }{B}\bigg\}^{1/2}$$
 
 Podemos elegir cualquier valor de $m_h \geq 1$, el más sencillo es elegir
 $m_h=n_h-1$, en este caso:
