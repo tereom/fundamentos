@@ -1169,8 +1169,7 @@ Nuestra muestra original es:
 
 ```{r}
 set.seed(250)
-casas_muestra <- sample_n(casas, 200)
-
+casas_muestra <- sample_n(poblacion_casas, 200)
 ```
 
 El estimador de interés es:
@@ -1224,7 +1223,8 @@ De modo que en esta zona, entre 12% y 16% de toda el área disponible es ocupada
 
 
 Podemos usar el bootstrap para juzgar
-la variabilidad de un suavizador:
+la variabilidad de un suavizador, que consideramos como nuestra
+estadística:
 
 ```{r, fig.width = 5, fig.height = 3, message = FALSE}
 graf_casas <- function(data){
@@ -1234,9 +1234,7 @@ graf_casas <- function(data){
         geom_smooth(aes(y = precio_m2_miles), method = "loess", span = 0.7, 
                 se = FALSE, method.args = list(degree = 1, family = "symmetric"))     
 }
-set.seed(250)
-casas_muestra <- sample_frac(casas, 0.2)
-graf_casas(casas_muestra)
+graf_casas(muestra_casas)
 ```
 
 Podemos hacer bootstrap para juzgar la estabilidad del suavizador:
@@ -1373,7 +1371,7 @@ Esto produce un intervalo colapsado en 0 que no es razonable.
 Podemos remediar esto de varias maneras: quitando del análisis los que no sabe o no contestaron, agrupando en otra categoría, usando un modelo, o regularizar usando proporciones calculadas con conteos modificados: por ejemplo, agregando un caso de cada combinación (agregaría 18 personas "falsas" a una muestra de 290 personas).
 
 
-## Bootstrap y estimadores complejos: muestreo {-}
+## Bootstrap y muestras complejas {-}
 
 La necesidad de estimaciones confiables junto con el uso eficiente de recursos
 conllevan a diseños de muestras complejas. Estos diseños típicamente usan las
