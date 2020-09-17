@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] 0.26
+## [1] -0.8
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] -0.66
+## [1] 0.12
 ```
 
 ```r
@@ -553,3 +553,9 @@ ggplot(perms, aes(x = difs)) +
 La tarea 5 es el proyecto de RStudio.Cloud con este nombre, el ejercicio está
 en un archvio de R Markdown. Envíen el reporte por correo electrónico (con 
 título fundamentos-tarea05).
+
+## 6. TCL e introducción a bootstrap {-}
+
+La tarea 6 es el proyecto de RStudio.Cloud con este nombre, los ejercicios
+están descritos en un archivo de R. Envíen un reporte por correo electrónico con 
+las respuestas (con título fundamentos-tarea06).

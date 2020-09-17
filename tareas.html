@@ -249,6 +249,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-pruebas-pareadas"><i class="fa fa-check"></i>Solución: Pruebas pareadas</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#distribución-muestral-y-remuestreo"><i class="fa fa-check"></i>5. Distribución muestral y remuestreo</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
 <li class="divider"></li>
@@ -604,7 +605,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb207-11"><a href="tareas.html#cb207-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb207-12"><a href="tareas.html#cb207-12"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media_dif =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb207-13"><a href="tareas.html#cb207-13"></a><span class="st">  </span><span class="kw">pull</span>(media_dif)</span></code></pre></div>
-<pre><code>## [1] 0.26</code></pre>
+<pre><code>## [1] -0.8</code></pre>
 <div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="tareas.html#cb209-1"></a><span class="co"># Lo hacemos una función </span></span>
 <span id="cb209-2"><a href="tareas.html#cb209-2"></a>calcula_est &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
 <span id="cb209-3"><a href="tareas.html#cb209-3"></a>  dormir_perm &lt;-<span class="st"> </span>dormir_larga <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -619,7 +620,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb209-12"><a href="tareas.html#cb209-12"></a>}</span>
 <span id="cb209-13"><a href="tareas.html#cb209-13"></a><span class="co"># La llamamos 1000 veces</span></span>
 <span id="cb209-14"><a href="tareas.html#cb209-14"></a><span class="kw">calcula_est</span>()</span></code></pre></div>
-<pre><code>## [1] -0.66</code></pre>
+<pre><code>## [1] 0.12</code></pre>
 <div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="tareas.html#cb211-1"></a>difs &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">1000</span>, <span class="kw">calcula_est</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">flatten_dbl</span>()</span></code></pre></div>
 <ul>
 <li>Haz una gráfica de la distribución de referencia y grafica encima el valor
@@ -637,6 +638,12 @@ observado en los datos originales.</li>
 <p>La tarea 5 es el proyecto de RStudio.Cloud con este nombre, el ejercicio está
 en un archvio de R Markdown. Envíen el reporte por correo electrónico (con
 título fundamentos-tarea05).</p>
+</div>
+<div id="tcl-e-introducción-a-bootstrap" class="section level2 unnumbered">
+<h2>6. TCL e introducción a bootstrap</h2>
+<p>La tarea 6 es el proyecto de RStudio.Cloud con este nombre, los ejercicios
+están descritos en un archivo de R. Envíen un reporte por correo electrónico con
+las respuestas (con título fundamentos-tarea06).</p>
 
 </div>
 </div>
