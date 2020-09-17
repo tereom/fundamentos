@@ -25,7 +25,7 @@ muestra disponible, y la población es desconocida. Todo lo que tenemos es una
 muestra y una estimación basada en la muestra, y requerimos estimar la
 distribución de muestreo de la estadística de interés. El enfoque que
 presentaremos aquí es uno de los más flexibles y poderosos que están disponibles
-para este problema: el método **bootstrap** o de **remuestreo**.
+para este problema: el método ***bootstrap*** o de **remuestreo**.
 
 En primer lugar explicamos el concepto de intervalo de confianza, que es una
 manera resumida de evaluar la precisión de nuestras estimaciones.
@@ -93,7 +93,7 @@ manera que usando alguna prueba de hipótesis.**
 
 
 
-## La idea del bootstrap {-}
+## La idea del *bootstrap* {-}
 
 
 Como explicamos, el problema que tenemos ahora es que normalmente sólo tenemos
@@ -112,7 +112,7 @@ variabilidad.
 2. Pero **no** tenemos la distribución poblacional.
 3. **Sin embargo, podemos estimar la distribución poblacional con nuestros valores muestrales**.
 
-**Mundo bootstrap**
+**Mundo *bootstrap* **
 
 4. Si usamos la estimación del inciso 3, entonces usando el inciso 1 podríamos
 tomar muestras de nuestros datos muestrales, como si fueran de la población, y
@@ -120,9 +120,9 @@ usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de
 manera que produzcamos muestras independientes de la misma "población estimada",
 que es la muestra.
 5. Evaluamos nuestra estadística en cada una de estas remuestras.
-6. A la distribución resultante le llamamos **distribución bootstrap** o
+6. A la distribución resultante le llamamos **distribución *bootstrap* **o
 **distribución de remuestreo** del estimador.
-7. Usamos la distribución bootstrap de la muestra para estimar la variabilidad
+7. Usamos la distribución *bootstrap* de la muestra para estimar la variabilidad
 en nuestra estimación con **la muestra original**.
 
 
@@ -253,7 +253,7 @@ Nótese que algunos valores de la muestra original pueden aparecer varias veces,
 
 
 ```{block, type='comentario'}
-**La idea del bootstrap**. La muestra original es una aproximación de la población
+**La idea del bootstrap.** La muestra original es una aproximación de la población
 de donde fue extraída. Así que remuestrear la muestra aproxima lo que pasaría si
 tomáramos muestras de la población. La **distribución de remuestreo** de una estadística,
 que se construye tomando muchas remuestras, aproxima la distribución de muestreo
@@ -263,6 +263,7 @@ de la estadística.
 Y el proceso que hacemos es:
 
 ```{block2, type='comentario'}
+
 **Remuestreo para una población.** Dada una muestra de tamaño $n$ de una población,
 
 1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original
@@ -276,7 +277,7 @@ Y el proceso que hacemos es:
 
 ## El principio de plug-in {-}
 
-La idea básica detrás del bootstrap es el principio de plug-in para estimar
+La idea básica detrás del *bootstrap* es el principio de plug-in para estimar
 parámetros poblacionales: si queremos estimar una cantidad poblacional,
 calculamos esa cantidad poblacional con la muestra obtenida. Es un principio
 común en estadística.
@@ -295,7 +296,7 @@ distribución que da una muestra se llama distribución *empírica*.
 - Contruimos nuestro estimador "enchufando" la distribución empírica de la
 muestra en la fórmula del estimador.
 
-En el bootstrap aplicamos este principio simple a la **distribución de
+En el *bootstrap* aplicamos este principio simple a la **distribución de
 muestreo**:
 
 - *Si tenemos la población*, podemos *calcular* la distribución de muestreo de
@@ -428,7 +429,7 @@ original.
 
 - ¿Porqué no funcionaría tomar muestras sin reemplazo? Piensa si hay independencia
 entre las observaciones de la remuestra, y cómo serían las remuestras sin reemplazo.
-- ¿Por qué no se puede hacer bootstrap si no conocemos cómo se obtuvo la muestra original?
+- ¿Por qué no se puede hacer *bootstrap* si no conocemos cómo se obtuvo la muestra original?
 
 ```
 
@@ -503,9 +504,9 @@ prop_negro_tbl %>%
 ```
 
 
-## Discusión: propiedades de la distribución bootstrap {-}
+## Discusión: propiedades de la distribución *bootstrap* {-}
 
-Uasremos la distribución bootstrap principalmente para evaluar la variabilidad
+Uasremos la distribución *bootstrap* principalmente para evaluar la variabilidad
 de nuestros estimadores (y también otros aspectos como sesgo) estimando
 la dispersión de la distribución de muestreo. Sin embargo, es importante notar
 que no la usamos, por ejemplo, para saber dónde está centrada la distribución
@@ -586,7 +587,7 @@ Obsérvese que:
 
 - En algunos casos la aproximación  es mejor que en otros (a veces
 la muestra tiene valores ligeramente más altos o más bajos).
-- La dispersión de cada una de estas distribuciones bootstrap es similar a la de la verdadera
+- La dispersión de cada una de estas distribuciones *bootstrap* es similar a la de la verdadera
 distribución de muestreo (en rojo), pero puede está desplazada dependiendo
 de la muestra original que utilizamos.
 - Adicionalmente, los valores centrales de la distribución de bootstrap
@@ -596,16 +597,16 @@ tiende cubrir el verdadero valor que buscamos estimar, que es:
 poblacion_casas %>% summarise(media = mean(precio_miles), .groups = "drop")
 ```
 
-### Variación en distribuciones bootstrap {-}
+### Variación en distribuciones *bootstrap* {-}
 
-En el proceso de estimación bootstrap hay dos fuentes de variación pues:
+En el proceso de estimación *bootstrap* hay dos fuentes de variación pues:
 
 * La muestra original se selecciona con aleatoriedad de una población.
 
-* Las muestras bootstrap se seleccionan con aleatoriedad de la muestra
-original. Esto es: *La estimación bootstrap ideal es un resultado asintótico
-$B=\infty$, en esta caso $\hat{se}_B$ iguala la estimación _plug-in_
-$se_{P_n}$.*
+* Las muestras *bootstrap* se seleccionan con aleatoriedad de la muestra
+original. Esto es: *La estimación *bootstrap* ideal es un resultado asintótico
+$B=\infty$, en esta caso $\hat{\textsf{se}}_B$ iguala la estimación _plug-in_
+$\textsf{se}_{P_n}$.*
 
 En el proceso de *bootstrap* podemos controlar la variación del segundo aspecto,
 conocida como **implementación de muestreo Monte Carlo**, y la variación
@@ -613,7 +614,7 @@ Monte Carlo decrece conforme incrementamos el número de muestras.
 
 Podemos eliminar la variación Monte Carlo si seleccionamos todas las posibles
 muestras con reemplazo de tamaño $n$, hay ${2n-1}\choose{n}$ posibles muestras
-y si seleccionamos todas obtenemos $\hat{se}_\infty$ (bootstrap ideal), sin
+y si seleccionamos todas obtenemos $\hat{\textsf{se}}_\infty$ (bootstrap ideal), sin
 embargo, en la mayor parte de los problemas no es factible proceder así.
 
 ```{r, eval = FALSE, echo=FALSE}
@@ -704,11 +705,11 @@ plot_layout(heights = c(1, 5), "cm")
 
 En la siguiente gráfica mostramos 6 posibles muestras de tamaño 50 simuladas de
 la población, para cada una de ellas se graficó la distribución empírica y se
-se realizan histogramas de la distribución bootstrap con $B=30$ y $B=1000$, en
+se realizan histogramas de la distribución *bootstrap* con $B=30$ y $B=1000$, en
 cada caso hacemos dos repeticiones, notemos que cuando el número de muestras
-bootstrap es grande las distribuciones bootstrap son muy similares (para una
+bootstrap es grande las distribuciones *bootstrap* son muy similares (para una
 muestra de la población dada), esto es porque disminuimos el erro Monte Carlo.
-También vale la pena recalcar que la distribución bootstrap está centrada en el
+También vale la pena recalcar que la distribución *bootstrap* está centrada en el
 valor observado en la muestra (línea azúl punteada) y no en el valor poblacional
 sin embargo la forma de la distribución es similar a lo largo de las filas.
 
@@ -718,13 +719,13 @@ Entonces, ¿cuántas muestras bootstrap?
 
 1. Incluso un número chico de replicaciones bootstrap, digamos $B=25$ es
 informativo, y $B=50$ con frecuencia es suficiente para dar una buena
-estimación de $se_P(\hat{\theta})$ (@efron).
+estimación de $se_P(\hat{\theta})$ (@Efron).
 
-2. Cuando se busca estimar error estándar @tim recomienda $B=1000$ muestras, o
+2. Cuando se busca estimar error estándar @Chihara recomienda $B=1000$ muestras, o
 $B=10,000$ muestras dependiendo la presición que se busque.
 
 
-## Error estándar bootstrap e intervalos normales {-}
+## Error estándar *bootstrap* e intervalos normales {-}
 
 Ahora podemos construir nuestra primera versión de intervalos de confianza
 basados en la distribución bootstrap.
@@ -753,12 +754,11 @@ entre la distribución bootstrap, que aproxima la distribución de muestreo. Lo 
 $$\hat{\mathsf{ee}}_{\textrm{boot}}(\hat{\theta})$$
 que es la desviación estándar de la **distribución bootsrap**.
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
+**Definición.** El **error estándar *bootstrap* ** $\hat{\mathsf{ee}}_{\textrm{boot}}(\hat{\theta})$ se
+define como la desviación estándar de la distribución *bootstrap* de $\theta$.
 
-**Definición.** El **error estándar bootstrap**  $\hat{\mathsf{ee}}_{\textrm{boot}}(\hat{\theta})$ se
-define como la desviación estándar de la distribución bootstrap de $\theta$.
-
-El **intervalo de confianza normal bootstrap** al 95\% está dado por
+El **intervalo de confianza normal *bootstrap* **al 95\% está dado por
 $$[\hat{\theta} - 2\mathsf{ee}(\hat{\theta}), \hat{\theta} + 2\mathsf{ee}(\hat{\theta})].$$
 
 ```
@@ -787,7 +787,7 @@ prop_hat <- calc_estimador(te)
 prop_hat %>% round(2)
 ```
 
-Podemos graficar su distribución bootstrap ---la cual simulamos arriba---.
+Podemos graficar su distribución *bootstrap* ---la cual simulamos arriba---.
 
 ```{r, out.width = "95%"}
 g_hist <- ggplot(prop_negro_tbl, aes(x = prop_negro)) + geom_histogram(bins = 15)
@@ -796,7 +796,7 @@ g_qq_normal <- ggplot(prop_negro_tbl, aes(sample = prop_negro)) +
 g_hist + g_qq_normal
 ```
 
-Y notamos que la distribución bootstrap es aproximadamente normal.
+Y notamos que la distribución *bootstrap* es aproximadamente normal.
 Adicionalmente, vemos que el sesgo tiene un valor estimado de:
 
 ```{r}
@@ -806,8 +806,8 @@ media_boot - prop_hat
 
 De esta forma, hemos verificado que:
 
-- La distribución bootstrap es aproximadamente normal (ver gráfica de cuantiles normales);
-- La distribución bootstrap es aproximadamente insesgada.
+- La distribución *bootstrap* es aproximadamente normal (ver gráfica de cuantiles normales);
+- La distribución *bootstrap* es aproximadamente insesgada.
 
 Lo cual nos lleva a construir intervalos de confianza basados en la distribución
 normal. Estimamos el error estándar con la desviación estándar de la
@@ -978,13 +978,11 @@ de simulación se pueden hacer con poblaciones sintéticas que se generen con
 las características que creemos va a tener nuestra población (por ejemplo, sesgo,
 colas largas, etc.).
 
-```{block2 ,type='comentario'}
-
+```{block, type='comentario'}
 En general, no importa qué tipo de estimadores o intervalos de confianza usemos,
 requerimos checar la calibración. Esto puede hacerse con ejercicios de
 simulación con poblaciones sintéticas y tanto los procedimientos de muestreo
 como los tamaños de muestra que nos interesa usar.
-
 ```
 
 Verificar la cobertura de nuestros intervalos de confianza por medio simulación está
@@ -1032,10 +1030,10 @@ aproximen bien garantías frecuentistas (discutimos esto más adelante). Los int
 que producimos en esta sección pueden interpretarse de las dos maneras.
 
 
-## Intervalos bootstrap de percentiles {-}
+## Intervalos *bootstrap* de percentiles {-}
 
 Retomemos nuestro ejemplo del valor total del precio de las casas. A través de
-remuestras bootstrap hemos verificado gráficamente que la distribución de
+remuestras *bootstrap* hemos verificado gráficamente que la distribución de
 remuestreo es *ligeramente* asimétrica (ver la figura de abajo).
 
 ```{r, fig.height = 3, out.width = "95%", echo = FALSE}
@@ -1055,7 +1053,7 @@ intervalo_total %>% round(1)
 ```
 y por construcción sabemos que es simétrico con respecto al valor estimado, pero
 como podemos ver la distribución de muestreo no es simétrica, lo cual podemos
-confirmar por ejemplo calculando el porcentaje de muestras bootstrap que caen
+confirmar por ejemplo calculando el porcentaje de muestras *bootstrap* que caen
 por arriba y por debajo del intervalo construido:
 
 ```{r, echo = FALSE}
@@ -1066,20 +1064,18 @@ totales_boot %>%
             prop_sup = mean(upper))
 ```
 
-los cuales se han calculado como el porcentaje de medias bootstrap por debajo
+los cuales se han calculado como el porcentaje de medias *bootstrap* por debajo
 (arriba) de la cota inferior (superior), y vemos que no coinciden con el nivel de
 confianza prestablecido (2.5\% para cada extremo).
 
 Otra opción común que se usa específicamente cuando la distribución bootstrap
 no es muy cercana a la normal son los intervalos de percentiles bootstrap:
 
-```{block2, type='mathblock'}
-
-**Definición.** El **intervalo de percentiles bootstrap** al 95\% de confianza
+```{block, type='mathblock'}
+**Definición.** El **intervalo de percentiles *bootstrap* **al 95\% de confianza
 está dado por
 $$[q_{0.025}, q_{0.975}]$$
 donde $q_f$ es el percentil $f$ de la distribución bootstrap.
-
 ```
 
 Otros intervalos comunes son el de 80% o 90% de confianza, por ejemplo,
@@ -1097,7 +1093,7 @@ intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.02
 que está en millones de dólares. Nótese que es similar al intervalo de error estándar.
 
 
-Otro punto interesante sobre los intervalos bootstrap de percentiles es que
+Otro punto interesante sobre los intervalos *bootstrap* de percentiles es que
 lidian naturalmente con la asímetría de la distribución bootstrap. Ilustramos
 esto con la distancia de las extremos del intervalo con respecto a la media:
 
@@ -1120,7 +1116,7 @@ al 95% es muy similar al intervalo normal de 2 errores estándar.
 ### Ejemplo {-}
 
 Consideramos los datos de propinas. Queremos estimar la media de cuentas
-totales para la comida y la cena. Podemos hacer bootstrap de cada grupo
+totales para la comida y la cena. Podemos hacer *bootstrap* de cada grupo
 por separado:
 
 ```{r}
@@ -1160,12 +1156,12 @@ ggplot(intervalo_propinas_90, aes(x = term)) +
   labs(subtitle = "Intervalos de 90% para la media")
 ```
 
-Nótese que el bootstrap lo hicimos por separado en cada momento del día (por eso
-el argumento *strata* en la llamada a **bootstraps**):
+Nótese que el *bootstrap* lo hicimos por separado en cada momento del día (por eso
+el argumento `strata` en la llamada a `bootstraps`):
 
 ```{block2, type='ejercicio'}
 
-Justifica el procedimiento de hacer el bootstrap separado para cada grupo. ¿Qué supuestos
+Justifica el procedimiento de hacer el *bootstrap* separado para cada grupo. ¿Qué supuestos
 acerca del muestreo se deben satisfacer? ¿Deben ser muestras aleatorias simples
 de cada momento del día, por ejemplo? ¿Qué harías si no fuera así, por ejemplo, si
 se escogieron al azar tickets de todos los disponibles en un periodo?
