@@ -596,6 +596,133 @@ tiende cubrir el verdadero valor que buscamos estimar, que es:
 poblacion_casas %>% summarise(media = mean(precio_miles), .groups = "drop")
 ```
 
+### Variación en distribuciones bootstrap {-}
+
+En el proceso de estimación bootstrap hay dos fuentes de variación pues:
+
+* La muestra original se selecciona con aleatoriedad de una población.
+
+* Las muestras bootstrap se seleccionan con aleatoriedad de la muestra
+original. Esto es: *La estimación bootstrap ideal es un resultado asintótico
+$B=\infty$, en esta caso $\hat{se}_B$ iguala la estimación _plug-in_
+$se_{P_n}$.*
+
+En el proceso de *bootstrap* podemos controlar la variación del segundo aspecto,
+conocida como **implementación de muestreo Monte Carlo**, y la variación
+Monte Carlo decrece conforme incrementamos el número de muestras.
+
+Podemos eliminar la variación Monte Carlo si seleccionamos todas las posibles
+muestras con reemplazo de tamaño $n$, hay ${2n-1}\choose{n}$ posibles muestras
+y si seleccionamos todas obtenemos $\hat{se}_\infty$ (bootstrap ideal), sin
+embargo, en la mayor parte de los problemas no es factible proceder así.
+
+```{r, eval = FALSE, echo=FALSE}
+set.seed(8098)
+pob_plot <- ggplot(data_frame(x = -15:20), aes(x)) +
+    stat_function(fun = dnormm, args = list(p = c(0.3, 0.7), mu = c(-2, 8),
+        sigma = c(3.5, 3)), alpha = 0.8) +
+    geom_vline(aes(color = "mu", xintercept = 5), alpha = 0.5) +
+    scale_colour_manual(values = c('mu' = 'red'), name = '',
+        labels = expression(mu)) +
+    labs(x = "", y = "", subtitle = "Población", color = "") +
+    theme(axis.text.y = element_blank())
+
+samples <- data_frame(sample = 1:6) %>%
+    mutate(
+        sims = rerun(6, rnormm(50, p = c(0.3, 0.7), mu = c(-2, 8),
+            sigma = c(3.5, 3))),
+        x_bar = map_dbl(sims, mean))
+
+ means_boot <- function(n, sims) {
+    rerun(n, mean(sample(sims, replace = TRUE))) %>%
+        flatten_dbl()
+ }
+samples_boot <- samples %>%
+    mutate(
+        medias_boot_30_1 = map(sims, ~means_boot(n = 30, .)),
+        medias_boot_30_2 = map(sims, ~means_boot(n = 30, .)),
+        medias_boot_1000_1 = map(sims, ~means_boot(n = 1000, .)),
+        medias_boot_1000_2 = map(sims, ~means_boot(n = 1000, .))
+    )
+
+emp_dists <- samples_boot %>%
+    unnest(cols = sims) %>%
+    rename(obs = sims)
+emp_dists_plots <- ggplot(emp_dists, aes(x = obs)) +
+    geom_histogram(binwidth = 2, alpha = 0.5, fill = "darkgray") +
+    geom_vline(aes(color = "mu", xintercept = 5), alpha = 0.5,
+      show.legend = FALSE) +
+    geom_vline(aes(xintercept = x_bar, color = "x_bar"), show.legend = FALSE,
+        alpha = 0.8, linetype = "dashed") +
+    xlim(-15, 20) +
+    geom_vline(xintercept = 5, color = "red", alpha = 0.5) +
+    labs(x = "", y = "", subtitle = expression("Distribución empírica"~P[n])) +
+    scale_colour_manual(values = c('mu' = 'red', 'x_bar' = 'blue'), name = '',
+        labels = c(expression(mu), expression(bar(x)))) +
+    facet_wrap(~ sample, ncol = 1) +
+    theme(strip.background = element_blank(), strip.text.x = element_blank(),
+        axis.text.y = element_blank())
+
+boot_dists_30 <- samples_boot %>%
+    unnest(cols = c(medias_boot_30_1, medias_boot_30_2)) %>%
+    pivot_longer(cols = c(medias_boot_30_1, medias_boot_30_2),
+    values_to = "mu_hat_star", names_to = "boot_trial",
+    names_prefix = "medias_boot_30_")
+boot_dists_30_plot <- ggplot(boot_dists_30, aes(x = mu_hat_star)) +
+    geom_histogram(alpha = 0.5, fill = "darkgray") +
+    labs(x = "", y = "",
+        subtitle = expression("Distribución bootstrap B = 30")) +
+    geom_vline(xintercept = 5, color = "red", alpha = 0.5) +
+    geom_vline(aes(xintercept = x_bar), color = "blue",
+        linetype = "dashed", alpha = 0.8) +
+    facet_grid(sample~boot_trial) +
+    theme(strip.background = element_blank(), strip.text.y = element_blank(),
+        axis.text.y = element_blank())
+
+boot_dists_1000 <- samples_boot %>%
+    unnest(cols = c(medias_boot_1000_1, medias_boot_1000_2)) %>%
+    pivot_longer(cols = c(medias_boot_1000_1, medias_boot_1000_2),
+    values_to = "mu_hat_star", names_to = "boot_trial",
+    names_prefix = "medias_boot_1000_")
+boot_dists_1000_plot <- ggplot(boot_dists_1000, aes(x = mu_hat_star)) +
+    geom_histogram(alpha = 0.5, fill = "darkgray") +
+    labs(subtitle = expression("Distribución bootstrap B = 1000"),
+       x = "", y = "") +
+    geom_vline(xintercept = 5, color = "red", alpha = 0.5) +
+    geom_vline(aes(xintercept = x_bar), color = "blue",
+        linetype = "dashed", alpha = 0.8) +
+    facet_grid(sample~boot_trial) +
+    scale_colour_manual(values = c('mu' = 'red', 'x_bar' = 'blue'), name = '',
+    labels = c(expression(mu), expression(bar(x)))) +
+    theme(strip.background = element_blank(), strip.text.y = element_blank(),
+        strip.text.x = element_blank(), axis.text.y = element_blank())
+
+(pob_plot | plot_spacer() | plot_spacer()) /
+(emp_dists_plots | boot_dists_30_plot | boot_dists_1000_plot) +
+plot_layout(heights = c(1, 5), "cm")
+```
+
+En la siguiente gráfica mostramos 6 posibles muestras de tamaño 50 simuladas de
+la población, para cada una de ellas se graficó la distribución empírica y se
+se realizan histogramas de la distribución bootstrap con $B=30$ y $B=1000$, en
+cada caso hacemos dos repeticiones, notemos que cuando el número de muestras
+bootstrap es grande las distribuciones bootstrap son muy similares (para una
+muestra de la población dada), esto es porque disminuimos el erro Monte Carlo.
+También vale la pena recalcar que la distribución bootstrap está centrada en el
+valor observado en la muestra (línea azúl punteada) y no en el valor poblacional
+sin embargo la forma de la distribución es similar a lo largo de las filas.
+
+![](images/bootstrap_mc_error.png)
+
+Entonces, ¿cuántas muestras bootstrap?
+
+1. Incluso un número chico de replicaciones bootstrap, digamos $B=25$ es
+informativo, y $B=50$ con frecuencia es suficiente para dar una buena
+estimación de $se_P(\hat{\theta})$ (@efron).
+
+2. Cuando se busca estimar error estándar @tim recomienda $B=1000$ muestras, o
+$B=10,000$ muestras dependiendo la presición que se busque.
+
 
 ## Error estándar bootstrap e intervalos normales {-}
 
@@ -738,6 +865,7 @@ g_qq <- totales_boot %>%
   geom_hline(yintercept = quantile(totales_boot$total_boot, 0.025), colour = "gray")
 g_hist + g_qq
 ```
+
 En este caso, distribución de muestreo presenta cierta asimetría, pero la
 desviación no es grande. En la parte central la aproximación normal es
 razonable. Procedemos a checar sesgo
@@ -747,6 +875,7 @@ total_est <- calc_estimador_casas(muestra_casas)
 sesgo <- mean(totales_boot$total_boot) - total_est
 sesgo
 ```
+
 Este número puede parecer grande, pero sí calculamos la desviación relativa
 con respecto al estimador vemos que es chico en la escala de la distribución
 bootstrap:
@@ -775,7 +904,9 @@ está entre `r round(intervalo_total[1])` y `r round(intervalo_total[2])` millon
 de dólares.
 
 **Nota:** en este ejemplo mostraremos una alternativa de intervalos de confianza
-que es más apropiado cuando observamos asimetría.
+que es más apropiado cuando observamos asimetría. Sin embargo, primero tendremos
+que hablar de dos conceptos clave con respecto a intervalos de confianza:
+calibración e interpretación.
 
 
 ## Calibración de intervalos de confianza {-}
@@ -838,8 +969,8 @@ total <- sum(poblacion_casas$precio_miles)
 sims_tbl %>%
   summarise(cobertura = mean(cubre))
 ```
-que es consistente con una cobertura real del 95% (¿qué significa "consistente"? ¿Cómo puedes
-checarlo con el bootstrap?)
+que es *consistente* con una cobertura real del 95% (¿qué significa
+"consistente"? ¿Cómo puedes checarlo con el bootstrap?)
 
 **Observación.** En este caso teníamos la población real, y pudimos verificar
 la cobertura de nuestros intervalos. En general no la tenemos. Estos ejercicios
@@ -858,19 +989,21 @@ como los tamaños de muestra que nos interesa usar.
 
 Verificar la cobertura de nuestros intervalos de confianza por medio simulación está
 bien estudiado para algunos casos. Por ejemplo, cuando trabajamos con estimaciones para
-poblaciones teóricas. En particular sabemos los procedimientos funcionan bien en casos:
+poblaciones teóricas. En general sabemos que los procedimientos funcionan bien en casos:
 
 - con distribuciones simétricas que tengan colas no muy largas;
-- estimación de proporciones donde no tratamos con casos raros o casos seguros ---probabilidees cercanas a 0 o 1---.
+- estimación de proporciones donde no tratamos con casos raros o casos seguros
+(probabilidades cercanas a 0 o 1).
 
 ## Interpretación de intervalos de confianza {-}
 
-Como hemos visto,  "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
+Como hemos visto, "intervalo de confianza" (de 90\% de confianza, por ejemplo) es un
 término *frecuentista*, que significa:
 
 - **Cada muestra produce un intervalo distinto**. Para el 90\% de las muestras posibles, el intervalo
 cubre al valor poblacional.
-- Así que con *alta probabilidad*, el valor poblacional está dentro del intervalo.
+- La afirmación es *sobre el intervalo y el mecanismo para construirlo.*
+- Así que con *alta probabilidad*, el intervalo contiene el valor poblacional.
 - Intervalos más anchos nos dan más incertidumbre acerca de dónde está el verdadero valor poblacional
 (y al revés para intervalos más angostos).
 
@@ -901,6 +1034,42 @@ que producimos en esta sección pueden interpretarse de las dos maneras.
 
 ## Intervalos bootstrap de percentiles {-}
 
+Retomemos nuestro ejemplo del valor total del precio de las casas. A través de
+remuestras bootstrap hemos verificado gráficamente que la distribución de
+remuestreo es *ligeramente* asimétrica (ver la figura de abajo).
+
+```{r, fig.height = 3, out.width = "95%", echo = FALSE}
+g_hist2 <- totales_boot %>%
+  ggplot(aes(x = total_boot)) +
+  geom_histogram(aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = list(mean = total_est, sd = ee_boot), color = 'red', lty = 2)
+
+g_hist2 + g_qq
+```
+
+Anteriormente hemos calculado intervalos de confianza basados en supuestos
+normales por medio del error éstandar. Este intervalo está dado por
+
+```{r, echo = FALSE}
+intervalo_total %>% round(1)
+```
+y por construcción sabemos que es simétrico con respecto al valor estimado, pero
+como podemos ver la distribución de muestreo no es simétrica, lo cual podemos
+confirmar por ejemplo calculando el porcentaje de muestras bootstrap que caen
+por arriba y por debajo del intervalo construido:
+
+```{r, echo = FALSE}
+totales_boot %>%
+  mutate(upper = total_boot >= max(intervalo_total * 1000),
+         lower = total_boot <= min(intervalo_total * 1000)) %>%
+  summarise(prop_inf = mean(lower),
+            prop_sup = mean(upper))
+```
+
+los cuales se han calculado como el porcentaje de medias bootstrap por debajo
+(arriba) de la cota inferior (superior), y vemos que no coinciden con el nivel de
+confianza prestablecido (2.5\% para cada extremo).
+
 Otra opción común que se usa específicamente cuando la distribución bootstrap
 no es muy cercana a la normal son los intervalos de percentiles bootstrap:
 
@@ -919,15 +1088,29 @@ intervalos de confianza muy alta (por ejemplo 99.5%) pueden tener mala calibraci
 o ser muy variables en su longitud pues dependen del comportamiento en las colas de la
 distribución.
 
-### Ejemplo {-}
-
 Para el ejemplo de las casas, calcularíamos simplemente
 
 ```{r}
-intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975))
-(intervalo_95 / 1000) %>% round(1)
+intervalo_95 <- totales_boot %>% pull(total_boot) %>% quantile(., probs = c(0.025, 0.975)) / 1000
+(intervalo_95) %>% round(1)
 ```
 que está en millones de dólares. Nótese que es similar al intervalo de error estándar.
+
+
+Otro punto interesante sobre los intervalos bootstrap de percentiles es que
+lidian naturalmente con la asímetría de la distribución bootstrap. Ilustramos
+esto con la distancia de las extremos del intervalo con respecto a la media:
+
+```{r}
+abs(intervalo_95 - total_est/1000)
+```
+
+Los intervalos de confianza nos permiten presentar un rango de valores posibles
+para el parámetro de interés. Esto es una notable diferencia con respecto a
+presentar sólo un candidato como estimador. Nuestra fuente de información son
+los datos. Es por esto que si vemos valores muy chicos (grandes) en nuestra
+muestra, el intervalo se tiene que extender a la izquierda (derecha) para
+compensar dichas observaciones.
 
 ```{block2, type='ejercicio'}
 Explica por qué cuando la aproximación normal es apropiada, el intervalo de percentiles
