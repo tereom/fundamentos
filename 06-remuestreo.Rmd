@@ -1765,7 +1765,7 @@ ponderador podría tomar valores negativos.
 
 Implementemos el bootstrap de Rao y Wu a la ENIGH, usaremos $m_h=n_h-1$
 
-```{r funcion_boot, cache = FALSE, message=FALSE}
+```{r funcion_boot, cache = TRUE, message=FALSE}
 # creamos una tabla con los estratos y upms
 est_upm <- hogar %>% 
     distinct(est_dis, upm, n)
