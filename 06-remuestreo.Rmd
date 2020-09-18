@@ -1217,9 +1217,10 @@ dist_boot %>% int_pctl(res_boot, alpha = 0.01) %>%
   mutate(across(where(is.numeric), round, 2)) %>% 
   select(term, .lower, .upper)
 ```
+
 Que nos indica que con alta probabilidad las cuentas son más altas que en la cena
 que en la comida. La diferencia puede ir de un poco menos de un dólar hasta seis dólares
-con 95% de confianza.
+con 99\% de confianza.
 
 ### Datos pareados {-}
 
@@ -1419,7 +1420,6 @@ tea <- read_csv(("data/tea.csv"))
 te <- tea %>% select(how, price, sugar)
 ```
 
-
 ```{r, echo = FALSE, message = FALSE}
 calcular_perfiles <- function(te){
     tabla <- te %>% group_by(how, price) %>% tally() %>% 
@@ -1544,8 +1544,16 @@ esto y calculamos la media.
 muestra <- sample_n(estudiantes, 60)
 round(mean(muestra$calif), 2)
 ```
+
+```{r, echo = FALSE, results='hide'}
+muestra %>%
+  group_by(tipo) %>% 
+  tally() %>% 
+  mutate(prop = n/sum(n))
+```
+
 Este número es muy cercano a la media verdadera de la población: 
-`r mean(estudiantes$calif)`, pero esta es una de muchas posibles muestras.
+`r round(mean(estudiantes$calif), 2)`, pero esta es una de muchas posibles muestras.
 
 ```{r, fig.height=2.8}
 medias_mas <- rerun(1000, mean(sample_n(estudiantes, 60)$calif)) %>% 
@@ -1565,7 +1573,7 @@ hist_mas + qq_mas
 
 Algunas de las muestras generan valores alejados de la verdadera media, para minimizar
 la probabilidad de seleccionar muestras que lleven a estimaciones alejadas del 
-verdadero valor poblacional podríamos tomar muestras más grandes:
+verdadero valor poblacional podríamos tomar muestras más grandes.
 
 Pero usualmente los costos limitan el tamaño de muestra. Una alternativa es
 estratificar, supongamos que sabemos el tipo de cada escuela (urbana, rural o 
@@ -1602,6 +1610,14 @@ hist_estrat + qq_estrat
 La estratificación nos sirve para reducir el error estándar de las estimaciones, 
 por su parte los conglomerados reducen costos. Veamos cuantas escuelas tendría 
 que visitar en una muestra dada (con diseño estratificado).
+
+```{r, echo = FALSE, results='hide'}
+muestra_estrat %>% 
+  group_by(tipo) %>% 
+  tally() %>% 
+  mutate(prop = n/sum(n))
+```
+
 
 ```{r}
 n_distinct(muestra_estrat$ind_escuela)
