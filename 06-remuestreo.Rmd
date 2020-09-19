@@ -1206,7 +1206,7 @@ dist_boot <- bootstraps(propinas, strata = momento, 2000) %>%
   mutate(res_boot = map(splits, estimador_dif)) 
 g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20) +
   xlab("Diferencia Comida vs Cena")
-g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line()
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
 g_1 + g_2
 ```
 
@@ -1265,7 +1265,7 @@ estimador_dif <- function(split, ...){
 dist_boot <- bootstraps(dormir,  2000) %>% 
   mutate(res_boot = map(splits, estimador_dif)) 
 g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20)
-g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line()
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
 g_1 + g_2
 ```
 
@@ -1329,7 +1329,7 @@ Ahora hacemos bootstrap para construir un intervalo:
 dist_boot <- bootstraps(casas_muestra,  2000) %>% 
   mutate(res_boot = map(splits, estimador_razon)) 
 g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20)
-g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line()
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
 g_1 + g_2
 ```
 
