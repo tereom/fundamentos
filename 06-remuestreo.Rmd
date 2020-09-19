@@ -602,7 +602,7 @@ En el proceso de estimación bootstrap hay dos fuentes de variación pues:
 
 * Las muestras bootstrap se seleccionan con aleatoriedad de la muestra 
 original. Esto es: *La estimación bootstrap ideal es un resultado asintótico 
-$B=\infty$, en esta caso $\hat{se}_B$ iguala la estimación _plug-in_ 
+$B=\infty$, en esta caso $\hat{\textsf{se}}_B$ iguala la estimación _plug-in_ 
 $se_{P_n}$.* 
 
 En el proceso de *bootstrap* podemos controlar la variación del segundo aspecto,
@@ -611,7 +611,7 @@ Monte Carlo decrece conforme incrementamos el número de muestras.
 
 Podemos eliminar la variación Monte Carlo si seleccionamos todas las posibles
 muestras con reemplazo de tamaño $n$, hay ${2n-1}\choose{n}$ posibles muestras 
-y si seleccionamos todas obtenemos $\hat{se}_\infty$ (bootstrap ideal), sin
+y si seleccionamos todas obtenemos $\hat{\textsf{se}}_\infty$ (bootstrap ideal), sin
 embargo, en la mayor parte de los problemas no es factible proceder así.
 
 ```{r, eval = FALSE, echo=FALSE}
@@ -716,9 +716,9 @@ Entonces, ¿cuántas muestras bootstrap?
 
 1. Incluso un número chico de replicaciones bootstrap, digamos $B=25$ es 
 informativo, y $B=50$ con frecuencia es suficiente para dar una buena 
-estimación de $se_P(\hat{\theta})$ (@efron).
+estimación de $se_P(\hat{\theta})$ (@Efron).
 
-2. Cuando se busca estimar error estándar @tim recomienda $B=1000$ muestras, o 
+2. Cuando se busca estimar error estándar @Chihara recomienda $B=1000$ muestras, o 
 $B=10,000$ muestras dependiendo la presición que se busque.
 
 
@@ -1129,7 +1129,7 @@ propinas <- read_csv("data/propinas.csv")
 estimador <- function(split, ...){
   muestra <- analysis(split) %>% group_by(momento)
   muestra %>% 
-    summarise(estimate = mean(cuenta_total)) %>% 
+    summarise(estimate = mean(cuenta_total), .groups = 'drop') %>% 
     mutate(term = momento)
 }
 intervalo_propinas_90 <- bootstraps(propinas, strata = momento, 1000) %>% 
@@ -1169,4 +1169,704 @@ de cada momento del día, por ejemplo? ¿Qué harías si no fuera así, por ejem
 se escogieron al azar tickets de todos los disponibles en un periodo?
   
 ```
+
+
+## Bootstrap para dos muestras {-}
+
+En el ejemplo anterior consideramos cómo hacer bootstrap cuando tenemos muestras
+independientes. También podemos aplicarlo a estimadores que comparen directamente las
+dos muestras:
+
+```{block, type='mathblock'}
+**Bootstrap para comparar poblaciones**. Dadas muestras independientes de tamaños
+$m$ y $n$ de dos poblaciones:
+
+1. Extraer una remuestra de tamaño $m$ con reemplazo de la primera muestra y 
+una remuestra separada de tamaño $n$ de la segunda muestra. Calcula la estadística
+que compara los dos grupos (por ejemplo, diferencia de medias)
+2. Repetir este proceso muchas veces (por ejemplo, 1000 - 10000).
+3. Construir la distribución bootstrap de la estadística. Examinar dispersión, sesgo
+y forma.
+```
+
+### Ejemplo {-}
+
+Supongamos que queremos comparar directamente la media de la cuenta total
+en comida y cena. Podemos hacer:
+
+```{r, fig.width = 8, fig.height=3.5}
+estimador_dif <- function(split, ...){
+  muestra <- analysis(split) %>% group_by(momento)
+  muestra %>% 
+    summarise(estimate = mean(cuenta_total), .groups = "drop") %>% 
+    pivot_wider(names_from = momento, values_from = estimate) %>% 
+    mutate(estimate = Cena - Comida, term = "diferencia")
+}
+dist_boot <- bootstraps(propinas, strata = momento, 2000) %>% 
+  mutate(res_boot = map(splits, estimador_dif)) 
+g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20) +
+  xlab("Diferencia Comida vs Cena")
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
+g_1 + g_2
+```
+
+Y podemos calcular un intervalo de confianza para la diferencia de medias:
+
+```{r}
+dist_boot %>% int_pctl(res_boot, alpha = 0.01) %>% 
+  mutate(across(where(is.numeric), round, 2)) %>% 
+  select(term, .lower, .upper)
+```
+
+Que nos indica que con alta probabilidad las cuentas son más altas que en la cena
+que en la comida. La diferencia puede ir de un poco menos de un dólar hasta seis dólares
+con 99\% de confianza.
+
+### Datos pareados {-}
+
+En otros casos, las muestras no son independientes y están pareadas. Por ejemplo, este es un estudio
+dende a 10 personas una noche se les dio una medicina para dormir y otra noche otra medicina.
+Se registraron cuántas horas de sueño extra comparados con un día donde no tomaron medicina.
+
+```{r}
+dormir <- sleep %>% 
+  pivot_wider(names_from = group, 
+              names_prefix = "medicina_",
+              values_from = extra)
+dormir
+```
+
+En este caso, el bootstrap se hace sobre individuos, y quisiéramos comparar
+la medición de la medicina_1 con la medicina_2. Usaremos la media de al diferencia
+entre horas de sueño entre las dos medicinas. Nuestro estimador puntual es:
+
+```{r}
+estimador_dif <- dormir %>% 
+  mutate(dif_2_menos_1 = medicina_2 - medicina_1) %>% 
+  summarise(dif_media = mean(dif_2_menos_1))
+estimador_dif
+```
+Esto indica que en promedio duermen hora y media más con la medicina 2 que con 
+la medicina 1. Como hay variabilildad considerable en el número de horas extra de
+cada medicina dependiendo del individuo, es necesario hacer una intervalo de confianza
+para descartar que esta diferencia haya aparecido por azar debido a la variación muestral.
+
+Nótese que aquí no tenemos estratos, pues solo hay una muestra de individuo con
+dos mediciones.
+
+```{r, fig.width = 8, fig.height=3.5}
+estimador_dif <- function(split, ...){
+  muestra <- analysis(split)
+  muestra %>% 
+    mutate(dif_2_menos_1 = medicina_2 - medicina_1) %>% 
+    summarise(estimate = mean(dif_2_menos_1), .groups = "drop") %>% 
+    mutate(term = "diferencia 2 vs 1")
+}
+dist_boot <- bootstraps(dormir,  2000) %>% 
+  mutate(res_boot = map(splits, estimador_dif)) 
+g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20)
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
+g_1 + g_2
+```
+
+Nuestro intervalo de percentiles al 90% es de
+
+```{r}
+dist_boot %>% int_pctl(res_boot, 0.10)
+```
+Lo que indica con alta probabilidad que la medicina 2 da entre 1 y 2 horas extras de sueño. Nota
+que en este ejemplo también podríamos hacer una prueba de hipótesis por permutaciones,
+suponiendo como hipótesis nula que las dos medicinas son equivalentes. Sin embargo, usualmente
+es más informativo presentar este tipo de intervalos para estimar la diferencia.
+
+## Bootstrap y otras estadísticas {-}
+
+El bootstrap es una técnica versátil. Un ejemplo son **estimadores de razón**, que tienen
+la forma
+
+$$ \hat{r} = \frac{\overline y}{\overline x}$$
+Por ejemplo, ¿cómo haríamos estimación para el procentaje de área area habitable
+de las casas en relación al tamaño del lote? Una manera de estimar esta cantidad
+es dividiendo la suma del área habitable de nuestra muestra y dividirlo entre
+la suma del área de los lotes de nuestra muestra, como en la fórmula anterior. Esta
+fórmula es más difícil pues tanto numerador como denominador tienen variabilidad,
+y estas dos cantidades no varían independientemente.
+
+Con el bootstrap podemos atacar estos problemas
+
+### Ejemplo: estimadores de razón {-}
+
+Nuestra muestra original es:
+
+```{r}
+set.seed(250)
+casas_muestra <- sample_n(poblacion_casas, 200)
+```
+
+El estimador de interés es:
+
+```{r, fig.width = 8, fig.height=3.5}
+estimador_razon <- function(split, ...){
+  muestra <- analysis(split)
+  muestra %>% 
+    summarise(estimate = sum(area_habitable_sup_m2) / sum(area_lote_m2), .groups = "drop") %>% 
+    mutate(term = "% area del lote construida")
+}
+```
+
+Y nuestra estimación puntual es
+
+
+```{r}
+estimador <- muestra_casas %>% summarise(estimate = sum(area_habitable_sup_m2) / sum(area_lote_m2))
+estimador
+```
+Es decir que en promedio, un poco más de 15% del lote total es ocupado por área habitable. 
+Ahora hacemos bootstrap para construir un intervalo:
+
+
+```{r, fig.width = 8, fig.height=3.5}
+dist_boot <- bootstraps(casas_muestra,  2000) %>% 
+  mutate(res_boot = map(splits, estimador_razon)) 
+g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20)
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
+g_1 + g_2
+```
+
+En este caso la cola derecha parece tener menos dispersión que una distribución normal.
+Usamos un intervalo de percentiles para obtener:
+
+```{r}
+dist_boot %>% int_pctl(res_boot) %>% 
+  mutate(estimador = estimador$estimate) %>% 
+  rename(media_boot = .estimate) %>% 
+  mutate(bias = media_boot - estimador) %>% 
+  pivot_longer(is_numeric) %>% 
+  mutate(value = round(value, 3))
+```
+Nótese que el sesgo es bajo.
+De modo que en esta zona, entre 12% y 16% de toda el área disponible es ocupada por
+área habitable: estas son casas que tienen jardines o terrenos, garage relativamente grandes.
+
+
+### Ejemplo: suavizadores {-}
+
+
+
+Podemos usar el bootstrap para juzgar
+la variabilidad de un suavizador, que consideramos como nuestra
+estadística:
+
+```{r, fig.width = 5, fig.height = 3, message = FALSE}
+graf_casas <- function(data){
+    ggplot(data %>% filter(calidad_gral < 7), 
+        aes(x = area_habitable_sup_m2)) + 
+        geom_point(aes(y = precio_m2_miles), alpha = 0.75) +
+        geom_smooth(aes(y = precio_m2_miles), method = "loess", span = 0.7, 
+                se = FALSE, method.args = list(degree = 1, family = "symmetric"))     
+}
+graf_casas(muestra_casas)
+```
+
+Podemos hacer bootstrap para juzgar la estabilidad del suavizador:
+
+```{r}
+suaviza_boot <- function(x, data){
+    # remuestreo
+    muestra_boot <- sample_n(data, nrow(data), replace = T)
+    ajuste <- loess(precio_m2_miles ~ area_habitable_sup_m2, data = muestra_boot, 
+                    degree = 1, span = 0.7, family = "symmetric")
+    datos_grafica <- tibble(area_habitable_sup_m2 = seq(25, 250, 5))
+    ajustados <- predict(ajuste, newdata = datos_grafica)
+    datos_grafica %>% mutate(ajustados = ajustados) %>% 
+        mutate(rep = x)
+}
+reps <- map(1:10, ~ suaviza_boot(.x, casas_muestra %>% filter(calidad_gral < 7))) %>% 
+    bind_rows()
+```
+
+```{r, message = FALSE, warning = FALSE}
+# ojo: la rutina loess no tienen soporte para extrapolación
+graf_casas(casas_muestra) + 
+    geom_line(data = reps, aes(y = ajustados, group = rep), alpha = 1, colour = "red") 
+```
+
+Donde vemos que algunas cambios de pendiente del suavizador original no son muy interpretables (por ejemplo,
+para áreas chicas) y alta variabilidad en general en los extremos. Podemos hacer más iteraciones para calcular bandas de confianza:
+
+```{r, message = FALSE, warning = FALSE}
+reps <- map(1:200, ~ suaviza_boot(.x, casas_muestra %>% filter(calidad_gral < 7))) %>% 
+    bind_rows()
+# ojo: la rutina loess no tienen soporte para extrapolación
+graf_casas(casas_muestra) + 
+    geom_line(data = reps, aes(y = ajustados, group = rep), alpha = 0.2, colour = "red") 
+```
+Donde observamos cómo tenemos incertidumbre en cuanto al nivel y forma de las curvas
+en los extremos de los datos (casas grandes y chicas), lo cual es natural. Aunque podemos
+resumir para hacer bandas de confianza, mostrar remuestras de esta manera es informativo: por ejempo:
+vemos cómo es probable también que para casas de emnos de 70 metros cuadrados el precio por
+metro cuadrado no cambia tanto (líneas constantes)
+
+
+## Bootstrap y estimadores complejos: tablas de perfiles {-}
+
+Podemos regresar al ejemplo de la primera sesión donde calculamos perfiles de los tomadores
+de distintos tés: en bolsa, suelto, o combinados. Caundo hacemos estos tipos de análisis
+no es raro que los prefiles tengan variabilidad considerable que es necesario cuantificar.
+
+
+```{r, echo=FALSE, message=FALSE}
+tea <- read_csv(("data/tea.csv"))
+te <- tea %>% select(how, price, sugar)
+```
+
+```{r, echo = FALSE, message = FALSE}
+calcular_perfiles <- function(te){
+    tabla <- te %>% group_by(how, price) %>% tally() %>% 
+        spread(price, n, fill = 0) %>% 
+        gather(price, n, -how) %>% 
+        group_by(how) %>% 
+        mutate(prop_price = (100 * n / sum(n))) %>% 
+        group_by(price) %>% mutate(prom_prop = mean(prop_price)) %>% 
+        mutate(perfil = (prop_price / prom_prop - 1) %>% round(2))  
+    tabla
+}
+tabla <- calcular_perfiles(te)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+precio_prom <- tabla %>% select(price, prom_prop) %>% unique %>% 
+  mutate(promedio = round(prom_prop)) %>% select(price, promedio)
+tabla_perfil <- tabla %>%   
+  select(how, price, perfil) %>% spread(how, perfil, fill = -1) 
+tabla_2 <- tabla_perfil %>% 
+  gather(how, prop_price, -price)
+if_profile <- function(x){
+  any(x < 0) & any(x > 0)
+}
+marcar <- marcar_tabla_fun(0.25, "red", "black")
+tab_out <- tabla_perfil %>% left_join(precio_prom) %>%
+  arrange(`tea bag`) %>% 
+  mutate_if(if_profile, marcar) %>% 
+  knitr::kable(format = "html", escape = F, digits = 2) %>% 
+  kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
+tab_out
+```
+
+
+```{r, fig.width = 6, fig.height = 2, echo = FALSE, message = FALSE}
+mutar_perfiles <- function(tabla){
+        tabla %>% ungroup %>% 
+            left_join(tabla %>% ungroup %>% filter(how == "tea bag") %>% select(price, perfil_tea = perfil)) %>% 
+            mutate(precio = fct_reorder(price, perfil_tea))
+    }
+g_perfil <- ggplot(mutar_perfiles(tabla),
+        aes(x = precio, xend = precio, y = perfil, yend = 0, group = how)) + 
+        geom_point() + geom_segment() + facet_wrap(~how) +
+        geom_hline(yintercept = 0 , colour = "gray")+ coord_flip()
+g_perfil
+```
+
+Hacemos bootstrap sobre toda la muestra, y repetimos exactamente el mismo proceso
+de construción de perfiles:
+
+```{r}
+boot_perfiles <- map(1:1000, function(x){
+    te_boot <- te %>% sample_n(nrow(te), replace = TRUE)
+    calcular_perfiles(te_boot) %>% mutate(rep = x)
+}) %>% bind_rows()
+```
+
+Ahora resumimos y graficamos, esta vez de manera distinta:
+
+```{r, fig.width = 6, fig.height = 2}
+resumen_perfiles <- boot_perfiles %>% group_by(how, price) %>% 
+    summarise(perfil_media = mean(perfil), ymax = quantile(perfil, 0.9), ymin = quantile(perfil, 0.10)) 
+resumen_bolsa <- resumen_perfiles %>% ungroup %>% 
+    filter(how == "tea bag") %>% select(price, perfil_bolsa = perfil_media)
+resumen_perfiles <- resumen_perfiles %>% left_join(resumen_bolsa) %>% 
+    ungroup %>% 
+    mutate(price = fct_reorder(price, perfil_bolsa))
+ggplot(resumen_perfiles, aes(x = price, y = perfil_media, ymax = ymax, ymin = ymin)) + 
+    geom_point(colour = "red") + geom_linerange() +
+    facet_wrap(~how) + coord_flip() +
+    geom_hline(yintercept = 0, colour = "gray") + ylab("Perfil") + xlab("Precio")
+```
+
+Nótese una deficiencia clara del bootstrap: para los que compran té suelto, 
+en la muestra no existen personas
+que desconocen de dónde provienen su té (No sabe/No contestó). 
+Esto produce un intervalo colapsado en 0 que no es razonable. 
+
+Podemos remediar esto de varias maneras: quitando del análisis los que no sabe o no contestaron, agrupando en otra categoría, usando un modelo, o regularizar usando proporciones calculadas con conteos modificados: por ejemplo, agregando un caso de cada combinación (agregaría 18 personas "falsas" a una muestra de 290 personas).
+
+
+## Bootstrap y muestras complejas {-}
+
+La necesidad de estimaciones confiables junto con el uso eficiente de recursos
+conllevan a diseños de muestras complejas. Estos diseños típicamente usan las
+siguientes técnicas: muestreo sin reemplazo de una población finita, muestreo
+sistemático, estratificación, conglomerados, ajustes a no-respuesta, 
+postestratificación. Como consecuencia, los valores de la muestra suelen no ser
+independientes y los análisis de los mismos dependerá del diseño de la muestra.
+Comenzaremos con definiciones para entender el problema.
+
+```{r}
+set.seed(3872999)
+n_escuelas <- 5000
+
+tipo <- sample(c("rural", "urbano", "indigena"), n_escuelas, replace = TRUE, 
+    prob = c(0.3, 0.5, 0.2))
+
+escuela <- tibble(ind_escuela = 1:n_escuelas, tipo, 
+    media_tipo = case_when(tipo == "urbano" ~ 550, tipo == "rural" ~ 400, TRUE ~ 350), 
+    media_escuela = rnorm(n_escuelas, media_tipo, 30), 
+    n_estudiantes = round(rnorm(n_escuelas, 30, 4)))
+
+estudiantes <- uncount(escuela, n_estudiantes) %>% 
+    rowwise() %>% 
+    mutate(calif = rnorm(1, media_escuela, 70)) %>% 
+    ungroup()
+```
+
+Imaginemos que tenemos una población de `r n_escuelas`,
+y queremos estimar la media de las calificaciones de los estudiantes en una prueba.
+
+```{r}
+head(estudiantes)
+```
+La primera idea sería tomar una muestra aleatoria (MAS, muestreo aleatorio simple), 
+donde todos los estudiantes tienen igual probabilidad de ser seleccionados. Con
+estas condiciones el presupuesto alcanza para seleccionar a 60 estudiantes, hacemos 
+esto y calculamos la media.
+
+```{r}
+muestra <- sample_n(estudiantes, 60)
+round(mean(muestra$calif), 2)
+```
+
+```{r, echo = FALSE, results='hide'}
+muestra %>%
+  group_by(tipo) %>% 
+  tally() %>% 
+  mutate(prop = n/sum(n))
+```
+
+Este número es muy cercano a la media verdadera de la población: 
+`r round(mean(estudiantes$calif), 2)`, pero esta es una de muchas posibles muestras.
+
+```{r, fig.height=2.8}
+medias_mas <- rerun(1000, mean(sample_n(estudiantes, 60)$calif)) %>% 
+    flatten_dbl()
+sd(medias_mas)
+
+hist_mas <- ggplot(tibble(medias_mas), aes(x = medias_mas)) +
+    geom_histogram(binwidth = 10) +
+    geom_vline(xintercept = mean(estudiantes$calif), color = "red") +
+    xlim(410, 520)
+qq_mas <- ggplot(tibble(medias_mas), aes(sample = medias_mas)) +
+    geom_qq(distribution = stats::qunif) +
+    ylim(410, 520)
+
+hist_mas + qq_mas
+```
+
+Algunas de las muestras generan valores alejados de la verdadera media, para minimizar
+la probabilidad de seleccionar muestras que lleven a estimaciones alejadas del 
+verdadero valor poblacional podríamos tomar muestras más grandes.
+
+Pero usualmente los costos limitan el tamaño de muestra. Una alternativa es
+estratificar, supongamos que sabemos el tipo de cada escuela (urbana, rural o 
+indígena) y sabemos también que sabemos que la calificación de los estudiantes de escuelas urbanas tiende a ser distinta a las calificaciones que los estudiantes de
+escuelas rurales o indígenas.
+
+```{r, fig.height=2.8}
+muestra_estrat <- estudiantes %>% 
+    group_by(tipo) %>% 
+    sample_frac(0.0004)
+dim(muestra_estrat)
+
+muestrea_estrat <- function(){
+    muestra <- estudiantes %>% 
+        group_by(tipo) %>% 
+        sample_frac(0.0004)
+    mean(muestra$calif)
+}
+
+medias_estrat <- rerun(1000, muestrea_estrat()) %>% flatten_dbl()
+sd(medias_estrat)
+
+hist_estrat <- ggplot(tibble(medias_estrat), aes(x = medias_estrat)) +
+    geom_histogram(binwidth = 6) +
+    geom_vline(xintercept = mean(estudiantes$calif), color = "red") +
+    xlim(410, 520)
+qq_estrat <- ggplot(tibble(medias_estrat), aes(sample = medias_estrat)) +
+    geom_qq(distribution = stats::qunif) +
+    ylim(410, 520)
+
+hist_estrat + qq_estrat
+```
+
+La estratificación nos sirve para reducir el error estándar de las estimaciones, 
+por su parte los conglomerados reducen costos. Veamos cuantas escuelas tendría 
+que visitar en una muestra dada (con diseño estratificado).
+
+```{r, echo = FALSE, results='hide'}
+muestra_estrat %>% 
+  group_by(tipo) %>% 
+  tally() %>% 
+  mutate(prop = n/sum(n))
+```
+
+
+```{r}
+n_distinct(muestra_estrat$ind_escuela)
+```
+
+Es fácil ver que visitar una escuela para aplicar solo uno o dos exámenes no es
+muy eficiente en cuestión de costos. Es por ello que se suelen tomar muestras 
+considerando los conglomerados naturales, en este caso la escuela. No es difícil 
+imaginar que una parte grande del costo del muestreo sea mandar al examinador a
+la escuela y que una vez ahí examine a todos los alumnos de sexto grado. Podemos 
+imaginar que considerando estos costos por visita de escuela nos alcance para
+visitar 40 escuelas y en cada una examinar a todos los estudiantes.
+
+```{r, fig.height=2.8}
+muestra_escuelas <- escuela %>% 
+    group_by(tipo) %>% 
+    sample_frac(size = 0.008)
+muestra_cgl <- muestra_escuelas %>% 
+    left_join(estudiantes) 
+mean(muestra_cgl$calif)
+
+muestrea_cgl <- function(){
+    muestra_escuelas <- escuela %>% 
+        group_by(tipo) %>% 
+        sample_frac(size = 0.008)
+  muestra_cgl <- muestra_escuelas %>% 
+      left_join(estudiantes, by = c("ind_escuela", "tipo"))
+  mean(muestra_cgl$calif)
+        
+}
+
+medias_cgl <- rerun(1000, muestrea_cgl()) %>% flatten_dbl()
+sd(medias_cgl)
+
+hist_cgl <- ggplot(tibble(medias_cgl), aes(x = medias_cgl)) +
+    geom_histogram(binwidth = 6) +
+    geom_vline(xintercept = mean(estudiantes$calif), color = "red") +
+    xlim(410, 520)
+qq_cgl <- ggplot(tibble(medias_cgl), aes(sample = medias_cgl)) +
+    geom_qq(distribution = stats::qunif) +
+    ylim(410, 520)
+
+hist_cgl + qq_cgl
+```
+
+
+
+#### Ejemplo: ENIGH {-}
+
+La complejidad de los diseños de encuestas conlleva a que el cálculo de errores
+estándar sea muy complicado, para atacar este problema hay dos técnicas básicas:
+1) un enfoque analítico usando linearización, 2) métodos de remuestreo como 
+bootstrap. El incremento en el poder de cómputo ha favorecido los métodos de
+remuestreo pues la linearización requiere del desarrollo de una fórmula para 
+cada estimación y supuestos adicionales para simplificar.
+
+En 1988 @RaoWu propusieron un método de bootstrap para diseños 
+estratificados multietápicos con reemplazo de UPMs que describimos a 
+continuación.
+
+**ENIGH**. Usaremos como ejemplo la Encuesta Nacional de Ingresos y 
+Gastos de los Hogares, ENIGH 2018 [@enigh], esta encuesta usa un diseño de 
+conglomerados estratificado.
+
+Antes de proceder a bootstrap debemos entender como se seleccionaron los datos,
+esto es, el [diseño de la muestra](https://www.inegi.org.mx/contenidos/programas/enigh/nc/2018/doc/enigh18_diseno_muestral_ns.pdf):
+
+1. Unidad primaria de muestreo (UPM). Las UPMs están constituidas por 
+agrupaciones de viviendas. Se les denomina unidades primarias pues corresponden
+a la primera etapa de selección, las unidades secundarias (USMs) serían los 
+hogares.
+
+2. Estratificación. Los estratos se construyen en base a estado, ámbito (urbano, 
+complemento urbano, rural), características sociodemográficas de los habitantes
+de las viviendas, características físicas y equipamiento. El proceso de 
+estratificación resulta en 888 subestratos en todo el ámbito nacional.
+
+3. La selección de la muestra es independiente para cada estrato, y una 
+vez que se obtiene la muestra se calculan los factores de expansión que 
+reflejan las distintas probabilidades de selección. Después se llevan a cabo
+ajustes por no respuesta y por proyección (calibración), esta última 
+busca que distintos dominios de la muestra coincidan con la proyección de 
+población de INEGI.
+
+
+```{r, message=FALSE, warning=FALSE}
+concentrado_hogar <- read_csv(here::here("data", 
+    "conjunto_de_datos_enigh_2018_ns_csv", 
+    "conjunto_de_datos_concentradohogar_enigh_2018_ns", "conjunto_de_datos",
+    "conjunto_de_datos_concentradohogar_enigh_2018_ns.csv"))
+
+# seleccionar variable de ingreso corriente
+hogar <- concentrado_hogar %>% 
+    mutate(
+        upm = as.integer(upm),
+        jefe_hombre = sexo_jefe == 1, 
+        edo = str_sub(ubica_geo, 1, 2), 
+        jefa_50 = (sexo_jefe == 2) & (edad_jefe > 50)
+        ) %>% 
+    select(folioviv, foliohog, est_dis, upm, factor, ing_cor, sexo_jefe, 
+       edad_jefe, edo, jefa_50) %>% 
+    group_by(est_dis) %>% 
+    mutate(n = n_distinct(upm)) %>% # número de upms por estrato
+    ungroup()
+hogar
+```
+
+Para el cálculo de estadísticos debemos usar los factores de expansión, por 
+ejemplo el ingreso trimestral total sería:
+
+```{r}
+sum(hogar$factor * hogar$ing_cor / 1000)
+```
+
+y ingreso trimestral medio (miles pesos)
+
+```{r}
+sum(hogar$factor * hogar$ing_cor / 1000) / sum(hogar$factor)
+```
+
+La estimación del error estándar, por otro lado, no es sencilla y requiere
+usar aproximaciones, en la metodología de INEGI proponen una aproximación con 
+series de Taylor.
+
+
+```{r, out.width = "700px",echo = FALSE, fig.cap= "Extracto de estimación de errores de muestreo, ENIGH 2018."}
+knitr::include_graphics("images/inegi_metodologia_razon.png")
+```
+
+Veamos ahora como calcular el error estándar siguiendo el bootstrap de Rao y Wu:
+
+1. En cada estrato se seleccionan con reemplazo $m_h$ UPMs de las $n_h$ de la
+muestra original. Denotamos por $m_{hi}^*$ el número de veces que se seleccionó
+la UPM $i$ en el estrato $h$ (de tal manera que $\sum m_{hi}^*=m_h$). Creamos
+una replicación del ponderador correspondiente a la $k$-ésima unidad (USM) como:
+
+$$d_k^*=d_k \bigg[\bigg(1-\sqrt{\frac{m_h}{n_h - 1}}\bigg) + 
+\bigg(\sqrt{\frac{m_h}{n_h - 1}}\frac{n_h}{m_h}m_{h}^*\bigg)\bigg]$$
+
+donde $d_k$ es el inverso de la probabilidad de selección. Si $m_h<(n_h -1)$ 
+todos los pesos definidos de esta manera serán no negativos. Calculamos el 
+peso final $w_k^*$ aplicando a $d_k^*$ los mismos ajustes que se hicieron a los 
+ponderadores originales.
+
+2. Calculamos el estadístico de interés $\hat{\theta}$ usando los ponderadores
+$w_k^*$ en lugar de los originales $w_k$.
+
+3. Repetimos los pasos 1 y 2 $B$ veces para obtener $\hat{\theta}^{*1},\hat{\theta}^{*2},...,\hat{\theta}^{*B}$.
+
+4. Calculamos el error estándar como:
+
+$$\hat{\textsf{se}}_B = \bigg\{\frac{\sum_{b=1}^B[\hat{\theta}^*(b)-\hat{\theta}^*(\cdot)]^2 }{B}\bigg\}^{1/2}$$
+
+Podemos elegir cualquier valor de $m_h \geq 1$, el más sencillo es elegir
+$m_h=n_h-1$, en este caso:
+$$d_k^*=d_k \frac{n_h}{n_h-1}m_{hi}^*$$
+en este escenario las unidades que no se incluyen en la muestra tienen 
+un valor de cero como ponderador. Si elegimos $n_h \ne n_h-1$ las unidades que 
+no están en la muestra tienen ponderador distinto a cero, si $m_h=n_h$ el
+ponderador podría tomar valores negativos.
+
+Implementemos el bootstrap de Rao y Wu a la ENIGH, usaremos $m_h=n_h-1$
+
+```{r funcion_boot, cache = TRUE, message=FALSE}
+# creamos una tabla con los estratos y upms
+est_upm <- hogar %>% 
+    distinct(est_dis, upm, n)
+
+hogar_factor <- est_upm %>% 
+    group_by(est_dis) %>% # dentro de cada estrato tomamos muestra (n_h-1)
+    sample_n(size = first(n) - 1, replace = TRUE) %>% 
+    add_count(upm, name = "m_hi") %>% # calculamos m_hi*
+    left_join(hogar, by = c("est_dis", "upm", "n")) %>% 
+    mutate(factor_b = factor * m_hi * n / (n - 1))
+
+# unimos los pasos anteriores en una función para replicar en cada muestra bootstrap
+svy_boot <- function(est_upm, hogar){
+    m_hi <- est_upm %>% 
+        split(.$est_dis) %>% 
+        map(~sample(.$upm, size = first(.$n) - 1, replace = TRUE)) %>% 
+        flatten_int() %>% 
+        plyr::count() %>% 
+        select(upm = x, m_h = freq)
+    m_hi %>% 
+        left_join(hogar, by = c("upm")) %>% 
+        mutate(factor_b = factor * m_h * n / (n - 1))
+}
+set.seed(1038984)
+boot_rep <- rerun(250, svy_boot(est_upm, hogar))
+
+# Aplicación a ingreso medio
+wtd_mean <- function(w, x, na.rm = FALSE) {
+    sum(w * x, na.rm = na.rm) / sum(w, na.rm = na.rm)
+} 
+
+# La media es:
+hogar %>% 
+    summarise(media = wtd_mean(factor, ing_cor))
+```
+
+Y el error estándar:
+
+```{r}
+map_dbl(boot_rep, ~wtd_mean(w = .$factor_b, x = .$ing_cor)) %>% 
+  quantile(c(0.025, 0.975))
+```
+
+```{r, echo = FALSE}
+rm(boot_rep)
+```
+
+
+El método bootstrap está implementado en el paquete `survey` y más recientemente 
+en `srvyr` que es una versión *tidy* que utiliza las funciones en `survey`. 
+
+Podemos comparar nuestros resultados con la implementación en `survey`.
+
+```{r srvyr_media, cache=TRUE, message=FALSE}
+# 1. Definimos el diseño de la encuesta
+library(survey)
+library(srvyr)
+
+enigh_design <- hogar %>% 
+    as_survey_design(ids = upm, weights = factor, strata = est_dis)
+
+# 2. Elegimos bootstrap como el método para el cálculo de errores estándar
+set.seed(7398731)
+enigh_boot <- enigh_design %>% 
+    as_survey_rep(type = "subbootstrap", replicates = 250)
+
+# 3. Así calculamos la media
+enigh_boot %>% 
+    srvyr::summarise(mean_ingcor = survey_mean(ing_cor))
+
+enigh_boot %>% 
+    group_by(edo) %>% 
+    srvyr::summarise(mean_ingcor = survey_mean(ing_cor)) 
+```
+
+Resumiendo:
+
+* El bootstrap de Rao y Wu genera un estimador consistente y aproximadamente 
+insesgado de la varianza de estadísticos no lineales y para la varianza de un 
+cuantil. 
+
+* Este método supone que la seleccion de UPMs es con reemplazo; hay variaciones 
+del estimador bootstrap de Rao y Wu que extienden el método que acabamos de 
+estudiar; sin embargo, es común ignorar este aspecto, 
+por ejemplo [Mach et al](https://fcsm.sites.usa.gov/files/2014/05/2005FCSM_Mach_Dumais_Robidou_VA.pdf) estudian las propiedades del estimador de varianza bootstrap de Rao y Wu cuando 
+la muestra se seleccionó sin reemplazo.
+
 
