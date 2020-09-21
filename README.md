@@ -6,7 +6,7 @@ maestría en Ciencia de Datos del ITAM sitio: https://fundamentos-est.netlify.ap
 
 ---
 
-## Instrucciones para generar las notas por medio de `Docker`.
+# Instrucciones para generar las notas por medio de `Docker`.
 
 Puedes generar las notas por medio de un contenedor de `Docker`. Para esto debes
 de tener instalado el [`Docker Desktop`](https://docs.docker.com/desktop/) si tu
@@ -59,7 +59,7 @@ puedes utilizar el dockerfile con el que estamos generando el contenedor de las
 notas. Este lo encuentras
 [`agarbuno/dockerfiles`](https://github.com/agarbuno/dockerfiles/tree/master/notas-fundamentos). Sigue las instrucciones en el `README.md` en el repositorio.
 
-## Instrucciones para generar las notas de manera local.
+# Instrucciones para generar las notas de manera local.
 
 **Importante.** Si tienes una computadora `Mac` échale un ojo a la siguiente
 sección antes de instalar `R`. Esto garantizará que tienes todas las dependencias
@@ -93,7 +93,7 @@ correcta.
 
 **Nota:** esto sólo lo tienes que hacer la primera vez.
 
-## Consideraciones adicionales para `MacOS`.
+# Consideraciones adicionales para `MacOS`.
 
 De preferencia antes de instalar `R` considera las siguientes pasos. Esto es por
 que en `MacOS` necesitamos compiladores de `fortran`, `c++`, etc., para algunas librerías.
