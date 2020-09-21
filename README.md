@@ -50,8 +50,8 @@ garantizar la sincronía proponemos dos alternativas.
 **La primera opción** te funcionará bien si sólo te interesa compilar la última versión de
 las notas. Para esto necesitas:
 
-    - Hacer *pull* del repositorio. Con `git pull` en terminal o usando la interfaz gráfica.  
-    - Sincronizar las librerías del ambiente. Con `renv::init()` usando la opción 1.  
+- Hacer *pull* del repositorio. Con `git pull` en terminal o usando la interfaz gráfica.  
+- Sincronizar las librerías del ambiente. Con `renv::init()` usando la opción 1.  
 
 **La segunda opción** es generar la imagen del contenedor tú mismo. Esta opción también te
 la recomendamos si quieres hacer cambios en tu `fork` del repositorio. Para esto
