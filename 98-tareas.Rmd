@@ -391,7 +391,7 @@ observado en los datos originales.
 ```{r, fig.width = 3.5, fig.height=3.2}
 perms <- tibble(sims = 1:1000, difs = difs)
 ggplot(perms, aes(x = difs)) +
-  geom_histogram(binwidth = 0.15) +
+  geom_histogram(binwidth = 0.20) +
   geom_vline(xintercept = dif_obs, color = "red")
 ```
 
