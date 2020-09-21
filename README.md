@@ -57,7 +57,7 @@ las notas. Para esto necesitas:
 la recomendamos si quieres hacer cambios en tu `fork` del repositorio. Para esto
 puedes utilizar el dockerfile con el que estamos generando el contenedor de las
 notas. Este lo encuentras
-[`agarbuno/dockerfiles`](https://github.com/agarbuno/dockerfiles/tree/master/notas-fundamentos). Sigue las instrucciones en el `README.md` en el repositorio.
+[`agarbuno/dockerfiles`](https://github.com/agarbuno/dockerfiles/tree/master/notas-fundamentos). Sigue las instrucciones en el [`README.md`](https://github.com/agarbuno/dockerfiles/blob/master/notas-fundamentos/README.md).
 
 # Instrucciones para generar las notas de manera local.
 
