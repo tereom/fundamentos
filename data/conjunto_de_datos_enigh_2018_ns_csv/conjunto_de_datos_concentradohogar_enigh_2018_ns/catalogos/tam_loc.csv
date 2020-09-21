@@ -1,0 +1,5 @@
+tam_loc,descripcion
+1,Localidades con 100 000 y más habitantes
+2,Localidades con 15 000 a 99 999 habitantes
+3,Localidades con 2 500 a 14 999 habitantes
+4,Localidades con menos de 2 500 habitantes
