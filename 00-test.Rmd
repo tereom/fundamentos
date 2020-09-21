@@ -14,6 +14,6 @@ encontramos rápidamente que los conjuntos de datos son muy distintos.
 
 
 ```{r}
-library(data.table)
+2 + 2
 ```
 
