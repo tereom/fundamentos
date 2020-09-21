@@ -310,7 +310,7 @@ ventas.null <- lineup(null_dist(var = 'res.est2.2', dist = 'normal',
 ```
 
 ```
-## decrypt("bhMq KJPJ 62 sSQ6P6S2 u7")
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 ug")
 ```
 
 ```r
@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] -0.8
+## [1] -0.3
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] 0.12
+## [1] 0.44
 ```
 
 ```r
@@ -541,7 +541,7 @@ observado en los datos originales.
 ```r
 perms <- tibble(sims = 1:1000, difs = difs)
 ggplot(perms, aes(x = difs)) +
-  geom_histogram(binwidth = 0.15) +
+  geom_histogram(binwidth = 0.20) +
   geom_vline(xintercept = dif_obs, color = "red")
 ```
 
