@@ -716,9 +716,9 @@ Entonces, ¿cuántas muestras bootstrap?
 
 1. Incluso un número chico de replicaciones bootstrap, digamos $B=25$ es 
 informativo, y $B=50$ con frecuencia es suficiente para dar una buena 
-estimación de $se_P(\hat{\theta})$ (@efron).
+estimación de $se_P(\hat{\theta})$ (@Efron).
 
-2. Cuando se busca estimar error estándar @tim recomienda $B=1000$ muestras, o 
+2. Cuando se busca estimar error estándar @Chihara recomienda $B=1000$ muestras, o 
 $B=10,000$ muestras dependiendo la presición que se busque.
 
 
