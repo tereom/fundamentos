@@ -6,6 +6,58 @@ maestría en Ciencia de Datos del ITAM sitio: https://fundamentos-est.netlify.ap
 
 ---
 
+## Instrucciones para generar las notas por medio de `Docker`.
+
+Puedes generar las notas por medio de un contenedor de `Docker`. Para esto debes
+de tener instalado el [`Docker Desktop`](https://docs.docker.com/desktop/) si tu
+sistema operativo es `MacOS` o `Windows`; o alternativamente, [`Docker
+Engine`](https://docs.docker.com/engine/), si estás corriendo alguna
+distribución de `Linux`.
+
+Con `Docker` listo en tu máquina necesitas descargar la imagen del contenedor
+de la clase:
+```{bash}
+docker pull agarbuno/notas-fundamentos
+```
+
+Para ejecutar la imagen en tu computadora copia y pega lo siguiente en la
+terminal, modificando como se sugiere mas adelante,
+```{bash}
+docker run -d -p 8787:8787 -e PASSWORD=escribeunacontraseña -m 4g agarbuno/notas-fundamentos
+```
+En general se necesita correr la imagen con 4Gb de memoria (`-m 4g`).  La opción
+`-d` es opcional, y sirve para dejar corriendo el contenedor en el *background*
+de tu sesión de terminal. Cuidado con esta opción por que si no tienes cuidado
+podrías estar levantando múltiples contenedores en tu máquina.
+
+Esta imagen leventará una sesión de `Rstudio Server` a la cual podrás acceder en
+tu navegador de internet de preferencia por medio de
+```{bash}
+localhost:8787/
+```
+el cual te pedirá un usuario y contraseña. La contraseña es la misma que deberás
+de cambiar en las líneas de arriba: *escribeunacontraseña*. El usuario es, por
+*default*,
+`rstudio`.
+
+Una vez en la pantalla de `Rstudio` puedes empezar con cargar las notas como un
+proyecto.
+
+**NOTA.** Esta imagen se actualizará constantemente. Pero nada garantizará que
+esté en sincronía con la última versión de las notas en el repositorio. Para
+garantizar la sincronía proponemos dos alternativas.
+
+La primera te funcionará bien si sólo te interesa compilar la última versión de
+las notas. Para esto necesitas:
+    - Hacer *pull* del repositorio. Con `git pull` en terminal o usando la interfaz gráfica.  
+    - Sincronizar las librerías del ambiente. Con `renv::init()` usando la opción 1.  
+
+La segunda es generar la imagen del contenedor tú mismo. Esta opción también te
+la recomendamos si quieres hacer cambios en tu `fork` del repositorio. Para esto
+puedes utilizar el dockerfile con el que estamos generando el contenedor de las
+notas. Este lo encuentras
+[`agarbuno/dockerfiles`](https://github.com/agarbuno/dockerfiles/tree/master/notas-fundamentos). Sigue las instrucciones en el `README.md` en el repositorio.
+
 ## Instrucciones para generar las notas de manera local.
 
 **Importante.** Si tienes una computadora `Mac` échale un ojo a la siguiente
