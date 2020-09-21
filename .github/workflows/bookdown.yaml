@@ -16,7 +16,7 @@ jobs:
           crayon.enabled: 'FALSE'
       - uses: r-lib/actions/setup-pandoc@v1
       - name: Install packages
-        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra","timeDate","here","nullabor","LaplacesDemon"))'
+        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra","timeDate","here","nullabor","LaplacesDemon","survey","srvyr","rsample"))'
       - name: Render book
         run: Rscript -e 'bookdown::render_book("index.Rmd")'
       - uses: actions/upload-artifact@v1
