@@ -13,7 +13,11 @@ Imports:
     here, 
     broom,
     LaplacesDemon,
-    nullabor
+    nullabor,
+    survey,
+    srvyr,
+    rsample,
+    reshape2
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
 BugReports: https://github.com/tereom/fundamentos/issues

@@ -447,6 +447,7 @@ intuitivamente claro.
 
 
 ### Ejemplo {-}
+
 En el ejemplo de tomadores de té, podemos estimar la proporción de tomadores
 de té que prefiere el té negro usando nuestra muestra:
 
@@ -602,8 +603,8 @@ En el proceso de estimación bootstrap hay dos fuentes de variación pues:
 
 * Las muestras bootstrap se seleccionan con aleatoriedad de la muestra 
 original. Esto es: *La estimación bootstrap ideal es un resultado asintótico 
-$B=\infty$, en esta caso $\hat{\textsf{se}}_B$ iguala la estimación _plug-in_ 
-$se_{P_n}$.* 
+$B=\infty$, en esta caso $\hat{\textsf{ee}}_{boot}$ iguala la estimación _plug-in_ 
+$ee_{\hat{F}}$.* 
 
 En el proceso de *bootstrap* podemos controlar la variación del segundo aspecto,
 conocida como **implementación de muestreo Monte Carlo**, y la variación 
@@ -611,8 +612,8 @@ Monte Carlo decrece conforme incrementamos el número de muestras.
 
 Podemos eliminar la variación Monte Carlo si seleccionamos todas las posibles
 muestras con reemplazo de tamaño $n$, hay ${2n-1}\choose{n}$ posibles muestras 
-y si seleccionamos todas obtenemos $\hat{\textsf{se}}_\infty$ (bootstrap ideal), sin
-embargo, en la mayor parte de los problemas no es factible proceder así.
+y si seleccionamos todas obtenemos $\hat{\textsf{se}}_\infty$ (bootstrap ideal), 
+sin embargo, en la mayor parte de los problemas no es factible proceder así.
 
 ```{r, eval = FALSE, echo=FALSE}
 set.seed(8098)
@@ -622,10 +623,10 @@ pob_plot <- ggplot(data_frame(x = -15:20), aes(x)) +
     geom_vline(aes(color = "mu", xintercept = 5), alpha = 0.5) +
     scale_colour_manual(values = c('mu' = 'red'), name = '', 
         labels = expression(mu)) +
-    labs(x = "", y = "", subtitle = "Población", color = "") +
+    labs(x = "", y = "", subtitle = expression("Población"~F), color = "") +
     theme(axis.text.y = element_blank())
 
-samples <- data_frame(sample = 1:6) %>% 
+samples <- tibble(sample = 1:6) %>% 
     mutate(
         sims = rerun(6, rnormm(50, p = c(0.3, 0.7), mu = c(-2, 8), 
             sigma = c(3.5, 3))), 
@@ -654,7 +655,7 @@ emp_dists_plots <- ggplot(emp_dists, aes(x = obs)) +
         alpha = 0.8, linetype = "dashed") +
     xlim(-15, 20) +
     geom_vline(xintercept = 5, color = "red", alpha = 0.5) +
-    labs(x = "", y = "", subtitle = expression("Distribución empírica"~P[n])) +
+    labs(x = "", y = "", subtitle = expression("Distribución empírica"~hat(F))) +
     scale_colour_manual(values = c('mu' = 'red', 'x_bar' = 'blue'), name = '', 
         labels = c(expression(mu), expression(bar(x)))) +
     facet_wrap(~ sample, ncol = 1) +
@@ -695,9 +696,8 @@ boot_dists_1000_plot <- ggplot(boot_dists_1000, aes(x = mu_hat_star)) +
     theme(strip.background = element_blank(), strip.text.y = element_blank(), 
         strip.text.x = element_blank(), axis.text.y = element_blank())
 
-(pob_plot | plot_spacer() | plot_spacer()) /
-(emp_dists_plots | boot_dists_30_plot | boot_dists_1000_plot) +
-plot_layout(heights = c(1, 5), "cm")
+(pob_plot | plot_spacer() | plot_spacer()) / (emp_dists_plots | boot_dists_30_plot | boot_dists_1000_plot) +
+plot_layout(heights = c(1, 5))
 ```
 
 En la siguiente gráfica mostramos 6 posibles muestras de tamaño 50 simuladas de
@@ -720,6 +720,19 @@ estimación de $se_P(\hat{\theta})$ (@Efron).
 
 2. Cuando se busca estimar error estándar @Chihara recomienda $B=1000$ muestras, o 
 $B=10,000$ muestras dependiendo la presición que se busque.
+
+
+```{r}
+se_media_boot <- function(x, B){
+    thetas_boot <- rerun(B, mean(sample(x, replace = TRUE))) %>% flatten_dbl()
+    sd(thetas_boot)
+}
+B_muestras <- data_frame(n_sims = c(5, 25, 50, 100, 200, 400, 1000, 1500, 3000, 
+    5000, 10000, 20000)) %>% 
+    mutate(est = map_dbl(n_sims, ~se_media_boot(x = casas_muestra$precio_m2, B = .)))
+B_muestras
+```
+
 
 
 ## Error estándar bootstrap e intervalos normales {-}
@@ -1117,6 +1130,37 @@ al 95% es muy similar al intervalo normal de 2 errores estándar.
 
 ### Ejemplo {-}
 
+```{r rsample, eval=FALSE}
+# Ventajas de rsample
+library(rsample)
+
+# Generamos 100 muestras bootstrap, y la función nos regresa un arreglo con 100 
+# renglones, cada uno corresponde a una muestra bootstrap.
+set.seed(3897)
+computos_boot <- bootstraps(propinas, strata = momento, 100)
+computos_boot
+# La columna splits tiene información de las muestras seleccionadas, para la 
+# primera vemos que de 234 observaciones en la muestra original la primera 
+# muestra bootstrap contiene 234-89=145.
+
+first_computos_boot <- computos_boot$splits[[1]]
+first_computos_boot
+# Los podemos extraer
+as_tibble(first_computos_boot)
+
+# Una de las principales ventajas de usar este paquete es que es eficiente en el 
+# uso de memoria.
+
+library(pryr)
+object_size(propinas)
+object_size(computos_boot)
+# tamaño por muestra
+object_size(computos_boot)/nrow(computos_boot)
+# el incremento en tamaño es << 100
+as.numeric(object_size(computos_boot)/object_size(propinas))
+```
+
+
 Consideramos los datos de propinas. Queremos estimar la media de cuentas
 totales para la comida y la cena. Podemos hacer bootstrap de cada grupo
 por separado:
@@ -1139,10 +1183,11 @@ intervalo_propinas_90 <- bootstraps(propinas, strata = momento, 1000) %>%
 intervalo_propinas_90
 ```
 
-Nota: *.estimate* es la media de los valores de la estadística sobre las remuestras, **no** es
-el estimador original.
+Nota: *.estimate* es la media de los valores de la estadística sobre las 
+remuestras, **no** es el estimador original.
 
-De la tabla anterior inferimos que la media en la cuenta en la cena es más grande que la de la comida.
+De la tabla anterior inferimos que la media en la cuenta en la cena es más 
+grande que la de la comida.
 Podemos graficar agregando los estimadores plugin:
 
 ```{r, fig.height = 3}
