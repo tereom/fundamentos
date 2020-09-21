@@ -1169,9 +1169,9 @@ se escogieron al azar tickets de todos los disponibles en un periodo?
 ```
 
 
-## Bootstrap para dos muestras {-}
+## *Bootstrap* para dos muestras {-}
 
-En el ejemplo anterior consideramos cómo hacer bootstrap cuando tenemos muestras
+En el ejemplo anterior consideramos cómo hacer *bootstrap* cuando tenemos muestras
 independientes. También podemos aplicarlo a estimadores que comparen directamente las
 dos muestras:
 
@@ -1183,7 +1183,7 @@ $m$ y $n$ de dos poblaciones:
 una remuestra separada de tamaño $n$ de la segunda muestra. Calcula la estadística
 que compara los dos grupos (por ejemplo, diferencia de medias)
 2. Repetir este proceso muchas veces (por ejemplo, 1000 - 10000).
-3. Construir la distribución bootstrap de la estadística. Examinar dispersión, sesgo
+3. Construir la distribución *bootstrap* de la estadística. Examinar dispersión, sesgo
 y forma.
 ```
 
@@ -1234,7 +1234,7 @@ dormir <- sleep %>%
 dormir
 ```
 
-En este caso, el bootstrap se hace sobre individuos, y quisiéramos comparar
+En este caso, el *bootstrap* se hace sobre individuos, y quisiéramos comparar
 la medición de la medicina_1 con la medicina_2. Usaremos la media de al diferencia
 entre horas de sueño entre las dos medicinas. Nuestro estimador puntual es:
 
@@ -1279,7 +1279,7 @@ es más informativo presentar este tipo de intervalos para estimar la diferencia
 
 ## Bootstrap y otras estadísticas {-}
 
-El bootstrap es una técnica versátil. Un ejemplo son **estimadores de razón**, que tienen
+El *bootstrap* es una técnica versátil. Un ejemplo son **estimadores de razón**, que tienen
 la forma
 
 $$ \hat{r} = \frac{\overline y}{\overline x}$$
@@ -1290,7 +1290,7 @@ la suma del área de los lotes de nuestra muestra, como en la fórmula anterior.
 fórmula es más difícil pues tanto numerador como denominador tienen variabilidad,
 y estas dos cantidades no varían independientemente.
 
-Con el bootstrap podemos atacar estos problemas
+Con el *bootstrap* podemos atacar estos problemas
 
 ### Ejemplo: estimadores de razón {-}
 
@@ -1320,7 +1320,7 @@ estimador <- muestra_casas %>% summarise(estimate = sum(area_habitable_sup_m2) /
 estimador
 ```
 Es decir que en promedio, un poco más de 15% del lote total es ocupado por área habitable.
-Ahora hacemos bootstrap para construir un intervalo:
+Ahora hacemos *bootstrap* para construir un intervalo:
 
 
 ```{r, fig.width = 8, fig.height=3.5}
@@ -1351,7 +1351,7 @@ De modo que en esta zona, entre 12% y 16% de toda el área disponible es ocupada
 
 
 
-Podemos usar el bootstrap para juzgar
+Podemos usar el *bootstrap* para juzgar
 la variabilidad de un suavizador, que consideramos como nuestra
 estadística:
 
@@ -1366,7 +1366,7 @@ graf_casas <- function(data){
 graf_casas(muestra_casas)
 ```
 
-Podemos hacer bootstrap para juzgar la estabilidad del suavizador:
+Podemos hacer *bootstrap* para juzgar la estabilidad del suavizador:
 
 ```{r}
 suaviza_boot <- function(x, data){
@@ -1465,7 +1465,7 @@ g_perfil <- ggplot(mutar_perfiles(tabla),
 g_perfil
 ```
 
-Hacemos bootstrap sobre toda la muestra, y repetimos exactamente el mismo proceso
+Hacemos *bootstrap* sobre toda la muestra, y repetimos exactamente el mismo proceso
 de construción de perfiles:
 
 ```{r}
@@ -1672,7 +1672,7 @@ bootstrap. El incremento en el poder de cómputo ha favorecido los métodos de
 remuestreo pues la linearización requiere del desarrollo de una fórmula para
 cada estimación y supuestos adicionales para simplificar.
 
-En 1988 @RaoWu propusieron un método de bootstrap para diseños
+En 1988 @RaoWu propusieron un método de *bootstrap* para diseños
 estratificados multietápicos con reemplazo de UPMs que describimos a
 continuación.
 
@@ -1680,7 +1680,7 @@ continuación.
 Gastos de los Hogares, ENIGH 2018 [@enigh], esta encuesta usa un diseño de
 conglomerados estratificado.
 
-Antes de proceder a bootstrap debemos entender como se seleccionaron los datos,
+Antes de proceder a *bootstrap* debemos entender como se seleccionaron los datos,
 esto es, el [diseño de la muestra](https://www.inegi.org.mx/contenidos/programas/enigh/nc/2018/doc/enigh18_diseno_muestral_ns.pdf):
 
 1. Unidad primaria de muestreo (UPM). Las UPMs están constituidas por
@@ -1745,7 +1745,7 @@ series de Taylor.
 knitr::include_graphics("images/inegi_metodologia_razon.png")
 ```
 
-Veamos ahora como calcular el error estándar siguiendo el bootstrap de Rao y Wu:
+Veamos ahora como calcular el error estándar siguiendo el *bootstrap* de Rao y Wu:
 
 1. En cada estrato se seleccionan con reemplazo $m_h$ UPMs de las $n_h$ de la
 muestra original. Denotamos por $m_{hi}^*$ el número de veces que se seleccionó
@@ -1777,7 +1777,7 @@ un valor de cero como ponderador. Si elegimos $n_h \ne n_h-1$ las unidades que
 no están en la muestra tienen ponderador distinto a cero, si $m_h=n_h$ el
 ponderador podría tomar valores negativos.
 
-Implementemos el bootstrap de Rao y Wu a la ENIGH, usaremos $m_h=n_h-1$
+Implementemos el *bootstrap* de Rao y Wu a la ENIGH, usaremos $m_h=n_h-1$
 
 ```{r funcion_boot, cache = TRUE, message=FALSE}
 # creamos una tabla con los estratos y upms
@@ -1828,7 +1828,7 @@ rm(boot_rep)
 ```
 
 
-El método bootstrap está implementado en el paquete `survey` y más recientemente
+El método *bootstrap* está implementado en el paquete `survey` y más recientemente
 en `srvyr` que es una versión *tidy* que utiliza las funciones en `survey`.
 
 Podemos comparar nuestros resultados con la implementación en `survey`.
@@ -1857,12 +1857,12 @@ enigh_boot %>%
 
 Resumiendo:
 
-* El bootstrap de Rao y Wu genera un estimador consistente y aproximadamente
+* El *bootstrap* de Rao y Wu genera un estimador consistente y aproximadamente
 insesgado de la varianza de estadísticos no lineales y para la varianza de un
 cuantil.
 
 * Este método supone que la seleccion de UPMs es con reemplazo; hay variaciones
-del estimador bootstrap de Rao y Wu que extienden el método que acabamos de
+del estimador *bootstrap* de Rao y Wu que extienden el método que acabamos de
 estudiar; sin embargo, es común ignorar este aspecto,
-por ejemplo [Mach et al](https://fcsm.sites.usa.gov/files/2014/05/2005FCSM_Mach_Dumais_Robidou_VA.pdf) estudian las propiedades del estimador de varianza bootstrap de Rao y Wu cuando
+por ejemplo [Mach et al](https://fcsm.sites.usa.gov/files/2014/05/2005FCSM_Mach_Dumais_Robidou_VA.pdf) estudian las propiedades del estimador de varianza *bootstrap* de Rao y Wu cuando
 la muestra se seleccionó sin reemplazo.
