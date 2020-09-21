@@ -23,7 +23,7 @@ docker pull agarbuno/notas-fundamentos
 Para ejecutar la imagen en tu computadora copia y pega lo siguiente en la
 terminal, modificando como se sugiere mas adelante,
 ```{bash}
-docker run -d -p 8787:8787 -e PASSWORD=escribeunacontraseña -m 4g agarbuno/notas-fundamentos
+docker run -d -p 8787:8787 -e PASSWORD=<escribeunacontraseña> -m 4g agarbuno/notas-fundamentos
 ```
 En general se necesita correr la imagen con 4Gb de memoria (`-m 4g`).  La opción
 `-d` es opcional, y sirve para dejar corriendo el contenedor en el *background*
