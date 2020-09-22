@@ -47,7 +47,7 @@ proyecto.
 esté en sincronía con la última versión de las notas en el repositorio. Para
 garantizar la sincronía proponemos lo siguiente.
 
-## El combo: `Github` + `Docker` + `Volumes`
+# Generar notas con: `Github` + `Docker` + `Volumes`.
 
 El *problema* de `Docker` es que cualquier cambio que hagas dentro del
 contenedor cuando esté corriendo no se guardará para la siguiente sesión. Por
@@ -67,9 +67,9 @@ repositorio y las librerías de `R` que necesitemos descargar.
 
 Ahora, levanta el contenedor con las siguientes líneas en una terminal
 ```{bash}
-# Directorio en el *contenedor* donde vivara el cache de renv
+# Directorio en el *contenedor* donde vivirá el cache de renv
 RENV_PATHS_CACHE_CONTAINER=/home/rstudio/cursos/renv/cache
-# Directorio en el *host* donde vivara el cache de renv
+# Directorio en el *host* donde vivirá el cache de renv
 RENV_PATHS_CACHE_HOST=/home/estudiante/itam/cursos//renv/cache
 
 docker run -p 8787:8787 \
@@ -79,12 +79,12 @@ docker run -p 8787:8787 \
     -v "${RENV_PATHS_CACHE_HOST}:${RENV_PATHS_CACHE_CONTAINER}" \
     -m 4g \
     -v /Users/agarbuno/github-repos/itam/docker-cursos:/home/rstudio/cursos \
-    env-fundamentos
+    agarbuno/env-fundamentos
 ```
 
 Ahora entra al servidor de `Rstudio` en `localhost:8787`. Dentro de la interfaz
 gráfica, en particular la terminal de sistema, puedes clonar el repositorio de
-la notas, cambiarte a la rama de desarrollo `dev`. Ver imagen: 
+la notas, y **cambiarte a la rama de desarrollo `dev`**. Ver imagen: 
 
 ![](images/rstudio-terminal.png)
 
@@ -103,11 +103,15 @@ renv::restore()
 ```
 ![](images/rstudio-renv-paths.png)
 
-Con lo cual te pedirá confirmación para reparar los paquetes que no encuentre. 
+ahora te pedirá confirmación para reparar los paquetes que no encuentre. 
 
-**Nota.** definir las variables `RENV_PATHS_CACHE` y `RENV_PATHS_ROOT` 
+**Nota.** Definir las variables `RENV_PATHS_CACHE` y `RENV_PATHS_ROOT` 
 sólo será necesario cuando quieras descargar nuevos paquetes que no tengas del 
 `renv.lock` por ejemplo con los comandos `renv::restore()` o `renv::init()`.
+Copiar y generar todas las librerías se tardara **bastante** ---alrededor de una
+hora con una conexión simplona---. Pero la ventaja es que sólo lo tendrás que hacer una 
+vez y con esto garantizarás que puedes hacer cambios y actualizaciones pequeñas conforme
+se vayan actualizando las notas.
 
 # Instrucciones para generar las notas de manera local.
 
