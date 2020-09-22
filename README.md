@@ -51,25 +51,63 @@ garantizar la sincronía proponemos lo siguiente.
 
 El *problema* de `Docker` es que cualquier cambio que hagas dentro del
 contenedor cuando esté corriendo no se guardará para la siguiente sesión. Por
-ejemplo, crear un archivo, hacer un pull de un *repo*, etc. La ventaja es que se
-puede ligar un directorio en la máquina *host* con un directorio dentro del
-contenedor por medio de un `Volume`.
+ejemplo, crear un archivo, clonar o hacer un pull de un *repo*, etc. La ventaja
+es que se puede ligar un directorio en la máquina *host* con un directorio
+dentro del contenedor por medio de un `Volume`.Esto implica que podemos tener un
+contenedor que sólo replique el ambiente del sistema operativo.
 
-Esto implica que podemos tener un contenedor que sólo replique el ambiente del 
-sistema operativo. Siguiendo este tren de pensamiento, descarga el contenedor
+Siguiendo este tren de pensamiento, descarga el contenedor
 ```{bash}
 docker pull agarbuno/env-fundamentos
 ```
-y crea una carpeta de trabajo. Por ejemplo, crea el directorio `mkdir ~/itam/cursos/`. 
+y crea una carpeta de trabajo. Por ejemplo, crea el directorio (suponiendo que
+estás en Ubuntu y tu usuario en tú máquina es `estudiante`) con `mkdir
+/home/estudiante/itam/cursos/`. Este directorio lo usaremos para mantener el
+repositorio y las librerías de `R` que necesitemos descargar.
 
-Ahora, levanta el contenedor como lo has hecho arriba
+Ahora, levanta el contenedor con las siguientes líneas en una terminal
 ```{bash}
-docker run -p 8787:8787 -e PASSWORD=itam -m 4g -v ~/itam/cursos/:/home/rstudio/cursos agarbuno/env-fundamentos
+# Directorio en el *contenedor* donde vivara el cache de renv
+RENV_PATHS_CACHE_CONTAINER=/home/rstudio/cursos/renv/cache
+# Directorio en el *host* donde vivara el cache de renv
+RENV_PATHS_CACHE_HOST=/home/estudiante/itam/cursos//renv/cache
+
+docker run -p 8787:8787 \
+    -e PASSWORD=itam \
+    -e "RENV_PATHS_CACHE=${RENV_PATHS_CACHE_CONTAINER}" \
+    -e "RENV_PATHS_ROOT=${RENV_PATHS_CACHE_CONTAINER}" \
+    -v "${RENV_PATHS_CACHE_HOST}:${RENV_PATHS_CACHE_CONTAINER}" \
+    -m 4g \
+    -v /Users/agarbuno/github-repos/itam/docker-cursos:/home/rstudio/cursos \
+    env-fundamentos
 ```
-y entra al servidor de `Rstudio` en `localhost:8787`. Dentro de la interfaz
+
+Ahora entra al servidor de `Rstudio` en `localhost:8787`. Dentro de la interfaz
 gráfica, en particular la terminal de sistema, puedes clonar el repositorio de
-la notas, cambiarte a la rama de desarrollo `dev` y preparar el ambiente de 
-`R` para reproducir las notas con `renv::restore()`.
+la notas, cambiarte a la rama de desarrollo `dev`. Ver imagen: 
+
+![](images/rstudio-terminal.png)
+
+
+Ahora tenemos que preparar el ambiente de `R`. Esto lo haremos de la siguiente forma. 
+Abre el repo de las notas como un proyecto de `Rstudio`. Te saldrá un mensaje de alerta 
+con respecto a `renv`. Ahora, prepararemos los *paths* para el ambiente del proyecto 
+corriendo las líneas en la consola
+```{r}
+Sys.setenv(RENV_PATHS_CACHE = "/home/rstudio/cursos/renv/cache")
+Sys.setenv(RENV_PATHS_ROOT = "/home/rstudio/cursos/renv/cache")
+```
+y ahora sincronizaremos el contenido del contenedor y volúmenes con la instrucción:
+```{r}
+renv::restore()
+```
+![](images/rstudio-renv-paths.png)
+
+Con lo cual te pedirá confirmación para reparar los paquetes que no encuentre. 
+
+**Nota.** definir las variables `RENV_PATHS_CACHE` y `RENV_PATHS_ROOT` 
+sólo será necesario cuando quieras descargar nuevos paquetes que no tengas del 
+`renv.lock` por ejemplo con los comandos `renv::restore()` o `renv::init()`.
 
 # Instrucciones para generar las notas de manera local.
 
