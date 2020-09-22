@@ -45,19 +45,31 @@ proyecto.
 
 **NOTA.** Esta imagen se actualizará constantemente. Pero nada garantizará que
 esté en sincronía con la última versión de las notas en el repositorio. Para
-garantizar la sincronía proponemos dos alternativas.
+garantizar la sincronía proponemos lo siguiente.
 
-**La primera opción** te funcionará bien si sólo te interesa compilar la última versión de
-las notas. Para esto necesitas:
+## El combo: `Github` + `Docker` + `Volumes`
 
-- Hacer *pull* del repositorio. Con `git pull` en terminal o usando la interfaz gráfica.  
-- Sincronizar las librerías del ambiente. Con `renv::init()` usando la opción 1.  
+El *problema* de `Docker` es que cualquier cambio que hagas dentro del
+contenedor cuando esté corriendo no se guardará para la siguiente sesión. Por
+ejemplo, crear un archivo, hacer un pull de un *repo*, etc. La ventaja es que se
+puede ligar un directorio en la máquina *host* con un directorio dentro del
+contenedor por medio de un `Volume`.
 
-**La segunda opción** es generar la imagen del contenedor tú mismo. Esta opción también te
-la recomendamos si quieres hacer cambios en tu `fork` del repositorio. Para esto
-puedes utilizar el dockerfile con el que estamos generando el contenedor de las
-notas. Este lo encuentras
-[`agarbuno/dockerfiles`](https://github.com/agarbuno/dockerfiles/tree/master/notas-fundamentos). Sigue las instrucciones en el [`README.md`](https://github.com/agarbuno/dockerfiles/blob/master/notas-fundamentos/README.md).
+Esto implica que podemos tener un contenedor que sólo replique el ambiente del 
+sistema operativo. Siguiendo este tren de pensamiento, descarga el contenedor
+```{bash}
+docker pull agarbuno/env-fundamentos
+```
+y crea una carpeta de trabajo. Por ejemplo, crea el directorio `mkdir ~/itam/cursos/`. 
+
+Ahora, levanta el contenedor como lo has hecho arriba
+```{bash}
+docker run -p 8787:8787 -e PASSWORD=itam -m 4g -v ~/itam/cursos/:/home/rstudio/cursos agarbuno/env-fundamentos
+```
+y entra al servidor de `Rstudio` en `localhost:8787`. Dentro de la interfaz
+gráfica, en particular la terminal de sistema, puedes clonar el repositorio de
+la notas, cambiarte a la rama de desarrollo `dev` y preparar el ambiente de 
+`R` para reproducir las notas con `renv::restore()`.
 
 # Instrucciones para generar las notas de manera local.
 
