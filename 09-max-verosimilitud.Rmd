@@ -919,13 +919,27 @@ paramétrico se calcula como sigue:
 3. Se recalcula el estimador de máxima verosimilitud para la muestra bootstrap $\hat{\theta^*}_{\mathsf{mv}}$
 4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000)
 5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}$
-obtenidos.
+obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{mv}}$ 
 
 ```
 
 ## Ventajas y desventajas de bootstrap paramétrico
 
+- Ventaja: el bootstrap paramétrico puede dar estimadores más precisos e intervalos
+más angostos y bien calibrados que el no paramétrico, **siempre y cuando el modelo
+teórico sea razonable.** 
 
+- Desventaja: Es necesario decidir el modelo teórico, que tendrá cierto grado de
+desajuste vs. el proceso generador real de los datos. Si el ajuste es muy malo, los resultados
+tienen poca utilidad. Para el no paramétrico no es necesario hacer supuestos teóricos.
+
+- Ventaja: el bootstrap paramétrico puede ser más escalable que el no paramétrico, pues no es necesario cargar y remuestrear los datos originales, y tenemos mejoras adicionales cuando tenemos expresiones explícitas
+para los estimadores de máxima verosimilitud (como en el caso normal, donde es innecesario
+hacer optimización numérica).
+
+- Desventaja: el bootstrap paramétrico es conceptualmente más complicado que el 
+no paramétrico, y como vimos arriba, sus supuestos pueden ser más frágiles que los del
+no-paramétrico.
 
 ## Verificando los supuestos distribucionales
 
