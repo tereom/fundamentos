@@ -108,8 +108,8 @@ población desconocida y un estimador $T=t(X_1,\dots, X_n)$
 
 1. Si tuviéramos la distribución poblacional, simulamos muestras iid para
 aproximar la distribución de muestreo de nuestro estimador, y así entender su
-variabilidad.
-2. Pero **no** tenemos la distribución poblacional.
+variabilidad.  
+2. Pero **no** tenemos la distribución poblacional.  
 3. **Sin embargo, podemos estimar la distribución poblacional con nuestros valores muestrales**.
 
 **Mundo *bootstrap* **
@@ -118,12 +118,12 @@ variabilidad.
 tomar muestras de nuestros datos muestrales, como si fueran de la población, y
 usando el mismo tamaño de muestra. El muestreo lo hacemos con reemplazo de
 manera que produzcamos muestras independientes de la misma "población estimada",
-que es la muestra.
+que es la muestra.  
 5. Evaluamos nuestra estadística en cada una de estas remuestras.
 6. A la distribución resultante le llamamos **distribución *bootstrap* **o
-**distribución de remuestreo** del estimador.
+**distribución de remuestreo** del estimador.  
 7. Usamos la distribución *bootstrap* de la muestra para estimar la variabilidad
-en nuestra estimación con **la muestra original**.
+en nuestra estimación con **la muestra original**.  
 
 
 Veamos que sucede para un ejemplo concreto, donde  nos interesa estimar
@@ -266,8 +266,8 @@ Y el proceso que hacemos es:
 
 **Remuestreo para una población.** Dada una muestra de tamaño $n$ de una población,
 
-1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original
-2. Repetimos este remuestreo muchas veces (por ejemplo, 10,000).
+1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original.  
+2. Repetimos este remuestreo muchas veces (por ejemplo, 10,000).  
 3. Construímos la distribución bootstrap, y examinamos sus características
 (dónde está centrada, dispersión y forma).
 
@@ -713,8 +713,6 @@ También vale la pena recalcar que la distribución *bootstrap* está centrada e
 valor observado en la muestra (línea azúl punteada) y no en el valor poblacional
 sin embargo la forma de la distribución es similar a lo largo de las filas.
 
-![](images/bootstrap_mc_error.png)
-
 Entonces, ¿cuántas muestras bootstrap?
 
 1. Incluso un número chico de replicaciones bootstrap, digamos $B=25$ es
@@ -723,6 +721,9 @@ estimación de $se_P(\hat{\theta})$ (@Efron).
 
 2. Cuando se busca estimar error estándar @Chihara recomienda $B=1000$ muestras, o
 $B=10,000$ muestras dependiendo la presición que se busque.
+
+![](images/bootstrap_mc_error.png)
+
 
 
 ## Error estándar *bootstrap* e intervalos normales {-}
@@ -834,7 +835,7 @@ está entre `r round(intervalo_95[1], 2)` y `r round(intervalo_95[2], 2)`.
 Ahora consideremos el problema de estimar el total del valor de las casas
 vendidas en un periodo. Tenemos una muestra de tamaño $n=150$:
 
-```{r, fig.height = 3, out.width = "95%"}
+```{r, out.width = "95%"}
 # muestra original
 set.seed(121)
 muestra_casas <- sample_n(poblacion_casas, size = 150)
@@ -1175,7 +1176,8 @@ En el ejemplo anterior consideramos cómo hacer *bootstrap* cuando tenemos muest
 independientes. También podemos aplicarlo a estimadores que comparen directamente las
 dos muestras:
 
-```{block, type='mathblock'}
+```{block2, type='mathblock'}
+
 **Bootstrap para comparar poblaciones**. Dadas muestras independientes de tamaños
 $m$ y $n$ de dos poblaciones:
 
@@ -1185,6 +1187,7 @@ que compara los dos grupos (por ejemplo, diferencia de medias)
 2. Repetir este proceso muchas veces (por ejemplo, 1000 - 10000).
 3. Construir la distribución *bootstrap* de la estadística. Examinar dispersión, sesgo
 y forma.
+
 ```
 
 ### Ejemplo {-}
@@ -1202,9 +1205,12 @@ estimador_dif <- function(split, ...){
 }
 dist_boot <- bootstraps(propinas, strata = momento, 2000) %>%
   mutate(res_boot = map(splits, estimador_dif))
-g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + geom_histogram(bins = 20) +
+g_1 <- ggplot(dist_boot %>% unnest(res_boot), aes(x = estimate)) + 
+  geom_histogram(bins = 20) +
   xlab("Diferencia Comida vs Cena")
-g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + geom_qq() + geom_qq_line(colour = 'red')
+g_2 <- ggplot(dist_boot %>% unnest(res_boot), aes(sample = estimate)) + 
+  geom_qq() + 
+  geom_qq_line(colour = 'red')
 g_1 + g_2
 ```
 
@@ -1277,7 +1283,7 @@ que en este ejemplo también podríamos hacer una prueba de hipótesis por permu
 suponiendo como hipótesis nula que las dos medicinas son equivalentes. Sin embargo, usualmente
 es más informativo presentar este tipo de intervalos para estimar la diferencia.
 
-## Bootstrap y otras estadísticas {-}
+## *Bootstrap* y otras estadísticas {-}
 
 El *bootstrap* es una técnica versátil. Un ejemplo son **estimadores de razón**, que tienen
 la forma
@@ -1355,7 +1361,7 @@ Podemos usar el *bootstrap* para juzgar
 la variabilidad de un suavizador, que consideramos como nuestra
 estadística:
 
-```{r, fig.width = 5, fig.height = 3, message = FALSE}
+```{r, message = FALSE}
 graf_casas <- function(data){
     ggplot(data %>% filter(calidad_gral < 7),
         aes(x = area_habitable_sup_m2)) +
@@ -1406,7 +1412,7 @@ vemos cómo es probable también que para casas de emnos de 70 metros cuadrados 
 metro cuadrado no cambia tanto (líneas constantes)
 
 
-## Bootstrap y estimadores complejos: tablas de perfiles {-}
+## *Bootstrap* y estimadores complejos: tablas de perfiles {-}
 
 Podemos regresar al ejemplo de la primera sesión donde calculamos perfiles de los tomadores
 de distintos tés: en bolsa, suelto, o combinados. Caundo hacemos estos tipos de análisis
@@ -1446,10 +1452,20 @@ marcar <- marcar_tabla_fun(0.25, "red", "black")
 tab_out <- tabla_perfil %>% left_join(precio_prom) %>%
   arrange(`tea bag`) %>%
   mutate_if(if_profile, marcar) %>%
-  knitr::kable(format = "html", escape = F, digits = 2) %>%
-  kableExtra::kable_styling(bootstrap_options = c( "hover", "condensed"), full_width = FALSE)
-tab_out
+  knitr::kable(format = format_table_salida(), escape = F, digits = 2) %>%
+  kableExtra::kable_styling(latex_options = c("striped", "scale_down"),
+                            bootstrap_options = c( "hover", "condensed"),
+                            full_width = FALSE)
 ```
+
+```{r, echo = FALSE}
+if (knitr::is_latex_output()) {
+  gsub("_", "-", tab_out)
+} else {
+  tab_out
+}
+```
+
 
 
 ```{r, fig.width = 6, fig.height = 2, echo = FALSE, message = FALSE}
@@ -1491,7 +1507,7 @@ ggplot(resumen_perfiles, aes(x = price, y = perfil_media, ymax = ymax, ymin = ym
     geom_hline(yintercept = 0, colour = "gray") + ylab("Perfil") + xlab("Precio")
 ```
 
-Nótese una deficiencia clara del bootstrap: para los que compran té suelto,
+Nótese una deficiencia clara del *bootstrap*: para los que compran té suelto,
 en la muestra no existen personas
 que desconocen de dónde provienen su té (No sabe/No contestó).
 Esto produce un intervalo colapsado en 0 que no es razonable.
@@ -1499,7 +1515,7 @@ Esto produce un intervalo colapsado en 0 que no es razonable.
 Podemos remediar esto de varias maneras: quitando del análisis los que no sabe o no contestaron, agrupando en otra categoría, usando un modelo, o regularizar usando proporciones calculadas con conteos modificados: por ejemplo, agregando un caso de cada combinación (agregaría 18 personas "falsas" a una muestra de 290 personas).
 
 
-## Bootstrap y muestras complejas {-}
+## *Bootstrap* y muestras complejas {-}
 
 La necesidad de estimaciones confiables junto con el uso eficiente de recursos
 conllevan a diseños de muestras complejas. Estos diseños típicamente usan las
@@ -1686,12 +1702,12 @@ esto es, el [diseño de la muestra](https://www.inegi.org.mx/contenidos/programa
 1. Unidad primaria de muestreo (UPM). Las UPMs están constituidas por
 agrupaciones de viviendas. Se les denomina unidades primarias pues corresponden
 a la primera etapa de selección, las unidades secundarias (USMs) serían los
-hogares.
+hogares.  
 
 2. Estratificación. Los estratos se construyen en base a estado, ámbito (urbano,
 complemento urbano, rural), características sociodemográficas de los habitantes
 de las viviendas, características físicas y equipamiento. El proceso de
-estratificación resulta en 888 subestratos en todo el ámbito nacional.
+estratificación resulta en 888 subestratos en todo el ámbito nacional.  
 
 3. La selección de la muestra es independiente para cada estrato, y una
 vez que se obtiene la muestra se calculan los factores de expansión que
@@ -1741,7 +1757,7 @@ usar aproximaciones, en la metodología de INEGI proponen una aproximación con
 series de Taylor.
 
 
-```{r, out.width = "700px",echo = FALSE, fig.cap= "Extracto de estimación de errores de muestreo, ENIGH 2018."}
+```{r, out.width = "99%",echo = FALSE, fig.cap= "Extracto de estimación de errores de muestreo, ENIGH 2018."}
 knitr::include_graphics("images/inegi_metodologia_razon.png")
 ```
 
