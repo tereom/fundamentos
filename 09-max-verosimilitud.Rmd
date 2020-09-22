@@ -701,6 +701,7 @@ knitr::include_graphics('images/mle-normal.png', auto_pdf = TRUE )
 ```
 
 En las siguientes secciones veremos los métodos clásicos para encontrar el $\textsf{MLE}$. Y mas adelante, estudiaremos los propiedades teóricas que hacen a estos estimadores tan útiles y prácticos en aplicaciones. 
+
 **Ejemplo**. Como ejercicio, podemos encontrar los estimadores de máxima
 verosimilitud cuando tenemos una muestra $X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2).$
 (puedes derivar e igualar el cero para encontrar el mínimo). También podemos resolver numéricamente,
@@ -847,6 +848,12 @@ bind_cols(est_mv, error_est) %>%
   mutate(across(where(is.numeric), round, 3)) %>% 
   select(parametro, estimador, ee_boot)
 ```
+Si usamos la rutina estándar de R (dejaremos para despúés explicar cómo
+calcula los errores estándar esta rutina ---no es con bootstrap):
+
+```{r}
+tidy(MASS::fitdistr(muestra, "normal"))
+```
 
 Podemos checar también la normalidad aproximada de las distribuciones
 bootstrap para construir nuestros intervalos:
@@ -909,7 +916,7 @@ independientes (lo cual es posible demostrar).
 
 
 ```{block, type = 'mathblock'}
-Supongamos que tenemos una muestra iid $X_1,X_2,\ldots, X_n \sim f(x;\theta)$ de un modelo
+**Bootstrap paramétrico**. Supongamos que tenemos una muestra iid $X_1,X_2,\ldots, X_n \sim f(x;\theta)$ de un modelo
 paramétrico, y un estimador de máxima verosimilitud $\hat{\theta}_{\mathsf{mv}}$ para $\theta$.
 El error estándar estimado para $\hat{\theta}_{\mathsf{mv}}$ por medio del bootstrap
 paramétrico se calcula como sigue:
@@ -995,3 +1002,64 @@ g_exp + g_gamma
 El ajuste es considerablemente mejor para la distribución gamma
 (puedes hacer el protocolo *rorschach* para
 afinar tu diagnóstico de este tipo de gráficas).
+
+**Ejempĺo**. Examinamos un modelo teórico para las cuentas totales del 
+conjunto de datos de propinas. En primer lugar:
+
+1. Separamos comida y cena, pues sabemos que las cuentas tienden a ser
+más grandes en las cenas.
+2. En lugar de modelar la cuenta total, modelamos el gasto por persona, es decir,
+la cuenta total dividida por el numero de personas. Grupos grandes pueden
+producir colas largas que no tenemos necesidad de modelar de manera
+probabilística, pues conocemos
+el número de personas.
+
+En este caso intentaremos un modelo lognormal, es decir, el logaritmo de los
+valores observados se comporta aproximadamente normal. Puedes también intentar con
+una distribución gamma.
+
+Separamos por Cena y Comida, dividimos entre número de personas y probamos
+ajustando un modelo para cada horario:
+
+```{r}
+propinas <- read_csv("data/propinas.csv") %>% 
+    mutate(cuenta_persona = cuenta_total / num_personas)
+propinas_mv <- propinas %>% 
+  group_by(momento) %>% 
+  summarise(est_mv = list(tidy(MASS::fitdistr(cuenta_persona, "lognormal"))))  %>% 
+  unnest(est_mv)
+propinas_mv 
+```
+
+Ojo: estos parámetros están en escala logarítmica. Puedes checar aqui
+para ver cómo calcular media y desviación estándar de las distribuciones originales.
+Ahora verificamos el ajuste:
+
+```{r}
+g_1 <- ggplot(propinas %>% filter(momento == "Cena"), aes(sample = cuenta_persona)) +
+  geom_qq(dparams = list(mean = propinas_mv$estimate[1], sd = propinas_mv$estimate[2]),
+          distribution = stats::qlnorm) + ylim(c(0, 20)) +
+  geom_abline() + labs(subtitle = "Cena")
+g_2 <- ggplot(propinas %>% filter(momento == "Comida"), aes(sample = cuenta_persona)) +
+  geom_qq(dparams = list(mean = propinas_mv$estimate[3], sd = propinas_mv$estimate[4]),
+          distribution = stats::qlnorm) + ylim(c(0, 20)) +
+  geom_abline() + labs(subtitle = "Comida")
+g_1 + g_2
+```
+El ajuste es bueno, aunque podríamos checar la cola de la derecha en la Comida:
+¿por qué existen esos valores relativamente grandes (alrededor de 25% más altos
+de lo que esperaríamos). 
+
+```{block, type="ejercicio"}
+- ¿Tiene sentido ajustar dos distribuciones con parámetros
+separados? ¿Crees que estas dos distribuciones podrían compartir algún 
+parámetro? Para esto
+puedes revisar el error estándar de los estimadores de máxima verosimilitud que mostramos
+arriba. ¿Qué ventajas verías en usar menos parámetros? ¿Cómo implementarías la 
+estimación?
+- ¿Qué pasa si intentas ajustar un modelo normal a estos datos?
+```
+
+
+
+
