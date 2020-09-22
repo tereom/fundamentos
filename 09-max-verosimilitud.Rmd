@@ -943,3 +943,55 @@ no-paramétrico.
 
 ## Verificando los supuestos distribucionales
 
+Como hemos discutido antes, podemos hacer pruebas de hipótesis para checar si una muestra
+dada proviene de una distribución conocida. Sin embargo, la herramienta más común es
+la de los qq-plots, donde podemos juzgar fácilmente el tamaño de las desviaciones
+y si estas tienen implicaciones prácticas importantes.
+
+El proceso es como sigue: si $X_1,X_,\ldots, X_n$ es una muestra de $f(x;\theta)$, 
+calculamos el estimador de máxima verosimilitud $\theta_{\mathsf{mv}}$ con los datos
+observados. Enchufamos $\hat{f} = f(x;\theta_{\mathsf{mv}})$, y hacemos una gráfica
+de los cuantiles teóricos de $\hat{f}$ contra los cuantiles muestrales.
+
+**Ejemplo**. Consideramos la siguiente muestra:
+
+```{r}
+set.seed(32)
+muestra <- rgamma(150, 0.4, 1)
+qplot(muestra) 
+```
+
+Y queremos usar un modelo exponencial. Encontramos los estimadores de maxima
+verosimilitud
+
+```{r}
+est_mv <- MASS::fitdistr(muestra, "exponential")
+rate_mv <- est_mv$estimate
+rate_mv
+```
+```{r, fig.width = 5, fig.height=3.5}
+g_exp <- ggplot(tibble(muestra = muestra), aes(sample = muestra)) +
+  geom_qq(distribution = stats::qexp, dparams = list(rate = rate_mv)) +
+  geom_abline() + labs(subtitle = "Gráfica de cuantiles exponenciales")
+g_exp
+```
+
+Donde vemos que el desajuste es considerable, y los datos tienen
+una cola derecha considerablemente más larga que la de exponencial (datos son
+casi dos veces más grande de lo que esperaríamos), y la cola
+izquierda está más comprimida en los datos que en una exponencial.
+
+Sin embargo, si ajustamos una gamma:
+
+```{r, fig.width = 8, fig.height=3.5}
+est_mv <- MASS::fitdistr(muestra, "gamma")$estimate
+g_gamma <- ggplot(tibble(muestra = muestra), aes(sample = muestra)) +
+  geom_qq(distribution = stats::qgamma, 
+          dparams = list(shape = est_mv[1], rate = est_mv[2])) +
+  geom_abline() + labs(subtitle = "Gráfica de cuantiles gamma")
+g_exp + g_gamma
+```
+
+El ajuste es considerablemente mejor para la distribución gamma
+(puedes hacer el protocolo *rorschach* para
+afinar tu diagnóstico de este tipo de gráficas).
