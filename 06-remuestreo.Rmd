@@ -266,8 +266,8 @@ Y el proceso que hacemos es:
 
 **Remuestreo para una población.** Dada una muestra de tamaño $n$ de una población,
 
-1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original.  
-2. Repetimos este remuestreo muchas veces (por ejemplo, 10,000).  
+1. Obtenemos una remuestra de tamaño $n$ con reemplazo de la muestra original.
+2. Repetimos este remuestreo muchas veces (por ejemplo, 10,000).
 3. Construímos la distribución bootstrap, y examinamos sus características
 (dónde está centrada, dispersión y forma).
 
@@ -1183,7 +1183,7 @@ $m$ y $n$ de dos poblaciones:
 
 1. Extraer una remuestra de tamaño $m$ con reemplazo de la primera muestra y
 una remuestra separada de tamaño $n$ de la segunda muestra. Calcula la estadística
-que compara los dos grupos (por ejemplo, diferencia de medias)
+que compara los dos grupos (por ejemplo, diferencia de medias).
 2. Repetir este proceso muchas veces (por ejemplo, 1000 - 10000).
 3. Construir la distribución *bootstrap* de la estadística. Examinar dispersión, sesgo
 y forma.
