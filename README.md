@@ -47,7 +47,7 @@ proyecto.
 esté en sincronía con la última versión de las notas en el repositorio. Para
 garantizar la sincronía proponemos lo siguiente.
 
-## El combo: `Github` + `Docker` + `Volumes`
+# Generar notas con: `Github` + `Docker` + `Volumes`.
 
 El *problema* de `Docker` es que cualquier cambio que hagas dentro del
 contenedor cuando esté corriendo no se guardará para la siguiente sesión. Por
