@@ -79,7 +79,7 @@ docker run -p 8787:8787 \
     -v "${RENV_PATHS_CACHE_HOST}:${RENV_PATHS_CACHE_CONTAINER}" \
     -m 4g \
     -v /Users/agarbuno/github-repos/itam/docker-cursos:/home/rstudio/cursos \
-    env-fundamentos
+    agarbuno/env-fundamentos
 ```
 
 Ahora entra al servidor de `Rstudio` en `localhost:8787`. Dentro de la interfaz
