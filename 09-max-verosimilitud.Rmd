@@ -701,3 +701,55 @@ knitr::include_graphics('images/mle-normal.png', auto_pdf = TRUE )
 ```
 
 En las siguientes secciones veremos los métodos clásicos para encontrar el $\textsf{MLE}$. Y mas adelante, estudiaremos los propiedades teóricas que hacen a estos estimadores tan útiles y prácticos en aplicaciones. 
+**Ejemplo**. Como ejercicio, podemos encontrar los estimadores de máxima
+verosimilitud cuando tenemos una muestra $X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2).$
+(puedes derivar e igualar el cero para encontrar el mínimo). También podemos resolver numéricamente,
+por ejemplo:
+
+Supongamos que tenemos la siguiente muestra:
+
+```{r}
+set.seed(41852)
+muestra <- rnorm(150, mean = 1, sd = 0.5)
+```
+
+
+La función generadora de la log verosimilitud para una muestra es (ve la expresión
+del ejercicio anterior y calcula su logaritmo), y generamos la función de verosimilitud
+para nuestra muestra:
+
+```{r}
+crear_log_p <- function(x){
+  log_p <- function(pars){
+    media = pars[1]
+    desv_est = pars[2]
+    n <- length(x)
+    # ve la ecuación del ejercicio anterior
+    z <- (x - media) / desv_est
+    log_verosim <- -(log(desv_est) +  0.5 * mean(z^2))
+    log_verosim
+  }  
+  log_p
+}
+log_p <- crear_log_p(muestra)
+```
+
+
+Ahora optimizamos (checa que el método converge):
+
+```{r}
+res <- optim(c(0, 0.5), log_p, control = list(fnscale = -1, maxit = 10000), method = "Nelder-Mead")
+res$convergence
+c(media_hat = res$par[1], sigma_hat = res$par[2]) %>% round(4)
+```
+
+Verifica que el estimador de la media y de la desviación estándar
+es el que esperábamos (y que puedes derivar analíticamente):
+
+```{r}
+n <- length(muestra)
+sd_n <- function(x) sqrt( mean((x - mean(x))^2))
+c(media_muestra = mean(muestra), sd_muestra = sd_n(muestra)) %>% round(4)
+```
+
+
