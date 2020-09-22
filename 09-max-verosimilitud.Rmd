@@ -710,7 +710,7 @@ Supongamos que tenemos la siguiente muestra:
 
 ```{r}
 set.seed(41852)
-muestra <- rnorm(150, mean = 1, sd = 0.5)
+muestra <- rnorm(150, mean = 1, sd = 2)
 ```
 
 
@@ -738,9 +738,11 @@ log_p <- crear_log_p(muestra)
 Ahora optimizamos (checa que el método converge):
 
 ```{r}
-res <- optim(c(0, 0.5), log_p, control = list(fnscale = -1, maxit = 10000), method = "Nelder-Mead")
+res <- optim(c(0, 0.5), log_p, control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
 res$convergence
-c(media_hat = res$par[1], sigma_hat = res$par[2]) %>% round(4)
+est_mv <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>% 
+  column_to_rownames(var = "parametro")
+est_mv
 ```
 
 Verifica que el estimador de la media y de la desviación estándar
@@ -749,7 +751,173 @@ es el que esperábamos (y que puedes derivar analíticamente):
 ```{r}
 n <- length(muestra)
 sd_n <- function(x) sqrt( mean((x - mean(x))^2))
-c(media_muestra = mean(muestra), sd_muestra = sd_n(muestra)) %>% round(4)
+c(media = mean(muestra), sigma = sd_n(muestra)) %>% round(4)
+```
+
+La siguiente pregunta qué nos interesa hacer es: ¿cómo estimamos la variabilidad
+de estos estimadores? Más adelante veremos una respuesta basada en teoría, pero
+también podemos resolver este problema usando el bootstrap.
+
+## Bootstrap paramétrico {-}
+
+Cuando nuestras observaciones provienen de un modelo teórico parametrizado
+con algunos parámetros que queremos estimar, y utilizamos máxima verosimilitud 
+para hacer nuestra estimación, no podemos aplicar directamente el bootstrap no
+paramétrico que vimos en las secciones anteriores. La razón es que nuestro
+estimador, en general, no es un estimador de plug-in necesariamente.
+
+Sin embargo, suponiendo que el modelo paramétrico que estamos usando es apropiado,
+podemos remuestrear de tal modelo para estimar la varianza de nuestros estimadores.
+Este proceso se llama el **bootstrap paramétrico**. Antes de hacer una definición
+precisa, veamos cómo calcularíamos error estándar para los estimadores de máxima
+verosimilitud de la normal que vimos arriba
+
+**Ejemplo**. Una vez que tenemos nuestros estimadores puntuales,
+
+```{r}
+est_mv
+```
+Sustitumos estos parámetros en la distribución normal y simulamos una muestra del
+mismo tamaño que la original:
+
+```{r}
+simular_modelo <- function(n, media, sigma){
+  rnorm(n, media, sigma)
+}
+muestra_bootstrap <- simular(length(muestra), 
+                             est_mv["media", "estimador"], 
+                             est_mv["sigma", "estimador"])
+head(muestra_bootstrap)
+```
+
+Una vez que tenemos esta muestra bootstrap recalculamos los estimadores de máxima
+verosimlitud. Esto se hace optimizando:
+
+
+```{r}
+# creamos nueva verosimilitud para muestra bootstrap
+log_p_boot <- crear_log_p(muestra_bootstrap)
+# optimizamos
+res_boot <- optim(c(0, 0.5), log_p_boot, 
+  control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
+res_boot$convergence
+est_mv_boot <- tibble(parametro = c("media", "sigma"), estimador = res_boot$par) %>% 
+  column_to_rownames(var = "parametro")
+est_mv_boot
+```
+Y esta es nuestra replicación bootstrap de los estimadores de máxima verosimilitud.
+
+La idea es la misma que el bootstrap, con la ventaja de que estamos simulando
+del modelo que suponemos es el correcto, es decir, estamos usando información adicional
+que no teníamos en el bootstrap paramétrico. Ahora es necesario repetir un 
+número grande de veces.
+
+Nótese que esta función solo envuelve el proceso de remuestreo,
+cálculo de la función de verosimilitud y optimización:
+
+```{r}
+rep_boot <- function(rep, crear_log_p, est_mv, n){
+  muestra_bootstrap <- simular_modelo(length(muestra), 
+                               est_mv["media", "estimador"], 
+                               est_mv["sigma", "estimador"])
+  log_p_boot <- crear_log_p(muestra_bootstrap)
+  # optimizamos
+  res_boot <- optim(c(0, 0.5), log_p_boot, 
+    control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
+  try(if(res_boot$convergence != 0) stop("No se alcanzó convergencia."))
+  est_mv_boot <- tibble(parametro = c("media", "sigma"), estimador_boot = res_boot$par) 
+  est_mv_boot$rep <- rep
+  est_mv_boot
+}
+reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra))) 
+reps_boot
+```
+
+Ya ahora podemos estimar error estándar:
+
+```{r}
+error_est <- reps_boot %>% group_by(parametro) %>% 
+  summarise(ee_boot = sd(estimador_boot)) 
+error_est
+```
+Así que nuestra estimación final sería:
+
+```{r}
+bind_cols(est_mv, error_est) %>% 
+  mutate(across(where(is.numeric), round, 3)) %>% 
+  select(parametro, estimador, ee_boot)
+```
+
+Podemos checar también la normalidad aproximada de las distribuciones
+bootstrap para construir nuestros intervalos:
+
+```{r}
+ggplot(reps_boot, aes(sample = estimador_boot)) + 
+  geom_qq() + geom_qq_line(colour = "red") +
+  facet_wrap(~parametro, scales = "free_y")
+```
+La distribuciones son aproximadamente normales. Nótese que esto no siempre
+sucede, especialmente con parámetros de dispersión como $\sigma$. (Examina
+las curvas de nivel del ejemplo de arriba).
+
+
+**Ejemplo**. Supongamos que tenemos una muestra más chica. Repasa los pasos
+para asegurarte que entiendes el procedimiento:
+
+```{r}
+set.seed(41852)
+muestra <- rnorm(5, mean = 1, sd = 2)
+# función de verosimilitud
+log_p <- crear_log_p(muestra)
+# máxima verosimilitud
+res <- optim(c(0, 0.5), log_p, control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
+res$convergence
+est_mv <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>% 
+  column_to_rownames(var = "parametro")
+est_mv
+```
+Hacemos bootstrap paramétrico
+
+```{r}
+reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra))) 
+reps_boot
+```
+
+```{r}
+ggplot(reps_boot, aes(sample = estimador_boot)) + 
+  geom_qq() + geom_qq_line(colour = "red") +
+  facet_wrap(~parametro, scales = "free_y")
+```
+Donde vemos que la distribución de $\sigma$ tienen sesgo a la derecha. Podemos
+usar intervalos de percentiles.
+
+**Ejercicio (extra)**. Con más de un parámetro, podemos preguntarnos cómo dependen
+las estimaciones individuales - en algunos casos pueden estar correlacionadas. Podemos
+examinar este comportamiendo visualizando las replicaciones bootstrap
+
+```{r}
+ggplot(reps_boot %>% pivot_wider(names_from = parametro, values_from = estimador_boot),
+       aes(x = media, y = sigma)) + geom_point(alpha = 0.5) + coord_equal()
+  
+```
+Esta es nuestra aproximación a la distribución de remuestreo de nuestro
+par de estadísticas $(\mu_{\mathsf{mv}}, \sigma_{\mathsf{mv}})$. En este caso, parecen ser
+independientes (lo cual es posible demostrar).
+
+
+```{block, type = 'mathblock'}
+Supongamos que tenemos una muestra iid $X_1,X_2,\ldots, X_n \sim f(x;\theta)$ de un modelo
+paramétrico, y un estimador de máxima verosimilitud $\hat{\theta}_{\mathsf{mv}}$ para $\theta$.
+El error estándar estimado para $\hat{\theta}_{\mathsf{mv}}$ por medio del bootstrap
+paramétrico se calcula como sigue:
+
+1. Se calcula $\hat{\theta}_{\mathsf{mv}}$ para la muestra observada
+2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{mv}})$ (muestra bootstrap)
+3. Se recalcula el estimador de máxima verosimilitud para la muestra bootstrap $\hat{\theta^*}_{\mathsf{mv}}$
+4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000)
+5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}$
+obtenidos.
+
 ```
 
 
