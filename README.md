@@ -84,7 +84,7 @@ docker run -p 8787:8787 \
 
 Ahora entra al servidor de `Rstudio` en `localhost:8787`. Dentro de la interfaz
 gráfica, en particular la terminal de sistema, puedes clonar el repositorio de
-la notas, cambiarte a la rama de desarrollo `dev`. Ver imagen: 
+la notas, y **cambiarte a la rama de desarrollo `dev`**. Ver imagen: 
 
 ![](images/rstudio-terminal.png)
 
@@ -103,11 +103,15 @@ renv::restore()
 ```
 ![](images/rstudio-renv-paths.png)
 
-Con lo cual te pedirá confirmación para reparar los paquetes que no encuentre. 
+ahora te pedirá confirmación para reparar los paquetes que no encuentre. 
 
-**Nota.** definir las variables `RENV_PATHS_CACHE` y `RENV_PATHS_ROOT` 
+**Nota.** Definir las variables `RENV_PATHS_CACHE` y `RENV_PATHS_ROOT` 
 sólo será necesario cuando quieras descargar nuevos paquetes que no tengas del 
 `renv.lock` por ejemplo con los comandos `renv::restore()` o `renv::init()`.
+Copiar y generar todas las librerías se tardara **bastante** ---alrededor de una
+hora con una conexión simplona---. Pero la ventaja es que sólo lo tendrás que hacer una 
+vez y con esto garantizarás que puedes hacer cambios y actualizaciones pequeñas conforme
+se vayan actualizando las notas.
 
 # Instrucciones para generar las notas de manera local.
 
