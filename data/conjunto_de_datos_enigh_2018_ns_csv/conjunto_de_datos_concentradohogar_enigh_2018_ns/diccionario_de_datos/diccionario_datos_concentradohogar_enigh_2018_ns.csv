@@ -1,0 +1,156 @@
+Tabla  CONCENTRADOHOGAR,,,,,
+,,,,,
+#,Variable,Descripción,Tipo,Categorías,
+,,,,valor,etiqueta o rango
+1,folioviv,"Identificador de la vivienda compuesto por dos dígitos con la clave de la entidad federativa, uno con el ámbito (urbano, código diferente a 6; rural, código 6), cuatro dígitos del número consecutivo de la upm, un dígito de la decena de levantamiento y dos dígitos con un número consecutivo para la vivienda seleccionada.",C (10),,
+2,foliohog,El código 1 identifica al hogar principal y del 2 al 5 los hogares adicionales.,C (1),,
+3,ubica_geo,"Contiene la ubicación geográfica de la vivienda. Los dos primeros dígitos representan la clave de la entidad y los siguientes tres la clave del municipio. Éstas corresponden al Catálogo de claves de entidades federativas, municipios y localidades, que está disponible   en el sitio del INEGI.",C (5),,
+4,tam_loc,Tamaño de la localidad por número de habitantes.,C (1),,"{1,...,4}"
+,,,,1,Localidades con 100 000 y más habitantes
+,,,,2,Localidades con 15 000 a 99 999 habitantes
+,,,,3,Localidades con 2 500 a 14 999 habitantes
+,,,,4,Localidades con menos de 2 500 habitantes
+5,est_socio,"Clasificación de las viviendas del país de acuerdo a ciertas características socioeconómicas de las personas que las habitan, así como características físicas y el equipamiento de las mismas expresadas por medio de 24 indicadores construidos con información del Censo de Población y Vivienda 2010. Esta estratificación se realizó por medio de métodos estadísticos multivariados.",C (1),,"{1,...,4}"
+,,,,1,Bajo
+,,,,2,Medio bajo
+,,,,3,Medio alto
+,,,,4,Alto
+6,est_dis,Son los estratos seleccionados en la segunda etapa del muestreo y corresponden a grupos de UPMs de acuerdo con su estrato geográfico (entidad-ámbito-zona).,C (7),,
+7,upm,"Las unidades primarias de muestreo están constituidas por agrupaciones de viviendas con características diferenciadas dependiendo del ámbito al que pertenecen. Estas unidades son seleccionadas en la primera etapa del muestreo y corresponden a áreas geográficas con límites identificables en el terreno que agrupan un conjunto de viviendas, cuyo número depende del tamaño de las localidades.",C (5),,
+8,factor,Factor de expansión.,N (5),,
+9,clase_hog,"Diferenciación de los hogares a partir del tipo de relación consanguínea, legal, de afinidad o de costumbre entre el jefe(a) y los otros integrantes del hogar, sin considerar a los trabajadores domésticos y a los familiares de éstos ni a los huéspedes. Se clasifican en: unipersonal: hogar formado por una sola persona que es el jefe(a); nuclear: hogar constituido por un solo grupo familiar primario; ampliado: hogar formado por el jefe(a) y su grupo familiar primario más otros grupos familiares u otros parientes; compuesto: hogar formado por un hogar nuclear o ampliado con personas sin parentesco con el jefe(a); corresidente: hogar formado por dos o más personas que no tienen parentesco con el jefe(a).",C (1),,"{1,...,5}"
+,,,,1,Unipersonal
+,,,,2,Nuclear
+,,,,3,Ampliado
+,,,,4,Compuesto
+,,,,5,Corresidente
+10,sexo_jefe,Distinción biológica que clasifica al jefe del hogar en hombre o mujer.,C (1),,"{1,2}"
+,,,,1,Hombre
+,,,,2,Mujer
+11,edad_jefe,Años transcurridos entre la fecha de nacimiento del jefe del hogar y la fecha de la entrevista.,N (2),,
+12,educa_jefe,Educación formal del jefe del hogar.,C (2),,"{01,...,11}"
+,,,,1,Sin instrucción
+,,,,2,Preescolar
+,,,,3,Primaria incompleta
+,,,,4,Primaria completa
+,,,,5,Secundaria incompleta
+,,,,6,Secundaria completa
+,,,,7,Preparatoria incompleta
+,,,,8,Preparatoria completa
+,,,,9,Profesional incompleta
+,,,,10,Profesional completa
+,,,,11,Posgrado
+13,tot_integ,"Número de personas pertenecientes a este hogar, sin considerar a los trabajadores domésticos y a los familiares de éstos ni a los huéspedes.",N (2),,
+14,hombres,"Número de hombres pertenecientes a este hogar, sin considerar a los trabajadores domésticos y a los familiares de éstos ni a los huéspedes.",N (2),,
+15,mujeres,"Número de mujeres pertenecientes a este hogar, sin considerar a los trabajadores domésticos y a los familiares de éstos ni a los huéspedes.",N (2),,
+16,mayores,Integrantes del hogar que tienen 12 o más años de edad.,N (2),,
+17,menores,Integrantes del hogar que tienen 11 o menos años de edad.,N (2),,
+18,p12_64,Integrantes del hogar cuya edad está entre los 12 y los 64 años.,N (2),,
+19,p65mas,Integrantes del hogar que tienen 65 o más años de edad.,N (2),,
+20,ocupados,Número de personas que tienen trabajo y 14 o más años de edad.,N (2),,
+21,percep_ing,Número de personas que perciben ingreso corriente monetario.,N (2),,
+22,perc_ocupa,Número de personas que perciben ingreso corriente monetario y tienen trabajo.,N (2),,
+23,ing_cor,"Suma de los ingresos por trabajo, los provenientes de rentas, de transferencias, de estimación del alquiler y de otros ingresos.","N (12,2)",,
+24,ingtrab,"Suma del ingreso obtenido por trabajo, como subordinado, como independiente y de otros trabajos.","N (12,2)",,
+25,trabajo,"Son las remuneraciones por trabajo subordinado. Está compuesta por los sueldos, las comisiones, aguinaldo, indemnizaciones del trabajo y remuneraciones en especie.","N (12,2)",,
+26,sueldos,"Remuneraciones por sueldos, salarios y jornal.","N (12,2)",,
+27,horas_extr,Remuneraciones por trabajar horas extras.,"N (12,2)",,
+28,comisiones,Remuneraciones por comisiones y propinas.,"N (12,2)",,
+29,aguinaldo,Ingresos por concepto de aguinaldo.,"N (12,2)",,
+30,indemtrab,Indemnizaciones por accidentes de trabajo o por despido y retiro voluntario.,"N (12,2)",,
+31,otra_rem,Otras remuneraciones monetarias.,"N (12,2)",,
+32,remu_espec,"La estimación realizada con base en el valor en el mercado a precio de menudeo, de los productos y/o servicios de consumo final y privado que reciben los trabajadores subordinados como remuneración.","N (12,2)",,
+33,negocio,"Los ingresos por trabajo independiente son todas aquellas entradas en efectivo o en especie que los integrantes del hogar reciben regularmente por su desempeño como trabajadores independientes en su trabajo principal o, si es el caso, en su trabajo secundario.","N (12,2)",,
+34,noagrop,Ingresos de negocios no agropecuarios.,"N (12,2)",,
+35,industria,Ingresos de negocios industriales.,"N (12,2)",,
+36,comercio,Ingresos de negocios comerciales.,"N (12,2)",,
+37,servicios,Ingresos de negocios de servicios.,"N (12,2)",,
+38,agrope,Ingresos de negocios agropecuarios.,"N (12,2)",,
+39,agricolas,Ingresos de negocios agrícolas.,"N (12,2)",,
+40,pecuarios,Ingresos de negocios pecuarios.,"N (12,2)",,
+41,reproducc,"Ingresos de negocios de recolección, reforestación y tala de árboles.","N (12,2)",,
+42,pesca,"Ingresos de negocios de pesca, caza y captura de animales.","N (12,2)",,
+43,otros_trab,Otros ingresos provenientes del trabajo.,"N (12,2)",,
+44,rentas,La renta de la propiedad agrupa todos los ingresos que reciben los integrantes del hogar derivados de la posesión de activos financieros o tangibles que han puesto a disposición de otras unidades institucionales.,"N (12,2)",,
+45,utilidad,"Ingresos provenientes de cooperativas, sociedades y empresas que funcionan como sociedades.","N (12,2)",,
+46,arrenda,Arrendamiento de activos tangibles y financieros.,"N (12,2)",,
+47,transfer,Las transferencias son las entradas en efectivo o en especie recibidas por los integrantes del hogar y por las cuales el proveedor o donante no demanda retribución de ninguna naturaleza.,"N (12,2)",,
+48,jubilacion,"Jubilaciones, pensiones e indemnizaciones por accidente de trabajo despido y retiro voluntario.","N (12,2)",,
+49,becas,Becas provenientes del gobierno y de instituciones.,"N (12,2)",,
+50,donativos,Donativos en dinero provenientes de instituciones y otros hogares.,"N (12,2)",,
+51,remesas,Ingresos provenientes de otros países.,"N (12,2)",,
+52,bene_gob,Beneficios provenientes de programas gubernamentales.,"N (12,2)",,
+53,transf_hog,Son los bienes y servicios regalados por otros hogares.,"N (12,2)",,
+54,trans_inst,Son los bienes y servicios que las instituciones públicas o privadas otorgan a ciertos sectores de la población.,"N (12,2)",,
+55,estim_alqu,"El valor estimado del alquiler que el hogar habría de pagar en el mercado por contar con un alojamiento del mismo tamaño, calidad y ubicación. Esta estimación la realiza el propio informante con base en su apreciación del valor de mercado de la renta de su vivienda.","N (12,2)",,
+56,otros_ing,Otros ingresos corrientes.,"N (12,2)",,
+57,gasto_mon,Es la suma de los gastos regulares que directamente hacen los hogares en bienes y servicios para su consumo.,"N (12,2)",,
+58,alimentos,"Los gastos en bienes de consumo no duradero que realizan día a día los integrantes del hogar en alimentos, bebidas y tabaco.","N (12,2)",,
+59,ali_dentro,Gasto en alimentos y bebidas consumidas dentro del hogar.,"N (12,2)",,
+60,cereales,Gasto en cereales.,"N (12,2)",,
+61,carnes,Gasto en carnes.,"N (12,2)",,
+62,pescado,Gasto en pescados y mariscos.,"N (12,2)",,
+63,leche,Gasto en leche y sus derivados.,"N (12,2)",,
+64,huevo,Gasto en huevo.,"N (12,2)",,
+65,aceites,Gasto en aceites y grasas.,"N (12,2)",,
+66,tuberculo,Gasto en tubérculos.,"N (12,2)",,
+67,verduras,"Gasto en verduras, legumbres, leguminosas y semillas.","N (12,2)",,
+68,frutas,Gasto en frutas.,"N (12,2)",,
+69,azucar,Gasto en azúcar y mieles.,"N (12,2)",,
+70,cafe,"Gasto en café, té y chocolate.","N (12,2)",,
+71,especias,Gasto en especias y aderezos.,"N (12,2)",,
+72,otro_alim,Gasto en otros alimentos diversos.,"N (12,2)",,
+73,bebidas,Gasto en bebidas alcohólicas y no alcohólicas.,"N (12,2)",,
+74,ali_fuera,Gasto en alimentos y bebidas consumidas fuera del hogar.,"N (12,2)",,
+75,tabaco,Gasto en tabaco.,"N (12,2)",,
+76,vesti_calz,Gastos realizados en prendas de vestir y calzado que realizan los miembros del hogar y distingue tanto el sexo de los integrantes del hogar como los diferentes grupos de edad de éstos.,"N (12,2)",,
+77,vestido,Gasto en prendas de vestir.,"N (12,2)",,
+78,calzado,Gasto en calzado y su reparación.,"N (12,2)",,
+79,vivienda,"Gasto en vivienda, servicios de conservación, energía eléctrica y combustibles.","N (12,2)",,
+80,alquiler,Gasto en alquileres brutos.,"N (12,2)",,
+81,pred_cons,"Gasto en impuestos, predial y cuotas por servicio de conservación.","N (12,2)",,
+82,agua,Gasto en agua.,"N (12,2)",,
+83,energia,Gasto en electricidad y combustibles.,"N (12,2)",,
+84,limpieza,"Gasto en artículos y servicios para la limpieza, cuidados de la casa, enseres domésticos y muebles, cristalería, utensilios domésticos y blancos.","N (12,2)",,
+85,cuidados,Gasto en artículos y servicios para la limpieza y cuidados de la casa.,"N (12,2)",,
+86,utensilios,"Gasto en cristalería, blancos y utensilios domésticos.","N (12,2)",,
+87,enseres,Gasto en enseres domésticos.,"N (12,2)",,
+88,salud,Gasto en cuidados de la salud.,"N (12,2)",,
+89,atenc_ambu,Gasto en atención primaria o ambulatoria.,"N (12,2)",,
+90,hospital,"Gasto en atención hospitalaria, servicios médicos y medicamentos durante el embarazo y parto, aparatos ortopédicos, terapéuticos y seguros médicos.","N (12,2)",,
+91,medicinas,Gasto en medicamentos sin receta.,"N (12,2)",,
+92,transporte,"Gasto en transporte; adquisición, mantenimiento, accesorios y servicios para vehículos; comunicaciones.","N (12,2)",,
+93,publico,Gasto en transporte público.,"N (12,2)",,
+94,foraneo,Gasto en transporte foráneo.,"N (12,2)",,
+95,adqui_vehi,Gasto en adquisición de vehículos de uso particular.,"N (12,2)",,
+96,mantenim,"Gasto en refacciones, partes, accesorios, mantenimiento, combustibles y servicio para vehículos.","N (12,2)",,
+97,refaccion,"Gasto en refacciones, accesorios y servicios para vehículos de uso particular.","N (12,2)",,
+98,combus,"Gasto en combustibles, aceites, reparaciones de llantas, pensiones y otros servicios para vehículos de uso particular.","N (12,2)",,
+99,comunica,Gasto en comunicaciones.,"N (12,2)",,
+100,educa_espa,"Gasto en servicios de educación, artículos educativos, artículos de esparcimiento y otros gastos esparcimiento.","N (12,2)",,
+101,educacion,Gasto en artículos y servicios de educación.,"N (12,2)",,
+102,esparci,Gasto en artículos y servicios de esparcimiento.,"N (12,2)",,
+103,paq_turist,"Gasto en paquetes turísticos y para fiestas, hospedaje y alojamiento.","N (12,2)",,
+104,personales,"Cuidados personales, accesorios y efectos personales y otros gastos diversos","N (12,2)",,
+105,cuida_pers,Gasto en cuidados personales.,"N (12,2)",,
+106,acces_pers,Gasto en accesorios y efectos personales.,"N (12,2)",,
+107,otros_gas,Otros gastos diversos.,"N (12,2)",,
+108,transf_gas,Transferencias de gasto.,"N (12,2)",,
+109,percep_tot,"Percepciones financieras y de capital totales, son la suma de cada una de las percepciones que reciben los integrantes del hogar que se derivan de movimientos en el valor de sus activos.","N (12,2)",,
+110,retiro_inv,"Retiro de inversiones, ahorros, tandas, cajas de ahorro, etcétera.","N (12,2)",,
+111,prestamos,Préstamos recibidos de personas ajenas al hogar o instituciones.,"N (12,2)",,
+112,otras_perc,Otras percepciones financieras y de capital.,"N (12,2)",,
+113,ero_nm_viv,Erogaciones en especie patrimoniales y para vivienda propia.,"N (12,2)",,
+114,ero_nm_hog,"Transferencias en especie no regulares, provenientes de otros hogares.","N (12,2)",,
+115,erogac_tot,"Erogaciones financieras y de capital totales, se componen de la sumatoria de las erogaciones financieras y de capital monetarias y no monetarias que realizan los integrantes del hogar en un lapso determinado.","N (12,2)",,
+116,cuota_viv,Cuota pagada por la vivienda propia.,"N (12,2)",,
+117,mater_serv,"Gasto en servicios y materiales para reparación, mantenimiento y/o ampliación de la vivienda.","N (12,2)",,
+118,material,"Materiales para reparación, mantenimiento y/o ampliación de la vivienda","N (12,2)",,
+119,servicio,"Gasto en servicios de reparación, mantenimiento y/o ampliación de la vivienda.","N (12,2)",,
+120,deposito,"Depósitos en cuentas de ahorros, tandas, cajas de ahorro, etcétera.","N (12,2)",,
+121,prest_terc,Préstamos a terceros.,"N (12,2)",,
+122,pago_tarje,Pago por tarjeta de crédito al banco o casa comercial.,"N (12,2)",,
+123,deudas,Pago de deudas de los miembros del hogar a la empresa donde trabajan y/o a otras personas o instituciones.,"N (12,2)",,
+124,balance,Pérdidas en los negocios del hogar.,"N (12,2)",,
+125,otras_erog,Otras erogaciones financieras y de capital.,"N (12,2)",,
+126,smg,Salario mínimo general trimestralizado.,"N (6,2)",,
