@@ -865,8 +865,8 @@ las curvas de nivel del ejemplo de arriba).
 para asegurarte que entiendes el procedimiento:
 
 ```{r}
-set.seed(41852)
-muestra <- rnorm(5, mean = 1, sd = 2)
+set.seed(4182)
+muestra <- rnorm(6, mean = 1, sd = 2)
 # función de verosimilitud
 log_p <- crear_log_p(muestra)
 # máxima verosimilitud
@@ -887,8 +887,11 @@ reps_boot
 ggplot(reps_boot, aes(sample = estimador_boot)) + 
   geom_qq() + geom_qq_line(colour = "red") +
   facet_wrap(~parametro, scales = "free_y")
+ggplot(reps_boot, aes(x = estimador_boot)) +
+  geom_histogram() +facet_wrap(~parametro)
 ```
-Donde vemos que la distribución de $\sigma$ tienen sesgo a la derecha. Podemos
+Donde vemos que la distribución de $\sigma$ tienen sesgo a la derecha, pues en algunos
+casos obtenemos estimaciones muy cercanas a cero. Podemos
 usar intervalos de percentiles.
 
 **Ejercicio (extra)**. Con más de un parámetro, podemos preguntarnos cómo dependen
@@ -920,4 +923,9 @@ obtenidos.
 
 ```
 
+## Ventajas y desventajas de bootstrap paramétrico
+
+
+
+## Verificando los supuestos distribucionales
 
