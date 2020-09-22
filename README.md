@@ -67,9 +67,9 @@ repositorio y las librerías de `R` que necesitemos descargar.
 
 Ahora, levanta el contenedor con las siguientes líneas en una terminal
 ```{bash}
-# Directorio en el *contenedor* donde vivara el cache de renv
+# Directorio en el *contenedor* donde vivirá el cache de renv
 RENV_PATHS_CACHE_CONTAINER=/home/rstudio/cursos/renv/cache
-# Directorio en el *host* donde vivara el cache de renv
+# Directorio en el *host* donde vivirá el cache de renv
 RENV_PATHS_CACHE_HOST=/home/estudiante/itam/cursos//renv/cache
 
 docker run -p 8787:8787 \
