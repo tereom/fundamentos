@@ -132,14 +132,14 @@ la media de los precios de venta de una población de casas. Tenemos nuestra mue
 ```{r, cache=TRUE}
 set.seed(2112)
 poblacion_casas <- read_csv("data/casas.csv")
-muestra <- sample_n(poblacion_casas, 200, replace = TRUE)
-mean(muestra$precio_miles)
+casas_muestra <- sample_n(poblacion_casas, 200, replace = TRUE)
+mean(casas_muestra$precio_miles)
 ```
 
 Esta muestra nos da nuestro estimador de la distribución poblacional:
 
 ```{r,  fig.width =5, fig.height = 3}
-bind_rows(muestra %>% mutate(tipo = "muestra"),
+bind_rows(casas_muestra %>% mutate(tipo = "muestra"),
     poblacion_casas %>% mutate(tipo = "población")) %>% 
 ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) + 
     geom_qq(distribution = stats::qunif, alpha = 0.4, size = 1) +
@@ -149,7 +149,7 @@ ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) +
 O con histogramas:
 
 ```{r,  fig.width =5, fig.height = 3}
-bind_rows(muestra %>% mutate(tipo = "muestra"),
+bind_rows(casas_muestra %>% mutate(tipo = "muestra"),
     poblacion_casas %>% mutate(tipo = "población")) %>% 
 ggplot(aes(x = precio_miles, group = tipo)) + 
     geom_histogram(aes(y=..density..), binwidth = 50) + 
@@ -164,7 +164,7 @@ estimación de la media poblacional de precios de casas, y usaremos la media
 muestral para hacer esto. Para nuestra muestra, nuestra estimación puntual es:
 
 ```{r}
-media <- mean(muestra$precio_miles)
+media <- mean(casas_muestra$precio_miles)
 media
 ```
 
@@ -183,7 +183,7 @@ muestra original. Evaluamos nuestra estadística (en este caso la media) en cada
 una de estas remuestras:
 
 ```{r, cache = TRUE}
-media_muestras <- map_dbl(1:5000, ~ muestra %>%  
+media_muestras <- map_dbl(1:5000, ~ casas_muestra %>%  
     sample_n(200, replace = T) %>%
     summarise(media_precio = mean(precio_miles), .groups = "drop") %>% pull(media_precio)) 
 ```
@@ -207,7 +207,7 @@ limites_ic
 ```
 
 Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la
-mediana es `r round(mean(muestra$precio_miles), 1)`, con un intervalo de
+mediana es `r round(mean(casas_muestra$precio_miles), 1)`, con un intervalo de
 confianza del 90\% de (`r limites_ic[1]`, `r limites_ic[2]`)
 
 Otra cosa que podríamos hacer para describir la dispersión de nuestro estimador
@@ -950,11 +950,11 @@ simular_intervalos <- function(rep, size = 150){
     sample_n(datos, size = nrow(datos), replace = TRUE)
   }
   # paso 3: remuestrea y calcula el estimador
-  totales_boot <- map_dbl(1:2000,  ~ calc_estimador_casas(muestra_boot(muestra_casas))) %>% 
+  totales_boot <- map_df(1:2000, ~calc_estimador_casas(muestra_boot(muestra_casas))) %>% 
     tibble(total_boot = .) %>%
     summarise(ee_boot = sd(total_boot)) %>% 
-    mutate(inf = total_est - 2*ee_boot, sup = total_est + 2*ee_boot) %>% 
-    mutate(rep = rep)
+    mutate(inf = total_est - 2*ee_boot, sup = total_est + 2*ee_boot, 
+           rep = rep)
   totales_boot
 }
 # Para recrear, correr:
