@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] -0.3
+## [1] -0.22
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] 0.44
+## [1] 1.1
 ```
 
 ```r
@@ -559,3 +559,304 @@ título fundamentos-tarea05).
 La tarea 6 es el proyecto de RStudio.Cloud con este nombre, los ejercicios
 están descritos en un archivo de R. Envíen un reporte por correo electrónico con 
 las respuestas (con título fundamentos-tarea06).
+
+### Solución y discusión de media {-}
+
+---
+title: "Bootstrap - Media"
+output: html_document
+---
+
+
+
+
+#### Ejemplo: el error estándar de una media {-}
+
+Supongamos que $x$ es una variable aleatoria que toma valores en los reales con 
+distribución de probabilidad $P$. Denotamos por $\mu_F$ y $\sigma_F^2$ la 
+media y varianza de $P$,
+
+$$\mu_F = E_F(x),$$ 
+$$\sigma_F^2=var_F(x)=E_F[(x-\mu)^2]$$
+
+en la notación enfatizamos la dependencia de la media y varianza en la 
+distribución $P$. 
+
+Ahora, sea $(x_1,...,x_n)$ una muestra aleatoria de $P$, de tamaño $n$, 
+la media de la muestra $\bar{x}=\sum_{i=1}^nx_i/n$ tiene:
+
+* esperanza $\mu_F$,
+
+* varianza $\sigma_F^2/n$.
+
+En palabras: la esperanza de $\bar{x}$ es la misma que la esperanza de $x$, pero
+la varianza de $\bar{x}$ es $1/n$ veces la varianza de $x$, así que entre
+mayor es la $n$ tenemos una mejor estimación de $\mu_P$.
+
+En el caso de la media $\bar{x}$, el error estándar, que denotamos 
+$se_P(\bar{x})$, es la raíz de la varianza de $\bar{x}$,
+
+$$se_F(\bar{x}) = [var_F(\bar{x})]^{1/2}= \sigma_F/ \sqrt{n}.$$
+
+En este punto podemos usar el principio del _plug-in_, simplemente sustituimos
+$P_n$ por $P$ y obtenemos, primero, una estimación de $\sigma_P$:
+$$\hat{\sigma}=\hat{\sigma}_{\hat{F}} = \bigg\{\frac{1}{n}\sum_{i=1}^n(x_i-\bar{x})^2\bigg\}^{1/2}$$
+
+de donde se sigue la estimación del error estándar:
+
+$$\hat{ee}(\bar{x})=\hat{\sigma}_{\hat{F}}/\sqrt{n}=\bigg\{\frac{1}{n^2}\sum_{i=1}^n(x_i-\bar{x})^2\bigg\}^{1/2}$$
+
+Notemos que usamos el principio del _plug-in_ en dos ocasiones, primero para 
+estimar la esperanza $\mu_P$ mediante $\mu_{\hat{F}}$ y luego para estimar el 
+error estándar $ee_F(\bar{x})$. 
+
+
+Consideramos los datos de ENLACE edo. de México 
+(`enlace`), y la columna de calificaciones de español 3^o^ de primaria (`esp_3`). 
+
+
+```r
+enlace <- read_csv("data/enlace_15.csv")
+```
+
+```
+## Parsed with column specification:
+## cols(
+##   id = col_double(),
+##   cve_ent = col_double(),
+##   turno = col_character(),
+##   tipo = col_character(),
+##   esp_3 = col_double(),
+##   esp_6 = col_double(),
+##   n_eval_3 = col_double(),
+##   n_eval_6 = col_double()
+## )
+```
+Suponemos que me interesa hacer inferencia del promedio de las 
+calificaciones de los estudiantes de tercero de primaria en el Estado de México.
+
+En este ejercicio planteamos $3$ escenarios (que simulamos): 1) que tengo una 
+muestra de tamaño $10$, 2) que tengo una muestra de tamaño $100$, y 3) que tengo una 
+muestra de tamaño $1000$. 
+
+- Selección de muestras:
+
+
+```r
+set.seed(373783326)
+muestras <- tibble(tamanos = c(10, 100, 1000)) %>% 
+    mutate(muestras = map(tamanos, ~sample(enlace$esp_3, size = .)))
+```
+
+Ahora procedemos de manera *usual* en estadística (usando fórmulas y no 
+simulación), estimo la media de la muestra con el estimador *plug-in* 
+
+$$\bar{x}={1/n\sum x_i}$$ 
+
+y el error estándar de $\bar{x}$ con el estimador *plug-in*, en el caso de la 
+media hay una fórmula, pero cómo calculamos el error estándar de una mediana?, 
+o de una correlación?
+
+$$\hat{ee}(\bar{x}) =\bigg\{\frac{1}{n^2}\sum_{i=1}^n(x_i-\bar{x})^2\bigg\}^{1/2}$$
+
+- Estimadores *plug-in*:
+
+
+```r
+se_plug_in <- function(x){
+    x_bar <- mean(x)
+    n_x <- length(x)
+    var_x <- 1 / n_x ^ 2 * sum((x - x_bar) ^ 2)
+    sqrt(var_x)
+}
+muestras_est <- muestras %>% 
+    mutate(
+        medias = map_dbl(muestras, mean), 
+        e_estandar_plug_in = map_dbl(muestras, se_plug_in)
+    )
+muestras_est
+```
+
+```
+## # A tibble: 3 x 4
+##   tamanos muestras      medias e_estandar_plug_in
+##     <dbl> <list>         <dbl>              <dbl>
+## 1      10 <dbl [10]>      602.              19.3 
+## 2     100 <dbl [100]>     553.               6.54
+## 3    1000 <dbl [1,000]>   552.               1.90
+```
+
+Ahora, recordemos que la distribución muestral es la distribución de una
+estadística, considerada como una variable aleatoria. Usando esta definción 
+podemos aproximarla, para cada tamaño de muestra, simulando:  
+
+1) simulamos muestras de tamaño $n$ de la población,   
+2) calculamos la estadística de interés (en este caso $\bar{x}$),  
+3) vemos la distribución de la estadística a lo largo de simulaciones.
+
+- Histogramas de distribución muestral y aproximación de errores estándar con 
+simulación 
+
+
+```r
+muestras_sims <- muestras_est %>%
+    mutate(
+        sims_muestras = map(tamanos, ~rerun(10000, sample(enlace$esp_3, 
+            size = ., replace = TRUE))), 
+        sims_medias = map(sims_muestras, ~map_dbl(., mean)), 
+        e_estandar_aprox = map_dbl(sims_medias, sd)
+        )
+sims_medias <- muestras_sims %>% 
+    select(tamanos, sims_medias) %>% 
+    unnest(sims_medias) 
+
+ggplot(sims_medias, aes(x = sims_medias)) +
+    geom_histogram(binwidth = 2) +
+    facet_wrap(~tamanos, nrow = 1) +
+    theme_minimal()
+```
+
+<img src="98-tareas_files/figure-html/unnamed-chunk-21-1.png" width="672" height="350px" />
+
+Notamos que la variación en la distribución muestral decrece conforme aumenta
+el tamaño de muestra, esto es esperado pues el error estándar de una media 
+es $\sigma_P / \sqrt{n}$, y dado que en este ejemplo estamos calculando la media 
+para la misma población el valor poblacional $\sigma_P$ es constante y solo 
+cambia el denominador.
+
+Nuestros valores de error estándar con simulación están en la columna 
+`e_estandar_aprox`:
+
+
+```r
+muestras_sims %>% 
+    select(tamanos, medias, e_estandar_plug_in, e_estandar_aprox)
+```
+
+```
+## # A tibble: 3 x 4
+##   tamanos medias e_estandar_plug_in e_estandar_aprox
+##     <dbl>  <dbl>              <dbl>            <dbl>
+## 1      10   602.              19.3             18.9 
+## 2     100   553.               6.54             5.92
+## 3    1000   552.               1.90             1.87
+```
+
+En este ejercicio estamos simulando para examinar las distribuciones muestrales
+y para ver que podemos aproximar el error estándar de la media usando 
+simulación; sin embargo, dado que en este caso hipotético conocemos la varianza 
+poblacional y la fórmula del error estándar de una media, por lo que podemos 
+calcular el verdadero error estándar para una muestra de cada tamaño.
+
+- Calcula el error estándar de la media para cada tamaño de muestra usando la
+información poblacional:
+
+
+```r
+muestras_sims_est <- muestras_sims %>% 
+    mutate(e_estandar_pob = sd(enlace$esp_3) / sqrt(tamanos))
+muestras_sims_est %>% 
+    select(tamanos, e_estandar_plug_in, e_estandar_aprox, e_estandar_pob)
+```
+
+```
+## # A tibble: 3 x 4
+##   tamanos e_estandar_plug_in e_estandar_aprox e_estandar_pob
+##     <dbl>              <dbl>            <dbl>          <dbl>
+## 1      10              19.3             18.9           18.7 
+## 2     100               6.54             5.92           5.93
+## 3    1000               1.90             1.87           1.87
+```
+
+En la tabla de arriba podemos comparar los $3$ errores estándar que calculamos, 
+recordemos que de estos $3$ el *plug-in* es el único que podríamos obtener en 
+un escenario real pues los otros dos los calculamos usando la población. 
+
+Una alternativa al estimador *plug-in* del error estándar es usar *bootstrap* 
+(en muchos casos no podemos calcular el error estándar *plug-in* por falta de 
+fórmulas) pero podemos usar *bootstrap*: utilizamos una 
+estimación de la distribución poblacional y calculamos el error estándar 
+bootstrap usando simulación. Hacemos el mismo procedimiento que usamos para 
+calcular *e_estandar_apox* pero sustituimos la distribución poblacional por la 
+distriución empírica. Hagámoslo usando las muestras que sacamos en el primer 
+paso:
+
+
+```r
+muestras_sims_est_boot <- muestras_sims_est %>% 
+    mutate(
+        sims_muestras_boot = map2(muestras, tamanos,
+            ~rerun(10000, sample(.x, size = .y, replace = TRUE))), 
+        sims_medias_boot = map(sims_muestras_boot, ~map_dbl(., mean)), 
+        e_estandar_boot = map_dbl(sims_medias_boot, sd)
+        )
+muestras_sims_est_boot
+```
+
+```
+## # A tibble: 3 x 11
+##   tamanos muestras medias e_estandar_plug… sims_muestras sims_medias
+##     <dbl> <list>    <dbl>            <dbl> <list>        <list>     
+## 1      10 <dbl [1…   602.            19.3  <list [10,00… <dbl [10,0…
+## 2     100 <dbl [1…   553.             6.54 <list [10,00… <dbl [10,0…
+## 3    1000 <dbl [1…   552.             1.90 <list [10,00… <dbl [10,0…
+## # … with 5 more variables: e_estandar_aprox <dbl>, e_estandar_pob <dbl>,
+## #   sims_muestras_boot <list>, sims_medias_boot <list>, e_estandar_boot <dbl>
+```
+
+Graficamos los histogramas de la distribución bootstrap para cada muestra.
+
+
+```r
+sims_medias_boot <- muestras_sims_est_boot %>% 
+    select(tamanos, sims_medias_boot) %>% 
+    unnest(sims_medias_boot) 
+
+ggplot(sims_medias_boot, aes(x = sims_medias_boot)) +
+    geom_histogram(binwidth = 4) +
+    facet_wrap(~tamanos, nrow = 1) +
+    theme_minimal()
+```
+
+<img src="98-tareas_files/figure-html/unnamed-chunk-25-1.png" width="672" height="350px" />
+
+Y la tabla con todos los errores estándar quedaría:
+
+
+```r
+muestras_sims_est_boot %>% 
+    select(tamanos, e_estandar_boot, e_estandar_plug_in, e_estandar_aprox, 
+        e_estandar_pob)
+```
+
+```
+## # A tibble: 3 x 5
+##   tamanos e_estandar_boot e_estandar_plug_in e_estandar_aprox e_estandar_pob
+##     <dbl>           <dbl>              <dbl>            <dbl>          <dbl>
+## 1      10           19.3               19.3             18.9           18.7 
+## 2     100            6.53               6.54             5.92           5.93
+## 3    1000            1.89               1.90             1.87           1.87
+```
+
+Observamos que el estimador bootstrap del error estándar es muy similar al 
+estimador plug-in del error estándar, esto es esperado pues se calcularon con la 
+misma muestra y el error estándar *bootstrap* converge al *plug-in* conforme 
+incrementamos el número de muestras *bootstrap*.
+
+
+#### ¿Por qué bootstrap? {-}
+
+* En el caso de la media $\hat{\theta}=\bar{x}$ la aplicación del principio del 
+_plug-in_ para el cálculo de errores estándar es inmediata; sin embargo, hay 
+estadísticas para las cuáles no es fácil aplicar este método.
+
+* El método de aproximarlo con simulación, como lo hicimos en el ejercicio de 
+arriba no es factible pues en la práctica no podemos seleccionar un número 
+arbitrario de muestras de la población, sino que tenemos únicamente una muestra. 
+
+* La idea del *bootstrap* es replicar el método de simulación para aproximar
+el error estándar, esto es seleccionar muchas muestras y calcular la estadística 
+de interés en cada una, con la diferencia que las muestras se seleccionan de la
+distribución empírica a falta de la distribución poblacional.
+
+
