@@ -108,6 +108,17 @@ Ahora, dado que sabemos que $D( \theta^* \| \theta) \geq 0$ y $D( \theta^* \| \t
 en $\hat \theta_n \approx \theta^*,$ y la approximación se vuelve una identidad
 en el límite $n\rightarrow n.$ 
 
+```{block, type = 'ejercicio'}
+
+En los pasos anteriores: 
+
+- deriva el término faltante $\Psi (\theta^*);$
+- describe en tus propias palabras lo que significa $D( \theta^* \| \theta).$ Recuerda, que arriba la definimos para 
+distribuciones $f$ y $g$. Es decir, $D( f \| g).$
+
+```
+
+
 ### Ejemplo {-}
 
 El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el
@@ -170,11 +181,44 @@ g1 + g2
 
 ```
 
-2. El estimador $\hat p_n$ es **equivariante.** Esta propiedad es general para
-cualquier tamaño de muestra, y establece que cualquier función ---bien
-comportada--- de nuestro párametro es también un $\textsf{MLE}.$ En nuestro
-ejemplo, supongamos que nos interesa estimar el momio de éxitos (bastante común
-en casas de apuestas). El momio está definido como
+Nota que la banda definida por $\epsilon$ se puede hacer tan pequeña como se requiera, 
+lo único que sucederá es que necesitaremos un mayor número de muestras para garantizar 
+que las trayectorias de los estimadores $\hat p_n$ se mantengan dentro de las bandas con 
+alta probabilidad conforme $n$ aumenta. 
+
+## Equivarianza del MLE {-}
+
+Muchas veces nos interesa reparametrizar la función de verosimilitud con el motivo 
+de simplificar el problema de optimización asociado, o simplemente por conveniencia 
+interpretativa. Por ejemplo, si el parámetro de interés es tal que $\theta \in [a, b]$ entonces
+encontrar el MLE se traduce en optimizar la log-verosimilitud en el espacio restringido al 
+intervalo $[a,b].$ En este caso, los métodos tradicionales de búsqueda local por descenso en gradiente 
+podrían tener problemas de estabilidad cuando la búsqueda se realice cerca de las cotas. 
+
+El concepto de equivarianza nos dice que si la reparametrización que hagamos está bien 
+definida, y si este cambio de variable se realiza por medio de una función bien comportada, 
+entonces la solución de encontrar
+el MLE en las coordenadas originales es igual a realizar la inferencia en las coordenadas *fáciles.*
+
+```{block, type = 'mathblock'}
+
+**Teorema.** Sea $\tau = g(\theta)$ una función de $\theta$ bien comportada. Entonces si $\hat \theta_n$ 
+es el MLE de $\theta,$ entonces $\hat \tau_n = g(\hat \theta_n)$ es el MLE de $\tau.$
+
+```
+
+
+### Ejemplo {-}
+
+El concepto de equivarianza lo ilustraremos para nuestro ejemplo de esta sección. En 
+particular la parametrización la realizamos por cuestiones de interpretación como un 
+factor de riesgo. 
+
+Como hemos visto estimador $\hat p_n$ es **equivariante.** Es importante
+mencionar que esta propiedad es general para cualquier tamaño de muestra. Es
+decir, no descansa en  En nuestro ejemplo, supongamos que nos interesa estimar
+el momio de éxitos (bastante común en casas de apuestas). El momio está definido
+como
 $$ \theta = \frac{p}{1-p},$$
 y podemos rescribir la función de verosimilitud en términos de este parámetro.
 Sustituyendo $p = \frac{\theta}{1+\theta}$ en $\mathcal{L}_n(p)$
