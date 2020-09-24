@@ -9,34 +9,108 @@ comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
 
-El método de máxima verosimiltud es uno de los métodos más utilizados en
+El método de máxima verosimiltud es uno de los métodos más utilizados en la
 inferencia estadística paramétrica. En esta sección estudiaremos las propiedades
-teóricas que cumplen los estimadores de máxima verosimilitud ($\textsf{MLE}$).
-Siempre y cuando el modelo $f(x; \theta)$ satisfaga ciertas condiciones de
-regularidad, los estimadores de máxima verosimilitud serán: consistentes,
-asintóticamente normales, asintóticamente insesgados, asintóticamente
-eficientes, y equivariantes.
+teóricas que cumplen los estimadores de máxima verosimilitud ($\textsf{MLE}$) y que 
+han ayudado en su *casi* adopción universal.
+
+Estas propiedades de los $\textsf{MLE}$ son válidas siempre y cuando el modelo
+$f(x; \theta)$ satisfaga ciertas condiciones de regularidad. En particular
+veremos las condiciones para que los estimadores de máxima verosimilitud sean:
+consistentes, asintóticamente normales, asintóticamente insesgados,
+asintóticamente eficientes, y equivariantes.
+
+```{block, type = 'comentario'}
+
+Los estimadores $\textsf{MLE}$ usualmente son malinterpretados como una estimación 
+puntual en la inferencia, y por ende, incapaces de cuantificar incertidumbre. A lo
+largo de estas notas hemos visto cómo extraer intervalos de confianza por medio de 
+simulación y por lo tanto incorporar incertidumbre en la estimación. 
+Sin embargo, mediante $\textsf{MLE}$ también es posible reportar incertidumbre. 
+Justo lo veremos en esta sección.  
+
+```
+
 
 A lo largo de esta sección asumiremos muestras 
 \begin{align}
-  X_1, \ldots, X_n \overset{\text{iid}}{\sim} f(x; \theta),
+  X_1, \ldots, X_n \overset{\text{iid}}{\sim} f(x; \theta^*),
 \end{align}
 donde $\theta^*$ es el valor verdadero ---que suponemos desconocido pero fijo---
 del parámetro $\theta \in \Theta$, y sea $\hat \theta_n$ el estimador de máxima
 verosimilitud de $\theta.$
 
 
-**Ejemplo.** Consideremos el caso de una muestra de variables binarias que
+### Ejemplo {-}
+
+Usaremos este ejemplo para ilustrar los diferentes puntos teóricos a lo largo de
+esta sección. Consideremos el caso de una muestra de variables binarias que
 registran el éxito o fracaso de un experimento. Es decir, $X_1, \ldots, X_n \sim
 \textsf{Bernoulli}(p),$ donde el párametro desconocido es el procentaje de
-éxitos. Este ejemplo lo hemos estudiado en secciones pasadas (ver Sección
-\@ref(S:max-verosimilitud)), y sabemos que
+éxitos. Éste último denotado por $p.$ Este ejemplo lo hemos estudiado en
+secciones pasadas (ver Sección \@ref(S:max-verosimilitud)), y sabemos que
 \begin{align}
   \hat p_n = \frac{S_n}{n} = \bar X_n,
 \end{align}
 donde $S_n= \sum_i X_i$ es el número total de éxitos en la muestra. 
 
-1. El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el
+## Consistencia {-}
+
+Es prudente pensar que para un estimador, lo que nos interesa es que conforme
+más información tengamos, más cerca esté del valor desconocido. Esta propiedad
+la representamos por medio del concepto de *consistencia*. Para hablar de 
+esta propiedad necesitamos definir un tipo de convergencia para una 
+secuencia de variables aleatorias, **convergencia en probabilidad.**
+
+```{block, type = 'mathblock'}
+**Definición.** Una sucesión de variables aleatorias $X_n$ converge en
+probabilidad a la variable aleatoria $X,$ lo cual denotamos por 
+$X_n \overset{P}{\rightarrow} X,$ si para toda $\epsilon > 0,$
+$$\lim_{n \rightarrow \infty}  \mathbb{P}(|X_n - X| > \epsilon) = 0.$$
+```
+
+Ahora, definimos un estimador consistente como:
+```{block, type = 'mathblock'}
+**Definición.** Un estimador $\tilde \theta_n$ es **consistente** si converge en 
+probabilidad a $\theta^*.$ Donde $\theta^*$ denota el verdadero valor del parámetro, 
+que asumimos fijo. 
+```
+
+En particular, los estimadores $\textsf{MLE}$ son consistentes.
+```{block, type = 'mathblock'}
+**Teorema.** Sea $X_n \sim f(X; \theta^*),$ una muestra iid, tal que $f(X;
+\theta)$ cumple con ciertas condiciones de regularidad. Entonces, $\hat
+\theta_n,$ el estimador de máxima verosimilitud, converge en
+probabilidad a $\theta^*.$ Es decir, $\hat \theta_n$ es
+consistente.
+```
+La demostración de este teorema la pueden encontrar en @Wasserman y escapa 
+a los objetivos del curso. Sin embargo, el boceto es importante pues
+nos permite hablar de un concepto muy útil en probabilidad, aprendizaje de máquina
+y teoría de la información: *divergencia de Kullback-Leibler,* la cual mide la diferencia 
+entre dos distribuciones, y está definida como 
+$$ D(f\, \|\, g) = \int f(x) \log \frac{f(x)}{g(x)} \, \text{d}x.$$
+Nota que $D(f\, \|\, g) \geq 0,$ no es simétrica, y $D(f\, \|\, g) =0$ si y sólo si 
+$f = g.$
+
+*Idea de la demostración.* Para buscar el MLE necesitamos maximizar 
+$$\ell_n(\theta) = \sum_{i = 1}^n \log f(X_i; \theta).$$
+
+Esta expresión como sumanos permite ligar la Ley de los Grandes Números mediante:
+$$\frac{\ell_n(\theta)}{n}= \frac1n\sum_{i = 1}^n \log f(X_i; \theta) \approx \mathbb{E}[\log f(X; \theta)],$$
+donde los el valor esperado se toma con respecto a la distribución de la muestra. 
+Es decir, 
+$$\mathbb{E}[\log f(X; \theta)] = \int f(x; \theta^*)  \log f(x; \theta)\,  \text{d}x,$$
+misma que podemos rescribir como 
+$$\mathbb{E}[\log f(X; \theta)] = -D( \theta^* \| \theta) + \Psi (\theta^*).$$
+Ahora, dado que sabemos que $D( \theta^* \| \theta) \geq 0$ y $D( \theta^* \| \theta) =
+0,$ si y sólo si $\theta^* = \theta,$ la log-verosimilitud es máxima
+en $\hat \theta_n \approx \theta^*,$ y la approximación se vuelve una identidad
+en el límite $n\rightarrow n.$ 
+
+### Ejemplo {-}
+
+El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el
 estimador se vuelve más preciso conforme obtengamos más información. En general
 esta es una propiedad que usualmente los estimadores deben satisfacer para ser
 útiles en la práctica. La figura siguiente muestra el estimador $\hat p_n$ como
@@ -177,9 +251,9 @@ knitr::include_graphics('images/mle-mapa-mental.jpg')
 Esta sección contiene una discusión similar que en la publicación de 
 [Rachel Draelos](https://glassboxmedicine.com/2019/12/07/connections-log-likelihood-cross-entropy-kl-divergence-logistic-regression-and-neural-networks/). En secciones anteriores (Sección \@ref{S:max-verosimilitud}) 
 hemos visto que la función de log-verosimilitud tiene una conexión con una 
-función de pérdida. Por ejemplo, una muestra 
+función de pérdida. Por ejemplo, consideremos una muestra 
 $X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2),$ donde conocemos
-la varianza pero no el promedio. La función de log-verosimilitud
+la varianza pero no el promedio. En este caso, la función de log-verosimilitud
 corresponde a la función de pérdida cuadrática
 $$\ell_n(\mu) = - \frac{1}{2 \sigma^2}\sum_{i = 1}^n \left( x_i - \mu \right)^2.$$
 En este caso, maximizar la log-verosimilitud corresponde a minimizar una función de 
@@ -195,9 +269,9 @@ $(p = 1/2),$ pues no favorecemos un resultado sobre el otro.
 ```{block, type = 'mathblock'}
 
 **Definición.** Sea $X$ una variable aleatoria discreta con posibles valores
-$x_1, \ldots, x_k,$ con probabilidades $P(X = x_i) = f(x_i)$ para cada $i = 1,
+$x_1, \ldots, x_k,$ con probabilidades $P(X = X_i) = f(X_i)$ para cada $i = 1,
 \ldots, k.$ La entropía la definimos como 
-$$ H(X) = - \sum_{i = 1}^k f(x_i) \log f(x_i). $$ 
+$$ H(X) = - \sum_{i = 1}^k f(X_i) \log f(X_i). $$ 
 
 ```
 Con esta definición, la entropía la interpretamos como el número esperado de
@@ -219,23 +293,52 @@ disponible. Con esta consideración en mente, definimos el concepto de **entrop�
 
 **Definición.** Sea $X$ una variable aleatoria discreta. La entropía cruzada la 
 definimos como 
-$$ H (g, f) = - \sum_{i = 1}^n g(x_i) \log f(x_i).$$
+$$ H (g, f) = - \sum_{i = 1}^n g(X_i) \log f(X_i).$$
 
 ```
 
 En el caso que nos interesa, consideramos que los datos que observamos en
 nuestra muestra son independientes e idénticamente distribuidos. La ley de los
 grandes números nos permite asignar los pesos $1/n$ cuando $X_1, \ldots, X_n
-\sim g$ en la función de entropía cruzada. A su vez, la manera de comprimir
-la información de una variable aleatoria es a través del modelo probabilístico 
-que estamos considerando. La función $f(x; \theta)$ de nuestro modelo
-es precisamente nuestro codificador de información disponible. Estos dos
+\overset{\text{iid}}{\sim} g$. Esto es,
+$$H (g, f) \approx - \sum_{i = 1}^n \frac1n \, \log f(x_i),$$
+
+donde $n_1, \ldots, x_n$ denota la realización de la muestra.
+
+La manera de comprimir la información de una variable aleatoria es a
+través del modelo probabilístico que estamos considerando. La función $f(x;
+\theta)$ de nuestro modelo es precisamente nuestro codificador de información
+disponible. La notación $f(x; \theta)$ hace alusión sobre que escogemos dentro
+de esta familia de distribuciones a un candidato por medio de la etiqueta
+$\theta.$ Por ejemplo, todas las distribuciones Gaussianas $\mathsf{N}(\mu, 1)$
+forman una familia de distribuciones. Y nosotros escogemos, por medio del
+parámetro $\mu$, la *mejor.*
+
+```{r, echo = FALSE, out.width = "95%", fig.height = 3}
+library(latex2exp)
+
+tibble(x = rnorm(1000)) %>% 
+  ggplot(aes(x= x)) + 
+    geom_histogram(aes(y = ..density..), binwidth = .5) + 
+    stat_function(fun = dnorm, args = list(mean = 0, sd = 1), color = 'red', lty = 2, lwd = 1) + 
+    stat_function(fun = dnorm, args = list(mean = 1.5, sd = 1), color = 'lightgreen', lty = 2, lwd = 1) + 
+    stat_function(fun = dnorm, args = list(mean = -2, sd = 1), color = 'lightblue', lty = 2, lwd = 1) + 
+    annotate("text", x=0, y=.42, label="N[mu](0, 1)", parse=TRUE, size = 5, col = 'red') + 
+    annotate("text", x=2, y=.42, label="N[mu](2, 1)", parse=TRUE, size = 5, col = 'lightgreen') + 
+    annotate("text", x=-2, y=.42, label="N[mu](-2, 1)", parse=TRUE, size = 5, col = 'lightblue')
+    
+
+```
+
+
+Estos dos
 puntos nos permiten establecer la función de entropía cruzada como
 $$ H (g, f; \theta) = - \frac1n \sum_{i = 1}^n  \log f(x_i;\theta).$$
 
 De donde establecemos que nuestra mejor compresión de información se cumple cuando
 $$\tilde \theta_n = \underset{\theta \, \in \, \Theta}{\arg\min} \, H (g, f; \theta),$$
 pues queremos minimizar la entropía (el grado de sorpresa) con respecto al
-modelo que genero los datos. Notemos que la siguiente serie de igualdades se
+modelo que generó los datos. Notemos que la siguiente serie de igualdades se
 satsiface
-$$ \tilde \theta_n = \underset{\theta \, \in \, \Theta}{\arg\min} \, H (g, f; \theta) = \underset{\theta \, \in \, \Theta}{\arg\max} \, \mathcal{L}_n(\theta) = \hat \theta_n.$$
+$$ \tilde \theta_n = \underset{\theta \, \in \, \Theta}{\arg\min} \, H (g, f; \theta) = \underset{\theta \, \in \, \Theta}{\arg\max} \, \mathcal{L}_n(\theta) = \hat \theta_n,$$
+lo cual implica que el estimador minimizador de entropía coincide con el estimador máximo verosímil.
