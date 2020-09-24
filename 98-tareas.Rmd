@@ -457,7 +457,7 @@ de donde se sigue la estimación del error estándar:
 $$\hat{ee}(\bar{x})=\hat{\sigma}_{\hat{F}}/\sqrt{n}=\bigg\{\frac{1}{n^2}\sum_{i=1}^n(x_i-\bar{x})^2\bigg\}^{1/2}$$
 
 Notemos que usamos el principio del _plug-in_ en dos ocasiones, primero para 
-estimar la esperanza $\mu_P$ mediante $\mu_{\hat{F}}$ y luego para estimar el 
+estimar la esperanza $\mu_F$ mediante $\mu_{\hat{F}}$ y luego para estimar el 
 error estándar $ee_F(\bar{x})$. 
 
 
