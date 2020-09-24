@@ -1119,7 +1119,7 @@ crear_log_p <- function(x){
 }
 # simular datos
 set.seed(12)
-muestra <- simular_modelo(200, params = logit(c(0.3, 0.28)))
+muestra <- simular_modelo(200, params = logit(c(0.3, 0.29)))
 qplot(muestra)
 ```
 
@@ -1153,7 +1153,8 @@ rep_boot <- function(rep, simular, crear_log_p, pars, n){
   est_mv_boot
 }
 set.seed(8934)
-reps_boot <- map(1:1000, ~ rep_boot(.x, simular_modelo, crear_log_p, est_mv, n = 200)) %>% 
+reps_boot <- map(1:500, ~ rep_boot(.x, simular_modelo, crear_log_p, est_mv, 
+                                   n = length(muestra))) %>% 
   bind_rows
 reps_boot %>% mutate(across(everything(), round, 2)) %>% head
 ```
@@ -1161,7 +1162,7 @@ En primer lugar, notamos varíación muy alta en los estimadores. El optimizador
 encontró resultados que no tienen sentido:
 
 ```{r}
-ggplot(reps_boot %>% filter(convergence == 0), 
+ggplot(reps_boot, 
        aes(x = inv_logit(p_azar_logit), y = inv_logit(p_corr_logit), 
            colour = factor(convergence))) +
   geom_point() +
@@ -1186,7 +1187,7 @@ grande?
 - Repite el ejercicio con los parámetros del primer ejemplo ($p_azar = 0.3, p_corr=0.75$)
 y el mismo tamaño de muestra. ¿Qué sucede en este caso?
 - En el caso extremo, decimos que el modelo no está indentificado, y eso generalmente
-sucede por un problema en el planteamiento del problema, independientemente de los datos.
+sucede por un problema en el planteamiento del modelo, independientemente de los datos.
 ¿Puedes imaginar un modelo así?
 ```
 
