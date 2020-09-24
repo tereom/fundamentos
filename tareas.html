@@ -471,7 +471,7 @@ Para checar esto, vemos la gráfica de dependencia de residuales.</p>
 <span id="cb291-2"><a href="tareas.html#cb291-2"></a>ventas.res &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(ventas, period, res.est2<span class="fl">.2</span>)</span>
 <span id="cb291-3"><a href="tareas.html#cb291-3"></a>ventas.null &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="kw">null_dist</span>(<span class="dt">var =</span> <span class="st">&#39;res.est2.2&#39;</span>, <span class="dt">dist =</span> <span class="st">&#39;normal&#39;</span>, </span>
 <span id="cb291-4"><a href="tareas.html#cb291-4"></a>  <span class="dt">params =</span> <span class="kw">list</span>(<span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="fl">0.08</span>)), <span class="dt">n =</span> <span class="dv">10</span>, ventas.res)</span></code></pre></div>
-<pre><code>## decrypt(&quot;bhMq KJPJ 62 sSQ6P6S2 ua&quot;)</code></pre>
+<pre><code>## decrypt(&quot;bhMq KJPJ 62 sSQ6P6S2 uT&quot;)</code></pre>
 <div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="tareas.html#cb293-1"></a><span class="kw">ggplot</span>(ventas.null, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> res.est2<span class="fl">.2</span>)) <span class="op">+</span></span>
 <span id="cb293-2"><a href="tareas.html#cb293-2"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>.sample, <span class="dt">ncol =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb293-3"><a href="tareas.html#cb293-3"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
@@ -627,7 +627,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb298-11"><a href="tareas.html#cb298-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb298-12"><a href="tareas.html#cb298-12"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media_dif =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb298-13"><a href="tareas.html#cb298-13"></a><span class="st">  </span><span class="kw">pull</span>(media_dif)</span></code></pre></div>
-<pre><code>## [1] -0.28</code></pre>
+<pre><code>## [1] 0.24</code></pre>
 <div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="tareas.html#cb300-1"></a><span class="co"># Lo hacemos una función </span></span>
 <span id="cb300-2"><a href="tareas.html#cb300-2"></a>calcula_est &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
 <span id="cb300-3"><a href="tareas.html#cb300-3"></a>  dormir_perm &lt;-<span class="st"> </span>dormir_larga <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -642,7 +642,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb300-12"><a href="tareas.html#cb300-12"></a>}</span>
 <span id="cb300-13"><a href="tareas.html#cb300-13"></a><span class="co"># La llamamos 1000 veces</span></span>
 <span id="cb300-14"><a href="tareas.html#cb300-14"></a><span class="kw">calcula_est</span>()</span></code></pre></div>
-<pre><code>## [1] -0.46</code></pre>
+<pre><code>## [1] -0.38</code></pre>
 <div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="tareas.html#cb302-1"></a>difs &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">1000</span>, <span class="kw">calcula_est</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">flatten_dbl</span>()</span></code></pre></div>
 <ul>
 <li>Haz una gráfica de la distribución de referencia y grafica encima el valor
@@ -695,7 +695,7 @@ mayor es la <span class="math inline">\(n\)</span> tenemos una mejor estimación
 <p>de donde se sigue la estimación del error estándar:</p>
 <p><span class="math display">\[\hat{ee}(\bar{x})=\hat{\sigma}_{\hat{F}}/\sqrt{n}=\bigg\{\frac{1}{n^2}\sum_{i=1}^n(x_i-\bar{x})^2\bigg\}^{1/2}\]</span></p>
 <p>Notemos que usamos el principio del <em>plug-in</em> en dos ocasiones, primero para
-estimar la esperanza <span class="math inline">\(\mu_P\)</span> mediante <span class="math inline">\(\mu_{\hat{F}}\)</span> y luego para estimar el
+estimar la esperanza <span class="math inline">\(\mu_F\)</span> mediante <span class="math inline">\(\mu_{\hat{F}}\)</span> y luego para estimar el
 error estándar <span class="math inline">\(ee_F(\bar{x})\)</span>.</p>
 <p>Consideramos los datos de ENLACE edo. de México
 (<code>enlace</code>), y la columna de calificaciones de español 3<sup>o</sup> de primaria (<code>esp_3</code>).</p>

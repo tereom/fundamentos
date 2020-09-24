@@ -310,7 +310,7 @@ ventas.null <- lineup(null_dist(var = 'res.est2.2', dist = 'normal',
 ```
 
 ```
-## decrypt("bhMq KJPJ 62 sSQ6P6S2 ua")
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 uT")
 ```
 
 ```r
@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] -0.28
+## [1] 0.24
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] -0.46
+## [1] -0.38
 ```
 
 ```r
@@ -607,7 +607,7 @@ de donde se sigue la estimación del error estándar:
 $$\hat{ee}(\bar{x})=\hat{\sigma}_{\hat{F}}/\sqrt{n}=\bigg\{\frac{1}{n^2}\sum_{i=1}^n(x_i-\bar{x})^2\bigg\}^{1/2}$$
 
 Notemos que usamos el principio del _plug-in_ en dos ocasiones, primero para 
-estimar la esperanza $\mu_P$ mediante $\mu_{\hat{F}}$ y luego para estimar el 
+estimar la esperanza $\mu_F$ mediante $\mu_{\hat{F}}$ y luego para estimar el 
 error estándar $ee_F(\bar{x})$. 
 
 
