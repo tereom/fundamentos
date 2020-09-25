@@ -1,0 +1,192 @@
+# Más de pruebas de hipótesis e intervalos
+
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(patchwork)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
+En esta parte veremos enfoques más clásicos para analizar una prueba de 
+hipótesis, en situaciones donde podemos hacer algunos supuestos teóricos acerca
+de la distribución de las poblaciones.
+
+El enfoque básico es el mismo que cuando vimos pruebas
+de permutaciones: calculamos una estadística de prueba de los
+datos y luego, con una distribución de referencia (asociada a la hipótesis nula),
+calculamos un valor-$p$. Si el
+valor-$p$ es chico, entonces los resultados observados no pueden explicarse
+fácilmente por variación muestral, y rechazamos la hipótesis nula.
+
+Con esta idea básica, y *supuestos distribucionales acerca de las poblaciones* podemos construir muchas pruebas además de las que ya vimos. La ventaja de este
+enfoque es que: 
+
+- Podemos ahorrarnos cómputo usando fórmulas que derivemos para calcular 
+valores-$p$.
+- Cuando los supuestos distribucionales son apropiados, podemos
+construir pruebas sensibles que analizan parámetros individuales
+
+La desventaja es que hay que checar con cuidado los supuestos distribucionales
+que hagamos. Si los supuestos son incorrectos, las valores-$p$ no tienen mucho
+sentido y pueden llevarnos a la conclusión incorrecta.
+
+## Prueba de Wald
+
+Como hemos visto, existe normalidad asintótica en varios estimadores que
+hemos considerado, como medias muestrales y en particular proporciones muestrales.
+También vimos que estimadores de máxima verosimilitud cumplen muchas 
+veces un teorema central del límite.
+
+Así que supongamos que tenemos una estadística $\hat{\theta}$ que estima 
+$\theta$ y es asintóticamente insesgada. Sea $\hat{ee}$ una estimación de su error estándar (hay distintas maneras de estimarlo: por ejemplo con bootstrap, o teóricamente).
+Recuerda que el error estándar de una estadística es la desviación estándar
+de su distribución de muestreo.
+
+Si nos interesa probar la hipótesis de que $\theta = 125$, por ejemplo,
+y $\theta$ es aproximadamente normal, entonces veamos como construir una
+distribución de referencia aproximada:
+
+- Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta} 
+es aproximadamente N(125, \hat{ee}).
+- Esto implica que la siguiente estadística $W$ es aproximadamente normal
+estándar:
+
+$$W = \frac{\hat{\theta} - 125}{\hat{ee}} \sim N(0,1)$$
+Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
+en contra de la hipótesis nula.
+
+Como $W$ **no depende de ningún parámetro**, podemos
+usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
+en la muestra. 
+
+Si observamos para nuestra muestra un valor $W=w$ entonces, el
+valor $p$ de esta prueba es, aproximadamente,
+
+
+$$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
+donde $Z\sim N(0,1)$ y $\Phi$ es su función de distribución acumulada.
+
+
+**Ejemplo: media muestral**.  La media nacional de las escuelas de enlace tienen
+una media de 454 (matemáticas en 6o. grado). Tomamos una muestra de 200
+escuelas del Estado de México, y queremos saber si la media obtenida 
+es consistente o no con la media nacional. Como estamos usando como
+estimador una media de una muestra iid, podemos estimar el error estándar
+de la media con
+
+$$\hat{ee} = s / \sqrt{n}$$
+
+Obtenemos:
+
+```{r}
+set.seed(29)
+muestra_edomex <- read_csv("data/enlace.csv") %>% 
+  filter(estado == "ESTADO DE MEXICO") %>% 
+  sample_n(180)
+resumen <- muestra_edomex %>% 
+  summarise(media = mean(mate_6), s = sd(mate_6), n = n()) %>% 
+  mutate(ee = s / sqrt(n))
+resumen
+```
+
+La hipótesis nula es entonces que la meida poblacional del Estado de México
+es igual a 454. Calculamos el valor p usando la prueba de Wald_
+
+```{r}
+dif <- (resumen %>% pull(media)) - 454
+ee <- resumen %>% pull(ee)
+w <- dif / ee
+p <- 2 * (1 - pnorm(abs(w)))
+p
+```
+y vemos que esta muestra es consistente con la media nacional. No tenemos
+evidencia en contra de que la media del estado de méxico es muy similar 
+a la nacional.
+
+```{block, type="ejercicio"}
+- Repite esta prueba con una muestra de Chiapas. ¿Qué resultado obtienes?
+```
+
+
+**Ejemplo.** Podemos hacer la prueba de Wald para proporciones. 
+
+
+## Prueba de Wald para dos medias o proporciones
+
+Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
+distintas, y queremos ver si la hipótesis de medias poblacionales
+iguales es consistente con los datos, podemos usar también una prueba de Wald
+
+Sea $\overline{X}_1$ y $\overline{X}_2$ las medias muestrales
+correspondientes. Si la hipótesis
+de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
+la variable
+$$\hat{\delta} = \overline{X}_1 - \overline{X}_2$$
+es aproximadamente normal con media $N(\mu_1 - \mu_2, ee)$, donde el
+error estándar de $\hat{\delta}$ es la raíz de la suma de los cuadrados de
+los errores estándar
+de $\overline{X}$ y $\overline{Y}$:
+
+$$ ee = \sqrt{ee_1^2 + ee_{2}^2}$$
+y entonces
+$$ee =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
+(Nota: usa probabilidad para explicar por qué es cierto esto). De esto
+se deduce que bajo la hipótesis nula de igualdad de medias $\mu_1 = \mu_2$,
+tenemos que la estadística de Wald
+
+$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} }$$ 
+es aproximamente normal estándar. Procedemos entonces igual que antes.
+
+**Ejemplo**
+
+
+
+## Observación: pruebas $t$ practica estadística.
+
+Con más supuestos distribucionales podemos hacer otros tipos de pruebas donde
+no requerimos hacer supuestos asintóticos. Por ejemplo, si suponemos
+que la muestra obtenida $X_1,\ldots, X_n$ proviene de una distribución
+normal $N(\mu, \sigma)$ (cosa que es **necesario** verificar), entonces
+es posible demostrar que la estadística
+
+$$T = \frac{\bar{X} - \mu}{S / \sqrt{n}}$$
+tiene una distribución exacta que es $t$ de Student con $n-1$ grados de libertad,
+y no depende de otros parámetros, de manera que podemos usarla como distribución
+de referencia y podemos calcular valores $p$ exactos (revisa la sección 8.1 de @Chihara).
+Esta no es aproximadamente normal estándar, excepto cuando $n$ es grande.
+
+La diferencia con usar una prueba de Wald está en que aquí consideramos también
+la variablidad del error estándar estimado, lo que correctamente sugiere que
+esperamos más variaciones proporcionalmente más grandes en $T$ 
+comparado con lo que sucede si no consideramos esta variación (como en la prueba de Wald). Sin embargo:
+
+- Si la muestra $n$ es grande, la distribución $t$ de Student con
+$n-1$ grados de libertad es muy similar a la normal estándar, de manera que la 
+aproximación de Wald es suficiente.
+- Cuando la muestra $n$ es chica, es difícil validar el supuesto de normalidad, a menos
+que tengamos alguna información adicional acerca de la distribución poblacional.
+- La prueba tiene cierta robustez a desviaciones de normalidad de las observaciones,
+pero si el sesgo es muy grande, por ejemplo, el supuesto es incorrecto y da
+valores $p$ distorsionados.
+
+Puedes ver [aquí](https://en.wikipedia.org/wiki/Student%27s_t-distribution), o el apéndice
+B.11 de @Chihara para ver descripciones de la distribución $t$ y cómo se compara
+con una normal estándar dependiendo de los grados de libertad.
+
+En la práctica, es muy común que no se checan supuestos y se salta directamente
+a hacer pruebas $t$. Si tenemos duda de esos supuestos, podemos hacer
+pruebas gráficas o de permutaciones, si son apropiadas.
+
+
+
+
+
+
+
+
+
+
+
+
