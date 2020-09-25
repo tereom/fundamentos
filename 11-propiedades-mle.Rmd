@@ -48,7 +48,7 @@ esta sección. Consideremos el caso de una muestra de variables binarias que
 registran el éxito o fracaso de un experimento. Es decir, $X_1, \ldots, X_n \sim
 \textsf{Bernoulli}(p),$ donde el párametro desconocido es el procentaje de
 éxitos. Éste último denotado por $p.$ Este ejemplo lo hemos estudiado en
-secciones pasadas (ver Sección \@ref(S:max-verosimilitud)), y sabemos que
+secciones pasadas (ver Sección \@ref(S:max-verosimilitud)), y sabemos que el $\textsf{MLE}$ es
 \begin{align}
   \hat p_n = \frac{S_n}{n} = \bar X_n,
 \end{align}
@@ -93,12 +93,13 @@ $$ D(f\, \|\, g) = \int f(x) \log \frac{f(x)}{g(x)} \, \text{d}x.$$
 Nota que $D(f\, \|\, g) \geq 0,$ no es simétrica, y $D(f\, \|\, g) =0$ si y sólo si 
 $f = g.$
 
-*Idea de la demostración.* Para buscar el MLE necesitamos maximizar 
+*Idea de la demostración.* Este boceto nos permite ilustrar la importancia 
+teórica de la log-verosimilitud. Pues para buscar el $\textsf{MLE}$ necesitamos maximizar 
 $$\ell_n(\theta) = \sum_{i = 1}^n \log f(X_i; \theta).$$
 
-Esta expresión como sumanos permite ligar la Ley de los Grandes Números mediante:
+Esta expresión como suma nos permite ligar la *Ley de los Grandes Números* mediante:
 $$\frac{\ell_n(\theta)}{n}= \frac1n\sum_{i = 1}^n \log f(X_i; \theta) \approx \mathbb{E}[\log f(X; \theta)],$$
-donde los el valor esperado se toma con respecto a la distribución de la muestra. 
+donde el valor esperado se toma con respecto a la distribución de la muestra. 
 Es decir, 
 $$\mathbb{E}[\log f(X; \theta)] = \int f(x; \theta^*)  \log f(x; \theta)\,  \text{d}x,$$
 misma que podemos rescribir como 
@@ -106,7 +107,7 @@ $$\mathbb{E}[\log f(X; \theta)] = -D( \theta^* \| \theta) + \Psi (\theta^*).$$
 Ahora, dado que sabemos que $D( \theta^* \| \theta) \geq 0$ y $D( \theta^* \| \theta) =
 0,$ si y sólo si $\theta^* = \theta,$ la log-verosimilitud es máxima
 en $\hat \theta_n \approx \theta^*,$ y la approximación se vuelve una identidad
-en el límite $n\rightarrow n.$ 
+en el límite $n\rightarrow \infty.$ 
 
 ```{block, type = 'ejercicio'}
 
@@ -126,7 +127,7 @@ estimador se vuelve más preciso conforme obtengamos más información. En gener
 esta es una propiedad que usualmente los estimadores deben satisfacer para ser
 útiles en la práctica. La figura siguiente muestra el estimador $\hat p_n$ como
 función del número de muestras utilizado. Distintas curvas corresponden a
-distintas colecciones ($B = 500$).
+distintas realizaciones de muestras obtenidas del modelo ($B = 500$).
 
 ```{r, echo = FALSE}
 p_true <- .25
@@ -186,25 +187,25 @@ lo único que sucederá es que necesitaremos un mayor número de muestras para g
 que las trayectorias de los estimadores $\hat p_n$ se mantengan dentro de las bandas con 
 alta probabilidad conforme $n$ aumenta. 
 
-## Equivarianza del MLE {-}
+## Equivarianza del $\textsf{MLE}$  {-}
 
 Muchas veces nos interesa reparametrizar la función de verosimilitud con el motivo 
 de simplificar el problema de optimización asociado, o simplemente por conveniencia 
 interpretativa. Por ejemplo, si el parámetro de interés es tal que $\theta \in [a, b],$ entonces
-encontrar el MLE se traduce en optimizar la log-verosimilitud en el espacio restringido al 
+encontrar el $\textsf{MLE}$ se traduce en optimizar la log-verosimilitud en el espacio restringido al 
 intervalo $[a,b].$ En este caso, los métodos tradicionales de búsqueda local por descenso en gradiente 
 podrían tener problemas de estabilidad cuando la búsqueda se realice cerca de las cotas. 
 
 El concepto de equivarianza nos dice que si el cambio de coordenadas
 parametrales está definida, y si este cambio de variable se realiza por medio de
-una función bien comportada, entonces la solución de encontrar el MLE en las
+una función bien comportada, entonces la solución de encontrar el $\textsf{MLE}$ en las
 coordenadas originales y transformar, es igual a realizar la inferencia en las
 coordenadas *fáciles.*
 
 ```{block, type = 'mathblock'}
 
 **Teorema.** Sea $\tau = g(\theta)$ una función de $\theta$ bien comportada. Entonces si $\hat \theta_n$ 
-es el MLE de $\theta,$ entonces $\hat \tau_n = g(\hat \theta_n)$ es el MLE de $\tau.$
+es el $\textsf{MLE}$ de $\theta,$ entonces $\hat \tau_n = g(\hat \theta_n)$ es el $\textsf{MLE}$ de $\tau.$
 
 ```
 
@@ -246,7 +247,7 @@ suficientemente grande por medio de una distribución Gaussiana. Esto es, bajo
 ciertas condiciones de regularidad, 
 $$\hat \theta_n \overset{.}{\sim} \mathsf{N}( \theta^*, \mathsf{se}^2),$$
 
-donde $\mathsf{se}$ denota el error estándar del MLE , $\mathsf{se} =
+donde $\mathsf{se}$ denota el error estándar del $\textsf{MLE},$ $\mathsf{se} =
 \mathsf{se}(\hat \theta_n) = \sqrt{\mathbb{V}(\hat \theta_n)}$.
 
 Esta distribución se puede caracterizar de manera aproximada por métodos analíticos. 
@@ -278,7 +279,7 @@ al evaluar en $\theta$s diferentes. Por lo tanto, si $I_n(\theta)$ es grande, la
 distribución será fácil de identificar cuando hagamos observaciones.
 
 La información de Fisher también nos permite caracterizar de forma 
-analítica la varianza asíntotica del MLE pues la aproximación 
+analítica la varianza asíntotica del $\textsf{MLE}$ pues la aproximación 
 $\mathsf{se}^2 \approx \frac{1}{I_n(\theta^*)}$ es válida.
 
 El siguiente resultado utiliza la propiedad de la función de score: 
@@ -312,7 +313,7 @@ $$\hat{\mathsf{se}} = \sqrt{1/I_n(\hat \theta_n)}.$$
 
 Esto último nos permite constuir intervalos de confianza, por ejemplo al 95\%, a través de 
 $$ \hat \theta_n \pm 2 \, \hat{\mathsf{se}}.$$
-Asimismo, el teorema de Normalidad asintótica nos permite establecer que el MLE es **asíntoticamente insesgado**. Es decir, 
+Asimismo, el teorema de Normalidad asintótica nos permite establecer que el $\textsf{MLE}$ es **asíntoticamente insesgado**. Es decir, 
 $$\lim_{n \rightarrow n}\mathbb{E}[\hat \theta_n] =  \theta^*.$$
 
 ### Ejemplo {-}
@@ -357,21 +358,46 @@ dt %>%
 
 ```
 
+## Optimalidad del $\textsf{MLE}$ {-}
 
-4. El estimador $\hat \theta_n$ es **asintóticamente óptimo o eficiente.** Hemos
-visto que, cuando $n$ es suficientemente grande, el $\textsf{MLE}$ es
-asintóticamente insesgado. Una pregunta *natural* en este contexto es: ¿Cuál es
-la varianza mas pequeña que puede tener un estimador insesgado? La respuesta
-yace en la *desigualdad de Cramer-Rao.* Sea $\tilde \theta_n$ *cualquier*
+Consideremos el caso de una muestra iid $X_1, \ldots, X_n \sim
+\mathsf{N}(\theta, \sigma^2).$ Y consideremos dos estimadores para $\theta.$ El
+primero será la media muestral $\bar X_n$ y el segundo la mediana muestral, la cual
+denotaremos por $\tilde \theta_n.$ Sabemos que ambos son insesgados. Por lo tanto, 
+promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual utilizar?
+
+La media sabemos que es el $\textsf{MLE}$ y por el TCL tenemos que 
+$$\sqrt{n} \left( \bar X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}( 0, \sigma^2).$$
+
+La mediana, en contraste, tiene una distribución asintótica 
+$$\sqrt{n} \left( \tilde X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}\left( 0, \sigma^2 \frac{\pi}{2}\right),$$
+
+es decir tiene una varianza ligeramente mayor. Por lo tanto, 
+decimos que la mediana tiene una eficiencia relativa con respecto a la media
+del $.63 \% \approx \pi/2$. Es decir, la mediana sólo utliza una fracción de los datos
+comparado con la media. 
+
+El siguiente teorema, **la desigualdad de Cramer-Rao**, nos permite establecer 
+esta resultado de manera mas general para cualquier estimador insesgado. 
+
+```{block, type ='mathblock'}
+
+**Teorema.**  Sea $\tilde \theta_n$ *cualquier*
 estimador insesgado de $\theta$ cuyo valor verdadero es $\theta^*,$ entonces
 \begin{align}
   \mathbb{V}(\tilde \theta_n) \geq \frac{1}{n I(\theta^*)}.
 \end{align}
+ 
+```
+
 Un estimador insesgado que satisfaga esta desigualdad se dice que es
 *eficiente.* Nota que el lado derecho de la desigualdad es precisamente la
 varianza asintótica del $\textsf{MLE}.$ Por lo tanto, éste es *asintóticamente
 eficiente.*
 
+
+El siguiente diagrama muestra de manera gráfica la relación entre las distintas 
+propiedades que hemos visto en esta sección. 
 
 ```{r, out.width = '95%', echo = FALSE}
 knitr::include_graphics('images/mle-mapa-mental.jpg')
@@ -382,7 +408,7 @@ knitr::include_graphics('images/mle-mapa-mental.jpg')
 Esta sección contiene una discusión similar que en la publicación de 
 [Rachel Draelos](https://glassboxmedicine.com/2019/12/07/connections-log-likelihood-cross-entropy-kl-divergence-logistic-regression-and-neural-networks/). En secciones anteriores (Sección \@ref{S:max-verosimilitud}) 
 hemos visto que la función de log-verosimilitud tiene una conexión con una 
-función de pérdida. Por ejemplo, consideremos una muestra 
+función de pérdida. Por ejemplo, si consideramos una muestra 
 $X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2),$ donde conocemos
 la varianza pero no el promedio. En este caso, la función de log-verosimilitud
 corresponde a la función de pérdida cuadrática
@@ -458,7 +484,6 @@ tibble(x = rnorm(1000)) %>%
     annotate("text", x=2, y=.42, label="N[mu](2, 1)", parse=TRUE, size = 5, col = 'lightgreen') + 
     annotate("text", x=-2, y=.42, label="N[mu](-2, 1)", parse=TRUE, size = 5, col = 'lightblue')
     
-
 ```
 
 
