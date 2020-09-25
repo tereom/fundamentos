@@ -190,15 +190,16 @@ alta probabilidad conforme $n$ aumenta.
 
 Muchas veces nos interesa reparametrizar la función de verosimilitud con el motivo 
 de simplificar el problema de optimización asociado, o simplemente por conveniencia 
-interpretativa. Por ejemplo, si el parámetro de interés es tal que $\theta \in [a, b]$ entonces
+interpretativa. Por ejemplo, si el parámetro de interés es tal que $\theta \in [a, b],$ entonces
 encontrar el MLE se traduce en optimizar la log-verosimilitud en el espacio restringido al 
 intervalo $[a,b].$ En este caso, los métodos tradicionales de búsqueda local por descenso en gradiente 
 podrían tener problemas de estabilidad cuando la búsqueda se realice cerca de las cotas. 
 
-El concepto de equivarianza nos dice que si la reparametrización que hagamos está bien 
-definida, y si este cambio de variable se realiza por medio de una función bien comportada, 
-entonces la solución de encontrar
-el MLE en las coordenadas originales es igual a realizar la inferencia en las coordenadas *fáciles.*
+El concepto de equivarianza nos dice que si el cambio de coordenadas
+parametrales está definida, y si este cambio de variable se realiza por medio de
+una función bien comportada, entonces la solución de encontrar el MLE en las
+coordenadas originales y transformar, es igual a realizar la inferencia en las
+coordenadas *fáciles.*
 
 ```{block, type = 'mathblock'}
 
@@ -216,7 +217,7 @@ factor de riesgo.
 
 Como hemos visto estimador $\hat p_n$ es **equivariante.** Es importante
 mencionar que esta propiedad es general para cualquier tamaño de muestra. Es
-decir, no descansa en  En nuestro ejemplo, supongamos que nos interesa estimar
+decir, no descansa en supuestos de muestras grandes. Supongamos que nos interesa estimar
 el momio de éxitos (bastante común en casas de apuestas). El momio está definido
 como
 $$ \theta = \frac{p}{1-p},$$
@@ -231,12 +232,98 @@ cuya función encuentra su máximo en
  \hat \theta_n = \frac{\bar X_n}{ 1 - \bar X_n}.
 \end{align}
 
-2. El estimador $\hat \theta_n$ es **asintóticamente normal.** Esta propiedad la
+```{block, type = 'ejercicio'}
+
+Comprueba que el estimador de arriba para $\theta$ es el MLE.
+
+```
+
+## Normalidad asintótica {-}
+
+Está propiedad nos permite caracterizar la distribución asintótica del MLE . Es
+decir, nos permite caracterizar la incertidumbre asociada una  nuestra
+suficientemente grande por medio de una distribución Gaussiana. Esto es, bajo
+ciertas condiciones de regularidad, 
+$$\hat \theta_n \overset{.}{\sim} \mathsf{N}( \theta^*, \mathsf{se}^2),$$
+
+donde $\mathsf{se}$ denota el error estándar del MLE , $\mathsf{se} =
+\mathsf{se}(\hat \theta_n) = \sqrt{\mathbb{V}(\hat \theta_n)}$.
+
+Esta distribución se puede caracterizar de manera aproximada por métodos analíticos. 
+Para esto necesitamos las siguientes definiciones. 
+
+```{block, type = 'mathblock'}
+
+**Definición. ** La función de *score* está definida como
+\begin{align}
+  s(X; \theta) = \frac{\partial \log f(X; \theta)}{\partial \theta}.
+\end{align}
+
+La **información de Fisher** está definida como 
+\begin{align}
+  I_n(\theta) &= \mathbb{V}\left( \sum_{i = 1}^ns(X_i; \theta) \right) \\ 
+              &= \sum_{i = 1}^n  \mathbb{V} \left(s(X_i; \theta) \right)
+\end{align}
+
+```
+
+Estas cantidades nos permiten evaluar qué tan fácil será identificar el mejor
+modelo dentro de la familia parámetrica $f(X; \theta)$. La función de score nos
+dice qué tanto cambia locamente la distribución cuando cambiamos el valor del
+parámetro. Calcular la varianza, nos habla de la dispersión de dicho cambio a lo
+largo del soporte de la variable aleatoria $X.$ Si $I_n(\theta)$ es grande
+entonces el cambio de la distribución es muy importante. Esto quiere decir que
+la distribución es muy diferente de las *distribuciones cercanas* que se generen
+al evaluar en $\theta$s diferentes. Por lo tanto, si $I_n(\theta)$ es grande, la
+distribución será fácil de identificar cuando hagamos observaciones.
+
+La información de Fisher también nos permite caracterizar de forma 
+analítica la varianza asíntotica del MLE pues la aproximación 
+$\mathsf{se}^2 \approx \frac{1}{I_n(\theta^*)}$ es válida.
+
+El siguiente resultado utiliza la propiedad de la función de score: 
+$\mathbb{E}[s(X; \theta)] = 0,$ que implica que 
+$\mathbb{V} \left(s(X_i; \theta) \right) = \mathbb{E}[s^2(X; \theta)],$ y 
+permite a su vez un cómputo más sencillo de la información de Fisher.
+
+```{block, type = 'mathblock'}
+
+**Teorema.** El cálculo de la información de Fisher para una muestra 
+de tamaño $n$ se puede calcular de manera simplificada como 
+$I_n(\theta) = n \, I(\theta).$ Por otro lado, tenemos la siguiente igualdad
+$$ I(\theta) = - \mathbb{E}\left( \frac{\partial^2 \log f(X; \theta)}{\partial \theta^2}  \right).$$
+
+```
+
+Con estas herramientas podemos formular el teorema siguiente. 
+
+```{block, type = 'mathblock'}
+
+**Teorema.** Bajo ciertas condiciones de regularidad se satisface que 
+$\mathsf{se} \approx \sqrt{1/I_n(\theta^*)}$ y 
+$$ \hat \theta_n \overset{d}{\rightarrow} \mathsf{N}( \theta^*, \mathsf{se}^2).$$
+
+```
+
+El resultado es teóricamente interesante pero no es práctico pues no conocemos $\theta^*$ en la práctica. 
+Sin embargo, también podemos aplicar el principio de *plug-in* y caracterizar la varianza 
+de la distribución asintótica por medio de 
+$$\hat{\mathsf{se}} = \sqrt{1/I_n(\hat \theta_n)}.$$
+
+Esto último nos permite constuir intervalos de confianza, por ejemplo al 95\%, a través de 
+$$ \hat \theta_n \pm 2 \, \hat{\mathsf{se}}.$$
+Asimismo, el teorema de Normalidad asintótica nos permite establecer que el MLE es **asíntoticamente insesgado**. Es decir, 
+$$\lim_{n \rightarrow n}\mathbb{E}[\hat \theta_n] =  \theta^*.$$
+
+### Ejemplo {-}
+
+Regresando a nuestro ejemplo. Veremos empiricamente que el 
+estimador $\hat \theta_n$ es **asintóticamente normal.** Esta propiedad la
 hemos visto anteriormente para un caso muy particular. Lo vimos en el TLC para
-el caso de promedios $\bar X_n$ que en nuestro ejemplo corresponde a $\hat p_n$.
-Sin embargo, esta propiedad la satisface cualquier otro estimador que sea máximo
+el caso de promedios, $\bar X_n,$ que en nuestro ejemplo corresponde a $\hat p_n$.
+Como hemos visto, esta propiedad la satisface cualquier otro estimador que sea máximo
 verosímil. Por ejemplo, podemos utilizar el $\mathsf{MLE}$ de los momios. La
-figura que sigue muestra la distribución de $\hat \theta_n$ para las distintas
+figura que sigue muestra la distribución de $\hat \theta_n$ para distintas
 remuestras ($B = 500$) con distintos valores de $n.$
 
 ```{r, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
