@@ -23,7 +23,10 @@ docker pull agarbuno/notas-fundamentos
 Para ejecutar la imagen en tu computadora copia y pega lo siguiente en la
 terminal, modificando como se sugiere mas adelante,
 ```{bash}
-docker run -d -p 8787:8787 -e PASSWORD=<escribeunacontraseña> -m 4g agarbuno/notas-fundamentos
+docker run -d -p 8787:8787 \
+  -e PASSWORD=<escribeunacontraseña> \
+  -m 4g \
+  agarbuno/notas-fundamentos
 ```
 En general se necesita correr la imagen con 4Gb de memoria (`-m 4g`).  La opción
 `-d` es opcional, y sirve para dejar corriendo el contenedor en el *background*
@@ -36,7 +39,7 @@ tu navegador de internet de preferencia por medio de
 localhost:8787/
 ```
 el cual te pedirá un usuario y contraseña. La contraseña es la misma que deberás
-de cambiar en las líneas de arriba: *escribeunacontraseña*. El usuario es, por
+de cambiar en las líneas de arriba: *<escribeunacontraseña>*. El usuario es, por
 *default*,
 `rstudio`.
 
@@ -47,7 +50,7 @@ proyecto.
 esté en sincronía con la última versión de las notas en el repositorio. Para
 garantizar la sincronía proponemos lo siguiente.
 
-# Generar notas con: `Github` + `Docker` + `Volumes`.
+# Trabajar en las notas con: `Github` + `Docker` + `Volumes`.
 
 El *problema* de `Docker` es que cualquier cambio que hagas dentro del
 contenedor cuando esté corriendo no se guardará para la siguiente sesión. Por
@@ -70,7 +73,9 @@ Ahora, levanta el contenedor con las siguientes líneas en una terminal
 # Directorio en el *contenedor* donde vivirá el cache de renv
 RENV_PATHS_CACHE_CONTAINER=/home/rstudio/cursos/renv/cache
 # Directorio en el *host* donde vivirá el cache de renv
-RENV_PATHS_CACHE_HOST=/home/estudiante/itam/cursos//renv/cache
+RENV_PATHS_CACHE_HOST=/home/estudiante/itam/cursos/renv/cache
+# Directorio donde guardas las notas de manera local
+PATH_NOTAS_FUNDAMENTOS=/home/estudiante/itam/cursos/fundamentos
 
 docker run -p 8787:8787 \
     -e PASSWORD=itam \
@@ -78,7 +83,7 @@ docker run -p 8787:8787 \
     -e "RENV_PATHS_ROOT=${RENV_PATHS_CACHE_CONTAINER}" \
     -v "${RENV_PATHS_CACHE_HOST}:${RENV_PATHS_CACHE_CONTAINER}" \
     -m 4g \
-    -v /Users/agarbuno/github-repos/itam/docker-cursos:/home/rstudio/cursos \
+    -v $PATH_NOTAS_FUNDAMENTOS:/home/rstudio/cursos \
     agarbuno/env-fundamentos
 ```
 
@@ -112,6 +117,12 @@ Copiar y generar todas las librerías se tardara **bastante** ---alrededor de un
 hora con una conexión simplona---. Pero la ventaja es que sólo lo tendrás que hacer una 
 vez y con esto garantizarás que puedes hacer cambios y actualizaciones pequeñas conforme
 se vayan actualizando las notas.
+
+### Nota {-}
+
+Los archivos de configuración de los contenedores los puedes encontrar en la
+carpeta `dockerfiles` de estas notas o en la carpeta correspondiente
+[aquí](https://github.com/agarbuno/dockerfiles).
 
 # Instrucciones para generar las notas de manera local.
 
