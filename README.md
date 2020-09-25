@@ -118,7 +118,7 @@ hora con una conexión simplona---. Pero la ventaja es que sólo lo tendrás que
 vez y con esto garantizarás que puedes hacer cambios y actualizaciones pequeñas conforme
 se vayan actualizando las notas.
 
-### Nota {-}
+### Archivos de configuración
 
 Los archivos de configuración de los contenedores los puedes encontrar en la
 carpeta `dockerfiles` de estas notas o en la carpeta correspondiente
