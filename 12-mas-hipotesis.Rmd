@@ -371,6 +371,104 @@ el algoritmo 2 parece ser mejor.
 ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
 ```
 
+## Pruebas de cociente de verosimilitud
+
+Otra técnica clásica para hacer pruebas de hipótesis es el de cociente
+de verosimilitudes. Con esta técnica podemos hacer pruebas que involucren
+varios parámetros, y podemos contrastar hipótesis nulas contra alternativas
+especificas. Como en toda esta sección, es necesario hacer
+supuestos distribucionales para poder construir este tipo de pruebas.
+
+Esta prueba se basa en la función de verosimilitud $L(\theta; x_1,\ldots, x_n)$
+que examinamos en la sección de máxima verosimilitud. 
+
+
+**Ejemplo**. Supongamos que tenemos la hipótesis nula de que una moneda
+es justa ($p =0.05$ de sol). En 120 tiros de la moneda (que suponemos
+independientes), observamos 75 soles.
+Recordemos la función de log-verosimilitud para el modelo binomial 
+(ignorando constantes que no dependen de $p$) es
+$$l(p) = 75 \log(p) + (120 - 75)\log(1-p) $$
+
+- Primero calculamos el estimador de máxima verosimilitud de $p$, que
+es $\hat{p} = 65/100 = 0.65$. Evaluamos la verosimilitud 
+
+$$l(\hat{p}) = l(0.65) = 75\log(0.625) + 45\log(0.375) = -79.388$$
+- Ahora evaluamos la verosimlitud según la hipótesis nula, donde asumimos
+que $p = 0.5$:
+
+$$l(p_0) = l(0.5) = 75\log(0.5) + 45\log(0.5) = -83.177$$
+- Finalmente, contrastamos estos dos números con una estadística que denotamos
+con $\lambda$:
+
+$$\lambda = 2\left[l(\hat{p}) - l(p_0)\right] = 2[l(0.625)- l(0.5)] = 2(3.79)=7.58$$
+
+- A $\lambda$ se le llama la **estadística de cociente de verosimilitud**. Tomamos la diferencia de log verosimilitudes, que es los mismo que tomar
+el logaritmo del **cociente** de verosimilitudes, y de ahí el nombre de la prueba.
+
+- Nótese que cuando este número es muy grande, esto implica que la hipótesis
+nula es menos creíble, o menos consistente con los datos, pues la nula tiene mucho
+menos verosimilitud de lo que los datos indican. Cuando este valor
+es cercano a 0, entonces tenemos menos evidencia en contra de la 
+hipótesis nula.
+
+Este método puede generalizarse para que no solo aplique a hipótesis
+nulas donde $\theta = \theta_0$, sino en general, $\theta \in \Theta_0$. 
+Por ejemplo, podemos construir pruebas para $\theta < 0.4$.
+
+```{block2, type='mathblock'}
+Consideramos la hipótesis nula $\theta= \theta_0$. 
+La **estadística del cociente de verosimilitudes** está dada por:
+  
+$$\lambda = 2\log\left( \frac{\max_{\theta}L(\theta)}{\max_{\theta=\theta_0}L(\theta)}        \right ) = 2\log\left(  \frac{L(\hat{\theta})}{L(\theta_0)}  \right)$$
+
+  donde $\hat{\theta}$ es el estimador de máxima verosimilitud.
+```
+
+Para construir una prueba, como siempre, necesitamos una distribución de
+referencia. Esto podemos hacerlo con simulación, o usando resultados asintóticos.
+
+
+### Distribución de referencia para pruebas de cocientes.
+
+Para nuestro ejemplo anterior, podemos simular datos bajo la hipótesis nula,
+y ver cómo se distribuye la estadística $\lambda$:
+
+**Ejemplo.** Simulamos bajo la hipótesis nula como sigue:
+
+```{r}
+n_volados <- 120 # número de volados
+simulados_nula <- rbinom(4000, n_volados, p = 0.5)
+lambda <- function(n, x, p_0 = 0.5){
+  # estimador de max verosim
+  p_mv <- x / n 
+  # log verosimilitud bajo mv
+  log_p_mv <- x * log(p_mv) + (n - x) * log(1 - p_mv)
+  # log verosimllitud bajo nula
+  log_p_nula <- x * log(p_0) + (n - x) * log(1 - p_0)
+  lambda <- 2*(log_p_mv - log_p_nula)
+  lambda
+}
+lambda_obs <- lambda(n_volados, 75, 0.5)
+sims_tbl <- tibble(sim_x = simulados_nula) %>% 
+  mutate(lambda = map_dbl(sim_x, ~ lambda(n_volados, .x, p_0 = 0.5)))
+ggplot(sims_tbl, aes(x = lambda)) + 
+  geom_histogram(binwidth = 0.2) +
+  geom_vline(xintercept = 2.92, colour = "red")
+```
+Con esta aproximación a la distribución de referencia podemos calcular
+el valor p en nuestro ejemplo anterior:
+
+```{r}
+valor_p <- mean(sims_tbl$lambda >= lambda_obs)
+valor_p
+```
+y observamos que tenemos evidencia fuerte en contra de la hipótesis nula:
+la moneda no está balanceada.
+
+
+
+
 
 
 
