@@ -476,7 +476,6 @@ forman una familia de distribuciones. Y nosotros escogemos, por medio del
 parámetro $\mu$, la *mejor.*
 
 ```{r, echo = FALSE, out.width = "95%", fig.height = 3}
-library(latex2exp)
 
 tibble(x = rnorm(1000)) %>% 
   ggplot(aes(x= x)) + 
