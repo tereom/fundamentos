@@ -306,9 +306,12 @@ $$ \hat \theta_n \overset{d}{\rightarrow} \mathsf{N}( \theta^*, \mathsf{se}^2).$
 
 ```
 
-El resultado es teóricamente interesante pero no es práctico pues no conocemos $\theta^*$ en la práctica. 
-Sin embargo, también podemos aplicar el principio de *plug-in* y caracterizar la varianza 
-de la distribución asintótica por medio de 
+El resultado anterior es teóricamente interesante y nos asegura un
+comportamiento controlado conforme tengamos más muestras disponibles. Sin
+embargo, no es práctico pues no conocemos $\theta^*$ en la práctica y por
+consiguiente no conoceríamos la varianza. Sin embargo, también podemos aplicar
+el principio de *plug-in* y caracterizar la varianza de la distribución
+asintótica por medio de
 $$\hat{\mathsf{se}} = \sqrt{1/I_n(\hat \theta_n)}.$$
 
 Esto último nos permite constuir intervalos de confianza, por ejemplo al 95\%, a través de 
@@ -325,7 +328,7 @@ el caso de promedios, $\bar X_n,$ que en nuestro ejemplo corresponde a $\hat p_n
 Como hemos visto, esta propiedad la satisface cualquier otro estimador que sea máximo
 verosímil. Por ejemplo, podemos utilizar el $\mathsf{MLE}$ de los momios. La
 figura que sigue muestra la distribución de $\hat \theta_n$ para distintas
-remuestras ($B = 500$) con distintos valores de $n.$
+remuestras $(B = 500)$ con distintos valores de $n.$
 
 ```{r, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
 
@@ -340,7 +343,7 @@ dt %>%
   filter(floor(logb(n, 4)) - logb(n, 4) == 0) %>% 
   filter(n > 1) %>% 
   ggplot(aes(x = momios)) + 
-    geom_histogram(aes(y = ..density.. ), bins = 20) +
+    geom_histogram(aes(y = ..density.. ), binwidth = .45) +
     stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) + 
     facet_wrap(~n, scale = 'free', ncol = 3)
 
@@ -362,9 +365,10 @@ dt %>%
 
 Consideremos el caso de una muestra iid $X_1, \ldots, X_n \sim
 \mathsf{N}(\theta, \sigma^2).$ Y consideremos dos estimadores para $\theta.$ El
-primero será la media muestral $\bar X_n$ y el segundo la mediana muestral, la cual
-denotaremos por $\tilde \theta_n.$ Sabemos que ambos son insesgados. Por lo tanto, 
-promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual utilizar?
+primero será la media muestral $\bar X_n$ y el segundo la mediana muestral, la
+cual denotaremos por $\tilde \theta_n.$ Sabemos que ambos son insesgados. Por lo
+tanto, en promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual
+utilizar?
 
 La media sabemos que es el $\textsf{MLE}$ y por el TCL tenemos que 
 $$\sqrt{n} \left( \bar X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}( 0, \sigma^2).$$
@@ -372,13 +376,13 @@ $$\sqrt{n} \left( \bar X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}(
 La mediana, en contraste, tiene una distribución asintótica 
 $$\sqrt{n} \left( \tilde X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}\left( 0, \sigma^2 \frac{\pi}{2}\right),$$
 
-es decir tiene una varianza ligeramente mayor. Por lo tanto, 
-decimos que la mediana tiene una eficiencia relativa con respecto a la media
-del $.63 \% \approx \pi/2$. Es decir, la mediana sólo utliza una fracción de los datos
-comparado con la media. 
+es decir tiene una varianza ligeramente mayor. Por lo tanto, decimos que la
+mediana tiene una *eficiencia relativa* con respecto a la media del $.63 \%
+(\approx \pi/2)$. Es decir, la mediana sólo utliza una fracción de los datos
+comparado con la media.
 
-El siguiente teorema, **la desigualdad de Cramer-Rao**, nos permite establecer 
-esta resultado de manera mas general para cualquier estimador insesgado. 
+El siguiente teorema, **la desigualdad de Cramer-Rao**, nos permite establecer
+esta resultado de manera mas general para cualquier estimador insesgado.
 
 ```{block, type ='mathblock'}
 
