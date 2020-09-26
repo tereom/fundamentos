@@ -26,7 +26,7 @@ enfoque es que:
 - Podemos ahorrarnos cómputo usando fórmulas que derivemos para calcular 
 valores-$p$.
 - Cuando los supuestos distribucionales son apropiados, podemos
-construir pruebas sensibles que analizan parámetros individuales
+construir pruebas sensibles que analizan parámetros individuales.
 
 La desventaja es que hay que checar con cuidado los supuestos distribucionales
 que hagamos. Si los supuestos son incorrectos, las valores-$p$ no tienen mucho
@@ -51,13 +51,11 @@ distribución de referencia aproximada:
 - Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta} 
 es aproximadamente N(125, \hat{ee}).
 - Esto implica que la siguiente estadística $W$ es aproximadamente normal
-estándar:
+estándar bajo la nula:
 
 $$W = \frac{\hat{\theta} - 125}{\hat{ee}} \sim N(0,1)$$
 Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
-en contra de la hipótesis nula.
-
-Como $W$ **no depende de ningún parámetro**, podemos
+en contra de la hipótesis nula. Como $W$ **no depende de ningún parámetro**, podemos
 usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
 en la muestra. 
 
@@ -77,7 +75,6 @@ estimador una media de una muestra iid, podemos estimar el error estándar
 de la media con
 
 $$\hat{ee} = s / \sqrt{n}$$
-
 Obtenemos:
 
 ```{r}
@@ -92,7 +89,7 @@ resumen
 ```
 
 La hipótesis nula es entonces que la meida poblacional del Estado de México
-es igual a 454. Calculamos el valor p usando la prueba de Wald_
+es igual a 454. Calculamos el valor p usando la prueba de Wald:
 
 ```{r}
 dif <- (resumen %>% pull(media)) - 454
@@ -110,40 +107,59 @@ a la nacional.
 ```
 
 
-**Ejemplo.** Podemos hacer la prueba de Wald para proporciones. 
+Tenemos entonces:
+
+```{block2, type='mathblock'}
+**Prueba de Wald.** Consideramos probar la hipótesis nula $\theta = \theta_0$
+contra la alternativa $\theta \neq \theta_0$.
+
+Suponemos que $\hat{\theta}$ es asintóticamente normal e insesgada, 
+de modo que bajo la hipótesis nula
+$$\frac{\hat{\theta} - \theta_0}{\hat{ee}} \sim N(0,1).$$ 
+Entonces el valor-p de la **prueba de Wald** para esta hipótesis nula es
+
+$$\mathsf{valor-p} \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
 
 
-## Prueba de Wald para dos medias o proporciones
-
-Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
-distintas, y queremos ver si la hipótesis de medias poblacionales
-iguales es consistente con los datos, podemos usar también una prueba de Wald
-
-Sea $\overline{X}_1$ y $\overline{X}_2$ las medias muestrales
-correspondientes. Si la hipótesis
-de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
-la variable
-$$\hat{\delta} = \overline{X}_1 - \overline{X}_2$$
-es aproximadamente normal con media $N(\mu_1 - \mu_2, ee)$, donde el
-error estándar de $\hat{\delta}$ es la raíz de la suma de los cuadrados de
-los errores estándar
-de $\overline{X}$ y $\overline{Y}$:
-
-$$ ee = \sqrt{ee_1^2 + ee_{2}^2}$$
-y entonces
-$$ee =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
-(Nota: usa probabilidad para explicar por qué es cierto esto). De esto
-se deduce que bajo la hipótesis nula de igualdad de medias $\mu_1 = \mu_2$,
-tenemos que la estadística de Wald
-
-$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} }$$ 
-es aproximamente normal estándar. Procedemos entonces igual que antes.
-
-**Ejemplo**
+```
 
 
+**Ejemplo.** Podemos hacer la prueba de Wald para proporciones con el 
+estimador usual $\hat{p}$ que estima una proporción poblacional $p$. 
+En este caso, utilizamos la estimación usual del error estándar de $\hat{p}$,
+que está dada por
+$$\hat{ee} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}.$$
+Por ejemplo supongamos que en nuestros datos observamos que, en $n=80$
+muestras independientes, tenemos $x=47$ éxitos. ¿Es esto consistente
+con la hipótesis nula $p = 0.05$?
 
-## Observación: pruebas $t$ practica estadística.
+Calcuamos primero:
+
+```{r}
+p_hat <- 47 / 80
+ee <- sqrt(p_hat * (1 - p_hat) / 80)
+```
+
+y la estadística $W$ de prueba es:
+
+```{r}
+w <- (p_hat - 0.5) / ee
+w
+```
+
+Calculamos su valor p:
+
+```{r}
+valor_p <- 2 * (1 - pnorm(abs(w)))
+valor_p
+```
+
+Y vemos que en este caso tenemos evidencia baja de que la proporción poblacional 
+es distinta de 0.5. 
+
+
+
+## Observación: pruebas $t$ y práctica estadística.
 
 Con más supuestos distribucionales podemos hacer otros tipos de pruebas donde
 no requerimos hacer supuestos asintóticos. Por ejemplo, si suponemos
@@ -175,9 +191,194 @@ Puedes ver [aquí](https://en.wikipedia.org/wiki/Student%27s_t-distribution), o 
 B.11 de @Chihara para ver descripciones de la distribución $t$ y cómo se compara
 con una normal estándar dependiendo de los grados de libertad.
 
-En la práctica, es muy común que no se checan supuestos y se salta directamente
-a hacer pruebas $t$. Si tenemos duda de esos supuestos, podemos hacer
+En muchas ocasiones, en la práctica es común no checar supuestos y saltar directamente
+a hacer pruebas $t$, lo cual no es muy seguro. 
+Si tenemos duda de esos supuestos, podemos hacer
 pruebas gráficas o de permutaciones, si son apropiadas.
+
+
+## Prueba de Wald para dos medias o proporciones
+
+Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
+distintas, y queremos ver si la hipótesis de medias poblacionales
+iguales es consistente con los datos, podemos usar también una prueba de Wald
+
+Sea $\overline{X}_1$ y $\overline{X}_2$ las medias muestrales
+correspondientes. Si la hipótesis
+de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
+la variable
+$$\hat{\delta} = \overline{X}_1 - \overline{X}_2$$
+es aproximadamente normal con media $N(\mu_1 - \mu_2, ee)$, donde el
+error estándar de $\hat{\delta}$ es la raíz de la suma de los cuadrados de
+los errores estándar
+de $\overline{X}$ y $\overline{Y}$:
+
+$$ ee = \sqrt{ee_1^2 + ee_{2}^2}$$
+y entonces
+$$ee =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
+(Nota: usa probabilidad para explicar por qué es cierto esto). De esto
+se deduce que bajo la hipótesis nula de igualdad de medias $\mu_1 = \mu_2$,
+tenemos que la estadística de Wald
+
+$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim N(0,1)$$ 
+es aproximamente normal estándar. Procedemos entonces igual que antes. En el caso
+particular de proporciones, podemos simplificar, como hicimos arriba, a
+$$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_1(1-\hat{p}_1)}{n_2}} } \sim N(0,1)$$ 
+
+```{block2, type = 'ejercicio'}
+- Haz una prueba comparando las medias en enlace de la Ciudad de México vs
+Estado de México. ¿Hay evidencia de que tienen distintas medias?
+```
+
+
+**Ejemplo (Wasserman).** Supongamos tenemos dos conjuntos de prueba para 
+evaluar algoritmos de predicción, de tamaños $n_1=100$ y $n=250$ respectivamente,
+tenemos dos algoritmos para generar predicciones de clase (digamos positivo y negativo).
+Usaremos el primer conjunto para evaluar el algoritmo 1 y el segundo para evaluar
+el algoritmo 2. El algoritmo 1 corre en 1 hora, y el algoritmo 2 tarda 24 horas.
+
+Supón que obtenemos que la tasa de clasificación correcta del primer algoritmo
+es $\hat{p}_1 = 0.85$, y la tasa del segundo es de $\hat{p} = 0.91$. ¿Estos
+datos son consistentes con la hipótesis de que los algoritmos tienen desempeño 
+muy similar? Es decir, queremos probar la hipótesis $p_1 = p_2$.
+
+Calculamos la estidística de Wald:
+
+```{r}
+n_1 <- 100
+n_2 <- 250
+p_hat_1 <- 0.86
+p_hat_2 <- 0.90
+ee <- sqrt(p_hat_1 * (1 - p_hat_1) / n_1 + p_hat_2 * (1 - p_hat_2) / n_2)
+delta = p_hat_1 - p_hat_2
+w  <- delta / ee
+w
+```
+
+que da un valor p de:
+
+```{r}
+2 * (1 - pnorm(abs(w)))
+```
+
+Y vemos que valor p es grande, de forma que los datos son consistentes
+con la hipótesis de que los algoritmos tienen desempeño similar. ¿Cómo tomaríamos
+nuestra decisión final? Si la diferencia entre 1 hora y 24 horas no es muy
+importante, entonces preferíamos usar el algoritmo 2. Sin embargo, si el costo
+de 24 horas es más alto que 1 hora de corrida, los datos no tienen indicios fuertes
+de que vayamos a perder en desempeño, y podriamos seleccionar el algoritmo 1.
+
+
+
+
+
+
+
+
+
+## Datos pareados
+
+Las pruebas que acabamos de para comparar medias requieren
+poblaciones independientes. Si las dos muestras están pareadas, podemos
+tomar las diferencias $D_i = X_i - Y_i$ y utilizar la prueba para una
+sola muestra con la media $\overline{D}$. Esta es una prueba de Wald pareada.
+
+
+**Ejemplo (Wasserman).** Ahora supongamos que utilizamos la misma
+muestra de tamapo $n=300$ para probar los dos algoritmos. En este caso,
+no debemos hacer la prueba para medias de muestras independientes. Sin embargo,
+esto podemos ponerlo en términos de una prueba para una sola muestra.
+
+Tenemos las observaciones $X_1,\ldots, X_n$ y $Y_1,\dots, Y_n$, donde
+$X_i=1$ si el algoritmo 1 clasifica correctamente, y 0 en otro caso. Igualmente,
+$Y_i=1$ si el algoritmo 2 clasifica correctamente, y 0 en otro caso. Definimos
+
+$$D_i= X_i - Y_i$$
+Y $D_1,\ldots, D_n$ es una muestra iid. Ahora observemos que la media $\bar{D}$
+tiene valor esperado $p_1 - p_2$, donde $p_1$ y $p_2$ son las tasas de correctos
+del algoritmo 1 y del algoritmo 2 respectivamente. Podemos hacer una prueba
+de Wald como al principio de la sección:
+
+$$W = \frac{\bar{D} - 0}{\hat{ee}}$$
+Y notemos que el error estándar **no** se calcula como en el ejemplo anterior. Podríamos
+usar bootstrap para estimarlo, pero en este caso podemos usar el estimador usual
+
+$$\hat{ee} = S / \sqrt{n}$$
+donde
+$$S = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D})^2$$
+y nótese que necesitamos las decisiones indiviudales de cada algoritmo para
+cada caso, en contraste al ejemplo anterior de muestras independientes donde
+los errores estándar se calculaban de manera independiente. Esto tiene sentido,
+pues la variablidad de $\overline{D}$ depende de cómo están correlacionados
+los aciertos de los dos algoritmos.
+
+Supongamos por ejemplo que los datos que obtenemos son:
+
+```{r, echo = FALSE, include = FALSE}
+set.seed(31521)
+datos_clasif <- tibble(x = rep(1, 135), y = rep(1, 135)) %>% 
+  bind_rows(tibble(x = rep(0, 65), y = rep(1, 65))) %>% 
+  bind_rows(tibble(x = rep(1, 40), y = rep(0, 40))) %>% 
+  bind_rows(tibble(x = rep(1 ,100), y = rep(1, 100))) %>%
+  sample_n(300) %>% 
+  mutate(caso = as.character(1: 300)) %>% 
+  select(caso, x, y)
+```
+
+```{r}
+datos_clasif %>% head
+```
+
+Como explicamos arriba, nos interesa la diferencia. Calculamos $d$:
+
+```{r}
+datos_clasif <- datos_clasif %>% 
+  mutate(d = x - y)
+datos_clasif %>% head
+```
+Y ahora calculamos la media de $d$ (y tasa de correctos de cada clasificador:)
+
+```{r}
+medias_tbl <- 
+  datos_clasif %>% summarise(across(where(is.numeric), mean, .names = "{col}_hat"))
+d_hat <- pull(medias_tbl, d_hat)
+medias_tbl
+```
+Ahora necesitamos calcular el error estándar. Como explicamos arriba, hacemos
+
+```{r}
+ee <- datos_clasif %>% 
+  mutate(d_hat = mean(d)) %>% 
+  mutate(dif_2 = (d - d_hat)) %>% 
+  summarise(ee = sd(dif_2) / sqrt(n())) %>% 
+  pull(ee)
+ee  
+```
+
+Y ahora podemos calcular la estadística $W$ y el valor p correspondiente:
+
+```{r}
+w <- d_hat / ee
+valor_p <- 2 * (1 - pnorm(abs(w)))
+c(w = w, valor_p = valor_p) %>% round(3)
+```
+
+Y vemos que tenemos evidencia considerable de que el desempeño no es el mismo:
+el algoritmo 2 parece ser mejor.
+
+```{block2, type='ejercicio'}
+- ¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este 
+ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
+```
+
+
+
+
+
+
+
+
+
 
 
 
