@@ -319,6 +319,15 @@ $$ \hat \theta_n \pm 2 \, \hat{\mathsf{se}}.$$
 Asimismo, el teorema de Normalidad asintótica nos permite establecer que el $\textsf{MLE}$ es **asíntoticamente insesgado**. Es decir, 
 $$\lim_{n \rightarrow n}\mathbb{E}[\hat \theta_n] =  \theta^*.$$
 
+```{block, type = 'mathblock'}
+
+**Definición.** Sea una muestra $X_1, \ldots, X_n \overset{iid}{\sim} f(X;
+\theta^*)$. Un estimador $\tilde \theta_n$ es insesgado si satisface que
+$$\mathbb{E}[\tilde \theta_n] =\theta^*.$$ 
+
+```
+El sesgo del estimador es precisamente la diferencia: $\textsf{Sesgo} = \mathbb{E}[\tilde \theta_n] - \theta^*.$
+
 ### Ejemplo {-}
 
 Regresando a nuestro ejemplo. Veremos empiricamente que el 
@@ -369,6 +378,30 @@ primero será la media muestral $\bar X_n$ y el segundo la mediana muestral, la
 cual denotaremos por $\tilde \theta_n.$ Sabemos que ambos son insesgados. Por lo
 tanto, en promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual
 utilizar?
+
+Un criterio para comparar estimadores es el **error cuadrático medio**
+($\textsf{MLE}$, por sus siglas en inglés).
+
+```{block, type = 'mathblock'}
+
+**Definición.** El error cuadrático medio de un estimador $\tilde \theta_n$ se
+calcula como
+$$\textsf{MSE}[\tilde \theta_n] = \mathbb{E}[(\tilde \theta_n - \theta^*)].$$
+
+```
+
+Por lo tanto, el $\textsf{MSE}$ mide la distancia promedio entre el estimador y 
+el valor verdadero valor del parámetro. La siguiente igualdad es bastante útil 
+para comparar dos estimadores. 
+
+```{block, type = 'mathblock'}
+
+$$\textsf{MSE}[\tilde \theta_n] = \mathbb{V}\left(\tilde \theta_n\right) + \textsf{Sesgo}\left[\tilde \theta_n\right]^2.$$
+
+```
+
+Por lo tanto si dos estimadores son insesgados, uno es más eficiente que el otro si 
+su varianza es menor.
 
 La media sabemos que es el $\textsf{MLE}$ y por el TCL tenemos que 
 $$\sqrt{n} \left( \bar X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}( 0, \sigma^2).$$
