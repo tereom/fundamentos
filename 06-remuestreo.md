@@ -2077,4 +2077,33 @@ estudiar; sin embargo, es común ignorar este aspecto,
 por ejemplo [Mach et al](https://fcsm.sites.usa.gov/files/2014/05/2005FCSM_Mach_Dumais_Robidou_VA.pdf) estudian las propiedades del estimador de varianza bootstrap de Rao y Wu cuando 
 la muestra se seleccionó sin reemplazo.
 
+## Conclusiones y observaciones {-}
 
+* El principio fundamental del Bootstrap no paramétrico es que podemos estimar
+la distribución poblacional con la distribución empírica. Por tanto para 
+hacer inferencia tomamos muestras con reemplazo de la muestra y 
+analizamos la variación de la estadística de interés a lo largo de las 
+remuestras.
+
+* El bootstrap nos da la posibilidad de crear intervalos de confianza
+cuando no contamos con fórmulas para hacerlo de manera analítica y sin 
+supuestos distribucionales de la población.
+
+* Hay muchas opciones para construir intervalos bootstrap, los que tienen 
+mejores propiedades son los intervalos $BC_a$, sin embargo los más comunes son 
+los intervalos normales con error estándar bootstrap y los intervalos de 
+percentiles de la distribución bootstrap.
+
+* Antes de hacer intervalos normales vale la pena 
+graficar la distribución bootstrap y evaluar si el supuesto de normalidad es 
+razonable. Así como evaluar el sesgo relativo.
+
+* En cuanto al número de muestras bootstrap se recomienda al menos $1,000$ 
+al hacer pruebas, y $10,000$ o $15,000$ para los resultados finales, sobre
+todo cuando se hacen intervalos de confianza de percentiles.
+
+* La función de distribución empírica es una mala estimación en las colas de 
+las distribuciones, por lo que es difícil construir intervalos de confianza 
+(usando bootstrap no paramétrico) para estadísticas que dependen mucho de las 
+colas. O en general para estadísticas que dependen de un número chico de 
+observaciones de una muestra grande.

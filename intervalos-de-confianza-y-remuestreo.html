@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="S-distribucion-muestreo.html"/>
-<link rel="next" href="tareas.html"/>
+<link rel="next" href="estimación-por-máxima-verosimilitud.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -258,6 +258,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-estimadores-complejos-tablas-de-perfiles"><i class="fa fa-check"></i>Bootstrap y estimadores complejos: tablas de perfiles</a></li>
 <li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#conclusiones-y-observaciones"><i class="fa fa-check"></i>Conclusiones y observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html"><i class="fa fa-check"></i><b>7</b> Estimación por máxima verosimilitud</a><ul>
+<li class="chapter" data-level="" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#introducción-a-estimación-por-máxima-verosimilitud"><i class="fa fa-check"></i>Introducción a estimación por máxima verosimilitud</a></li>
+<li class="chapter" data-level="" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#máxima-verosimilitud-para-observaciones-continuas"><i class="fa fa-check"></i>Máxima verosimilitud para observaciones continuas</a></li>
+<li class="chapter" data-level="" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#aspectos-numéricos"><i class="fa fa-check"></i>Aspectos numéricos</a><ul>
+<li class="chapter" data-level="" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#el-método-de-momentos"><i class="fa fa-check"></i>El método de momentos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#máxima-verosimilitud-para-más-de-un-parámetro"><i class="fa fa-check"></i>Máxima verosimilitud para más de un parámetro</a></li>
+<li class="chapter" data-level="" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#bootstrap-paramétrico"><i class="fa fa-check"></i>Bootstrap paramétrico</a></li>
+<li class="chapter" data-level="7.1" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#ventajas-y-desventajas-de-bootstrap-paramétrico"><i class="fa fa-check"></i><b>7.1</b> Ventajas y desventajas de bootstrap paramétrico</a></li>
+<li class="chapter" data-level="7.2" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#verificando-los-supuestos-distribucionales"><i class="fa fa-check"></i><b>7.2</b> Verificando los supuestos distribucionales</a></li>
+<li class="chapter" data-level="7.3" data-path="estimación-por-máxima-verosimilitud.html"><a href="estimación-por-máxima-verosimilitud.html#modelos-mal-indentificados"><i class="fa fa-check"></i><b>7.3</b> Modelos mal indentificados</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
@@ -1872,8 +1885,36 @@ estudiar; sin embargo, es común ignorar este aspecto,
 por ejemplo <a href="https://fcsm.sites.usa.gov/files/2014/05/2005FCSM_Mach_Dumais_Robidou_VA.pdf">Mach et al</a> estudian las propiedades del estimador de varianza bootstrap de Rao y Wu cuando
 la muestra se seleccionó sin reemplazo.</p></li>
 </ul>
-
 </div>
+</div>
+<div id="conclusiones-y-observaciones" class="section level2 unnumbered">
+<h2>Conclusiones y observaciones</h2>
+<ul>
+<li><p>El principio fundamental del Bootstrap no paramétrico es que podemos estimar
+la distribución poblacional con la distribución empírica. Por tanto para
+hacer inferencia tomamos muestras con reemplazo de la muestra y
+analizamos la variación de la estadística de interés a lo largo de las
+remuestras.</p></li>
+<li><p>El bootstrap nos da la posibilidad de crear intervalos de confianza
+cuando no contamos con fórmulas para hacerlo de manera analítica y sin
+supuestos distribucionales de la población.</p></li>
+<li><p>Hay muchas opciones para construir intervalos bootstrap, los que tienen
+mejores propiedades son los intervalos <span class="math inline">\(BC_a\)</span>, sin embargo los más comunes son
+los intervalos normales con error estándar bootstrap y los intervalos de
+percentiles de la distribución bootstrap.</p></li>
+<li><p>Antes de hacer intervalos normales vale la pena
+graficar la distribución bootstrap y evaluar si el supuesto de normalidad es
+razonable. Así como evaluar el sesgo relativo.</p></li>
+<li><p>En cuanto al número de muestras bootstrap se recomienda al menos <span class="math inline">\(1,000\)</span>
+al hacer pruebas, y <span class="math inline">\(10,000\)</span> o <span class="math inline">\(15,000\)</span> para los resultados finales, sobre
+todo cuando se hacen intervalos de confianza de percentiles.</p></li>
+<li><p>La función de distribución empírica es una mala estimación en las colas de
+las distribuciones, por lo que es difícil construir intervalos de confianza
+(usando bootstrap no paramétrico) para estadísticas que dependen mucho de las
+colas. O en general para estadísticas que dependen de un número chico de
+observaciones de una muestra grande.</p></li>
+</ul>
+
 </div>
 </div>
 <h3>Referencias</h3>
@@ -1894,7 +1935,7 @@ la muestra se seleccionó sin reemplazo.</p></li>
         </div>
       </div>
 <a href="S-distribucion-muestreo.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="tareas.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="estimación-por-máxima-verosimilitud.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
