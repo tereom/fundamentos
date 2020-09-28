@@ -4,7 +4,7 @@
 library(tidyverse)
 library(patchwork)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=4)
+knitr::opts_chunk$set(cache = TRUE, echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=4)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -32,7 +32,7 @@ Justo lo veremos en esta sección.
 ```
 
 
-A lo largo de esta sección asumiremos muestras 
+A lo largo de esta sección asumiremos muestras de la forma 
 \begin{align}
   X_1, \ldots, X_n \overset{\text{iid}}{\sim} f(x; \theta^*),
 \end{align}
@@ -53,6 +53,64 @@ secciones pasadas (ver Sección \@ref(S:max-verosimilitud)), y sabemos que el $\
   \hat p_n = \frac{S_n}{n} = \bar X_n,
 \end{align}
 donde $S_n= \sum_i X_i$ es el número total de éxitos en la muestra. 
+
+La figura siguiente ilustra el estimador $\hat p_n$ como función del número de
+observaciones en nuestra muestra. Podemos apreciar cómo el promedio parece
+estabilizarse alrededor del verdadero valor de $p^* = 0.25$ cuando tenemos una
+cantidad suficientemente grande de observaciones.
+
+```{r, echo = FALSE, fig.height = 2, out.width = "95%"}
+library(latex2exp)
+
+set.seed(1087)
+p_true <- .25
+
+extrae_muestras <- function(index, n = 10){
+  tibble(x = rbernoulli(n, p = p_true), muestra = index)
+}
+
+extrae_muestras(1, n = 2500) %>% 
+  mutate(media = cummean(x)) %>% 
+  ggplot(aes(x = 1:2500, y = media)) + 
+    geom_line() + 
+    geom_hline(yintercept = p_true, color = 'red', lty = 2) + 
+    scale_x_log10() +
+    xlab('n: número de muestras') + 
+    ylab(TeX('$\\bar{x}_n$'))   + 
+    ylim(0, .50)
+
+```
+
+Como es de esperarse, diferentes muestras tendrán diferentes valores de $n$ dónde las
+trayectorias parezca que se haya estabilizado (Ver figura siguiente). Sin embargo, 
+se puede notar que este comportamiento parece estar controlado y son **"raras" las 
+trayectorias** que se encuentran más lejos.
+
+```{r, echo = FALSE, fig.height = 2, out.width = "95%"}
+
+n_muestra <- 2500
+
+g_0 <- 1:10 %>% 
+  map_dfr(extrae_muestras, n = n_muestra) %>% 
+  group_by(muestra) %>% 
+  mutate(media = cummean(x), n = 1:n_muestra) %>% 
+  ggplot(aes(x = n, y = media)) + 
+    geom_line(aes(group = muestra, color = factor(muestra))) + 
+    geom_hline(yintercept = p_true, color = 'red', lty = 2) + 
+    scale_x_log10() +
+    xlab('n: número de muestras') + 
+    ylab(TeX('$\\bar{x}_n$')) + theme(legend.position = "none") + 
+    ylim(0, .50)
+
+g_0 
+
+```
+Los conceptos siguientes nos permitirán cuantificar el porcentaje de
+trayectorias que se mantienen cercanas a $p^*,$ en el caso límite de un número
+grande de observaciones, cuando trabajemos con estimadores de máxima
+verosimilitud. Más aún, nos permitirán cracterizar la distribución para dicho
+límite y aprenderemos de otras propiedades bajo este supuesto asintótico. 
+
 
 ## Consistencia {-}
 
@@ -126,22 +184,17 @@ El estimador $\hat p_n$ es **consistente.** Esto quiere decir que el
 estimador se vuelve más preciso conforme obtengamos más información. En general
 esta es una propiedad que usualmente los estimadores deben satisfacer para ser
 útiles en la práctica. La figura siguiente muestra el estimador $\hat p_n$ como
-función del número de muestras utilizado. Distintas curvas corresponden a
+función del número de observaciones utilizado. Distintas curvas corresponden a
 distintas realizaciones de muestras obtenidas del modelo ($B = 500$).
 
 ```{r, echo = FALSE}
-p_true <- .25
-
-extrae_muestras <- function(index, n = 10){
-  tibble(x = rbernoulli(n, p = p_true), muestra = index)
-}
 
 set.seed(108727)
 n_muestra <- 4**5
 
 ```
 
-```{r consistency, cache = TRUE, echo = FALSE, fig.height = 5, out.width = '95%', fig.asp = .6}
+```{r consistency, cache = TRUE, echo = FALSE, fig.height = 2, out.width = '99%'}
 TOL <- p_true/4
 
 # extraigo 500 muestras diferentes de tamaño n_muestra
@@ -163,6 +216,7 @@ g1 <- dt %>%
   geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true + TOL ), alpha = .3) + 
   geom_line(aes(group = muestra), alpha = .05) + 
   geom_hline(yintercept = p_true, lty = 2, color = 'red') +
+  ylab(TeX('$\\bar{x}_n$')) + 
   # geom_line(data = esperado, aes(x = 1:n_muestra, y = media), lty = 1, color = 'lightblue') +
   scale_x_log10()
 
@@ -174,6 +228,7 @@ g2 <- dt %>%
   geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true+ TOL ), alpha = .3) + 
   geom_line(aes(group = muestra), alpha = .05) + 
   geom_hline(yintercept = p_true, lty = 2, color = 'red') +
+  ylab('') + 
   # geom_line(data = esperado, aes(x = 1:n_muestra, y = media), lty = 1, color = 'lightblue') +
   xlim(100, n_muestra) + 
   ylim(p_true - 2 * TOL, p_true + 2 * TOL)
@@ -183,7 +238,7 @@ g1 + g2
 ```
 
 Nota que la banda definida por $\epsilon$ se puede hacer tan pequeña como se requiera, 
-lo único que sucederá es que necesitaremos un mayor número de muestras para garantizar 
+lo único que sucederá es que necesitaremos un mayor número de observaciones para garantizar 
 que las trayectorias de los estimadores $\hat p_n$ se mantengan dentro de las bandas con 
 alta probabilidad conforme $n$ aumenta. 
 
@@ -307,7 +362,7 @@ $$ \hat \theta_n \overset{d}{\rightarrow} \mathsf{N}( \theta^*, \mathsf{se}^2).$
 ```
 
 El resultado anterior es teóricamente interesante y nos asegura un
-comportamiento controlado conforme tengamos más muestras disponibles. Sin
+comportamiento controlado conforme tengamos más observaciones disponibles. Sin
 embargo, no es práctico pues no conocemos $\theta^*$ en la práctica y por
 consiguiente no conoceríamos la varianza. Sin embargo, también podemos aplicar
 el principio de *plug-in* y caracterizar la varianza de la distribución
@@ -356,19 +411,111 @@ dt %>%
     stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) + 
     facet_wrap(~n, scale = 'free', ncol = 3)
 
+```
 
-# dt %>% 
-#   group_by(muestra) %>% 
-#   mutate(n = 1:n_muestra) %>% 
-#   mutate(media = sqrt(n) * (cummean(x) - p_true)/sqrt(p_true * (1-p_true))) %>% 
-#   filter(floor(logb(n, 4)) - logb(n, 4) == 0) %>% 
-#   filter(n > 1) %>% 
-#   ggplot(aes(x = media)) + 
-#     geom_histogram(aes(y = ..density.. ), bins = 20) + 
-#     stat_function(fun = dnorm, args = list(mean = 0, sd = 1)) + 
-#     facet_wrap(~n, scale = 'free', ncol = 3)
+El gráfico anterior valida empíricamente la distribución asintótica para 
+casos de muchas observaciones. A continuación ilustraremos cómo explotar 
+este resultado para obtener intervalos de confianza. 
+
+Para el caso de $\hat p_n$ hemos visto que el error estándar se calcula 
+analíticamente como
+$$\textsf{se}_p^2 = \mathbb{V}(\hat p_n) = \mathbb{V}\left(\frac1n \sum_{i = 1}^n x_i\right)  = \frac{p^* (1 - p^*)}{n}.$$
+
+Éste empata con el valor del error estándar asintótico
+$$\textsf{se}_p^2 \approx \sqrt{\frac{1}{I_n(p^*)}},$$
+pues la información de Fisher es igual a 
+$$I_n(p) = n \, I(p)  = \frac{n}{p (  1- p)}.$$
+En este caso podemos utilizar el estimador *plug-in,* 
+$\hat{\textsf{se}}_p = \textsf{se}_p(\hat p_n).$
+Para estimar el momio, $\theta,$ el cálculo no es tan fácil pues tendríamos que calcular 
+de manera analítica la varianza de un cociente 
+$$\textsf{se}_\theta^2 = \mathbb{V}\left( \frac{\hat p_n}{1-\hat p_n}\right).$$
+Utilizando la distirbución asintótica, el error estándar se puede calcular mediante
+$$\textsf{se}_\theta^2 \approx \sqrt{\frac{1}{I_n(\theta^*)}} = \sqrt{\frac{\theta (1 + \theta)^2 }{n}}.$$
+A continuación mostramos los errores estándar para nuestro ejemplo utilizando 
+la distribución asintótica y por medio de la distribución de *bootstrap.*
+Como es de esperarse, ambos coinciden para muestras relativamente grandes. 
+```{r, echo = FALSE, cache = TRUE}
+# Genero muestra 
+muestras <- tibble(tamanos = 2**seq(4,7)) %>% 
+  mutate(obs = map(tamanos, ~rbernoulli(., p = p_true)))
+
+calcula_momio <- function(x){
+  x / (1 - x)
+}
+
+calcula_se_momio <- function(x){
+  sqrt(((1+x)**2) * x)
+}
+
+# Calculo MLE
+muestras_est <- muestras %>% 
+  group_by(tamanos) %>% 
+  mutate(media_hat = map_dbl(obs, mean), 
+         media_se  = sqrt(media_hat * (1 - media_hat)/tamanos),
+         momio_hat = calcula_momio(media_hat), 
+         momio_se  = calcula_se_momio(momio_hat)/sqrt(tamanos))
+
+
+# Calculo por bootstrap
+muestras_boot <- muestras_est %>%
+  group_by(tamanos) %>% 
+  mutate(sims_muestras  = map(tamanos, ~rerun(1000, sample(muestras %>% filter(tamanos == ..1) %>% unnest(obs) %>% pull(obs), 
+                                                  size = ., replace = TRUE))), 
+         sims_medias = map(sims_muestras, ~map_dbl(., mean)), 
+         sims_momios = map(sims_medias, ~map_dbl(., calcula_momio)),
+         media_boot    = map_dbl(sims_medias, mean),
+         momio_boot    = map_dbl(sims_momios, mean), 
+         media_se_boot = map_dbl(sims_medias, sd), 
+         momio_se_boot = map_dbl(sims_momios, sd)
+         )
 
 ```
+
+```{r, cache = TRUE, echo = FALSE}
+
+muestras_boot %>% 
+  select(tamanos, momio_hat, momio_boot, momio_se, momio_se_boot)
+
+```
+
+
+```{block, type = 'ejercicio'}
+
+Comprueba las fórmulas para los errores estándar tanto para la probabilidad de
+éxito como para los momios.
+
+```
+
+
+### El método delta {-}
+
+El ejercicio anterior nos sugiere una pregunta natural: Cómo establecer la
+distribución asintótica de un estimador cuando ya se conoce la de una pre-imagen
+de él? Es decir, si ya conocemos la distribución de $\theta,$ podemos establecer
+la distribución de $\tau = g(\theta)?$
+
+La respuesta es afirmativa y la enunciamos por medio de un teorema. El resultado se conoce como 
+el **método delta**. 
+
+```{block, type = 'mathblock'}
+
+**Teorema.** Si $\tau = g(\theta)$ es una función diferenciable y $g'(\theta)\neq 0,$ entonces
+$$\hat \tau_n \overset{d}{\rightarrow} \mathsf{N}( \tau^*, \hat{\mathsf{se}}^2_\tau),$$
+donde $\hat \tau_n = g(\hat \theta_n)$ y 
+$$\hat{\mathsf{se}}_\tau = \bigg| g'(\hat \theta_n) \bigg| \times \hat{\mathsf{se}}_\theta(\hat \theta_n).$$
+```
+
+Por ejemplo, este resultado lo podemos utilizar para nuestro experimento de Bernoullis. 
+Pues $g(p) = \frac{p}{1-p}$ es una función diferenciable y por lo tanto 
+$$\hat{\mathsf{se}}_\theta = \sqrt{\frac1n} \times \left[ \hat p_n^{1/2} (1-\hat p_n)^{3/2}\right].$$
+
+```{block, type = 'ejercicio'}
+
+Comprueba la fórmula del método delta para el momio en función de la fracción de éxitos, y también comprueba que de el mismo resultado analítico que habías calculado en el ejercicio anterior.
+
+```
+
 
 ## Optimalidad del $\textsf{MLE}$ {-}
 
@@ -380,13 +527,13 @@ tanto, en promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual
 utilizar?
 
 Un criterio para comparar estimadores es el **error cuadrático medio**
-($\textsf{MLE}$, por sus siglas en inglés).
+($\textsf{MSE}$, por sus siglas en inglés).
 
 ```{block, type = 'mathblock'}
 
 **Definición.** El error cuadrático medio de un estimador $\tilde \theta_n$ se
 calcula como
-$$\textsf{MSE}[\tilde \theta_n] = \mathbb{E}[(\tilde \theta_n - \theta^*)].$$
+$$\textsf{MSE}[\tilde \theta_n] = \mathbb{E}[(\tilde \theta_n - \theta^*)^2].$$
 
 ```
 
@@ -431,6 +578,17 @@ Un estimador insesgado que satisfaga esta desigualdad se dice que es
 *eficiente.* Nota que el lado derecho de la desigualdad es precisamente la
 varianza asintótica del $\textsf{MLE}.$ Por lo tanto, éste es *asintóticamente
 eficiente.*
+
+```{block, type = 'comentario'}
+
+Es importante hacer enfásis en que la optimalidad del $\textsf{MLE}$ es un
+resultado asintótico. Es decir, sólo se satisface cuando tenemos un número
+*suficiente* de observaciones. Qué tan grande debe ser el tamaño de muestra
+varia de problema a problema. Es por esto que para muestras de tamaño finito se
+prefieren estimadores que minimicen el $\textsf{MSE},$ como cuando hacemos
+regresión ridge o utilizamos el estimador James--Stein para un vector de medias. 
+
+```
 
 
 El siguiente diagrama muestra de manera gráfica la relación entre las distintas 
