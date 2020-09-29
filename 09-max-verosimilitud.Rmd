@@ -5,7 +5,7 @@ library(tidyverse)
 library(patchwork)
 library(broom)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.height=2.5, out.width = "95%")
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```

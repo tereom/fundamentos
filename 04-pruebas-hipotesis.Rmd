@@ -1,7 +1,7 @@
 # Pruebas de hipótesis
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center')
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.align = 'center', cache = TRUE)
 N_rep <- 1000
 ```
 
@@ -658,7 +658,7 @@ dif_obs %>% round(3)
 
 Ahora construimos nuestra distribución nula o de referencia:
 
-```{r sims-te-2}
+```{r sims-te-2, cache = TRUE}
 set.seed(2)
 reps <- lineup(null_permute("Tea"), te_azucar, n = N_rep)
 valores_ref <- reps %>%

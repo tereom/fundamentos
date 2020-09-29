@@ -5,7 +5,7 @@ library(tidyverse)
 library(patchwork)
 library(broom)
 source("R/funciones_auxiliares.R")
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.height=2.5, out.width = '95%')
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -153,12 +153,12 @@ broom::tidy(MASS::fitdistr(muestra, "normal"))
 Podemos checar también la normalidad aproximada de las distribuciones
 bootstrap para construir nuestros intervalos:
 
-```{r}
+```{r, fig.height=2.8, out.width = '99%'}
 ggplot(reps_boot, aes(sample = estimador_boot)) + 
   geom_qq() + geom_qq_line(colour = "red") +
   facet_wrap(~parametro, scales = "free_y")
 ```
-La distribuciones son aproximadamente normales. Nótese que esto no siempre
+Las distribuciones son aproximadamente normales. Nótese que esto no siempre
 sucede, especialmente con parámetros de dispersión como $\sigma$. (Examina
 las curvas de nivel del ejemplo de arriba).
 
@@ -185,7 +185,7 @@ reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(mues
 reps_boot
 ```
 
-```{r}
+```{r, fig.height=2.8, out.width = '99%'}
 ggplot(reps_boot, aes(sample = estimador_boot)) + 
   geom_qq() + geom_qq_line(colour = "red") +
   facet_wrap(~parametro, scales = "free_y")
@@ -210,18 +210,21 @@ par de estadísticas $(\mu_{\mathsf{mv}}, \sigma_{\mathsf{mv}})$. En este caso, 
 independientes (lo cual es posible demostrar).
 
 
-```{block, type = 'mathblock'}
-**Bootstrap paramétrico**. Supongamos que tenemos una muestra iid $X_1,X_2,\ldots, X_n \sim f(x;\theta)$ de un modelo
-paramétrico, y un estimador de máxima verosimilitud $\hat{\theta}_{\mathsf{mv}}$ para $\theta$.
-El error estándar estimado para $\hat{\theta}_{\mathsf{mv}}$ por medio del bootstrap
-paramétrico se calcula como sigue:
+```{block2, type = 'mathblock'}
 
-1. Se calcula $\hat{\theta}_{\mathsf{mv}}$ para la muestra observada
-2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{mv}})$ (muestra bootstrap)
-3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{mv}}$
-4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000)
-5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}$
-obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{mv}}$ 
+**Bootstrap paramétrico**. Supongamos que tenemos una muestra iid
+$X_1,\ldots, X_n \sim f(x;\theta)$ de un modelo paramétrico, y un estimador
+de máxima verosimilitud $\hat{\theta}_{\mathsf{mv}}$ para $\theta$. El error
+estándar estimado para $\hat{\theta}_{\mathsf{mv}}$ por medio del bootstrap
+paramétrico se calcula como sigue:  
+
+1. Se calcula $\hat{\theta}_{\mathsf{mv}}$ para la muestra observada. 
+2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{mv}})$ (muestra bootstrap). 
+3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{mv}}.$
+4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000). 
+5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}.$
+obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{mv}}.$ 
+
 
 ```
 
@@ -257,7 +260,7 @@ de los cuantiles teóricos de $\hat{f}$ contra los cuantiles muestrales.
 
 **Ejemplo**. Consideramos la siguiente muestra:
 
-```{r}
+```{r, fig.height=2.8, out.width = '95%'}
 set.seed(32)
 muestra <- rgamma(150, 0.4, 1)
 qplot(muestra) 
@@ -271,7 +274,7 @@ est_mv <- MASS::fitdistr(muestra, "exponential")
 rate_mv <- est_mv$estimate
 rate_mv
 ```
-```{r, fig.width = 5, fig.height=3.5}
+```{r, fig.height=2.8, out.width = '65%'}
 g_exp <- ggplot(tibble(muestra = muestra), aes(sample = muestra)) +
   geom_qq(distribution = stats::qexp, dparams = list(rate = rate_mv)) +
   geom_abline() + labs(subtitle = "Gráfica de cuantiles exponenciales")
@@ -285,7 +288,7 @@ izquierda está más comprimida en los datos que en una exponencial.
 
 Sin embargo, si ajustamos una gamma:
 
-```{r, fig.width = 8, fig.height=3.5}
+```{r, fig.height=3, out.width = '99%'}
 est_mv <- MASS::fitdistr(muestra, "gamma")$estimate
 g_gamma <- ggplot(tibble(muestra = muestra), aes(sample = muestra)) +
   geom_qq(distribution = stats::qgamma, 
@@ -330,7 +333,7 @@ Ojo: estos parámetros están en escala logarítmica. Puedes checar aqui
 para ver cómo calcular media y desviación estándar de las distribuciones originales.
 Ahora verificamos el ajuste:
 
-```{r}
+```{r, fig.height=3, out.width = '99%'}
 g_1 <- ggplot(propinas %>% filter(momento == "Cena"), aes(sample = cuenta_persona)) +
   geom_qq(dparams = list(mean = propinas_mv$estimate[1], sd = propinas_mv$estimate[2]),
           distribution = stats::qlnorm) + ylim(c(0, 20)) +
@@ -346,6 +349,7 @@ El ajuste es bueno, aunque podríamos checar la cola de la derecha en la Comida:
 de lo que esperaríamos). 
 
 ```{block, type="ejercicio"}
+
 - ¿Tiene sentido ajustar dos distribuciones con parámetros
 separados? ¿Crees que estas dos distribuciones podrían compartir algún 
 parámetro? Para esto
@@ -353,6 +357,7 @@ puedes revisar el error estándar de los estimadores de máxima verosimilitud qu
 arriba. ¿Qué ventajas verías en usar menos parámetros? ¿Cómo implementarías la 
 estimación?
 - ¿Qué pasa si intentas ajustar un modelo normal a estos datos?
+
 ```
 
 
@@ -378,7 +383,7 @@ Aquí está la función para simular y la log verosimilitud correspondiente. Aqu
 a ver un problema más difícil, así que usaremos la transformación logit para las
 proporciones, y no obtener resultados fuera del rango 0-1 al optimizar:
 
-```{r, fig.width = 5, fig.height = 3.5}
+```{r}
 inv_logit <- function(theta){
   exp(theta) / (1 + exp(theta))
 }
@@ -456,7 +461,7 @@ reps_boot %>% mutate(across(everything(), round, 2)) %>% head
 En primer lugar, notamos varíación muy alta en los estimadores. El optimizador
 encontró resultados que no tienen sentido:
 
-```{r}
+```{r, out.width = "85%"}
 ggplot(reps_boot, 
        aes(x = inv_logit(p_azar_logit), y = inv_logit(p_corr_logit), 
            colour = factor(convergence))) +
@@ -475,6 +480,7 @@ con estos datos.
 datos.
 
 ```{block, type="ejercicio"}
+
 - ¿Qué conclusiones acerca del examen obtienes al ver estas simulaciones bootstrap?
 ¿Cómo se deberían reportar estos resultados?
 - Qué pasa en este ejemplo si la $p_corr$ es más grande, o el tamaño de muestra es más 
@@ -482,7 +488,8 @@ grande?
 - Repite el ejercicio con los parámetros del primer ejemplo ($p_azar = 0.3, p_corr=0.75$)
 y el mismo tamaño de muestra. ¿Qué sucede en este caso?
 - En el caso extremo, decimos que el modelo no está indentificado, y eso generalmente
-sucede por un problema en el planteamiento del modelo, independientemente de los datos.
+sucede por un problema en el planteamiento del modelo, independientemente de los datos. 
 ¿Puedes imaginar un modelo así?
+
 ```
 

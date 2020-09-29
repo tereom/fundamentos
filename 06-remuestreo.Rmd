@@ -138,7 +138,7 @@ mean(muestra$precio_miles)
 
 Esta muestra nos da nuestro estimador de la distribución poblacional:
 
-```{r, fig.height = 3, out.width="95%"}
+```{r, fig.height = 2.5, out.width="99%"}
 bind_rows(muestra %>% mutate(tipo = "muestra"),
     poblacion_casas %>% mutate(tipo = "población")) %>%
 ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) +
@@ -148,7 +148,7 @@ ggplot(aes(sample = precio_miles, colour = tipo, group = tipo)) +
 
 O con histogramas:
 
-```{r, fig.height = 3, out.width="95%"}
+```{r, fig.height = 2.5, out.width="99%"}
 bind_rows(muestra %>% mutate(tipo = "muestra"),
     poblacion_casas %>% mutate(tipo = "población")) %>%
 ggplot(aes(x = precio_miles, group = tipo)) +
@@ -185,15 +185,18 @@ una de estas remuestras:
 ```{r, cache = TRUE}
 media_muestras <- map_dbl(1:5000, ~ muestra %>%  
     sample_n(200, replace = T) %>%
-    summarise(media_precio = mean(precio_miles), .groups = "drop") %>% pull(media_precio))
+    summarise(media_precio = mean(precio_miles), .groups = "drop") %>% 
+      pull(media_precio))
 ```
 
 Y nuestra estimación de la distribución de muestreo para la media es entonces:
 
-```{r, fig.height = 3, out.width="95%"}
+```{r, fig.height = 2.5, out.width="99%"}
 bootstrap <- tibble(media = media_muestras)
-g_cuantiles <- ggplot(bootstrap, aes(sample = media)) + geom_qq(distribution = stats::qunif)
-g_histograma <- ggplot(bootstrap, aes(x = media)) + geom_histogram(binwidth = 2)
+g_cuantiles <- ggplot(bootstrap, aes(sample = media)) + 
+  geom_qq(distribution = stats::qunif)
+g_histograma <- ggplot(bootstrap, aes(x = media)) + 
+  geom_histogram(binwidth = 2)
 g_cuantiles + g_histograma
 ```
 A esta le llamamos la distribución de remuestreo de la media, que definimos más
@@ -249,8 +252,6 @@ Una remuestra se obtiene:
 sample(muestra, size = 5, replace = TRUE)
 ```
 Nótese que algunos valores de la muestra original pueden aparecer varias veces, y otros no aparecen del todo.
-
-
 
 ```{block, type='comentario'}
 **La idea del bootstrap.** La muestra original es una aproximación de la población
@@ -465,7 +466,7 @@ te %>% mutate(negro = ifelse(Tea == "black", 1, 0)) %>%
 hizo tomando una muestra aleatoria simple de tamaño 300 de la población de tomadores de té que
 nos interesa. Podemos entonces usar el boostrap:
 
-```{r, out.width="95%",  cache = TRUE}
+```{r, cache = TRUE, fig.height = 2.5, out.width="99%"}
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   prop_negro <- datos %>%
@@ -517,7 +518,7 @@ de muestreo, o para "mejorar" la estimación remuestreando.
 En nuestro ejemplo, podemos ver varias muestras (por ejemplo 20) de tamaño 200, y
 vemos cómo se ve la aproximación a la distribución de la población:
 
-```{r, echo = FALSE, message = FALSE, fig.width =4, fig.height = 3, cache = TRUE}
+```{r, echo = FALSE, message = FALSE, cache = TRUE, fig.height = 2.5, out.width="99%"}
 set.seed(911)
 muestras <- map(1:20, function(x) {
     muestra <- sample_n(poblacion_casas, 200, replace = T) %>%
@@ -535,7 +536,7 @@ geom_qq(data = dat_pob, aes(sample = precio_miles), colour = "red", size = 1,
 Podemos calcular las distribuciones de remuestreo para cada muestra bootstrap,
 y compararlas con la distribución de muestreo real.
 
-```{r,  fig.width =4, fig.height = 3, cache = TRUE, out.width="95%"}
+```{r, echo = FALSE, message = FALSE, cache = TRUE, fig.height = 2.5, out.width="99%"}
 # paso 1: define el estimador
 calc_estimador <- function(datos){
   media_precio <- datos %>%
@@ -574,7 +575,7 @@ dist_muestreo <- datos_sim %>%
 ```
 
 
-```{r, echo = FALSE, fig.width =4, fig.height = 3}
+```{r, echo = FALSE, fig.height = 2.5, out.width="99%"}
 ggplot(dist_boot, aes(sample = precio_miles, group = interaction(rep))) +
     geom_qq(distribution = stats::qunif, size = 0.1, alpha = 0.1) +
 geom_qq(data = dist_muestreo, aes(sample = precio_miles), colour = "red",
@@ -725,7 +726,6 @@ $B=10,000$ muestras dependiendo la presición que se busque.
 ![](images/bootstrap_mc_error.png)
 
 
-
 ## Error estándar *bootstrap* e intervalos normales {-}
 
 Ahora podemos construir nuestra primera versión de intervalos de confianza
@@ -790,7 +790,7 @@ prop_hat %>% round(2)
 
 Podemos graficar su distribución *bootstrap* ---la cual simulamos arriba---.
 
-```{r, out.width = "95%"}
+```{r, out.width = "99%", fig.height = 2.5}
 g_hist <- ggplot(prop_negro_tbl, aes(x = prop_negro)) + geom_histogram(bins = 15)
 g_qq_normal <- ggplot(prop_negro_tbl, aes(sample = prop_negro)) +
   geom_qq() + geom_qq_line(colour = "red")
@@ -835,7 +835,7 @@ está entre `r round(intervalo_95[1], 2)` y `r round(intervalo_95[2], 2)`.
 Ahora consideremos el problema de estimar el total del valor de las casas
 vendidas en un periodo. Tenemos una muestra de tamaño $n=150$:
 
-```{r, out.width = "95%"}
+```{r, out.width = "99%", fig.height = 2.5}
 # muestra original
 set.seed(121)
 muestra_casas <- sample_n(poblacion_casas, size = 150)
@@ -954,7 +954,7 @@ simular_intervalos <- function(rep, size = 150){
 sims_intervalos <- read_rds("cache/sims_intervalos.rds")
 ```
 
-```{r, fig.width =8, fig.height=4}
+```{r , out.width = "99%", fig.height = 2.5}
 total <- sum(poblacion_casas$precio_miles)
 sims_tbl <- sims_intervalos %>%
   bind_rows %>%
@@ -1144,7 +1144,7 @@ el estimador original.
 De la tabla anterior inferimos que la media en la cuenta en la cena es más grande que la de la comida.
 Podemos graficar agregando los estimadores plugin:
 
-```{r, fig.height = 3}
+```{r, fig.height = 2.5, out.width="99%"}
 estimadores <- propinas %>%
   group_by(momento) %>%
   rename(term = momento) %>%
@@ -1195,7 +1195,7 @@ y forma.
 Supongamos que queremos comparar directamente la media de la cuenta total
 en comida y cena. Podemos hacer:
 
-```{r, fig.width = 8, fig.height=3.5}
+```{r, fig.height=3, out.width="99%"}
 estimador_dif <- function(split, ...){
   muestra <- analysis(split) %>% group_by(momento)
   muestra %>%
@@ -1258,7 +1258,7 @@ para descartar que esta diferencia haya aparecido por azar debido a la variació
 Nótese que aquí no tenemos estratos, pues solo hay una muestra de individuo con
 dos mediciones.
 
-```{r, fig.width = 8, fig.height=3.5}
+```{r, fig.height=3, out.width="99%"}
 estimador_dif <- function(split, ...){
   muestra <- analysis(split)
   muestra %>%
@@ -1309,7 +1309,7 @@ casas_muestra <- sample_n(poblacion_casas, 200)
 
 El estimador de interés es:
 
-```{r, fig.width = 8, fig.height=3.5}
+```{r, fig.height=3, out.width="99%"}
 estimador_razon <- function(split, ...){
   muestra <- analysis(split)
   muestra %>%
@@ -1355,8 +1355,6 @@ De modo que en esta zona, entre 12% y 16% de toda el área disponible es ocupada
 
 ### Ejemplo: suavizadores {-}
 
-
-
 Podemos usar el *bootstrap* para juzgar
 la variabilidad de un suavizador, que consideramos como nuestra
 estadística:
@@ -1389,7 +1387,7 @@ reps <- map(1:10, ~ suaviza_boot(.x, casas_muestra %>% filter(calidad_gral < 7))
     bind_rows()
 ```
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, fig.height=3, out.width="99%"}
 # ojo: la rutina loess no tienen soporte para extrapolación
 graf_casas(casas_muestra) +
     geom_line(data = reps, aes(y = ajustados, group = rep), alpha = 1, colour = "red")
@@ -1569,7 +1567,7 @@ muestra %>%
 Este número es muy cercano a la media verdadera de la población:
 `r round(mean(estudiantes$calif), 2)`, pero esta es una de muchas posibles muestras.
 
-```{r, fig.height=2.8}
+```{r, fig.height=2.8, out.width="99%"}
 medias_mas <- rerun(1000, mean(sample_n(estudiantes, 60)$calif)) %>%
     flatten_dbl()
 sd(medias_mas)
@@ -1594,7 +1592,7 @@ estratificar, supongamos que sabemos el tipo de cada escuela (urbana, rural o
 indígena) y sabemos también que sabemos que la calificación de los estudiantes de escuelas urbanas tiende a ser distinta a las calificaciones que los estudiantes de
 escuelas rurales o indígenas.
 
-```{r, fig.height=2.8}
+```{r, fig.height=2.8, out.width="99%"}
 muestra_estrat <- estudiantes %>%
     group_by(tipo) %>%
     sample_frac(0.0004)
@@ -1645,7 +1643,7 @@ la escuela y que una vez ahí examine a todos los alumnos de sexto grado. Podemo
 imaginar que considerando estos costos por visita de escuela nos alcance para
 visitar 40 escuelas y en cada una examinar a todos los estudiantes.
 
-```{r, fig.height=2.8}
+```{r, fig.height=2.8,  out.width="99%"}
 muestra_escuelas <- escuela %>%
     group_by(tipo) %>%
     sample_frac(size = 0.008)
@@ -1783,7 +1781,7 @@ $w_k^*$ en lugar de los originales $w_k$.
 
 4. Calculamos el error estándar como:
 
-$$\hat{\textsf{se}}_B = \bigg\{\frac{\sum_{b=1}^B[\hat{\theta}^*(b)-\hat{\theta}^*(\cdot)]^2 }{B}\bigg\}^{1/2}$$
+$$\hat{\textsf{se}}_B = \bigg\{\frac1B \sum_{b=1}^B[\hat{\theta}^*(b)-\hat{\theta}^*(\cdot)]^2 \bigg\}^{1/2}$$
 
 Podemos elegir cualquier valor de $m_h \geq 1$, el más sencillo es elegir
 $m_h=n_h-1$, en este caso:
