@@ -3,6 +3,7 @@
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 library(purrr)
+library(patchwork)
 source("R/funciones_auxiliares.R")
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
@@ -785,7 +786,7 @@ mismo tamaño que la original:
 simular_modelo <- function(n, media, sigma){
   rnorm(n, media, sigma)
 }
-muestra_bootstrap <- simular(length(muestra), 
+muestra_bootstrap <- simular_modelo(length(muestra), 
                              est_mv["media", "estimador"], 
                              est_mv["sigma", "estimador"])
 head(muestra_bootstrap)
@@ -1135,7 +1136,7 @@ names(probs_mv) <- c("p_azar", "p_corr")
 probs_mv
 ```
 
-En primer lugar, parece ser que nuestras estimaciones son menos precias. Vamos 
+En primer lugar, parece ser que nuestras estimaciones son menos precisas. Vamos 
 a hacer bootstrap paramétrico:
 
 ```{r}
