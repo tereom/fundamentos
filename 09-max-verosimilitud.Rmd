@@ -759,4 +759,3 @@ c(media = mean(muestra), sigma = sd_n(muestra)) %>% round(4)
 La siguiente pregunta qué nos interesa hacer es: ¿cómo estimamos la variabilidad
 de estos estimadores? Más adelante veremos una respuesta basada en teoría, pero
 también podemos resolver este problema usando el bootstrap.
-
