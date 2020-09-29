@@ -1,4 +1,4 @@
-# Bootstrap paramétrico {-}
+# *Bootstrap* paramétrico
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
@@ -13,21 +13,20 @@ theme_set(theme_minimal())
 
 Cuando nuestras observaciones provienen de un modelo teórico parametrizado
 con algunos parámetros que queremos estimar, y utilizamos máxima verosimilitud 
-para hacer nuestra estimación, no podemos aplicar directamente el bootstrap no
+para hacer nuestra estimación, no podemos aplicar directamente el *bootstrap* no
 paramétrico que vimos en las secciones anteriores. La razón es que nuestro
-estimador, en general, no es un estimador de plug-in necesariamente.
+estimador, en general, no es un estimador de *plug-in* necesariamente.
 
 Sin embargo, suponiendo que el modelo paramétrico que estamos usando es apropiado,
 podemos remuestrear de tal modelo para estimar la varianza de nuestros estimadores.
-Este proceso se llama el **bootstrap paramétrico**. Antes de hacer una definición
+Este proceso se llama el ***bootstrap* paramétrico**. Antes de hacer una definición
 precisa, veamos cómo calcularíamos error estándar para los estimadores de máxima
-verosimilitud de la normal que vimos arriba
+verosimilitud de la normal que vimos arriba.
 
 
 **Ejemplo (sección máxima verosimilitud)**. Como ejercicio, podemos encontrar los estimadores de máxima
-verosimilitud cuando tenemos una muestra $X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2).$
-(puedes derivar e igualar el cero para encontrar el mínimo). También podemos resolver numéricamente,
-por ejemplo:
+verosimilitud cuando tenemos una muestra $X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2)$
+(puedes derivar e igualar a cero para encontrar el mínimo). También podemos resolver numéricamente.
 
 Supongamos que tenemos la siguiente muestra:
 
@@ -37,7 +36,7 @@ muestra <- rnorm(150, mean = 1, sd = 2)
 ```
 
 
-La función generadora de la log verosimilitud para una muestra es (ve la expresión
+La función generadora de la log-verosimilitud para una muestra es (ve la expresión
 del ejercicio anterior y calcula su logaritmo), y generamos la función de verosimilitud
 para nuestra muestra:
 
@@ -86,7 +85,7 @@ muestra_bootstrap <- simular_modelo(length(muestra),
 head(muestra_bootstrap)
 ```
 
-Una vez que tenemos esta muestra bootstrap recalculamos los estimadores de máxima
+Una vez que tenemos esta muestra *bootstrap* recalculamos los estimadores de máxima
 verosimlitud. Esto se hace optimizando:
 
 
@@ -102,17 +101,17 @@ est_mv_boot <- tibble(parametro = c("media", "sigma"), estimador = res_boot$par)
 est_mv_boot
 ```
 
-Y esta es nuestra replicación bootstrap de los estimadores de máxima verosimilitud.
+Y esta es nuestra replicación *bootstrap* de los estimadores de máxima verosimilitud.
 
-La idea es la misma que el bootstrap, con la ventaja de que estamos simulando
+La idea es la misma que el *bootstrap*, con la ventaja de que estamos simulando
 del modelo que suponemos es el correcto, es decir, estamos usando información adicional
-que no teníamos en el bootstrap paramétrico. Ahora es necesario repetir un 
+que no teníamos en el *bootstrap* paramétrico. Ahora es necesario repetir un 
 número grande de veces.
 
 Nótese que esta función solo envuelve el proceso de remuestreo,
 cálculo de la función de verosimilitud y optimización:
 
-```{r}
+```{r, cache = TRUE}
 rep_boot <- function(rep, crear_log_p, est_mv, n){
   muestra_bootstrap <- simular_modelo(length(muestra), 
                                est_mv["media", "estimador"], 
@@ -144,7 +143,7 @@ bind_cols(est_mv, error_est) %>%
   mutate(across(where(is.numeric), round, 3)) %>% 
   select(parametro, estimador, ee_boot)
 ```
-Si usamos la rutina estándar de R (dejaremos para despúés explicar cómo
+Si usamos la rutina estándar de `R` (dejaremos para después explicar cómo
 calcula los errores estándar esta rutina ---no es con bootstrap):
 
 ```{r}
@@ -179,9 +178,9 @@ est_mv <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>%
   column_to_rownames(var = "parametro")
 est_mv
 ```
-Hacemos bootstrap paramétrico
+Hacemos *bootstrap* paramétrico
 
-```{r}
+```{r, cache = TRUE}
 reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra))) 
 reps_boot
 ```
@@ -219,16 +218,16 @@ paramétrico se calcula como sigue:
 
 1. Se calcula $\hat{\theta}_{\mathsf{mv}}$ para la muestra observada
 2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{mv}})$ (muestra bootstrap)
-3. Se recalcula el estimador de máxima verosimilitud para la muestra bootstrap $\hat{\theta^*}_{\mathsf{mv}}$
+3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{mv}}$
 4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000)
 5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}$
 obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{mv}}$ 
 
 ```
 
-## Ventajas y desventajas de bootstrap paramétrico
+## Ventajas y desventajas de *bootstrap* paramétrico {-}
 
-- Ventaja: el bootstrap paramétrico puede dar estimadores más precisos e intervalos
+- Ventaja: el *bootstrap* paramétrico puede dar estimadores más precisos e intervalos
 más angostos y bien calibrados que el no paramétrico, **siempre y cuando el modelo
 teórico sea razonable.** 
 
@@ -236,15 +235,15 @@ teórico sea razonable.**
 desajuste vs. el proceso generador real de los datos. Si el ajuste es muy malo, los resultados
 tienen poca utilidad. Para el no paramétrico no es necesario hacer supuestos teóricos.
 
-- Ventaja: el bootstrap paramétrico puede ser más escalable que el no paramétrico, pues no es necesario cargar y remuestrear los datos originales, y tenemos mejoras adicionales cuando tenemos expresiones explícitas
+- Ventaja: el *bootstrap* paramétrico puede ser más escalable que el no paramétrico, pues no es necesario cargar y remuestrear los datos originales, y tenemos mejoras adicionales cuando tenemos expresiones explícitas
 para los estimadores de máxima verosimilitud (como en el caso normal, donde es innecesario
 hacer optimización numérica).
 
-- Desventaja: el bootstrap paramétrico es conceptualmente más complicado que el 
+- Desventaja: el *bootstrap* paramétrico es conceptualmente más complicado que el 
 no paramétrico, y como vimos arriba, sus supuestos pueden ser más frágiles que los del
 no-paramétrico.
 
-## Verificando los supuestos distribucionales
+## Verificando los supuestos distribucionales {-}
 
 Como hemos discutido antes, podemos hacer pruebas de hipótesis para checar si una muestra
 dada proviene de una distribución conocida. Sin embargo, la herramienta más común es
@@ -357,7 +356,7 @@ estimación?
 ```
 
 
-## Modelos mal indentificados
+## Modelos mal identificados
 
 Para algunos modelos y algunos parámetros, puede suceder que existan varias
 configuraciones muy diferentes de los parámetros que sean consistentes con
@@ -432,7 +431,7 @@ probs_mv
 ```
 
 En primer lugar, parece ser que nuestras estimaciones son menos precias. Vamos 
-a hacer bootstrap paramétrico:
+a hacer *bootstrap* paramétrico:
 
 ```{r}
 rep_boot <- function(rep, simular, crear_log_p, pars, n){
