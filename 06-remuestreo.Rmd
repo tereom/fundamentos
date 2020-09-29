@@ -1789,7 +1789,7 @@ est_upm <- hogar %>%
 hogar_factor <- est_upm %>% 
     group_by(est_dis) %>% # dentro de cada estrato tomamos muestra (n_h-1)
     sample_n(size = first(n) - 1, replace = TRUE) %>% 
-    add_count(upm, name = "m_hi") %>% # calculamos m_hi*
+    add_count(est_dis, upm, name = "m_hi", wt = 1) %>% # calculamos m_hi*
     left_join(hogar, by = c("est_dis", "upm", "n")) %>% 
     mutate(factor_b = factor * m_hi * n / (n - 1))
 
@@ -1806,7 +1806,7 @@ svy_boot <- function(est_upm, hogar){
         mutate(factor_b = factor * m_h * n / (n - 1))
 }
 set.seed(1038984)
-boot_rep <- rerun(250, svy_boot(est_upm, hogar))
+boot_rep <- rerun(500, svy_boot(est_upm, hogar))
 
 # Aplicación a ingreso medio
 wtd_mean <- function(w, x, na.rm = FALSE) {
@@ -1846,7 +1846,7 @@ enigh_design <- hogar %>%
 # 2. Elegimos bootstrap como el método para el cálculo de errores estándar
 set.seed(7398731)
 enigh_boot <- enigh_design %>% 
-    as_survey_rep(type = "subbootstrap", replicates = 250)
+    as_survey_rep(type = "subbootstrap", replicates = 500)
 
 # 3. Así calculamos la media
 enigh_boot %>% 
