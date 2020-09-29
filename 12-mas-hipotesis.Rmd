@@ -33,7 +33,7 @@ sentido y son difíciles de interpretar.
 Para esta sección seguiremos más a @Wasserman (capítulo 10), pero puedes
 revisar también @Chihara (capítulo 8).
 
-## Prueba de Wald
+## Prueba de Wald {-}
 
 Como hemos visto, existe normalidad asintótica en varios estimadores que
 hemos considerado, como medias y proporciones muestrales.
@@ -161,7 +161,7 @@ es distinta de 0.5.
 
 
 
-## Observación: pruebas $t$ y práctica estadística.
+## Observación: pruebas $t$ y práctica estadística {-}
 
 Con más supuestos distribucionales podemos hacer otros tipos de pruebas donde
 no requerimos hacer supuestos asintóticos. Por ejemplo, si suponemos
@@ -198,7 +198,7 @@ Si tenemos duda de esos supuestos, podemos hacer
 pruebas gráficas o de permutaciones, si son apropiadas.
 
 
-## Prueba de Wald para dos medias o proporciones
+## Prueba de Wald para dos medias o proporciones {-}
 
 Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
 distintas, y queremos ver si la hipótesis de medias poblacionales
@@ -276,7 +276,7 @@ de 24 horas es más alto que 1 hora de corrida, los datos no tienen indicios fue
 de que vayamos a perder en desempeño, y podriamos seleccionar el algoritmo 1.
 
 
-## Datos pareados
+## Datos pareados {-}
 
 Las pruebas que acabamos de para comparar medias requieren
 poblaciones independientes. Si las dos muestras están pareadas (es decir,
@@ -372,7 +372,7 @@ el algoritmo 2 parece ser mejor.
 ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
 ```
 
-## Pruebas de cociente de verosimilitud
+## Pruebas de cociente de verosimilitud {-}
 
 Otra técnica clásica para hacer pruebas de hipótesis es el de cociente
 de verosimilitudes. Con esta técnica podemos hacer pruebas que involucren
@@ -453,7 +453,7 @@ Para construir una prueba asociada, como siempre, necesitamos una distribución 
 referencia. Esto podemos hacerlo con simulación, o usando resultados asintóticos.
 
 
-### Distribución de referencia para pruebas de cocientes.
+### Distribución de referencia para pruebas de cocientes {-}
 
 Para nuestro ejemplo anterior, podemos simular datos bajo la hipótesis nula,
 y ver cómo se distribuye la estadística $\lambda$:
@@ -569,7 +569,7 @@ Este resultado asintótico no es trivial, y se usa comúnmente para calcular
 valores $p$. Discutiremos más este punto más adelante.
 
 
-## Otro tipo de pruebas
+## Otro tipo de pruebas {-}
 
 Con cocientes de verosimlitud podemos diseñar pruebas para contrastar
 condiciones que sólo un subconjunto de parámetros cumple. 
