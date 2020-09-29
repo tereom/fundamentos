@@ -356,7 +356,7 @@ estimación?
 ```
 
 
-## Modelos mal identificados
+## Modelos mal identificados {-}
 
 Para algunos modelos y algunos parámetros, puede suceder que existan varias
 configuraciones muy diferentes de los parámetros que sean consistentes con
