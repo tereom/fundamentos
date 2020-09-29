@@ -4,6 +4,7 @@
 library(tidyverse)
 library(purrr)
 library(patchwork)
+library(broom)
 source("R/funciones_auxiliares.R")
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
@@ -853,7 +854,7 @@ Si usamos la rutina estándar de R (dejaremos para despúés explicar cómo
 calcula los errores estándar esta rutina ---no es con bootstrap):
 
 ```{r}
-tidy(MASS::fitdistr(muestra, "normal"))
+broom::tidy(MASS::fitdistr(muestra, "normal"))
 ```
 
 Podemos checar también la normalidad aproximada de las distribuciones
@@ -1027,7 +1028,7 @@ propinas <- read_csv("data/propinas.csv") %>%
     mutate(cuenta_persona = cuenta_total / num_personas)
 propinas_mv <- propinas %>% 
   group_by(momento) %>% 
-  summarise(est_mv = list(tidy(MASS::fitdistr(cuenta_persona, "lognormal"))))  %>% 
+  summarise(est_mv = list(broom::tidy(MASS::fitdistr(cuenta_persona, "lognormal"))))  %>% 
   unnest(est_mv)
 propinas_mv 
 ```
