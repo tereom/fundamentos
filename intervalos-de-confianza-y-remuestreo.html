@@ -1691,11 +1691,11 @@ estándar sea muy complicado, para atacar este problema hay dos técnicas básic
 bootstrap. El incremento en el poder de cómputo ha favorecido los métodos de
 remuestreo pues la linearización requiere del desarrollo de una fórmula para
 cada estimación y supuestos adicionales para simplificar.</p>
-<p>En 1988 <span class="citation">(<span class="citeproc-not-found" data-reference-id="RaoWu"><strong>???</strong></span>)</span> propusieron un método de bootstrap para diseños
+<p>En 1988 <span class="citation">Rao and Wu (<a href="#ref-RaoWu" role="doc-biblioref">1988</a>)</span> propusieron un método de bootstrap para diseños
 estratificados multietápicos con reemplazo de UPMs que describimos a
 continuación.</p>
 <p><strong>ENIGH</strong>. Usaremos como ejemplo la Encuesta Nacional de Ingresos y
-Gastos de los Hogares, ENIGH 2018 <span class="citation">(<span class="citeproc-not-found" data-reference-id="enigh"><strong>???</strong></span>)</span>, esta encuesta usa un diseño de
+Gastos de los Hogares, ENIGH 2018 <span class="citation">(INEGI <a href="#ref-enigh" role="doc-biblioref">2018</a>)</span>, esta encuesta usa un diseño de
 conglomerados estratificado.</p>
 <p>Antes de proceder a bootstrap debemos entender como se seleccionaron los datos,
 esto es, el <a href="https://www.inegi.org.mx/contenidos/programas/enigh/nc/2018/doc/enigh18_diseno_muestral_ns.pdf">diseño de la muestra</a>:</p>
@@ -1799,7 +1799,7 @@ ponderador podría tomar valores negativos.</p>
 <span id="cb252-5"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-5"></a>hogar_factor &lt;-<span class="st"> </span>est_upm <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb252-6"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-6"></a><span class="st">    </span><span class="kw">group_by</span>(est_dis) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># dentro de cada estrato tomamos muestra (n_h-1)</span></span>
 <span id="cb252-7"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-7"></a><span class="st">    </span><span class="kw">sample_n</span>(<span class="dt">size =</span> <span class="kw">first</span>(n) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb252-8"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-8"></a><span class="st">    </span><span class="kw">add_count</span>(upm, <span class="dt">name =</span> <span class="st">&quot;m_hi&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># calculamos m_hi*</span></span>
+<span id="cb252-8"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-8"></a><span class="st">    </span><span class="kw">add_count</span>(est_dis, upm, <span class="dt">name =</span> <span class="st">&quot;m_hi&quot;</span>, <span class="dt">wt =</span> <span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># calculamos m_hi*</span></span>
 <span id="cb252-9"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-9"></a><span class="st">    </span><span class="kw">left_join</span>(hogar, <span class="dt">by =</span> <span class="kw">c</span>(<span class="st">&quot;est_dis&quot;</span>, <span class="st">&quot;upm&quot;</span>, <span class="st">&quot;n&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb252-10"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-10"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">factor_b =</span> factor <span class="op">*</span><span class="st"> </span>m_hi <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
 <span id="cb252-11"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-11"></a></span>
@@ -1816,7 +1816,7 @@ ponderador podría tomar valores negativos.</p>
 <span id="cb252-22"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-22"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">factor_b =</span> factor <span class="op">*</span><span class="st"> </span>m_h <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
 <span id="cb252-23"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-23"></a>}</span>
 <span id="cb252-24"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-24"></a><span class="kw">set.seed</span>(<span class="dv">1038984</span>)</span>
-<span id="cb252-25"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-25"></a>boot_rep &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">250</span>, <span class="kw">svy_boot</span>(est_upm, hogar))</span>
+<span id="cb252-25"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-25"></a>boot_rep &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">500</span>, <span class="kw">svy_boot</span>(est_upm, hogar))</span>
 <span id="cb252-26"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-26"></a></span>
 <span id="cb252-27"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-27"></a><span class="co"># Aplicación a ingreso medio</span></span>
 <span id="cb252-28"><a href="intervalos-de-confianza-y-remuestreo.html#cb252-28"></a>wtd_mean &lt;-<span class="st"> </span><span class="cf">function</span>(w, x, <span class="dt">na.rm =</span> <span class="ot">FALSE</span>) {</span>
@@ -1832,9 +1832,8 @@ ponderador podría tomar valores negativos.</p>
 ## 1 49610.</code></pre>
 <p>Y el error estándar:</p>
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="intervalos-de-confianza-y-remuestreo.html#cb254-1"></a><span class="kw">map_dbl</span>(boot_rep, <span class="op">~</span><span class="kw">wtd_mean</span>(<span class="dt">w =</span> .<span class="op">$</span>factor_b, <span class="dt">x =</span> .<span class="op">$</span>ing_cor)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb254-2"><a href="intervalos-de-confianza-y-remuestreo.html#cb254-2"></a><span class="st">  </span><span class="kw">quantile</span>(<span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
-<pre><code>##     2.5%    97.5% 
-## 48777.71 50441.46</code></pre>
+<span id="cb254-2"><a href="intervalos-de-confianza-y-remuestreo.html#cb254-2"></a><span class="st">  </span><span class="kw">sd</span>()</span></code></pre></div>
+<pre><code>## [1] 441.0439</code></pre>
 <p>El método bootstrap está implementado en el paquete <code>survey</code> y más recientemente
 en <code>srvyr</code> que es una versión <em>tidy</em> que utiliza las funciones en <code>survey</code>.</p>
 <p>Podemos comparar nuestros resultados con la implementación en <code>survey</code>.</p>
@@ -1848,7 +1847,7 @@ en <code>srvyr</code> que es una versión <em>tidy</em> que utiliza las funcione
 <span id="cb256-8"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-8"></a><span class="co"># 2. Elegimos bootstrap como el método para el cálculo de errores estándar</span></span>
 <span id="cb256-9"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-9"></a><span class="kw">set.seed</span>(<span class="dv">7398731</span>)</span>
 <span id="cb256-10"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-10"></a>enigh_boot &lt;-<span class="st"> </span>enigh_design <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb256-11"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-11"></a><span class="st">    </span><span class="kw">as_survey_rep</span>(<span class="dt">type =</span> <span class="st">&quot;subbootstrap&quot;</span>, <span class="dt">replicates =</span> <span class="dv">250</span>)</span>
+<span id="cb256-11"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-11"></a><span class="st">    </span><span class="kw">as_survey_rep</span>(<span class="dt">type =</span> <span class="st">&quot;subbootstrap&quot;</span>, <span class="dt">replicates =</span> <span class="dv">500</span>)</span>
 <span id="cb256-12"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-12"></a></span>
 <span id="cb256-13"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-13"></a><span class="co"># 3. Así calculamos la media</span></span>
 <span id="cb256-14"><a href="intervalos-de-confianza-y-remuestreo.html#cb256-14"></a>enigh_boot <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -1856,23 +1855,23 @@ en <code>srvyr</code> que es una versión <em>tidy</em> que utiliza las funcione
 <pre><code>## # A tibble: 1 x 2
 ##   mean_ingcor mean_ingcor_se
 ##         &lt;dbl&gt;          &lt;dbl&gt;
-## 1      49610.           426.</code></pre>
+## 1      49610.           459.</code></pre>
 <div class="sourceCode" id="cb258"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb258-1"><a href="intervalos-de-confianza-y-remuestreo.html#cb258-1"></a>enigh_boot <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb258-2"><a href="intervalos-de-confianza-y-remuestreo.html#cb258-2"></a><span class="st">    </span><span class="kw">group_by</span>(edo) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb258-3"><a href="intervalos-de-confianza-y-remuestreo.html#cb258-3"></a><span class="st">    </span>srvyr<span class="op">::</span><span class="kw">summarise</span>(<span class="dt">mean_ingcor =</span> <span class="kw">survey_mean</span>(ing_cor)) </span></code></pre></div>
 <pre><code>## # A tibble: 30 x 3
 ##    edo   mean_ingcor mean_ingcor_se
 ##    &lt;chr&gt;       &lt;dbl&gt;          &lt;dbl&gt;
-##  1 10         50161.           871.
-##  2 11         46142.          1266.
-##  3 12         29334.          1063.
-##  4 13         38783.           941.
-##  5 14         60541.          1937.
-##  6 15         48013.          1234.
-##  7 16         42653.          1164.
-##  8 17         42973.          1604.
-##  9 18         48148.          1827.
-## 10 19         68959.          3935.
+##  1 10         50161.           942.
+##  2 11         46142.          1252.
+##  3 12         29334.          1067.
+##  4 13         38783.           933.
+##  5 14         60541.          1873.
+##  6 15         48013.          1245.
+##  7 16         42653.          1239.
+##  8 17         42973.          1675.
+##  9 18         48148.          1822.
+## 10 19         68959.          3625.
 ## # … with 20 more rows</code></pre>
 <p>Resumiendo:</p>
 <ul>
@@ -1924,6 +1923,12 @@ observaciones de una muestra grande.</p></li>
 </div>
 <div id="ref-Efron">
 <p>Efron, Bradley, and Robert J. Tibshirani. 1993. <em>An Introduction to the Bootstrap</em>. Monographs on Statistics and Applied Probability 57. Boca Raton, Florida, USA: Chapman &amp; Hall/CRC.</p>
+</div>
+<div id="ref-enigh">
+<p>INEGI. 2018. “Encuesta Nacional de Ingresos Y Gastos de Los Hogares (Enigh-2018). Diseño Muestral.” <a href="http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/702825070359.pdf">http://internet.contenidos.inegi.org.mx/contenidos/Productos/prod_serv/contenidos/espanol/bvinegi/productos/nueva_estruc/702825070359.pdf</a>.</p>
+</div>
+<div id="ref-RaoWu">
+<p>Rao, J. N. K., and C. F. J. Wu. 1988. “Resampling Inference with Complex Survey Data.” <em>Journal of the American Statistical Association</em> 83 (401): 231–41. <a href="https://doi.org/10.1080/01621459.1988.10478591">https://doi.org/10.1080/01621459.1988.10478591</a>.</p>
 </div>
 <div id="ref-Wasserman">
 <p>Wasserman, Larry. 2013. <em>All of Statistics: A Concise Course in Statistical Inference</em>. Springer Science &amp; Business Media.</p>

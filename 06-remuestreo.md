@@ -1959,7 +1959,7 @@ est_upm <- hogar %>%
 hogar_factor <- est_upm %>% 
     group_by(est_dis) %>% # dentro de cada estrato tomamos muestra (n_h-1)
     sample_n(size = first(n) - 1, replace = TRUE) %>% 
-    add_count(upm, name = "m_hi") %>% # calculamos m_hi*
+    add_count(est_dis, upm, name = "m_hi", wt = 1) %>% # calculamos m_hi*
     left_join(hogar, by = c("est_dis", "upm", "n")) %>% 
     mutate(factor_b = factor * m_hi * n / (n - 1))
 
@@ -1976,7 +1976,7 @@ svy_boot <- function(est_upm, hogar){
         mutate(factor_b = factor * m_h * n / (n - 1))
 }
 set.seed(1038984)
-boot_rep <- rerun(250, svy_boot(est_upm, hogar))
+boot_rep <- rerun(500, svy_boot(est_upm, hogar))
 
 # Aplicación a ingreso medio
 wtd_mean <- function(w, x, na.rm = FALSE) {
@@ -2000,12 +2000,11 @@ Y el error estándar:
 
 ```r
 map_dbl(boot_rep, ~wtd_mean(w = .$factor_b, x = .$ing_cor)) %>% 
-  quantile(c(0.025, 0.975))
+  sd()
 ```
 
 ```
-##     2.5%    97.5% 
-## 48777.71 50441.46
+## [1] 441.0439
 ```
 
 
@@ -2028,7 +2027,7 @@ enigh_design <- hogar %>%
 # 2. Elegimos bootstrap como el método para el cálculo de errores estándar
 set.seed(7398731)
 enigh_boot <- enigh_design %>% 
-    as_survey_rep(type = "subbootstrap", replicates = 250)
+    as_survey_rep(type = "subbootstrap", replicates = 500)
 
 # 3. Así calculamos la media
 enigh_boot %>% 
@@ -2039,7 +2038,7 @@ enigh_boot %>%
 ## # A tibble: 1 x 2
 ##   mean_ingcor mean_ingcor_se
 ##         <dbl>          <dbl>
-## 1      49610.           426.
+## 1      49610.           459.
 ```
 
 ```r
@@ -2052,16 +2051,16 @@ enigh_boot %>%
 ## # A tibble: 30 x 3
 ##    edo   mean_ingcor mean_ingcor_se
 ##    <chr>       <dbl>          <dbl>
-##  1 10         50161.           871.
-##  2 11         46142.          1266.
-##  3 12         29334.          1063.
-##  4 13         38783.           941.
-##  5 14         60541.          1937.
-##  6 15         48013.          1234.
-##  7 16         42653.          1164.
-##  8 17         42973.          1604.
-##  9 18         48148.          1827.
-## 10 19         68959.          3935.
+##  1 10         50161.           942.
+##  2 11         46142.          1252.
+##  3 12         29334.          1067.
+##  4 13         38783.           933.
+##  5 14         60541.          1873.
+##  6 15         48013.          1245.
+##  7 16         42653.          1239.
+##  8 17         42973.          1675.
+##  9 18         48148.          1822.
+## 10 19         68959.          3625.
 ## # … with 20 more rows
 ```
 
