@@ -787,7 +787,257 @@ que es similar al que obtuvimos con la estrategia del bootstrap paramétrico.
 
 
 
+## Errores tipo I y tipo II
 
+En algunas ocasiones, en lugar de solamente calcular un valor-$p$ queremos
+tomar una decisión asociada a distintas hipótesis que consideramos posibles. Por
+ejemplo, nuestra hipótesis nula podría ser
+
+- Hipótesis nula $H_0$: Una medicina nueva que estamos probando no es efectiva
+en reducir el colesterol en pacientes.
+
+Y queremos contrastar con una alternativa:
+
+- Hipótesis alternativa $H_A$: la medicina nueva reduce los niveles de colesterol
+en los pacientes.
+
+La decisión que está detrás de estas pruebas es: si no podemos rechazar la nula,
+la medicina no sale al mercado. Si rechazamos la nula, entonces la medicina es 
+aprobada para salir al mercado. 
+
+Para diseñar esta prueba, procedemos como sigue:
+
+1. Definimos cómo recolectar datos $X$ de interés
+2. Definimos una estádistica $T(X)$ de los datos.
+3. Definimos una **región de rechazo** $R$ de valores tales 
+que si $T(X)\in R$, entonces rechazaremos la hipótesis nula (e implícitamente tomaríamos
+la decisión asociada a la alternativa).
+
+Ejecutamos la prueba observando datos $X=x$, calculando $T(x)$, y checando
+si $T(x) \in R$. Si esto sucede entonces decimos que rechazamos la hipótesis nula,
+y tomamos la decisión asociada a la alternativa.
+
+**Ejemplo**. Si tenemos la hipótesis nula $p_1=0.5$ para una proporción,
+y al alternativa es $p_1\neq 0.5$, podemos usar la estadística de Wald
+$T(x) = \frac{\hat{p_1} - 0.5}{\hat{ee}}$. Podríamos definir la región
+de rechazo como $R = \{T(x) : |T(x)| > 3 \}$ (rechazamos si en valor absoluto
+la estadística de Wald es mayor que 3).
+
+Cuando diseñamos una prueba de este tipo, quisiéramos minimizar dos tipos de errores:
+
+- Rechazar la hipótesis nula $H_0$ cuando es cierta: **Error tipo I**
+- No rechazar la hipótesis nula $H_0$ cuando $H_0$ es falsa: **Error tipo II**
+
+La gravedad de cada error depende del problema. En nuestro ejemplo de la medicina, por
+ejemplo: 
+
+- Un error tipo II resultaría en una medicina efectiva que no sale al mercado, lo
+que tiene consecuencias financieras (para la farmaceútica) y costos de oportunidad
+en salud (para la población). Por otra parte, 
+- Un error tipo I resultaría en salir al mercado con una medicina que no es efectiva. Esto tiene
+costos de oportunidad financieros que pueden ser grandes para la sociedad. 
+Todos estos costos dependen, por
+ejempĺo, de qué tan grave es la enfermedad, qué tan costosa es la medicina, y así sucesivamente.
+- En el enfoque más clásico, los errores tipo I y tipo II generalmente no se balancean
+según su severidad o probabilidad. En lugar de eso, generalmente se establece
+un límite para la probabilidad de cometer un error del tipo I (usualmente 5%, por una
+tradición que no tiene mucho fundamento)
+
+En vista de este ejemplo simple, y las observaciones de arriba:
+
+- **Reducir una decisión compleja** a una prueba de hipótesis con resultados
+binarios (rechazar o no) es generalmente **erróneo**.
+- **Las pruebas de hipótesis se usan muchas veces incorrectamente cuando lo más apropiado es usar estimación** por intervalos o algo similar que cuantifique la incertidumbre
+de las estimaciones.
+
+Consulta por ejemplo [el comunicado de la ASA acerca de p-values y pruebas de hipótesis](https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108)
+
+En el caso de la medicina, por ejemplo, realmente no nos interesa que
+la medicina sea mejor que un placebo. Nos importa que tenga un efecto considerable en los pacientes.
+Si estimamos este efecto, incluyendo incertidumbre, tenemos una mejor herramienta
+para hacer análisis costo-beneficio y tomar la decisión más apropiada.
+
+Como dijimos, típicamente se selecciona la región de rechazo de forma
+que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada. 
+
+```{block2, type='mathblock'}
+Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
+no conocemos $\theta$. Supongamos que la hipótesis nula es que $\theta = \theta_0$ (que llamamos
+una hipótesis simple).
+
+La **potencia** de una prueba con estadística $T$ y región de rechazo $R$
+se define como la probabilidad de rechazar para cada posible valor del parámetro $\theta$ 
+$$\beta(\theta) = P_\theta (X\in R)$$
+  
+El **tamaño** de una prueba se define como el valor 
+
+$$\alpha = \beta(\theta_0),$$
+  
+es decir, la probabilidad de rechazar la nula ($\theta = \theta_0$) erróneamente.
+```
+
+**Observación**. Esto se generaliza para hipótesis compuestas, donde la nula
+es que el parámetro $\theta$ está en un cierto conjunto $\Theta_0$. Por ejemplo,
+una hipótesis nula puede ser $\theta < 0.5$. En este caso, $\alpha$ se define
+como el valor más grande que $\beta(\theta)$ toma cuando $\theta$ está en $\Theta_0$,
+es decir, la probabilidad de rechazo más grande cuando la hipótesis nula se cumple.
+
+Decimos que una prueba tiene **nivel de significancia** de $\alpha$ si su tamaño
+es menor o igual a $\alpha$.
+
+**Ejemplo** (Chihara) Supongamos que las calificaciones de Enlace de alumnos en México
+se distribuye aproximadamente como una normal con media 515 y desviación estándar
+de 120. En una ciudad particular, se quiere decidir
+si es neceario pedir fondos porque la media de la ciudad es más baja
+que la nacional. Nuestra hipótesis nula es $H_0: \mu \geq 515$ y la
+alternativa es $\mu < 515$, así que si rechazamos la nula se pedirían los fondos.
+
+Supondremos que la distribución de calificaciones
+en la ciudad es también aproximadamente normal con desviación estándar de 130. Se
+plantea tomar una muestra de 100 alumnos, y rechazar si la media muestral $\overline{X}$ es
+menor que 505. ¿Cuál es la probabilidad $\alpha$ de tener un error de tipo I?
+
+
+La función de potencia es
+$$\beta(\mu) = P_\mu(\overline{X} < 505)$$
+Restando la media $\mu$ y estandarizando obtenemos
+$$\beta(\mu) = P \left (\frac{\overline{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{130/\sqrt{100}} \right )$$
+así que 
+$$\beta(\mu) = \Phi \left (\frac{505 -\mu}{130/\sqrt{100}}\right ),$$
+donde $\Phi$ es la función acumulada de la normal estándar. La gráfica
+de la potencia es entonces
+
+```{r}
+potencia_tbl <- tibble(mu = seq(450, 550, 1)) %>% 
+  mutate(beta = pnorm((505 - mu)/13)) %>% # probabilidad de rechazar
+  mutate(nula_verdadera = factor(mu >= 515)) # nula verdadera
+ggplot(potencia_tbl, aes(x = mu, y = beta, colour = nula_verdadera)) +
+  geom_line() 
+```
+
+Es decir, si la media $\mu$ de la ciudad es muy baja, con mucha seguridad rechazamos. Si
+es relativamente alta entonces no rechazamos. El tamaño de la prueba es el mayor
+valor de probabilidad de rechazo que se obtiene sobre los valores $\mu\geq 515$ (la nula).
+Podemos calcularlo analíticamente como sigue:
+
+Si $\mu \geq 515$, entonces
+$$\beta(\mu) \leq \beta(515) = \Phi\left (\frac{505 -515}{130/\sqrt{100}}\right ) = \Phi( - 10 / 13) = \Phi(-0.7692)$$
+que es igual a
+```{r}
+pnorm(-0.7692)
+```
+Y este es el tamaño de la prueba. En otras palabras: si la ciudad no está
+por debajo de la media nacional, hay una probabilidad de 22% de que erróneamente
+se pidan fondos (al rechazar $H_0$).
+
+**Ejemplo** Supongamos que los que programan el presupuesto deciden que se requiere
+tener una probabilidad de a lo más 5% de rechazar erróneamente la hipótesis nula (es decir,
+pedir fondos cuando en realidad su media no está debajo de la nacional) para 
+poder recibir fondos. ¿Cuál es la región de rechazo que podríamos escoger?
+
+En el caso anterior usamos la región $\overline{X}<505$. Si el tamaño de muestra
+está fijo en $n=100$ (por presupuesto), entonces tenemos que escoger un punto
+de corte más extremo. Si la región de rechazo es $\overline{X} < C)$ entonces
+tenemos, siguiendo los cálculos anteriores, que
+$$0.05 = \alpha = \Phi \left ( \frac{C -515}{130/\sqrt{100}}\right) = \Phi \left( \frac{C- 515}{13}   \right)$$
+Buscamos el cuantil 0.05 de la normal estándar, que es
+
+```{r}
+z_alpha <- qnorm(0.05)
+z_alpha
+```
+Y entonces requerimos que 
+
+$$\frac{C- 515}{13} = -1.6448.$$
+Despejando obtenemos
+
+```{r}
+C <- 13*z_alpha + 515
+C
+```
+
+Así que podemos usar la región $\overline{X} < 493.5$, que es más *estricta*
+que la anterior de $\overline{X} < 505$.
+
+```{block2, type='ejercicio'}
+Considera la potencia de la prueba $\beta(\mu)$ que vimos arriba. Discute y
+corre algunos ejemplos para contestar las siguientes preguntas:
+
+- Recuerda la definición: ¿qué significa $\beta(\mu)$?
+- ¿Qué pasa con la potencia cuando $\mu$ está más lejos de los valores de la hipótesis nula?
+- ¿Qué pasa con la potencia cuando hay menos variabilidad en la población? ¿Y cuando
+la muestra es más grande?
+- ¿Qué pasa si hacemos más chico el nivel de significancia?
+```
+
+
+
+
+
+## Consideraciones prácticas {-}
+
+Algunos recordatorios de lo que hemos visto:
+
+- Rechazar la nula **no quiere decir que la nula es falsa**, ni que **encotramos un
+"efecto"**. Un valor $p$ chico tampoco
+quiere decir que la nula es falsa. Lo que quiere decir es que la nula es poco consistente
+con los datos que observamos, o que es muy poco probable que la nula produzca los datos
+que observamos.
+
+- Rechazar la nula (encontrar un efecto "significativo") **no quiere decir que el efecto tiene importancia práctica**. Si la potencia es alta (por ejemplo cuando el tamaño de 
+muestra es grande), puede ser que la discrepancia de los datos con la nula es 
+despreciable, entonces para fines prácticos podríamos trabajar bajo el supuesto de la nula.
+Por eso en general preferimos hacer estimación que pruebas de hipótesis para entender
+o resumir los datos y tamaños de las discrepancias.
+
+- Adicionalmente, muchas de las hipótesis nulas que generalmente se utilizan se
+pueden rechazar sin datos (por ejemplo, igualdad de proporciones en dos poblaciones
+reales). Lo que importa es qué tan diferentes son, y qué tan bien podemos estimar
+sus diferencias.
+
+- En la literatura, muchas veces parece que "encontrar una cosa interesante" es
+rechazar una hipótesis nulas con nivel 5% de significancia. Es **más importante entender
+cómo se diseñó el estudio, cómo se recogieron los datos, cuáles fueron las decisiones
+de análisis** que pasar el mítico nivel de 5%
+
+- Cuando la potencia es baja (por ejemplo porque el tamaño de muestra es muy chico), 
+tenemos que observar diferencias muy grandes para rechazar. Si probamos algo **poco
+factible** (por ejemplo, que la vitamina $C$ aumenta la estatura a los adultos), 
+entonces **los rechazos generalmente se deben a variabilidad en la muestra** (error tipo II).
+
+- Cuando diseñamos y presentamos resultados de un estudio o análisis, es mejor
+pensar en describir los datos y su variabilidad, y mostrar estimaciones incluyendo fuentes
+de incertidumbre, en lugar de intentar resumir con un valor-$p$ o con el resultado
+de una prueba de hipótesis.
+
+## Pruebas múltiples {-}
+
+En algunas ocasiones se hacen muchas pruebas para "filtrar" las cosas que son
+interesantes y las que no. Por ejemplo, cuando comparamos miles de genes entre dos
+muestras (la nula es que son similares). Si cada prueba se conduce a un nivel $\alpha$,
+la probablilidad de tener al menos un rechazo falso (un error tipo I) es considerablemente
+más alta que $\alpha$. 
+
+Por ejemplo, si repetimos una prueba de hipótesis con nivel $\alpha$ con muestras
+independientes, la probabilidad de tener al menos un rechazo falso es $1-(1-\alpha)^n$,
+que es muy cercano a uno si $n$ es grande (¿cómo derivas esta fórmula?). Por ejemplo,
+si $\alpha = 0.05$ y $n = 100$, con más de 99% probabilidad tendremos al menos un
+rechazo falso, o un "hallazgo" falso. Sin $n$ es muy grande, 
+varios de los hallazgos que encontremos serán
+debidos a variabilidad muestral.
+
+Puedes ver en [@Wasserman], sección 10.7 métodos conservadores
+como corrección de Bonferroni (sólo rechazar cuando el valor $p$ es
+menor a $0.05/n$), 
+o la técnica más moderna de 
+control de tasa de descubrimientos falsos (FDR). 
+
+Cuando estamos en una situación como esta (que es más retadora en cuanto a análisis), 
+sin embargo, sugerimos usar estimaciones
+que tomen cuenta todos los datos con regularización apropiada: por ejemplo,
+en lugar de trabajar con cada muestra por separado, intentamos construir un modelo
+para el proceso completo de muestreo. Una posibilidad son
+modelos jerárquicos bayesianos. Ver por ejemplo [@gelmansignif].
 
 
 
