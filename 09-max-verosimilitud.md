@@ -191,7 +191,7 @@ Probamos esta idea con un proceso más complejo.
 corrida. Cada corrida se producen 500 productos, y se muestrean 10 para
 detectar defectos. Cuando la máquina funciona correctamente, la tasa de defectos
 es de 3%. Cuando la máquina no está funcionando correctamente la tasa de defectos
-es de 10%
+es de 20%
 
 Supongamos que escogemos al azar 11 corridas, y obervamos los siguientes
 número de defectuosos:
@@ -290,10 +290,10 @@ el estimador de máxima verosimilitud de $\lambda$?
 
 Para $\lambda>0$, tenemos que
 
-$${\mathcal L}(\lambda) = \prod_{i=1}^n \lambda e^{\lambda x_i}$$
+$${\mathcal L}(\lambda) = \prod_{i=1}^n \lambda e^{-\lambda x_i}$$
 de modo que
 
-$${\mathcal L}(\lambda) = \lambda^n e^{\lambda \sum_{i=1}^nx_i} = \lambda^n e^{n\lambda\bar{x}} = e^{n(\log\lambda + \lambda\bar{x})}$$
+$${\mathcal L}(\lambda) = \lambda^n e^{-\lambda \sum_{i=1}^nx_i} = \lambda^n e^{-n\lambda\bar{x}} = e^{n(\log\lambda - \lambda\bar{x})}$$
 Que podemos maximizar usando cálculo para obtener 
 $\hat{\lambda}_{\mathsf{ML}} = \frac{1}{\bar{x}}$ (demuéstralo). Discute
 por qué esto es intuitivamente razonable: ¿cuál es
@@ -348,11 +348,8 @@ $$\log(f(x_{max}))>\log(f(x)),$$ para cualquier $x.$ Pues el logaritmo respeta l
 </div>
 
 <div class="ejercicio">
-<p>Considera una muestra de variables aleatorias Gaussianas con media <span class="math inline">\(\mu\)</span> y varianza <span class="math inline">\(\sigma^2.\)</span> Escribe la verosimilitud para una muestra de tamaño <span class="math inline">\(n,\)</span> y después escribe la función de log-verosimilitud. ¿Que interpetación le das a la ecuación resultante? ¿La has visto en algunos otros ejemplos en secciones anteriores?<br />
-<em>Pista.</em> Recuerda la sección de regresión local.</p>
+<p>Considera una muestra de variables aleatorias Gaussianas con media <span class="math inline">\(\mu\)</span> y varianza <span class="math inline">\(\sigma^2.\)</span> Escribe la verosimilitud para una muestra de tamaño <span class="math inline">\(n,\)</span> y después escribe la función de log-verosimilitud.</p>
 </div>
-
-
 
 **Ejemplo.** En nuestro primer ejemplo,
 
@@ -462,7 +459,7 @@ tibble(x = seq(0,1,0.001)) %>%
 **Ejemplo.** Supongamos que en una población de transacciones hay un porcentaje $p$ (desconocido) 
 que son fraudulentas. Tenemos un sistema de clasificación humana que que marca transacciones como sospechosas. 
 Con este sistema hemos medido que la proporción de transacciones normales que son marcadas como sospechosas es de 0.1%, y que la proporción de transacciones fraudulentas que son marcadas
-como sospechosas es de 98%. Supongamos que extraemos una muestra de 2000 transacciones, de manera que todas ellas tiene la misma probabilidad de ser fraudulentas. El sistema de clasificación marca 6 transacciones como fraudulentas. ¿Cómo estimamos la proporción de transacciones fraudulentas en la población?
+como sospechosas es de 98%. Supongamos que extraemos una muestra de 2000 transacciones, de manera que todas ellas tiene la misma probabilidad de ser fraudulentas. El sistema de clasificación marca 4 transacciones como fraudulentas. ¿Cómo estimamos la proporción de transacciones fraudulentas en la población?
 
 Solución: sea $p$ la proporción de transacciones fraudulentas. Entonces la probabilidad
 de que una transacción sea marcada como sospechosa es (proba total):
@@ -511,8 +508,8 @@ transacciones sospechosas.
 - Notamos sin embargo que varios valores alrededor de este valor tienen probabilidad similar,
 así que también son consistentes con los datos (por ejemplo, valores como 0.05 o 0.15 tienen probabilidad similar). Tendremos que considerar esto para evaluar la incertidumbre en nuestra estimación.
 - Obsérvese adicionalmente que si no tomáramos en cuenta las probabilidades de falsos
-negativos y falsos positivos la estimación simple daría $6/2000 = 0.003$ (0.3%), que es
-tres veces más grande que nuestra estimación puntual por máxima verosimilitud.
+negativos y falsos positivos la estimación simple daría $4/2000 = 0.002$ (0.2%), que es
+dos veces más grande que nuestra estimación puntual por máxima verosimilitud.
 
 
 **Ejemplo.** Este es un ejemplo donde mostramos que cuando el soporte

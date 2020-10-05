@@ -487,7 +487,7 @@ Para checar esto, vemos la gráfica de dependencia de residuales.</p>
 <span id="cb379-2"><a href="tareas.html#cb379-2"></a>ventas.res &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(ventas, period, res.est2<span class="fl">.2</span>)</span>
 <span id="cb379-3"><a href="tareas.html#cb379-3"></a>ventas.null &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="kw">null_dist</span>(<span class="dt">var =</span> <span class="st">&#39;res.est2.2&#39;</span>, <span class="dt">dist =</span> <span class="st">&#39;normal&#39;</span>, </span>
 <span id="cb379-4"><a href="tareas.html#cb379-4"></a>  <span class="dt">params =</span> <span class="kw">list</span>(<span class="dt">mean =</span> <span class="dv">0</span>, <span class="dt">sd =</span> <span class="fl">0.08</span>)), <span class="dt">n =</span> <span class="dv">10</span>, ventas.res)</span></code></pre></div>
-<pre><code>## decrypt(&quot;bhMq KJPJ 62 sSQ6P6S2 7Z&quot;)</code></pre>
+<pre><code>## decrypt(&quot;bhMq KJPJ 62 sSQ6P6S2 uT&quot;)</code></pre>
 <div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="tareas.html#cb381-1"></a><span class="kw">ggplot</span>(ventas.null, <span class="kw">aes</span>(<span class="dt">x =</span> period, <span class="dt">y =</span> res.est2<span class="fl">.2</span>)) <span class="op">+</span></span>
 <span id="cb381-2"><a href="tareas.html#cb381-2"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>.sample, <span class="dt">ncol =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
 <span id="cb381-3"><a href="tareas.html#cb381-3"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="fl">0.3</span>) <span class="op">+</span></span>
@@ -643,7 +643,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb386-11"><a href="tareas.html#cb386-11"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif =</span> medicina_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>medicina_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb386-12"><a href="tareas.html#cb386-12"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media_dif =</span> <span class="kw">mean</span>(dif)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb386-13"><a href="tareas.html#cb386-13"></a><span class="st">  </span><span class="kw">pull</span>(media_dif)</span></code></pre></div>
-<pre><code>## [1] 0.62</code></pre>
+<pre><code>## [1] -0.12</code></pre>
 <div class="sourceCode" id="cb388"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb388-1"><a href="tareas.html#cb388-1"></a><span class="co"># Lo hacemos una función </span></span>
 <span id="cb388-2"><a href="tareas.html#cb388-2"></a>calcula_est &lt;-<span class="st"> </span><span class="cf">function</span>(){</span>
 <span id="cb388-3"><a href="tareas.html#cb388-3"></a>  dormir_perm &lt;-<span class="st"> </span>dormir_larga <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -658,7 +658,7 @@ tener un valor de medicina 1 y uno de medicina 2</strong>.</p>
 <span id="cb388-12"><a href="tareas.html#cb388-12"></a>}</span>
 <span id="cb388-13"><a href="tareas.html#cb388-13"></a><span class="co"># La llamamos 1000 veces</span></span>
 <span id="cb388-14"><a href="tareas.html#cb388-14"></a><span class="kw">calcula_est</span>()</span></code></pre></div>
-<pre><code>## [1] 0.42</code></pre>
+<pre><code>## [1] 0.12</code></pre>
 <div class="sourceCode" id="cb390"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb390-1"><a href="tareas.html#cb390-1"></a>difs &lt;-<span class="st"> </span><span class="kw">rerun</span>(<span class="dv">1000</span>, <span class="kw">calcula_est</span>()) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">flatten_dbl</span>()</span></code></pre></div>
 <ul>
 <li>Haz una gráfica de la distribución de referencia y grafica encima el valor
