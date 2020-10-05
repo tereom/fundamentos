@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Sección 8 Bootstrap paramétrico | EST-46111: Fundamentos de Estadística con Remuestreo</title>
+  <meta name="description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Sección 8 Bootstrap paramétrico | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="github-repo" content="tereom/fundamentos" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Sección 8 Bootstrap paramétrico | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  
+  <meta name="twitter:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  
+
+<meta name="author" content="Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="S-max-verosimilitud.html"/>
+<link rel="next" href="tareas.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/toc.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Fundamentos de Estadística con Remuestreo</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Información del curso</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#temario"><i class="fa fa-check"></i>Temario</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluación"><i class="fa fa-check"></i>Evaluación</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html"><i class="fa fa-check"></i><b>1</b> Principios de visualización</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#el-cuarteto-de-ascombe"><i class="fa fa-check"></i>El cuarteto de Ascombe</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#visualización-popular-de-datos"><i class="fa fa-check"></i>Visualización popular de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#teoría-de-visualización-de-datos"><i class="fa fa-check"></i>Teoría de visualización de datos</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#principios-generales-del-diseño-analítico"><i class="fa fa-check"></i>Principios generales del diseño analítico</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#técnicas-de-visualización"><i class="fa fa-check"></i>Técnicas de visualización</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#indicadores-de-calidad-gráfica"><i class="fa fa-check"></i>Indicadores de calidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#factor-de-engaño-y-chartjunk"><i class="fa fa-check"></i>Factor de engaño y Chartjunk</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#pequeños-múltiplos-y-densidad-gráfica"><i class="fa fa-check"></i>Pequeños múltiplos y densidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#tinta-de-datos"><i class="fa fa-check"></i>Tinta de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#decoración"><i class="fa fa-check"></i>Decoración</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#percepción-de-escala"><i class="fa fa-check"></i>Percepción de escala</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#ejemplo-gráfica-de-minard"><i class="fa fa-check"></i>Ejemplo: gráfica de Minard</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html"><i class="fa fa-check"></i><b>2</b> Análisis exploratorio</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#el-papel-de-la-exploración-en-el-análisis-de-datos"><i class="fa fa-check"></i>El papel de la exploración en el análisis de datos</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#algunos-conceptos-básicos"><i class="fa fa-check"></i>Algunos conceptos básicos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#media-y-desviación-estándar"><i class="fa fa-check"></i>Media y desviación estándar</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ejemplos"><i class="fa fa-check"></i>Ejemplos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#precios-de-casas"><i class="fa fa-check"></i>Precios de casas</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#prueba-enlace"><i class="fa fa-check"></i>Prueba Enlace</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#estados-y-calificaciones-en-sat"><i class="fa fa-check"></i>Estados y calificaciones en SAT</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#tablas-de-conteos"><i class="fa fa-check"></i>Tablas de conteos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>Loess</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ajustando-curvas-loess"><i class="fa fa-check"></i>Ajustando curvas loess</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#series-de-tiempo"><i class="fa fa-check"></i>Series de tiempo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html"><i class="fa fa-check"></i><b>3</b> Tipos de estudio y experimentos</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#motivación"><i class="fa fa-check"></i>Motivación</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#proceso-generador-de-datos"><i class="fa fa-check"></i>Proceso Generador de Datos</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-prevalencia-de-anemia"><i class="fa fa-check"></i>Ejemplo: Prevalencia de anemia</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#muestreo-aleatorio"><i class="fa fa-check"></i>Muestreo aleatorio</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#pero-si-no-podemos-hacer-muestreo-aleatorio"><i class="fa fa-check"></i>Pero si no podemos hacer muestreo aleatorio?</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-policías-y-tráfico"><i class="fa fa-check"></i>Ejemplo: Policías y tráfico</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#el-estimador-estándar"><i class="fa fa-check"></i>El estimador estándar</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#experimentos-tradicionales"><i class="fa fa-check"></i>Experimentos tradicionales</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#bloqueo"><i class="fa fa-check"></i>Bloqueo</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#variables-desconocidas"><i class="fa fa-check"></i>Variables desconocidas</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#aleatorizando-el-tratamiento"><i class="fa fa-check"></i>Aleatorizando el tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#resumen-selección-de-unidades-y-tratamiento"><i class="fa fa-check"></i>Resumen: selección de unidades y tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#asignación-natural-del-tratamiento"><i class="fa fa-check"></i>Asignación natural del tratamiento</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html"><i class="fa fa-check"></i><b>4</b> Pruebas de hipótesis</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparación-con-poblaciones-de-referencia"><i class="fa fa-check"></i>Comparación con poblaciones de referencia</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparando-distribuciones"><i class="fa fa-check"></i>Comparando distribuciones</a></li>
+<li><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-y-el-lineup">Prueba de permutaciones y el <em>lineup</em></a></li>
+<li><a href="pruebas-de-hipótesis.html#comparaciones-usando-lineup-continuación">Comparaciones usando <em>lineup</em> (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-hipótesis-tradicionales"><i class="fa fa-check"></i>Pruebas de hipótesis tradicionales</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-continuación"><i class="fa fa-check"></i>Tomadores de té (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación"><i class="fa fa-check"></i>Pruebas de permutación: Implementación</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-continuación"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#avispas-opcional"><i class="fa fa-check"></i>Avispas (opcional)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#la-crisis-de-replicabilidad"><i class="fa fa-check"></i>La “crisis de replicabilidad”</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#el-jardín-de-los-senderos-que-se-bifurcan"><i class="fa fa-check"></i>El jardín de los senderos que se bifurcan</a></li>
+<li><a href="pruebas-de-hipótesis.html#ejemplo-decisiones-de-análisis-y-valores-p">Ejemplo: decisiones de análisis y valores <em>p</em></a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#alternativas-o-soluciones"><i class="fa fa-check"></i>Alternativas o soluciones</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html"><i class="fa fa-check"></i><b>5</b> Estimación y distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-precios-de-casas"><i class="fa fa-check"></i>Ejemplo: precios de casas</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#distribución-de-muestreo"><i class="fa fa-check"></i>Distribución de muestreo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-ejemplos"><i class="fa fa-check"></i>Más ejemplos</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#el-error-estándar"><i class="fa fa-check"></i>El error estándar</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-valor-de-casas"><i class="fa fa-check"></i>Ejemplo: valor de casas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#calculando-la-distribución-de-muestreo"><i class="fa fa-check"></i>Calculando la distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-1"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#teorema-central-del-límite"><i class="fa fa-check"></i>Teorema central del límite</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#normalidad-y-gráficas-de-cuantiles-normales"><i class="fa fa-check"></i>Normalidad y gráficas de cuantiles normales</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#prueba-de-hipótesis-de-normalidad"><i class="fa fa-check"></i>Prueba de hipótesis de normalidad</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-2"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-3"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-4"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-del-teorema-central-del-límite"><i class="fa fa-check"></i>Más del Teorema central del límite</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html"><i class="fa fa-check"></i><b>6</b> Intervalos de confianza y remuestreo</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-introductorio"><i class="fa fa-check"></i>Ejemplo introductorio</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#la-idea-del-bootstrap"><i class="fa fa-check"></i>La idea del bootstrap</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#el-principio-de-plug-in"><i class="fa fa-check"></i>El principio de plug-in</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#discusión-propiedades-de-la-distribución-bootstrap"><i class="fa fa-check"></i>Discusión: propiedades de la distribución bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-1"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#variación-en-distribuciones-bootstrap"><i class="fa fa-check"></i>Variación en distribuciones bootstrap</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#error-estándar-bootstrap-e-intervalos-normales"><i class="fa fa-check"></i>Error estándar bootstrap e intervalos normales</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-tomadores-de-té-negro"><i class="fa fa-check"></i>Ejemplo: tomadores de té negro</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-inventario-de-casas-vendidas"><i class="fa fa-check"></i>Ejemplo: inventario de casas vendidas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#calibración-de-intervalos-de-confianza"><i class="fa fa-check"></i>Calibración de intervalos de confianza</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#interpretación-de-intervalos-de-confianza"><i class="fa fa-check"></i>Interpretación de intervalos de confianza</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#intervalos-bootstrap-de-percentiles"><i class="fa fa-check"></i>Intervalos bootstrap de percentiles</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-2"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-para-dos-muestras"><i class="fa fa-check"></i>Bootstrap para dos muestras</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-3"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#datos-pareados"><i class="fa fa-check"></i>Datos pareados</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-otras-estadísticas"><i class="fa fa-check"></i>Bootstrap y otras estadísticas</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-estimadores-de-razón"><i class="fa fa-check"></i>Ejemplo: estimadores de razón</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-suavizadores"><i class="fa fa-check"></i>Ejemplo: suavizadores</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-estimadores-complejos-tablas-de-perfiles"><i class="fa fa-check"></i>Bootstrap y estimadores complejos: tablas de perfiles</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#conclusiones-y-observaciones"><i class="fa fa-check"></i>Conclusiones y observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html"><i class="fa fa-check"></i><b>7</b> Estimación por máxima verosimilitud</a><ul>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#introducción-a-estimación-por-máxima-verosimilitud"><i class="fa fa-check"></i>Introducción a estimación por máxima verosimilitud</a></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#máxima-verosimilitud-para-observaciones-continuas"><i class="fa fa-check"></i>Máxima verosimilitud para observaciones continuas</a></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#aspectos-numéricos"><i class="fa fa-check"></i>Aspectos numéricos</a><ul>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#el-método-de-momentos"><i class="fa fa-check"></i>El método de momentos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#máxima-verosimilitud-para-más-de-un-parámetro"><i class="fa fa-check"></i>Máxima verosimilitud para más de un parámetro</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html"><i class="fa fa-check"></i><b>8</b> <em>Bootstrap</em> paramétrico</a><ul>
+<li><a href="bootstrap-paramétrico.html#ventajas-y-desventajas-de-bootstrap-paramétrico">Ventajas y desventajas de <em>bootstrap</em> paramétrico</a></li>
+<li class="chapter" data-level="" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html#verificando-los-supuestos-distribucionales"><i class="fa fa-check"></i>Verificando los supuestos distribucionales</a></li>
+<li class="chapter" data-level="" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html#modelos-mal-identificados"><i class="fa fa-check"></i>Modelos mal identificados</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>2. Loess</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-series-de-tiempo"><i class="fa fa-check"></i>Solución: Series de tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tipos-de-estudio-y-pgd"><i class="fa fa-check"></i>3. Tipos de estudio y PGD</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#pruebas-de-hipótesis-visuales-y-permutación"><i class="fa fa-check"></i>4. Pruebas de hipótesis visuales y permutación</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-pruebas-pareadas"><i class="fa fa-check"></i>Solución: Pruebas pareadas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#distribución-muestral-y-remuestreo"><i class="fa fa-check"></i>5. Distribución muestral y remuestreo</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-y-discusión-de-media"><i class="fa fa-check"></i>Solución y discusión de media</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#examen-parcial"><i class="fa fa-check"></i>Examen Parcial</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">EST-46111: Fundamentos de Estadística con Remuestreo</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="bootstrap-paramétrico" class="section level1">
+<h1><span class="header-section-number">Sección 8</span> <em>Bootstrap</em> paramétrico</h1>
+<p>Cuando nuestras observaciones provienen de un modelo teórico parametrizado
+con algunos parámetros que queremos estimar, y utilizamos máxima verosimilitud
+para hacer nuestra estimación, no podemos aplicar directamente el <em>bootstrap</em> no
+paramétrico que vimos en las secciones anteriores. La razón es que nuestro
+estimador, en general, no es un estimador de <em>plug-in</em> necesariamente.</p>
+<p>Sin embargo, suponiendo que el modelo paramétrico que estamos usando es apropiado,
+podemos remuestrear de tal modelo para estimar la varianza de nuestros estimadores.
+Este proceso se llama el <strong><em>bootstrap</em> paramétrico</strong>. Antes de hacer una definición
+precisa, veamos cómo calcularíamos error estándar para los estimadores de máxima
+verosimilitud de la normal que vimos arriba.</p>
+<p><strong>Ejemplo (sección máxima verosimilitud)</strong>. Como ejercicio, podemos encontrar los estimadores de máxima
+verosimilitud cuando tenemos una muestra <span class="math inline">\(X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2)\)</span>
+(puedes derivar e igualar a cero para encontrar el mínimo). También podemos resolver numéricamente.</p>
+<p>Supongamos que tenemos la siguiente muestra:</p>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="bootstrap-paramétrico.html#cb299-1"></a><span class="kw">set.seed</span>(<span class="dv">41852</span>)</span>
+<span id="cb299-2"><a href="bootstrap-paramétrico.html#cb299-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p>La función generadora de la log-verosimilitud para una muestra es (ve la expresión
+del ejercicio anterior y calcula su logaritmo), y generamos la función de verosimilitud
+para nuestra muestra:</p>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="bootstrap-paramétrico.html#cb300-1"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb300-2"><a href="bootstrap-paramétrico.html#cb300-2"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
+<span id="cb300-3"><a href="bootstrap-paramétrico.html#cb300-3"></a>    media =<span class="st"> </span>pars[<span class="dv">1</span>]</span>
+<span id="cb300-4"><a href="bootstrap-paramétrico.html#cb300-4"></a>    desv_est =<span class="st"> </span>pars[<span class="dv">2</span>]</span>
+<span id="cb300-5"><a href="bootstrap-paramétrico.html#cb300-5"></a>    n &lt;-<span class="st"> </span><span class="kw">length</span>(x)</span>
+<span id="cb300-6"><a href="bootstrap-paramétrico.html#cb300-6"></a>    <span class="co"># ve la ecuación del ejercicio anterior</span></span>
+<span id="cb300-7"><a href="bootstrap-paramétrico.html#cb300-7"></a>    z &lt;-<span class="st"> </span>(x <span class="op">-</span><span class="st"> </span>media) <span class="op">/</span><span class="st"> </span>desv_est</span>
+<span id="cb300-8"><a href="bootstrap-paramétrico.html#cb300-8"></a>    log_verosim &lt;-<span class="st"> </span><span class="op">-</span>(<span class="kw">log</span>(desv_est) <span class="op">+</span><span class="st">  </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(z<span class="op">^</span><span class="dv">2</span>))</span>
+<span id="cb300-9"><a href="bootstrap-paramétrico.html#cb300-9"></a>    log_verosim</span>
+<span id="cb300-10"><a href="bootstrap-paramétrico.html#cb300-10"></a>  }  </span>
+<span id="cb300-11"><a href="bootstrap-paramétrico.html#cb300-11"></a>  log_p</span>
+<span id="cb300-12"><a href="bootstrap-paramétrico.html#cb300-12"></a>}</span>
+<span id="cb300-13"><a href="bootstrap-paramétrico.html#cb300-13"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span></code></pre></div>
+<p>Ahora optimizamos (checa que el método converge):</p>
+<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="bootstrap-paramétrico.html#cb301-1"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb301-2"><a href="bootstrap-paramétrico.html#cb301-2"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="bootstrap-paramétrico.html#cb303-1"></a>est_mv &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb303-2"><a href="bootstrap-paramétrico.html#cb303-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span></code></pre></div>
+<p>Una vez que tenemos nuestros estimadores puntuales,</p>
+<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="bootstrap-paramétrico.html#cb304-1"></a>est_mv</span></code></pre></div>
+<pre><code>##       estimador
+## media  1.136001
+## sigma  1.838421</code></pre>
+<p>Sustitumos estos parámetros en la distribución normal y simulamos una muestra del
+mismo tamaño que la original:</p>
+<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="bootstrap-paramétrico.html#cb306-1"></a>simular_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(n, media, sigma){</span>
+<span id="cb306-2"><a href="bootstrap-paramétrico.html#cb306-2"></a>  <span class="kw">rnorm</span>(n, media, sigma)</span>
+<span id="cb306-3"><a href="bootstrap-paramétrico.html#cb306-3"></a>}</span>
+<span id="cb306-4"><a href="bootstrap-paramétrico.html#cb306-4"></a>muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="kw">length</span>(muestra), </span>
+<span id="cb306-5"><a href="bootstrap-paramétrico.html#cb306-5"></a>                             est_mv[<span class="st">&quot;media&quot;</span>, <span class="st">&quot;estimador&quot;</span>], </span>
+<span id="cb306-6"><a href="bootstrap-paramétrico.html#cb306-6"></a>                             est_mv[<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;estimador&quot;</span>])</span>
+<span id="cb306-7"><a href="bootstrap-paramétrico.html#cb306-7"></a><span class="kw">head</span>(muestra_bootstrap)</span></code></pre></div>
+<pre><code>## [1]  1.8583885  2.2084326  2.5852895  2.5174462 -0.7428032  0.5995989</code></pre>
+<p>Una vez que tenemos esta muestra <em>bootstrap</em> recalculamos los estimadores de máxima
+verosimlitud. Esto se hace optimizando:</p>
+<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="bootstrap-paramétrico.html#cb308-1"></a><span class="co"># creamos nueva verosimilitud para muestra bootstrap</span></span>
+<span id="cb308-2"><a href="bootstrap-paramétrico.html#cb308-2"></a>log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
+<span id="cb308-3"><a href="bootstrap-paramétrico.html#cb308-3"></a><span class="co"># optimizamos</span></span>
+<span id="cb308-4"><a href="bootstrap-paramétrico.html#cb308-4"></a>res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p_boot, </span>
+<span id="cb308-5"><a href="bootstrap-paramétrico.html#cb308-5"></a>  <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb308-6"><a href="bootstrap-paramétrico.html#cb308-6"></a>res_boot<span class="op">$</span>convergence</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="bootstrap-paramétrico.html#cb310-1"></a>est_mv_boot &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res_boot<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb310-2"><a href="bootstrap-paramétrico.html#cb310-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span>
+<span id="cb310-3"><a href="bootstrap-paramétrico.html#cb310-3"></a>est_mv_boot</span></code></pre></div>
+<pre><code>##       estimador
+## media  1.235914
+## sigma  1.710042</code></pre>
+<p>Y esta es nuestra replicación <em>bootstrap</em> de los estimadores de máxima verosimilitud.</p>
+<p>La idea es la misma que el <em>bootstrap</em>, con la ventaja de que estamos simulando
+del modelo que suponemos es el correcto, es decir, estamos usando información adicional
+que no teníamos en el <em>bootstrap</em> paramétrico. Ahora es necesario repetir un
+número grande de veces.</p>
+<p>Nótese que esta función solo envuelve el proceso de remuestreo,
+cálculo de la función de verosimilitud y optimización:</p>
+<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="bootstrap-paramétrico.html#cb312-1"></a>rep_boot &lt;-<span class="st"> </span><span class="cf">function</span>(rep, crear_log_p, est_mv, n){</span>
+<span id="cb312-2"><a href="bootstrap-paramétrico.html#cb312-2"></a>  muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="kw">length</span>(muestra), </span>
+<span id="cb312-3"><a href="bootstrap-paramétrico.html#cb312-3"></a>                               est_mv[<span class="st">&quot;media&quot;</span>, <span class="st">&quot;estimador&quot;</span>], </span>
+<span id="cb312-4"><a href="bootstrap-paramétrico.html#cb312-4"></a>                               est_mv[<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;estimador&quot;</span>])</span>
+<span id="cb312-5"><a href="bootstrap-paramétrico.html#cb312-5"></a>  log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
+<span id="cb312-6"><a href="bootstrap-paramétrico.html#cb312-6"></a>  <span class="co"># optimizamos</span></span>
+<span id="cb312-7"><a href="bootstrap-paramétrico.html#cb312-7"></a>  res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p_boot, </span>
+<span id="cb312-8"><a href="bootstrap-paramétrico.html#cb312-8"></a>    <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb312-9"><a href="bootstrap-paramétrico.html#cb312-9"></a>  <span class="kw">try</span>(<span class="cf">if</span>(res_boot<span class="op">$</span>convergence <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">stop</span>(<span class="st">&quot;No se alcanzó convergencia.&quot;</span>))</span>
+<span id="cb312-10"><a href="bootstrap-paramétrico.html#cb312-10"></a>  est_mv_boot &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador_boot =</span> res_boot<span class="op">$</span>par) </span>
+<span id="cb312-11"><a href="bootstrap-paramétrico.html#cb312-11"></a>  est_mv_boot<span class="op">$</span>rep &lt;-<span class="st"> </span>rep</span>
+<span id="cb312-12"><a href="bootstrap-paramétrico.html#cb312-12"></a>  est_mv_boot</span>
+<span id="cb312-13"><a href="bootstrap-paramétrico.html#cb312-13"></a>}</span>
+<span id="cb312-14"><a href="bootstrap-paramétrico.html#cb312-14"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, crear_log_p, est_mv, <span class="dt">n =</span> <span class="kw">length</span>(muestra))) </span>
+<span id="cb312-15"><a href="bootstrap-paramétrico.html#cb312-15"></a>reps_boot</span></code></pre></div>
+<pre><code>## # A tibble: 10,000 x 3
+##    parametro estimador_boot   rep
+##    &lt;chr&gt;              &lt;dbl&gt; &lt;int&gt;
+##  1 media              0.797     1
+##  2 sigma              1.90      1
+##  3 media              1.23      2
+##  4 sigma              1.96      2
+##  5 media              1.14      3
+##  6 sigma              1.89      3
+##  7 media              1.33      4
+##  8 sigma              1.73      4
+##  9 media              1.19      5
+## 10 sigma              1.73      5
+## # … with 9,990 more rows</code></pre>
+<p>Ya ahora podemos estimar error estándar:</p>
+<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="bootstrap-paramétrico.html#cb314-1"></a>error_est &lt;-<span class="st"> </span>reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(parametro) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb314-2"><a href="bootstrap-paramétrico.html#cb314-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">ee_boot =</span> <span class="kw">sd</span>(estimador_boot)) </span>
+<span id="cb314-3"><a href="bootstrap-paramétrico.html#cb314-3"></a>error_est</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   parametro ee_boot
+##   &lt;chr&gt;       &lt;dbl&gt;
+## 1 media       0.150
+## 2 sigma       0.106</code></pre>
+<p>Así que nuestra estimación final sería:</p>
+<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="bootstrap-paramétrico.html#cb316-1"></a><span class="kw">bind_cols</span>(est_mv, error_est) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb316-2"><a href="bootstrap-paramétrico.html#cb316-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb316-3"><a href="bootstrap-paramétrico.html#cb316-3"></a><span class="st">  </span><span class="kw">select</span>(parametro, estimador, ee_boot)</span></code></pre></div>
+<pre><code>##   parametro estimador ee_boot
+## 1     media     1.136   0.150
+## 2     sigma     1.838   0.106</code></pre>
+<p>Si usamos la rutina estándar de <code>R</code> (dejaremos para después explicar cómo
+calcula los errores estándar esta rutina —no es con bootstrap):</p>
+<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="bootstrap-paramétrico.html#cb318-1"></a>broom<span class="op">::</span><span class="kw">tidy</span>(MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;normal&quot;</span>))</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 3
+##   term  estimate std.error
+##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 mean      1.14     0.150
+## 2 sd        1.84     0.106</code></pre>
+<p>Podemos checar también la normalidad aproximada de las distribuciones
+bootstrap para construir nuestros intervalos:</p>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="bootstrap-paramétrico.html#cb320-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">sample =</span> estimador_boot)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb320-2"><a href="bootstrap-paramétrico.html#cb320-2"></a><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb320-3"><a href="bootstrap-paramétrico.html#cb320-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" />
+La distribuciones son aproximadamente normales. Nótese que esto no siempre
+sucede, especialmente con parámetros de dispersión como <span class="math inline">\(\sigma\)</span>. (Examina
+las curvas de nivel del ejemplo de arriba).</p>
+<p><strong>Ejemplo</strong>. Supongamos que tenemos una muestra más chica. Repasa los pasos
+para asegurarte que entiendes el procedimiento:</p>
+<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="bootstrap-paramétrico.html#cb321-1"></a><span class="kw">set.seed</span>(<span class="dv">4182</span>)</span>
+<span id="cb321-2"><a href="bootstrap-paramétrico.html#cb321-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">6</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb321-3"><a href="bootstrap-paramétrico.html#cb321-3"></a><span class="co"># función de verosimilitud</span></span>
+<span id="cb321-4"><a href="bootstrap-paramétrico.html#cb321-4"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
+<span id="cb321-5"><a href="bootstrap-paramétrico.html#cb321-5"></a><span class="co"># máxima verosimilitud</span></span>
+<span id="cb321-6"><a href="bootstrap-paramétrico.html#cb321-6"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb321-7"><a href="bootstrap-paramétrico.html#cb321-7"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="bootstrap-paramétrico.html#cb323-1"></a>est_mv &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb323-2"><a href="bootstrap-paramétrico.html#cb323-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span>
+<span id="cb323-3"><a href="bootstrap-paramétrico.html#cb323-3"></a>est_mv</span></code></pre></div>
+<pre><code>##       estimador
+## media 0.3982829
+## sigma 2.3988969</code></pre>
+<p>Hacemos <em>bootstrap</em> paramétrico</p>
+<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="bootstrap-paramétrico.html#cb325-1"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, crear_log_p, est_mv, <span class="dt">n =</span> <span class="kw">length</span>(muestra))) </span>
+<span id="cb325-2"><a href="bootstrap-paramétrico.html#cb325-2"></a>reps_boot</span></code></pre></div>
+<pre><code>## # A tibble: 10,000 x 3
+##    parametro estimador_boot   rep
+##    &lt;chr&gt;              &lt;dbl&gt; &lt;int&gt;
+##  1 media              0.789     1
+##  2 sigma              0.945     1
+##  3 media             -0.103     2
+##  4 sigma              1.37      2
+##  5 media              1.96      3
+##  6 sigma              1.70      3
+##  7 media              1.55      4
+##  8 sigma              2.28      4
+##  9 media             -0.228     5
+## 10 sigma              1.73      5
+## # … with 9,990 more rows</code></pre>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="bootstrap-paramétrico.html#cb327-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">sample =</span> estimador_boot)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb327-2"><a href="bootstrap-paramétrico.html#cb327-2"></a><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb327-3"><a href="bootstrap-paramétrico.html#cb327-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="bootstrap-paramétrico.html#cb328-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">x =</span> estimador_boot)) <span class="op">+</span></span>
+<span id="cb328-2"><a href="bootstrap-paramétrico.html#cb328-2"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro)</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-14-2.png" width="480" style="display: block; margin: auto;" />
+Donde vemos que la distribución de <span class="math inline">\(\sigma\)</span> tienen sesgo a la derecha, pues en algunos
+casos obtenemos estimaciones muy cercanas a cero. Podemos
+usar intervalos de percentiles.</p>
+<p><strong>Ejercicio (extra)</strong>. Con más de un parámetro, podemos preguntarnos cómo dependen
+las estimaciones individuales - en algunos casos pueden estar correlacionadas. Podemos
+examinar este comportamiendo visualizando las replicaciones bootstrap</p>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="bootstrap-paramétrico.html#cb329-1"></a><span class="kw">ggplot</span>(reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> parametro, <span class="dt">values_from =</span> estimador_boot),</span>
+<span id="cb329-2"><a href="bootstrap-paramétrico.html#cb329-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> media, <span class="dt">y =</span> sigma)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" />
+Esta es nuestra aproximación a la distribución de remuestreo de nuestro
+par de estadísticas <span class="math inline">\((\mu_{\mathsf{mv}}, \sigma_{\mathsf{mv}})\)</span>. En este caso, parecen ser
+independientes (lo cual es posible demostrar).</p>
+<div class="mathblock">
+<p>
+<strong>Bootstrap paramétrico</strong>. Supongamos que tenemos una muestra iid <span class="math inline"><span class="math inline">\(X_1,X_2,\ldots, X_n \sim f(x;\theta)\)</span></span> de un modelo paramétrico, y un estimador de máxima verosimilitud <span class="math inline"><span class="math inline">\(\hat{\theta}_{\mathsf{mv}}\)</span></span> para <span class="math inline"><span class="math inline">\(\theta\)</span></span>. El error estándar estimado para <span class="math inline"><span class="math inline">\(\hat{\theta}_{\mathsf{mv}}\)</span></span> por medio del bootstrap paramétrico se calcula como sigue:
+</p>
+<ol style="list-style-type: decimal">
+<li>
+Se calcula <span class="math inline"><span class="math inline">\(\hat{\theta}_{\mathsf{mv}}\)</span></span> para la muestra observada
+</li>
+<li>
+Se simula una muestra iid de tamaño <span class="math inline"><span class="math inline">\(n\)</span></span> de <span class="math inline"><span class="math inline">\(f(x; \hat{\theta}_{\mathsf{mv}})\)</span></span> (muestra bootstrap)
+</li>
+<li>
+Se recalcula el estimador de máxima verosimilitud para la muestra <em>bootstrap</em> <span class="math inline"><span class="math inline">\(\hat{\theta^*}_{\mathsf{mv}}\)</span></span>
+</li>
+<li>
+Se repiten 2-3 una cantidad grande de veces (1000 - 10000)
+</li>
+<li>
+Se calcula la desviación estándar de los valores <span class="math inline"><span class="math inline">\(\hat{\theta^*}_{\mathsf{mv}}\)</span></span> obtenidos. Este es el error estándar estimado para el estimador <span class="math inline"><span class="math inline">\(\hat{\theta}_{\mathsf{mv}}\)</span></span>
+</li>
+</ol>
+</div>
+<div id="ventajas-y-desventajas-de-bootstrap-paramétrico" class="section level2 unnumbered">
+<h2>Ventajas y desventajas de <em>bootstrap</em> paramétrico</h2>
+<ul>
+<li><p>Ventaja: el <em>bootstrap</em> paramétrico puede dar estimadores más precisos e intervalos
+más angostos y bien calibrados que el no paramétrico, <strong>siempre y cuando el modelo
+teórico sea razonable.</strong></p></li>
+<li><p>Desventaja: Es necesario decidir el modelo teórico, que tendrá cierto grado de
+desajuste vs. el proceso generador real de los datos. Si el ajuste es muy malo, los resultados
+tienen poca utilidad. Para el no paramétrico no es necesario hacer supuestos teóricos.</p></li>
+<li><p>Ventaja: el <em>bootstrap</em> paramétrico puede ser más escalable que el no paramétrico, pues no es necesario cargar y remuestrear los datos originales, y tenemos mejoras adicionales cuando tenemos expresiones explícitas
+para los estimadores de máxima verosimilitud (como en el caso normal, donde es innecesario
+hacer optimización numérica).</p></li>
+<li><p>Desventaja: el <em>bootstrap</em> paramétrico es conceptualmente más complicado que el
+no paramétrico, y como vimos arriba, sus supuestos pueden ser más frágiles que los del
+no-paramétrico.</p></li>
+</ul>
+</div>
+<div id="verificando-los-supuestos-distribucionales" class="section level2 unnumbered">
+<h2>Verificando los supuestos distribucionales</h2>
+<p>Como hemos discutido antes, podemos hacer pruebas de hipótesis para checar si una muestra
+dada proviene de una distribución conocida. Sin embargo, la herramienta más común es
+la de los qq-plots, donde podemos juzgar fácilmente el tamaño de las desviaciones
+y si estas tienen implicaciones prácticas importantes.</p>
+<p>El proceso es como sigue: si <span class="math inline">\(X_1,X_,\ldots, X_n\)</span> es una muestra de <span class="math inline">\(f(x;\theta)\)</span>,
+calculamos el estimador de máxima verosimilitud <span class="math inline">\(\theta_{\mathsf{mv}}\)</span> con los datos
+observados. Enchufamos <span class="math inline">\(\hat{f} = f(x;\theta_{\mathsf{mv}})\)</span>, y hacemos una gráfica
+de los cuantiles teóricos de <span class="math inline">\(\hat{f}\)</span> contra los cuantiles muestrales.</p>
+<p><strong>Ejemplo</strong>. Consideramos la siguiente muestra:</p>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="bootstrap-paramétrico.html#cb330-1"></a><span class="kw">set.seed</span>(<span class="dv">32</span>)</span>
+<span id="cb330-2"><a href="bootstrap-paramétrico.html#cb330-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rgamma</span>(<span class="dv">150</span>, <span class="fl">0.4</span>, <span class="dv">1</span>)</span>
+<span id="cb330-3"><a href="bootstrap-paramétrico.html#cb330-3"></a><span class="kw">qplot</span>(muestra) </span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Y queremos usar un modelo exponencial. Encontramos los estimadores de maxima
+verosimilitud</p>
+<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="bootstrap-paramétrico.html#cb331-1"></a>est_mv &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;exponential&quot;</span>)</span>
+<span id="cb331-2"><a href="bootstrap-paramétrico.html#cb331-2"></a>rate_mv &lt;-<span class="st"> </span>est_mv<span class="op">$</span>estimate</span>
+<span id="cb331-3"><a href="bootstrap-paramétrico.html#cb331-3"></a>rate_mv</span></code></pre></div>
+<pre><code>##    rate 
+## 2.76054</code></pre>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="bootstrap-paramétrico.html#cb333-1"></a>g_exp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">muestra =</span> muestra), <span class="kw">aes</span>(<span class="dt">sample =</span> muestra)) <span class="op">+</span></span>
+<span id="cb333-2"><a href="bootstrap-paramétrico.html#cb333-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qexp, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">rate =</span> rate_mv)) <span class="op">+</span></span>
+<span id="cb333-3"><a href="bootstrap-paramétrico.html#cb333-3"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles exponenciales&quot;</span>)</span>
+<span id="cb333-4"><a href="bootstrap-paramétrico.html#cb333-4"></a>g_exp</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Donde vemos que el desajuste es considerable, y los datos tienen
+una cola derecha considerablemente más larga que la de exponencial (datos son
+casi dos veces más grande de lo que esperaríamos), y la cola
+izquierda está más comprimida en los datos que en una exponencial.</p>
+<p>Sin embargo, si ajustamos una gamma:</p>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="bootstrap-paramétrico.html#cb334-1"></a>est_mv &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;gamma&quot;</span>)<span class="op">$</span>estimate</span>
+<span id="cb334-2"><a href="bootstrap-paramétrico.html#cb334-2"></a>g_gamma &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">muestra =</span> muestra), <span class="kw">aes</span>(<span class="dt">sample =</span> muestra)) <span class="op">+</span></span>
+<span id="cb334-3"><a href="bootstrap-paramétrico.html#cb334-3"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qgamma, </span>
+<span id="cb334-4"><a href="bootstrap-paramétrico.html#cb334-4"></a>          <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">shape =</span> est_mv[<span class="dv">1</span>], <span class="dt">rate =</span> est_mv[<span class="dv">2</span>])) <span class="op">+</span></span>
+<span id="cb334-5"><a href="bootstrap-paramétrico.html#cb334-5"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles gamma&quot;</span>)</span>
+<span id="cb334-6"><a href="bootstrap-paramétrico.html#cb334-6"></a>g_exp <span class="op">+</span><span class="st"> </span>g_gamma</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-20-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>El ajuste es considerablemente mejor para la distribución gamma
+(puedes hacer el protocolo <em>rorschach</em> para
+afinar tu diagnóstico de este tipo de gráficas).</p>
+<p><strong>Ejempĺo</strong>. Examinamos un modelo teórico para las cuentas totales del
+conjunto de datos de propinas. En primer lugar:</p>
+<ol style="list-style-type: decimal">
+<li>Separamos comida y cena, pues sabemos que las cuentas tienden a ser
+más grandes en las cenas.</li>
+<li>En lugar de modelar la cuenta total, modelamos el gasto por persona, es decir,
+la cuenta total dividida por el numero de personas. Grupos grandes pueden
+producir colas largas que no tenemos necesidad de modelar de manera
+probabilística, pues conocemos
+el número de personas.</li>
+</ol>
+<p>En este caso intentaremos un modelo lognormal, es decir, el logaritmo de los
+valores observados se comporta aproximadamente normal. Puedes también intentar con
+una distribución gamma.</p>
+<p>Separamos por Cena y Comida, dividimos entre número de personas y probamos
+ajustando un modelo para cada horario:</p>
+<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="bootstrap-paramétrico.html#cb335-1"></a>propinas &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/propinas.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb335-2"><a href="bootstrap-paramétrico.html#cb335-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cuenta_persona =</span> cuenta_total <span class="op">/</span><span class="st"> </span>num_personas)</span>
+<span id="cb335-3"><a href="bootstrap-paramétrico.html#cb335-3"></a>propinas_mv &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb335-4"><a href="bootstrap-paramétrico.html#cb335-4"></a><span class="st">  </span><span class="kw">group_by</span>(momento) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb335-5"><a href="bootstrap-paramétrico.html#cb335-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">est_mv =</span> <span class="kw">list</span>(<span class="kw">tidy</span>(MASS<span class="op">::</span><span class="kw">fitdistr</span>(cuenta_persona, <span class="st">&quot;lognormal&quot;</span>))))  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb335-6"><a href="bootstrap-paramétrico.html#cb335-6"></a><span class="st">  </span><span class="kw">unnest</span>(est_mv)</span>
+<span id="cb335-7"><a href="bootstrap-paramétrico.html#cb335-7"></a>propinas_mv </span></code></pre></div>
+<pre><code>## # A tibble: 4 x 4
+##   momento term    estimate std.error
+##   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1 Cena    meanlog    2.03     0.0273
+## 2 Cena    sdlog      0.362    0.0193
+## 3 Comida  meanlog    1.94     0.0366
+## 4 Comida  sdlog      0.302    0.0259</code></pre>
+<p>Ojo: estos parámetros están en escala logarítmica. Puedes checar aqui
+para ver cómo calcular media y desviación estándar de las distribuciones originales.
+Ahora verificamos el ajuste:</p>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="bootstrap-paramétrico.html#cb337-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(momento <span class="op">==</span><span class="st"> &quot;Cena&quot;</span>), <span class="kw">aes</span>(<span class="dt">sample =</span> cuenta_persona)) <span class="op">+</span></span>
+<span id="cb337-2"><a href="bootstrap-paramétrico.html#cb337-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">mean =</span> propinas_mv<span class="op">$</span>estimate[<span class="dv">1</span>], <span class="dt">sd =</span> propinas_mv<span class="op">$</span>estimate[<span class="dv">2</span>]),</span>
+<span id="cb337-3"><a href="bootstrap-paramétrico.html#cb337-3"></a>          <span class="dt">distribution =</span> stats<span class="op">::</span>qlnorm) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)) <span class="op">+</span></span>
+<span id="cb337-4"><a href="bootstrap-paramétrico.html#cb337-4"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Cena&quot;</span>)</span>
+<span id="cb337-5"><a href="bootstrap-paramétrico.html#cb337-5"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(momento <span class="op">==</span><span class="st"> &quot;Comida&quot;</span>), <span class="kw">aes</span>(<span class="dt">sample =</span> cuenta_persona)) <span class="op">+</span></span>
+<span id="cb337-6"><a href="bootstrap-paramétrico.html#cb337-6"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">mean =</span> propinas_mv<span class="op">$</span>estimate[<span class="dv">3</span>], <span class="dt">sd =</span> propinas_mv<span class="op">$</span>estimate[<span class="dv">4</span>]),</span>
+<span id="cb337-7"><a href="bootstrap-paramétrico.html#cb337-7"></a>          <span class="dt">distribution =</span> stats<span class="op">::</span>qlnorm) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)) <span class="op">+</span></span>
+<span id="cb337-8"><a href="bootstrap-paramétrico.html#cb337-8"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Comida&quot;</span>)</span>
+<span id="cb337-9"><a href="bootstrap-paramétrico.html#cb337-9"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span></span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-22-1.png" width="480" style="display: block; margin: auto;" />
+El ajuste es bueno, aunque podríamos checar la cola de la derecha en la Comida:
+¿por qué existen esos valores relativamente grandes (alrededor de 25% más altos
+de lo que esperaríamos).</p>
+<div class="ejercicio">
+<ul>
+<li>
+¿Tiene sentido ajustar dos distribuciones con parámetros separados? ¿Crees que estas dos distribuciones podrían compartir algún parámetro? Para esto puedes revisar el error estándar de los estimadores de máxima verosimilitud que mostramos arriba. ¿Qué ventajas verías en usar menos parámetros? ¿Cómo implementarías la estimación?
+</li>
+<li>
+¿Qué pasa si intentas ajustar un modelo normal a estos datos?
+</li>
+</ul>
+</div>
+</div>
+<div id="modelos-mal-identificados" class="section level2 unnumbered">
+<h2>Modelos mal identificados</h2>
+<p>Para algunos modelos y algunos parámetros, puede suceder que existan varias
+configuraciones muy diferentes de los parámetros que sean consistentes con
+los datos (en términos de verosimilitud, tienen verosimilitud alta similar), y
+en estos casos decimos que el modelo (con los datos observados) está
+<strong>mal identificado</strong>.</p>
+<p>Esto presenta problemas múltiples: optimizar es más difícil,
+hay incertidumbre grande en la estimación, y los parámetros se acoplan, haciendo
+difícil su interpretación.</p>
+<p><strong>Ejemplo.</strong> Consideremos el ejemplo anterior donde queríamos estimar dos proporciones:
+la proporción de examenes contestados al azar y la tasa de correctos. Vamos a suponer
+que la probabilidad de tener respuesta correcta dado que el examen no fue contestado
+al azar no es muy lejano a 1/5, que es la probabilidad de acertar a al azar.</p>
+<p>Aquí está la función para simular y la log verosimilitud correspondiente. Aquí vamos
+a ver un problema más difícil, así que usaremos la transformación logit para las
+proporciones, y no obtener resultados fuera del rango 0-1 al optimizar:</p>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="bootstrap-paramétrico.html#cb338-1"></a>inv_logit &lt;-<span class="st"> </span><span class="cf">function</span>(theta){</span>
+<span id="cb338-2"><a href="bootstrap-paramétrico.html#cb338-2"></a>  <span class="kw">exp</span>(theta) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(theta))</span>
+<span id="cb338-3"><a href="bootstrap-paramétrico.html#cb338-3"></a>}</span>
+<span id="cb338-4"><a href="bootstrap-paramétrico.html#cb338-4"></a>logit &lt;-<span class="st"> </span><span class="cf">function</span>(p){</span>
+<span id="cb338-5"><a href="bootstrap-paramétrico.html#cb338-5"></a>  <span class="kw">log</span>(p <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>p))</span>
+<span id="cb338-6"><a href="bootstrap-paramétrico.html#cb338-6"></a>}</span>
+<span id="cb338-7"><a href="bootstrap-paramétrico.html#cb338-7"></a><span class="co"># Simular datos</span></span>
+<span id="cb338-8"><a href="bootstrap-paramétrico.html#cb338-8"></a>sim_formas &lt;-<span class="st"> </span><span class="cf">function</span>(probs){</span>
+<span id="cb338-9"><a href="bootstrap-paramétrico.html#cb338-9"></a>  p_azar &lt;-<span class="st"> </span>probs[<span class="dv">1</span>]</span>
+<span id="cb338-10"><a href="bootstrap-paramétrico.html#cb338-10"></a>  p_corr &lt;-<span class="st"> </span>probs[<span class="dv">2</span>]</span>
+<span id="cb338-11"><a href="bootstrap-paramétrico.html#cb338-11"></a>  tipo &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_azar)</span>
+<span id="cb338-12"><a href="bootstrap-paramétrico.html#cb338-12"></a>  <span class="cf">if</span>(tipo<span class="op">==</span><span class="dv">0</span>){</span>
+<span id="cb338-13"><a href="bootstrap-paramétrico.html#cb338-13"></a>    <span class="co"># al azar</span></span>
+<span id="cb338-14"><a href="bootstrap-paramétrico.html#cb338-14"></a>    x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>)</span>
+<span id="cb338-15"><a href="bootstrap-paramétrico.html#cb338-15"></a>  } <span class="cf">else</span> {</span>
+<span id="cb338-16"><a href="bootstrap-paramétrico.html#cb338-16"></a>    <span class="co"># no al azar</span></span>
+<span id="cb338-17"><a href="bootstrap-paramétrico.html#cb338-17"></a>    x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, p_corr)</span>
+<span id="cb338-18"><a href="bootstrap-paramétrico.html#cb338-18"></a>  }</span>
+<span id="cb338-19"><a href="bootstrap-paramétrico.html#cb338-19"></a>  x</span>
+<span id="cb338-20"><a href="bootstrap-paramétrico.html#cb338-20"></a>}</span>
+<span id="cb338-21"><a href="bootstrap-paramétrico.html#cb338-21"></a>simular_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(n, params){</span>
+<span id="cb338-22"><a href="bootstrap-paramétrico.html#cb338-22"></a>  muestra &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="op">~</span><span class="st"> </span><span class="kw">sim_formas</span>(<span class="dt">probs =</span> <span class="kw">inv_logit</span>(params)))</span>
+<span id="cb338-23"><a href="bootstrap-paramétrico.html#cb338-23"></a>  muestra</span>
+<span id="cb338-24"><a href="bootstrap-paramétrico.html#cb338-24"></a>}</span>
+<span id="cb338-25"><a href="bootstrap-paramétrico.html#cb338-25"></a><span class="co"># log verosimilitud</span></span>
+<span id="cb338-26"><a href="bootstrap-paramétrico.html#cb338-26"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb338-27"><a href="bootstrap-paramétrico.html#cb338-27"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
+<span id="cb338-28"><a href="bootstrap-paramétrico.html#cb338-28"></a>    p_azar =<span class="st"> </span><span class="kw">inv_logit</span>(pars[<span class="dv">1</span>])</span>
+<span id="cb338-29"><a href="bootstrap-paramétrico.html#cb338-29"></a>    p_corr =<span class="st"> </span><span class="kw">inv_logit</span>(pars[<span class="dv">2</span>])</span>
+<span id="cb338-30"><a href="bootstrap-paramétrico.html#cb338-30"></a>    <span class="kw">sum</span>(<span class="kw">log</span>(p_azar <span class="op">*</span><span class="st"> </span><span class="kw">dbinom</span>(x, <span class="dv">10</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_azar) <span class="op">*</span><span class="st"> </span><span class="kw">dbinom</span>(x, <span class="dv">10</span>, p_corr)))</span>
+<span id="cb338-31"><a href="bootstrap-paramétrico.html#cb338-31"></a>  }  </span>
+<span id="cb338-32"><a href="bootstrap-paramétrico.html#cb338-32"></a>  log_p</span>
+<span id="cb338-33"><a href="bootstrap-paramétrico.html#cb338-33"></a>}</span>
+<span id="cb338-34"><a href="bootstrap-paramétrico.html#cb338-34"></a><span class="co"># simular datos</span></span>
+<span id="cb338-35"><a href="bootstrap-paramétrico.html#cb338-35"></a><span class="kw">set.seed</span>(<span class="dv">12</span>)</span>
+<span id="cb338-36"><a href="bootstrap-paramétrico.html#cb338-36"></a>muestra &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="dv">200</span>, <span class="dt">params =</span> <span class="kw">logit</span>(<span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.29</span>)))</span>
+<span id="cb338-37"><a href="bootstrap-paramétrico.html#cb338-37"></a><span class="kw">qplot</span>(muestra)</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="bootstrap-paramétrico.html#cb339-1"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
+<span id="cb339-2"><a href="bootstrap-paramétrico.html#cb339-2"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb339-3"><a href="bootstrap-paramétrico.html#cb339-3"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="bootstrap-paramétrico.html#cb341-1"></a>est_mv &lt;-<span class="st"> </span>res<span class="op">$</span>par</span>
+<span id="cb341-2"><a href="bootstrap-paramétrico.html#cb341-2"></a><span class="kw">names</span>(est_mv) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;p_azar_logit&quot;</span>, <span class="st">&quot;p_corr_logit&quot;</span>)</span>
+<span id="cb341-3"><a href="bootstrap-paramétrico.html#cb341-3"></a>est_mv</span></code></pre></div>
+<pre><code>## p_azar_logit p_corr_logit 
+##   -0.0343061   -0.7474912</code></pre>
+<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="bootstrap-paramétrico.html#cb343-1"></a>probs_mv &lt;-<span class="st"> </span><span class="kw">inv_logit</span>(est_mv)</span>
+<span id="cb343-2"><a href="bootstrap-paramétrico.html#cb343-2"></a><span class="kw">names</span>(probs_mv) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;p_azar&quot;</span>, <span class="st">&quot;p_corr&quot;</span>)</span>
+<span id="cb343-3"><a href="bootstrap-paramétrico.html#cb343-3"></a>probs_mv</span></code></pre></div>
+<pre><code>##    p_azar    p_corr 
+## 0.4914243 0.3213682</code></pre>
+<p>En primer lugar, parece ser que nuestras estimaciones son menos precias. Vamos
+a hacer <em>bootstrap</em> paramétrico:</p>
+<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="bootstrap-paramétrico.html#cb345-1"></a>rep_boot &lt;-<span class="st"> </span><span class="cf">function</span>(rep, simular, crear_log_p, pars, n){</span>
+<span id="cb345-2"><a href="bootstrap-paramétrico.html#cb345-2"></a>  muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular</span>(n, pars)</span>
+<span id="cb345-3"><a href="bootstrap-paramétrico.html#cb345-3"></a>  log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
+<span id="cb345-4"><a href="bootstrap-paramétrico.html#cb345-4"></a>  <span class="co"># optimizamos</span></span>
+<span id="cb345-5"><a href="bootstrap-paramétrico.html#cb345-5"></a>  res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), log_p_boot, </span>
+<span id="cb345-6"><a href="bootstrap-paramétrico.html#cb345-6"></a>    <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb345-7"><a href="bootstrap-paramétrico.html#cb345-7"></a>  <span class="kw">try</span>(<span class="cf">if</span>(res_boot<span class="op">$</span>convergence <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">stop</span>(<span class="st">&quot;No se alcanzó convergencia.&quot;</span>))</span>
+<span id="cb345-8"><a href="bootstrap-paramétrico.html#cb345-8"></a>  est_mv_boot &lt;-<span class="st"> </span>res_boot<span class="op">$</span>par </span>
+<span id="cb345-9"><a href="bootstrap-paramétrico.html#cb345-9"></a>  <span class="kw">names</span>(est_mv_boot) &lt;-<span class="st"> </span><span class="kw">names</span>(pars)</span>
+<span id="cb345-10"><a href="bootstrap-paramétrico.html#cb345-10"></a>  est_mv_boot[<span class="st">&quot;rep&quot;</span>] &lt;-<span class="st"> </span>rep</span>
+<span id="cb345-11"><a href="bootstrap-paramétrico.html#cb345-11"></a>  est_mv_boot[<span class="st">&quot;convergence&quot;</span>] &lt;-<span class="st"> </span>res_boot<span class="op">$</span>convergence</span>
+<span id="cb345-12"><a href="bootstrap-paramétrico.html#cb345-12"></a>  est_mv_boot</span>
+<span id="cb345-13"><a href="bootstrap-paramétrico.html#cb345-13"></a>}</span>
+<span id="cb345-14"><a href="bootstrap-paramétrico.html#cb345-14"></a><span class="kw">set.seed</span>(<span class="dv">8934</span>)</span>
+<span id="cb345-15"><a href="bootstrap-paramétrico.html#cb345-15"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, simular_modelo, crear_log_p, est_mv, </span>
+<span id="cb345-16"><a href="bootstrap-paramétrico.html#cb345-16"></a>                                   <span class="dt">n =</span> <span class="kw">length</span>(muestra))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb345-17"><a href="bootstrap-paramétrico.html#cb345-17"></a><span class="st">  </span>bind_rows</span>
+<span id="cb345-18"><a href="bootstrap-paramétrico.html#cb345-18"></a>reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), round, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##   p_azar_logit p_corr_logit   rep convergence
+##          &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+## 1         0.32        -0.7      1           0
+## 2         0.13        -0.71     2           0
+## 3         0.11        -0.78     3           0
+## 4        -0.19        -0.71     4           0
+## 5         0.36        -0.55     5           0
+## 6         0.74        -0.61     6           0</code></pre>
+<p>En primer lugar, notamos varíación muy alta en los estimadores. El optimizador
+encontró resultados que no tienen sentido:</p>
+<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="bootstrap-paramétrico.html#cb347-1"></a><span class="kw">ggplot</span>(reps_boot, </span>
+<span id="cb347-2"><a href="bootstrap-paramétrico.html#cb347-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">inv_logit</span>(p_azar_logit), <span class="dt">y =</span> <span class="kw">inv_logit</span>(p_corr_logit), </span>
+<span id="cb347-3"><a href="bootstrap-paramétrico.html#cb347-3"></a>           <span class="dt">colour =</span> <span class="kw">factor</span>(convergence))) <span class="op">+</span></span>
+<span id="cb347-4"><a href="bootstrap-paramétrico.html#cb347-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb347-5"><a href="bootstrap-paramétrico.html#cb347-5"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;p_azar&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;p_corr&quot;</span>)</span></code></pre></div>
+<p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-27-1.png" width="480" style="display: block; margin: auto;" />
+Y notamos un problema grave: Tenemos mucha variación en nuestros estimadores,
+y la correlación entre las estimaciones es alta. Esto deberíamos haberlo esperado,
+pues como las probabilidades de contestar correctamente son muy similares a las
+de contestar al azar:</p>
+<ul>
+<li><strong>Existen muchas combinaciones de parámetros que son consistentes
+con los datos</strong>. Decimos entonces que este modelo está mal identificado
+con estos datos.</li>
+<li>La mala identificación, como vemos, es una propiedad tanto de modelo como
+datos.</li>
+</ul>
+<div class="ejercicio">
+<ul>
+<li>
+¿Qué conclusiones acerca del examen obtienes al ver estas simulaciones bootstrap? ¿Cómo se deberían reportar estos resultados?
+</li>
+<li>
+Qué pasa en este ejemplo si la <span class="math inline"><span class="math inline">\(p_corr\)</span></span> es más grande, o el tamaño de muestra es más grande?
+</li>
+<li>
+Repite el ejercicio con los parámetros del primer ejemplo (<span class="math inline"><span class="math inline">\(p_azar = 0.3, p_corr=0.75\)</span></span>) y el mismo tamaño de muestra. ¿Qué sucede en este caso?
+</li>
+<li>
+En el caso extremo, decimos que el modelo no está indentificado, y eso generalmente sucede por un problema en el planteamiento del modelo, independientemente de los datos. ¿Puedes imaginar un modelo así?
+</li>
+</ul>
+</div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="S-max-verosimilitud.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tareas.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/tereom/fundamentos/edit/master/10-bootstrap-parametrico.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["fundamentos-estadistica.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

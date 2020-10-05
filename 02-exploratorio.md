@@ -89,16 +89,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        22.23|    5.00|No      |Dom |Cena    |            2|
-|        25.28|    5.00|Si      |Sab |Cena    |            2|
-|        40.55|    3.00|Si      |Dom |Cena    |            2|
-|        26.88|    3.12|No      |Dom |Cena    |            4|
-|         7.25|    5.15|Si      |Dom |Cena    |            2|
-|        20.90|    3.50|Si      |Dom |Cena    |            3|
-|         8.77|    2.00|No      |Dom |Cena    |            2|
-|        10.51|    1.25|No      |Sab |Cena    |            2|
-|        28.97|    3.00|Si      |Vie |Cena    |            2|
-|        30.40|    5.60|No      |Dom |Cena    |            4|
+|        20.27|    2.83|No      |Jue |Comida  |            2|
+|        48.33|    9.00|No      |Sab |Cena    |            4|
+|        17.26|    2.74|No      |Dom |Cena    |            3|
+|        19.08|    1.50|No      |Jue |Comida  |            2|
+|        11.61|    3.39|No      |Sab |Cena    |            2|
+|         9.94|    1.56|No      |Dom |Cena    |            2|
+|        41.19|    5.00|No      |Jue |Comida  |            5|
+|        16.43|    2.30|No      |Jue |Comida  |            2|
+|        12.60|    1.00|Si      |Sab |Cena    |            2|
+|        13.81|    2.00|No      |Dom |Cena    |            2|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
@@ -888,18 +888,18 @@ sample_n(te, 10)
 
 ```
 ## # A tibble: 10 x 3
-##    presentacion precio   azucar    
-##    <fct>        <fct>    <fct>     
-##  1 mixto        variable sin_azúcar
-##  2 suelto       fino     con_azúcar
-##  3 bolsas       fino     con_azúcar
-##  4 mixto        variable sin_azúcar
-##  5 bolsas       variable sin_azúcar
-##  6 suelto       variable con_azúcar
-##  7 bolsas       variable con_azúcar
-##  8 mixto        fino     sin_azúcar
-##  9 bolsas       marca    con_azúcar
-## 10 mixto        marca    sin_azúcar
+##    presentacion precio      azucar    
+##    <fct>        <fct>       <fct>     
+##  1 bolsas       marca       con_azúcar
+##  2 mixto        marca       sin_azúcar
+##  3 mixto        desconocido con_azúcar
+##  4 mixto        variable    sin_azúcar
+##  5 bolsas       variable    con_azúcar
+##  6 bolsas       marca       con_azúcar
+##  7 bolsas       variable    con_azúcar
+##  8 bolsas       desconocido con_azúcar
+##  9 mixto        variable    sin_azúcar
+## 10 mixto        variable    sin_azúcar
 ```
 
 Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por

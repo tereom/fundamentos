@@ -310,7 +310,7 @@ ventas.null <- lineup(null_dist(var = 'res.est2.2', dist = 'normal',
 ```
 
 ```
-## decrypt("bhMq KJPJ 62 sSQ6P6S2 u7")
+## decrypt("bhMq KJPJ 62 sSQ6P6S2 7Z")
 ```
 
 ```r
@@ -505,7 +505,7 @@ dormir_perm %>%
 ```
 
 ```
-## [1] 0.32
+## [1] 0.62
 ```
 
 ```r
@@ -526,7 +526,7 @@ calcula_est()
 ```
 
 ```
-## [1] 0.58
+## [1] 0.42
 ```
 
 ```r
@@ -620,7 +620,8 @@ enlace <- read_csv("data/enlace_15.csv")
 ```
 
 ```
-## Parsed with column specification:
+## 
+## ── Column specification ────────────────────────────────────────────────────────
 ## cols(
 ##   id = col_double(),
 ##   cve_ent = col_double(),
@@ -858,5 +859,22 @@ arbitrario de muestras de la población, sino que tenemos únicamente una muestr
 el error estándar, esto es seleccionar muchas muestras y calcular la estadística 
 de interés en cada una, con la diferencia que las muestras se seleccionan de la
 distribución empírica a falta de la distribución poblacional.
+
+## 8. Bootstrap y muestras complejas {-}
+
+Tarea en RStudio.Cloud
+
+## Examen Parcial {-}
+
+El examen se compondrá de dos partes examen a casa (80%) y examen en clase
+(20%): 
+
+1. Examen a casa en equipos de dos ó tres, las preguntas las encontrarán en
+RStudio.Cloud el martes 6 de octubre y se entregará por correo electrónico
+el lunes 12 de octubre. Se penalizará un punto por cada día de retraso en
+la entrega. Todas las preguntas del examen parcial se deberán hacer en Slack usando el canal #examen-parcial (no se contestarán mensajes o correos privados).
+
+2. Examen en clase, durará una hora, se puede ver las notas pero es individual (no comunicación).
+
 
 

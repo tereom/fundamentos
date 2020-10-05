@@ -134,7 +134,7 @@ mean(casas_muestra$precio_miles)
 ```
 
 ```
-## [1] 179.963
+## [1] 182.5114
 ```
 
 Esta muestra nos da nuestro estimador de la distribución poblacional:
@@ -177,7 +177,7 @@ media
 ```
 
 ```
-## [1] 179.963
+## [1] 182.5114
 ```
 
 
@@ -225,12 +225,12 @@ limites_ic
 
 ```
 ##  5% 95% 
-## 171 189
+## 174 192
 ```
 
 Presentaríamos nuestro resultado como sigue: nuestra estimación puntual de la
-mediana es 180, con un intervalo de
-confianza del 90\% de (171, 189)
+mediana es 182.5, con un intervalo de
+confianza del 90\% de (174, 192)
 
 Otra cosa que podríamos hacer para describir la dispersión de nuestro estimador
 es calcular el error estándar de remuestreo, que estima el error estándar de la
@@ -243,7 +243,7 @@ round(ee_boot, 2)
 ```
 
 ```
-## [1] 5.39
+## [1] 5.45
 ```
 
 
@@ -270,7 +270,7 @@ muestra
 ```
 
 ```
-## [1]  6 10  7  3 14
+## [1] 16  7 19  9  6
 ```
 
 Una remuestra se obtiene:
@@ -281,7 +281,7 @@ sample(muestra, size = 5, replace = TRUE)
 ```
 
 ```
-## [1]  7  3  7 10  6
+## [1] 19  6 16 16  6
 ```
 Nótese que algunos valores de la muestra original pueden aparecer varias veces, y otros no aparecen del todo.
 
@@ -599,18 +599,18 @@ B_muestras
 ## # A tibble: 12 x 2
 ##    n_sims   est
 ##     <dbl> <dbl>
-##  1      5  24.0
-##  2     25  23.1
-##  3     50  24.5
-##  4    100  23.6
-##  5    200  22.8
-##  6    400  22.8
-##  7   1000  24.0
-##  8   1500  23.6
-##  9   3000  23.7
-## 10   5000  23.9
-## 11  10000  24.1
-## 12  20000  23.9
+##  1      5  25.8
+##  2     25  24.2
+##  3     50  25.6
+##  4    100  24.8
+##  5    200  22.7
+##  6    400  23.2
+##  7   1000  23.2
+##  8   1500  23.1
+##  9   3000  23.5
+## 10   5000  23.5
+## 11  10000  23.8
+## 12  20000  23.3
 ```
 
 
@@ -703,7 +703,7 @@ media_boot - prop_hat
 ```
 
 ```
-## [1] 0.001128333
+## [1] 0.001126667
 ```
 
 De esta forma, hemos verificado que:
@@ -722,7 +722,7 @@ ee_boot
 ```
 
 ```
-## [1] 0.02471266
+## [1] 0.02478898
 ```
 
 y construimos un intervalo de confianza del 95%:
@@ -1215,7 +1215,7 @@ dist_boot %>% int_pctl(res_boot, alpha = 0.01) %>%
 ## # A tibble: 1 x 3
 ##   term       .lower .upper
 ##   <chr>       <dbl>  <dbl>
-## 1 diferencia   0.73   6.54
+## 1 diferencia    0.9   6.46
 ```
 
 Que nos indica que con alta probabilidad las cuentas son más altas que en la cena
@@ -1308,7 +1308,7 @@ dist_boot %>% int_pctl(res_boot, 0.10)
 ## # A tibble: 1 x 6
 ##   term              .lower .estimate .upper .alpha .method   
 ##   <chr>              <dbl>     <dbl>  <dbl>  <dbl> <chr>     
-## 1 diferencia 2 vs 1   1.04      1.57   2.22    0.1 percentile
+## 1 diferencia 2 vs 1   1.04      1.57    2.2    0.1 percentile
 ```
 Lo que indica con alta probabilidad que la medicina 2 da entre 1 y 2 horas extras de sueño. Nota
 que en este ejemplo también podríamos hacer una prueba de hipótesis por permutaciones,
