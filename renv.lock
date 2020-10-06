@@ -630,6 +630,20 @@
       "Repository": "CRAN",
       "Hash": "1bb58822a20301cee84a41678e25d9b7"
     },
+    "mapproj": {
+      "Package": "mapproj",
+      "Version": "1.2.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "74ed0ace54e00d9bc60614b220653b7e"
+    },
+    "maps": {
+      "Package": "maps",
+      "Version": "3.3.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "392212982257ea03c37b63547dc871b4"
+    },
     "markdown": {
       "Package": "markdown",
       "Version": "1.1",
