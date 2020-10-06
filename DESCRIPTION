@@ -17,7 +17,8 @@ Imports:
     survey,
     srvyr,
     rsample,
-    reshape2
+    reshape2, 
+    plotly
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
 BugReports: https://github.com/tereom/fundamentos/issues

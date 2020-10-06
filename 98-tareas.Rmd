@@ -801,10 +801,18 @@ usaremos el paquete [mxmaps](https://www.diegovalle.net/mxmaps/index.html). En e
 caso el `data.frame` con la información de ingreso corriente por estado se 
 llama `edo_ing_cor`.
 
-```{r, fig.width=6.5, fig.height=5}
+```{r, eval =FALSE}
 library(mxmaps)
 data(mxstate.map) # datos para hacer el mapa
+```
 
+```{r, echo = FALSE}
+# readr::write_rds(mxstate.map, path = "data/mxstate_map.Rdata")
+mxstate.map <- read_rds("data/mxstate_map.Rdata")
+```
+
+
+```{r, fig.width=6.5, fig.height=5}
 mxstate_ing_cor <- mxstate.map %>% 
   left_join(edo_ing_cor, by = c("region" = "edo"))
 
