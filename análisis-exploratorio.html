@@ -52,6 +52,13 @@
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -286,7 +293,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-y-discusión-de-media"><i class="fa fa-check"></i>Solución y discusión de media</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap en muestras complejas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución"><i class="fa fa-check"></i>Solución</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1" data-path="tareas.html"><a href="tareas.html#enigh"><i class="fa fa-check"></i><b>8.1</b> 1. ENIGH</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="tareas.html"><a href="tareas.html#mapas"><i class="fa fa-check"></i><b>8.1.1</b> Mapas</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#examen-parcial"><i class="fa fa-check"></i>Examen Parcial</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
@@ -387,84 +399,84 @@ cuatro días consecutivos:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">14.00</td>
-<td align="right">3.00</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">24.06</td>
-<td align="right">3.60</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="right">11.02</td>
-<td align="right">1.98</td>
-<td align="left">Si</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">23.17</td>
-<td align="right">6.50</td>
-<td align="left">Si</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">4</td>
-</tr>
-<tr class="odd">
-<td align="right">21.70</td>
-<td align="right">4.30</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">18.28</td>
-<td align="right">4.00</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
-</tr>
-<tr class="odd">
-<td align="right">14.73</td>
-<td align="right">2.20</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
-</tr>
-<tr class="even">
-<td align="right">14.52</td>
+<td align="right">13.03</td>
 <td align="right">2.00</td>
 <td align="left">No</td>
 <td align="left">Jue</td>
 <td align="left">Comida</td>
 <td align="right">2</td>
 </tr>
-<tr class="odd">
-<td align="right">8.58</td>
-<td align="right">1.92</td>
+<tr class="even">
+<td align="right">13.00</td>
+<td align="right">2.00</td>
 <td align="left">Si</td>
-<td align="left">Vie</td>
+<td align="left">Jue</td>
 <td align="left">Comida</td>
-<td align="right">1</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">13.16</td>
+<td align="right">2.75</td>
+<td align="left">No</td>
+<td align="left">Jue</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="right">15.01</td>
-<td align="right">2.09</td>
+<td align="right">17.78</td>
+<td align="right">3.27</td>
+<td align="left">No</td>
+<td align="left">Sab</td>
+<td align="left">Cena</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">13.81</td>
+<td align="right">2.00</td>
 <td align="left">Si</td>
 <td align="left">Sab</td>
 <td align="left">Cena</td>
 <td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">25.29</td>
+<td align="right">4.71</td>
+<td align="left">No</td>
+<td align="left">Dom</td>
+<td align="left">Cena</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="right">16.97</td>
+<td align="right">3.50</td>
+<td align="left">No</td>
+<td align="left">Dom</td>
+<td align="left">Cena</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="right">12.16</td>
+<td align="right">2.20</td>
+<td align="left">Si</td>
+<td align="left">Vie</td>
+<td align="left">Comida</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="right">26.86</td>
+<td align="right">3.14</td>
+<td align="left">Si</td>
+<td align="left">Sab</td>
+<td align="left">Cena</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="right">20.45</td>
+<td align="right">3.00</td>
+<td align="left">No</td>
+<td align="left">Sab</td>
+<td align="left">Cena</td>
+<td align="right">4</td>
 </tr>
 </tbody>
 </table>
@@ -1856,7 +1868,7 @@ junto con un análisis de serie de tiempo de <span class="citation">Cleveland (<
 desde 1999. Los usaremos para contestar las preguntas: ¿cuáles son los cumpleaños más
 frecuentes? y ¿en qué mes del año hay más nacimientos?</p>
 <p>Podríamos utilizaar una gráfica popular (ver por ejemplo <a href="http://thedailyviz.com/2016/09/17/how-common-is-your-birthday-dailyviz/">esta visualización</a>) como:</p>
-<p><img src="images/heatmapbirthdays1.png" style="display: block; margin: auto;" /></p>
+<p><img src="images/heatmapbirthdays1.png" width="305" style="display: block; margin: auto;" /></p>
 <p>Sin embargo, ¿cómo criticarías este análisis desde el punto de vista de los tres
 primeros principios del diseño analítico? ¿Las comparaciones son útiles? ¿Hay
 aspectos multivariados? ¿Qué tan bien explica o sugiere estructura, mecanismos o

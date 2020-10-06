@@ -731,7 +731,7 @@ A continuación mostramos la representación gráfica de la función de verosimi
 Notamos lo mismo que para los ejemplos anteriores. Conforme más datos tenemos, más nos acercamos a los valores 
 reales que no conocemos. 
 
-<img src="images/mle-normal.png" style="display: block; margin: auto;" />
+<img src="images/mle-normal.png" width="937" style="display: block; margin: auto;" />
 
 En las siguientes secciones veremos los métodos clásicos para encontrar el $\textsf{MLE}$. Y mas adelante, estudiaremos los propiedades teóricas que hacen a estos estimadores tan útiles y prácticos en aplicaciones. 
 

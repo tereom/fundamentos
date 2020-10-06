@@ -89,16 +89,16 @@ sample_n(propinas, 10) %>% formatear_tabla()
 
 | cuenta_total| propina|fumador |dia |momento | num_personas|
 |------------:|-------:|:-------|:---|:-------|------------:|
-|        14.00|    3.00|No      |Sab |Cena    |            2|
-|        24.06|    3.60|No      |Sab |Cena    |            3|
-|        11.02|    1.98|Si      |Sab |Cena    |            2|
-|        23.17|    6.50|Si      |Dom |Cena    |            4|
-|        21.70|    4.30|No      |Sab |Cena    |            2|
-|        18.28|    4.00|No      |Jue |Comida  |            2|
-|        14.73|    2.20|No      |Sab |Cena    |            2|
-|        14.52|    2.00|No      |Jue |Comida  |            2|
-|         8.58|    1.92|Si      |Vie |Comida  |            1|
-|        15.01|    2.09|Si      |Sab |Cena    |            2|
+|        13.03|    2.00|No      |Jue |Comida  |            2|
+|        13.00|    2.00|Si      |Jue |Comida  |            2|
+|        13.16|    2.75|No      |Jue |Comida  |            2|
+|        17.78|    3.27|No      |Sab |Cena    |            2|
+|        13.81|    2.00|Si      |Sab |Cena    |            2|
+|        25.29|    4.71|No      |Dom |Cena    |            4|
+|        16.97|    3.50|No      |Dom |Cena    |            3|
+|        12.16|    2.20|Si      |Vie |Comida  |            2|
+|        26.86|    3.14|Si      |Sab |Cena    |            2|
+|        20.45|    3.00|No      |Sab |Cena    |            4|
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones
@@ -1408,7 +1408,7 @@ frecuentes? y ¿en qué mes del año hay más nacimientos?
 
 Podríamos utilizaar una gráfica popular (ver por ejemplo [esta visualización](http://thedailyviz.com/2016/09/17/how-common-is-your-birthday-dailyviz/)) como:
 
-<img src="./images/heatmapbirthdays1.png" style="display: block; margin: auto;" />
+<img src="./images/heatmapbirthdays1.png" width="305" style="display: block; margin: auto;" />
 
 Sin embargo, ¿cómo criticarías este análisis desde el punto de vista de los tres
 primeros principios del diseño analítico? ¿Las comparaciones son útiles? ¿Hay

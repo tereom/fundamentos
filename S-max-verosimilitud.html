@@ -52,6 +52,13 @@
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
 
 
 <style type="text/css">
@@ -286,7 +293,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-y-discusión-de-media"><i class="fa fa-check"></i>Solución y discusión de media</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap en muestras complejas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución"><i class="fa fa-check"></i>Solución</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1" data-path="tareas.html"><a href="tareas.html#enigh"><i class="fa fa-check"></i><b>8.1</b> 1. ENIGH</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="tareas.html"><a href="tareas.html#mapas"><i class="fa fa-check"></i><b>8.1.1</b> Mapas</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#examen-parcial"><i class="fa fa-check"></i>Examen Parcial</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
@@ -817,7 +829,7 @@ encontrar el <span class="math inline">\(\textsf{MLE}\)</span>. Para este proble
 <p>A continuación mostramos la representación gráfica de la función de verosimilitud de este ejemplo.
 Notamos lo mismo que para los ejemplos anteriores. Conforme más datos tenemos, más nos acercamos a los valores
 reales que no conocemos.</p>
-<p><img src="images/mle-normal.png" style="display: block; margin: auto;" /></p>
+<p><img src="images/mle-normal.png" width="937" style="display: block; margin: auto;" /></p>
 <p>En las siguientes secciones veremos los métodos clásicos para encontrar el <span class="math inline">\(\textsf{MLE}\)</span>. Y mas adelante, estudiaremos los propiedades teóricas que hacen a estos estimadores tan útiles y prácticos en aplicaciones.</p>
 <p><strong>Ejemplo</strong>. Como ejercicio, podemos encontrar los estimadores de máxima
 verosimilitud cuando tenemos una muestra <span class="math inline">\(X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2).\)</span>
