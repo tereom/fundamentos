@@ -1,10 +1,9 @@
 # Más de pruebas de hipótesis e intervalos
 
-
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 library(patchwork)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.height=3, out.width = '95%', cache = TRUE)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -105,7 +104,7 @@ evidencia en contra de que la media del estado de méxico es muy similar
 a la nacional.
 
 ```{block, type="ejercicio"}
-- Repite esta prueba con una muestra de Chiapas. ¿Qué resultado obtienes?
+Repite esta prueba con una muestra de Chiapas. ¿Qué resultado obtienes?
 ```
 
 
@@ -233,7 +232,7 @@ particular de proporciones, podemos simplificar, como hicimos arriba, a
 $$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim N(0,1)$$ 
 
 ```{block2, type = 'ejercicio'}
-- Haz una prueba comparando las medias en enlace de la Ciudad de México vs
+Haz una prueba comparando las medias en enlace de la Ciudad de México vs
 Estado de México. ¿Hay evidencia de que tienen distintas medias?
 ```
 
@@ -368,7 +367,7 @@ Y vemos que tenemos evidencia considerable de que el desempeño no es el mismo:
 el algoritmo 2 parece ser mejor.
 
 ```{block2, type='ejercicio'}
-- ¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este 
+¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este 
 ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
 ```
 

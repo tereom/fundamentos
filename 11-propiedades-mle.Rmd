@@ -168,13 +168,9 @@ en $\hat \theta_n \approx \theta^*,$ y la approximación se vuelve una identidad
 en el límite $n\rightarrow \infty.$ 
 
 ```{block, type = 'ejercicio'}
-
-En los pasos anteriores: 
-
-- deriva el término faltante $\Psi (\theta^*);$
-- describe en tus propias palabras lo que significa $D( \theta^* \| \theta).$ Recuerda, que arriba la definimos para 
+En los pasos anteriores: 1) deriva el término faltante $\Psi (\theta^*);$
+2) describe en tus propias palabras lo que significa $D( \theta^* \| \theta).$ Recuerda, que arriba la definimos para 
 distribuciones $f$ y $g$. Es decir, $D( f \| g).$
-
 ```
 
 
@@ -512,7 +508,9 @@ $$\hat{\mathsf{se}}_\theta = \sqrt{\frac1n} \times \left[ \hat p_n^{1/2} (1-\hat
 
 ```{block, type = 'ejercicio'}
 
-Comprueba la fórmula del método delta para el momio en función de la fracción de éxitos, y también comprueba que de el mismo resultado analítico que habías calculado en el ejercicio anterior.
+Comprueba la fórmula del método delta para el momio en función de la fracción de
+éxitos, y también comprueba que de el mismo resultado analítico que habías
+calculado en el ejercicio anterior.
 
 ```
 
