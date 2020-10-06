@@ -639,7 +639,7 @@ el error estándar, esto es seleccionar muchas muestras y calcular la estadísti
 de interés en cada una, con la diferencia que las muestras se seleccionan de la
 distribución empírica a falta de la distribución poblacional.
 
-## 8. Bootstrap y muestras complejas {-}
+## 8. Bootstrap en muestras complejas {-}
 
 Tarea en RStudio.Cloud
 
