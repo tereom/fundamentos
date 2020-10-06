@@ -1,5 +1,9 @@
 # Tareas {-}
 
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, cache =TRUE)
+```
+
 * Las tareas se envían por correo a <teresa.ortiz.mancera@gmail.com> con título: 
 fundamentos-tareaXX (donde XX corresponde al número de tarea, 01..). 
 
@@ -638,6 +642,200 @@ distribución empírica a falta de la distribución poblacional.
 ## 8. Bootstrap y muestras complejas {-}
 
 Tarea en RStudio.Cloud
+
+### Solución {-}
+
+## 1. ENIGH
+
+Para este ejercicio usaremos los datos de la [ENIGH 2014](https://www.inegi.org.mx/programas/enigh/tradicional/2014/). En particular
+las variables alimentos, vestido, vivienda, salud, comunica, educacion y esparci 
+(esparcimiento) que indican el gasto trimestral en cada una de las categorías. 
+
+1. Calcula los deciles de ingreso usando la variable de ingreso corriente (ing_cor).
+
+Debes tomar en cuenta el diseño de la muestra, puedes usar la función
+`survey_quantile()` del paquete `srvyr` o `svyquantile()` del paquete `survey`.
+Reporta las estimaciones y sus errores estándar usando el bootstrap de Rao y Wu.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readr)
+library(dplyr)
+library(srvyr)
+concentrado_hogar <- read_csv("data/concentradohogar-2014.csv")
+# para facilitar los cálculos ponemos las variables en un vector
+vars_cats <- c("alimentos", "vestido", "vivienda", "salud", "transporte",
+               "comunica", "educacion", "esparci")
+
+hogar <- concentrado_hogar %>% 
+  select(folioviv, foliohog, ubica_geo, est_dis, upm, factor_hog, ing_cor,
+         all_of(vars_cats))
+
+# creamos una variable con el gasto total y el porcentaje de gasto en cada categoría
+hogar_gastos <- hogar %>%
+  mutate(gasto = alimentos + vestido + vivienda + salud + transporte + 
+           comunica + educacion + esparci) %>% 
+  dplyr::mutate_at(vars_cats, list(~. / gasto))
+
+glimpse(hogar_gastos)
+```
+
+
+Para usar las funciones de `srvyr` lo primero es especificar el diseño de la 
+muestra.
+
+```{r}
+enigh_design <- hogar_gastos %>% 
+  as_survey_design(ids = upm, weights = factor_hog, strata = est_dis)
+enigh_design
+```
+
+Elegimos *bootstrap* de Rao y Wu.
+
+```{r}
+enigh_boot <- enigh_design %>% 
+  as_survey_rep(type = "subbootstrap", replicates = 600)
+
+deciles_ingcor <- enigh_boot %>%
+  srvyr::summarise(q_ing_cor = survey_quantile(ing_cor, seq(0.1, 1, 0.1), 
+                                               vartype = NULL)) %>% 
+  tidyr::pivot_longer(cols = everything())
+deciles_ingcor
+```
+
+Creamos una nueva variable con los deciles.
+
+```{r, message=FALSE}
+library(Hmisc)
+enigh_boot_q <- enigh_boot %>%
+  mutate(decil = cut2(ing_cor, cuts = deciles_ingcor$value, 
+                      levels.mean = TRUE))
+```
+
+Y realizamos las estimaciones por decil.
+
+```{r}
+# estimaciones
+estimaciones <- enigh_boot_q %>% 
+  group_by(decil) %>% 
+  srvyr::summarise_at(vars_cats, survey_mean, na.rm = TRUE) 
+
+# errores estándar
+estimaciones_se <- estimaciones %>% 
+  select(decil, contains("se")) %>% 
+  pivot_longer(-decil, names_to = "campo", values_to = "se") %>% 
+  mutate(campo = stringr::str_extract(campo, ".*(?=_)"))
+
+# unimos las dos para hacer la gráfica
+estimaciones_tidy <- estimaciones %>% 
+  select(decil, all_of(vars_cats)) %>% 
+  pivot_longer(-decil, names_to = "campo", values_to = "est") %>% 
+  left_join(estimaciones_se)
+```
+
+Y graficamos.
+
+```{r, fig.width=4.5, fig.height=3}
+ggplot(estimaciones_tidy) +
+  geom_line(aes(x = as.integer(decil), y = est, group = campo, color = campo)) +
+  scale_x_continuous("decil", breaks = 1:10)
+```
+
+Podemos hacer páneles para ver la variación en cada categoría.
+
+```{r, fig.width=6.5, fig.height=4}
+ggplot(estimaciones_tidy) +
+  geom_line(aes(x = as.integer(decil), y = est, group = campo, color = campo), 
+            show.legend = FALSE) +
+  facet_wrap(~ campo, scales = "free_y", nrow = 2) +
+  scale_x_continuous("decil", breaks = 1:10)
+```
+
+Y finalmente agregamos errores estándar.
+
+```{r, fig.width=6.5, fig.height=4}
+ggplot(estimaciones_tidy) +
+  geom_line(aes(x = as.integer(decil), y = est, group = campo, color = campo), 
+            show.legend = FALSE, alpha = 0.8) +
+  geom_linerange(aes(x = as.integer(decil), ymin = est - 2 * se, ymax = est + 2 * se, 
+                     group = campo, color = campo), show.legend = FALSE, alpha = 0.8) +
+  facet_wrap(~ campo, scales = "free_y", nrow = 2) +
+  scale_x_continuous("decil", breaks = 1:10)
+```
+
+### Mapas
+
+Si quisieran hacer un mapa con la mediana de ingreso corriente trimestral por
+estado.
+
+1. Lo primero que debemos hacer es agregar la variable entidad a tus datos. 
+De acuerdo al diccionario de datos de la ENIGH la variable *ubicacion_geo*
+contiene la clave de entidad.
+
+    *ubica_geo: Ubicación geográfica, contiene la ubicación geográfica de la vivienda. 
+    Los dos primeros dígitos representan la clave de la entidad, los siguientes tres 
+    la clave del municipio y los últimos cuatro la clave de la localidad. Éstas 
+    corresponden al Catálogo de claves de entidades federativas, municipios y 
+    localidades, que está disponible en el sitio del INEGI.*
+
+Por lo tanto debemos comenzar creando una variable de entidad, para ello usamos
+la función `str_sub()` del paquete `stringr`.
+
+```{r}
+library(stringr)
+enigh_boot_edo <- enigh_boot %>% 
+  mutate(edo = str_sub(ubica_geo, 1, 2))
+```
+
+2. Una vez que tenemos la variable en el diseño usamos `group_by()` y `svy_median()`
+para calcular la mediana en cada estado y el error estándar de las estimaciones.
+
+```{r}
+edo_ing_cor <- enigh_boot_edo %>% 
+  group_by(edo) %>% 
+  summarise(mediana = survey_median(ing_cor, vartype = "se")) 
+```
+
+Ahora vemos como hacer un mapa con los resultados de nuestro análisis, para ello
+usaremos el paquete [mxmaps](https://www.diegovalle.net/mxmaps/index.html). En este 
+caso el `data.frame` con la información de ingreso corriente por estado se 
+llama `edo_ing_cor`.
+
+```{r, fig.width=6.5, fig.height=5}
+library(mxmaps)
+data(mxstate.map) # datos para hacer el mapa
+
+mxstate_ing_cor <- mxstate.map %>% 
+  left_join(edo_ing_cor, by = c("region" = "edo"))
+
+# este es el mapa básico
+mapa_ingcor <- ggplot(mxstate_ing_cor, aes(long, lat, group = group)) + 
+  geom_polygon(aes(fill = mediana), color = "darkgray") +
+  coord_map()
+
+mapa_ingcor 
+```
+
+Podemos agregar interactividad con el paquete `plotly`.
+
+```{r, fig.width=6.5, fig.height=4.5}
+library(plotly)
+
+# función para formatear con comas los datos de ingreso
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+
+mapa_ingcor <- ggplot(mxstate_ing_cor %>% mutate(ee = round(mediana_se)), 
+                      aes(long, lat, group = group, 
+                          text = str_c("ingreso corriente: ",  
+                                       comma(mediana)), label = ee)) + 
+  geom_polygon(aes(fill = mediana), color = "darkgray", size = 0.1) +
+  scale_fill_distiller(palette = "YlGnBu", type = "div") + #paleta 
+  labs(title = "Mediana de ingreso corriente", fill = "") + 
+  theme_void() +
+  coord_map()
+
+ggplotly(mapa_ingcor, tooltip = c("text", "label"))
+```
 
 ## Examen Parcial {-}
 
