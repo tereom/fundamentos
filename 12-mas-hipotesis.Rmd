@@ -9,18 +9,18 @@ comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
 
-En esta parte veremos enfoques más clásicos para analizar una prueba de 
-hipótesis, en situaciones donde podemos hacer algunos supuestos teóricos acerca
-de la distribución de las poblaciones. Esta es una sección complementaria para
-entender prácticas estadísticas usuales: recuerda que discutimos antes que
-hacer estimación por intervalos generalmente es más útil que hacer pruebas
-de hipótesis, y adicionalmente, tenemos también la técnica de pruebas de permutaciones
-que podemos aplicar en muchos de los casos que discutiremos a continuación.
+En esta sección veremos enfoques más clásicos para analizar una prueba de
+hipótesis. en particular veremos situaciones donde podemos hacer algunos
+supuestos teóricos acerca de la distribución de las poblaciones. Esta es una
+sección complementaria para entender prácticas estadísticas usuales: recuerda
+que discutimos antes que hacer estimación por intervalos generalmente es más
+útil que hacer pruebas de hipótesis, y adicionalmente, tenemos también la
+técnica de pruebas de permutaciones que podemos aplicar en muchos de los casos
+que discutiremos a continuación.
 
-El enfoque básico es el mismo que cuando vimos pruebas
-de permutaciones: calculamos una estadística de prueba de los
-datos y luego, con una distribución de referencia (asociada a la hipótesis nula),
-calculamos un valor-$p$. Si el
+El enfoque básico es el mismo que cuando vimos pruebas de permutaciones:
+calculamos una estadística de prueba de los datos y luego, con una distribución
+de referencia (asociada a la hipótesis nula), calculamos un valor-$p$. Si el
 valor-$p$ es chico, entonces los resultados observados no pueden explicarse
 fácilmente por variación muestral, y rechazamos la hipótesis nula.
 
@@ -40,33 +40,34 @@ hemos considerado, como medias y proporciones muestrales.
 También vimos que estimadores de máxima verosimilitud cumplen muchas 
 veces un teorema central del límite.
 
-Así que supongamos que tenemos una estadística $\hat{\theta}$ que estima 
-$\theta$ y es asintóticamente insesgada y normal. 
-Sea $\hat{ee}$ una estimación de su error estándar (hay distintas maneras de estimarlo: por ejemplo con bootstrap, o teóricamente).
-Recuerda que el error estándar de una estadística es la desviación estándar
-de su distribución de muestreo.
+Así que supongamos que tenemos una estadística $\hat{\theta}_n$ que estima
+$\theta$ y es asintóticamente insesgada y normal. Denotamos por
+$\hat{\textsf{ee}}$ una estimación de su error estándar ---hay distintas maneras
+de hacerlo: por ejemplo, con simulación *(bootstrap)*, o por medios analíticos
+*(teoría)*. Recuerda que el error estándar de una estadística es *la desviación
+estándar de su distribución de muestreo*.
 
 Si nos interesa probar la hipótesis de que $\theta = 125$, por ejemplo,
-y $\hat{\theta}$ es aproximadamente normal, entonces podemos construir una
+y $\hat{\theta}_n$ es aproximadamente normal, entonces podemos construir una
 distribución de referencia aproximada como sigue:
 
 - Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta}$ 
-es aproximadamente $N(125, \hat{ee})$.
+es aproximadamente $\mathsf{N}(125, \hat{\textsf{ee}})$.
 - Esto implica que la siguiente estadística $W$ es aproximadamente normal
 estándar bajo la nula:
 
-$$W = \frac{\hat{\theta} - 125}{\hat{ee}} \sim N(0,1)$$
+$$W = \frac{\hat{\theta} - 125}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1)$$
 Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
 en contra de la hipótesis nula. Como $W$ **no depende de ningún parámetro desconocido**, podemos
 usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
 en la muestra. 
 
 Si observamos para nuestra muestra un valor $W=w$ entonces, el
-valor $p$ de esta prueba es, aproximadamente,
+valor-$p$ de esta prueba es, aproximadamente,
 
 
 $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
-donde $Z\sim N(0,1)$ y $\Phi$ es su función de distribución acumulada.
+donde $Z\sim \mathsf{N}(0,1)$ y $\Phi$ es su función de distribución acumulada.
 
 
 **Ejemplo: media muestral**.  La media nacional de las escuelas de enlace está alrededor
@@ -76,7 +77,7 @@ es consistente o no con la media nacional. Como estamos usando como
 estimador una media de una muestra iid, podemos estimar el error estándar
 de la media con
 
-$$\hat{ee} = s / \sqrt{n}$$
+$$\hat{\textsf{ee}} = s / \sqrt{n}$$
 Obtenemos:
 
 ```{r}
@@ -91,7 +92,7 @@ resumen
 ```
 
 La hipótesis nula es que la media poblacional del Estado de México
-es igual a 454. Calculamos el valor p usando la prueba de Wald:
+es igual a 454. Calculamos el valor-$p$ usando la prueba de Wald:
 
 ```{r}
 dif <- (resumen %>% pull(media)) - 454
@@ -112,25 +113,25 @@ a la nacional.
 Tenemos entonces:
 
 ```{block2, type='mathblock'}
-**Prueba de Wald.** Consideramos probar la hipótesis nula $\theta = \theta_0$
-contra la alternativa $\theta \neq \theta_0$.
+**Prueba de Wald.** Consideramos probar la hipótesis nula $H_0: \theta = \theta_0$
+contra la alternativa $H_1: \theta \neq \theta_0$.
 
-Suponemos que $\hat{\theta}$ es asintóticamente normal e insesgada, 
+Suponemos que $\hat{\theta}_n$ es asintóticamente normal e insesgada, 
 de modo que bajo la hipótesis nula
-$$\frac{\hat{\theta} - \theta_0}{\hat{ee}} \sim N(0,1).$$ 
-Entonces el valor-p de la **prueba de Wald** para esta hipótesis nula es
+$$\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1).$$ 
+Entonces el valor-$p$ de la **prueba de Wald** para esta hipótesis nula es
 
-$$\mathsf{valor-p} \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
+$$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|)).$$
 
 
 ```
 
 
 **Ejemplo.** Podemos hacer la prueba de Wald para proporciones con el 
-estimador usual $\hat{p}$ que estima una proporción poblacional $p$. 
-En este caso, utilizamos la estimación usual del error estándar de $\hat{p}$,
+estimador usual $\hat{p}_n$ que estima una proporción poblacional $p$. 
+En este caso, utilizamos la estimación usual del error estándar de $\hat{p}_n$,
 que está dada por
-$$\hat{ee} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}.$$
+$$\hat{\textsf{ee}} = \sqrt{\frac{\hat{p}_n(1-\hat{p}_n)}{n}}.$$
 Supongamos por ejemplo que en nuestros datos observamos que en $n=80$
 muestras independientes, tenemos $x=47$ éxitos. ¿Es esto consistente
 con la hipótesis nula $p = 0.5$?
@@ -166,7 +167,7 @@ es distinta de 0.5.
 Con más supuestos distribucionales podemos hacer otros tipos de pruebas donde
 no requerimos hacer supuestos asintóticos. Por ejemplo, si suponemos
 que la muestra obtenida $X_1,\ldots, X_n$ proviene de una distribución
-normal $N(\mu, \sigma)$ (cosa que es **necesario** verificar), entonces
+normal $\mathsf{N}(\mu, \sigma)$ (cosa que es **necesario** verificar), entonces
 es posible demostrar que la estadística
 
 $$T = \frac{\bar{X} - \mu}{S / \sqrt{n}}$$
@@ -204,33 +205,33 @@ Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
 distintas, y queremos ver si la hipótesis de medias poblacionales
 iguales es consistente con los datos, podemos usar también una prueba de Wald.
 
-Sea $\overline{X}_1$ y $\overline{X}_2$ las medias muestrales
+Sea $\bar{X}_1$ y $\bar{X}_2$ las medias muestrales
 correspondientes. Si la hipótesis
 de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
 la variable
-$$\hat{\delta} = \overline{X}_1 - \overline{X}_2$$
-es aproximadamente normal con media $N(\mu_1 - \mu_2, ee)$, 
+$$\hat{\delta} = \bar{X}_1 - \bar{X}_2$$
+es aproximadamente normal con media $\mathsf{N}(\mu_1 - \mu_2, \textsf{ee})$, 
 donde $\mu_1$ y $\mu_2$ son las medias poblacionales correspondientes, y 
 donde el
 error estándar de $\hat{\delta}$ es la raíz de la suma de los cuadrados de
 los errores estándar
-de $\overline{X}$ y $\overline{Y}$:
+de $\bar{X}$ y $\bar{Y}$:
 
-$$ ee = \sqrt{ee_1^2 + ee_{2}^2}.$$
+$$ \textsf{ee} = \sqrt{\textsf{ee}_1^2 + \textsf{ee}_{2}^2}.$$
 Se sigue entonces que:
-$$ee =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
+$$\textsf{ee} =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
 (Nota: usa probabilidad para explicar por qué es cierto esto). De esto
 se deduce que bajo la hipótesis nula de igualdad de medias $\mu_1 = \mu_2$,
 tenemos que la estadística de Wald
 
-$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim N(0,1)$$ 
+$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim \mathsf{N}(0,1)$$ 
 es aproximamente normal estándar. Procedemos entonces a calcular el valor
 $p$ usando la función de distribución acumulada de la normal estándar.
 
 
 En el caso
 particular de proporciones, podemos simplificar, como hicimos arriba, a
-$$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim N(0,1)$$ 
+$$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim \mathsf{N}(0,1)$$ 
 
 ```{block2, type = 'ejercicio'}
 - Haz una prueba comparando las medias en enlace de la Ciudad de México vs
@@ -238,14 +239,14 @@ Estado de México. ¿Hay evidencia de que tienen distintas medias?
 ```
 
 
-**Ejemplo (Wasserman).** Supongamos tenemos dos conjuntos de prueba para 
-evaluar algoritmos de predicción, de tamaños $n_1=100$ y $n=250$ respectivamente,
+**Ejemplo (@Wasserman).** Supongamos tenemos dos conjuntos de prueba para 
+evaluar algoritmos de predicción, de tamaños $n_1=100$ y $n_2=250$ respectivamente,
 tenemos dos algoritmos para generar predicciones de clase (digamos positivo y negativo).
 Usaremos el primer conjunto para evaluar el algoritmo 1 y el segundo para evaluar
 el algoritmo 2. El algoritmo 1 corre en 1 hora, y el algoritmo 2 tarda 24 horas.
 
 Supón que obtenemos que la tasa de clasificación correcta del primer algoritmo
-es $\hat{p}_1 = 0.85$, y la tasa del segundo es de $\hat{p} = 0.91$. ¿Estos
+es $\hat{p}_1 = 0.85$, y la tasa del segundo es de $\hat{p}_2 = 0.91$. ¿Estos
 datos son consistentes con la hipótesis de que los algoritmos tienen desempeño 
 muy similar? Es decir, queremos probar la hipótesis $p_1 = p_2$.
 
@@ -268,7 +269,7 @@ que da un valor p de:
 2 * (1 - pnorm(abs(w)))
 ```
 
-Y vemos que valor p es grande, de forma que los datos son consistentes
+Y vemos que valor-$p$ es grande, de forma que los datos son consistentes
 con la hipótesis de que los algoritmos tienen desempeño similar. ¿Cómo tomaríamos
 nuestra decisión final? Si la diferencia entre 1 hora y 24 horas no es muy
 importante, entonces preferíamos usar el algoritmo 2. Sin embargo, si el costo
@@ -282,10 +283,10 @@ Las pruebas que acabamos de para comparar medias requieren
 poblaciones independientes. Si las dos muestras están pareadas (es decir,
 son dos mediciones en una misma muestra), podemos
 tomar considerar las diferencias $D_i = X_i - Y_i$ y utilizar la prueba para una
-sola muestra con la media $\overline{D}$. Esta es una prueba de Wald pareada.
+sola muestra con la media $\bar{D}$. Esta es una prueba de Wald pareada.
 
 
-**Ejemplo (Wasserman).** Ahora supongamos que utilizamos la misma
+**Ejemplo (@Wasserman).** Ahora supongamos que utilizamos la misma
 muestra de tamaño $n=300$ para probar los dos algoritmos. En este caso,
 no debemos hacer la prueba para medias de muestras independientes. Sin embargo,
 esto podemos ponerlo en términos de una prueba para una sola muestra.
@@ -300,17 +301,17 @@ tiene valor esperado $p_1 - p_2$, donde $p_1$ y $p_2$ son las tasas de correctos
 del algoritmo 1 y del algoritmo 2 respectivamente. Podemos hacer una prueba
 de Wald como al principio de la sección:
 
-$$W = \frac{\bar{D} - 0}{\hat{ee}}$$
+$$W = \frac{\bar{D} - 0}{{\textsf{ee}}}$$
 Y notemos que el error estándar **no** se calcula como en el ejemplo anterior. Podríamos
 usar bootstrap para estimarlo, pero en este caso podemos usar el estimador usual
 
-$$\hat{ee} = S / \sqrt{n}$$
+$$\hat{\textsf{ee}} = S / \sqrt{n}$$
 donde
 $$S = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D})^2$$
 y nótese que necesitamos las decisiones indiviudales de cada algoritmo para
 cada caso, en contraste al ejemplo anterior de muestras independientes donde
 los errores estándar se calculaban de manera independiente. Esto tiene sentido,
-pues la variablidad de $\overline{D}$ depende de cómo están correlacionados
+pues la variablidad de $\bar{D}$ depende de cómo están correlacionados
 los aciertos de los dos algoritmos.
 
 Supongamos por ejemplo que los datos que obtenemos son:
@@ -381,30 +382,31 @@ especificas.
 
 Para aplicar este tipo de pruebas es necesario hacer
 supuestos distribucionales (modelos probabilísticos), pues
-estas pruebas se basan en la función de verosimilitud $L(\theta; x_1,\ldots, x_n)$.
+estas pruebas se basan en la función de verosimilitud $\mathcal{L}(\theta; x_1,\ldots, x_n)$.
 
 **Ejemplo**. Supongamos que tenemos la hipótesis nula de que una moneda
 es justa ($p =0.05$ de sol). En 120 tiros de la moneda (que suponemos
 independientes), observamos 75 soles.
 Recordemos la función de log-verosimilitud para el modelo binomial 
 (ignorando constantes que no dependen de $p$) es
-$$l(p) = 75 \log(p) + (120 - 75)\log(1-p) $$
+$$\ell(p) = 75 \log(p) + (120 - 75)\log(1-p) $$
 
 - Primero calculamos el estimador de máxima verosimilitud de $p$, que
 es $\hat{p} = 75/120 = 0.625$. Evaluamos la verosimilitud 
 
-$$l(\hat{p}) = l(0.625) = 75\log(0.625) + 45\log(0.375) = -79.388$$
+$$\ell(\hat{p}) = \ell(0.625) = 75\log(0.625) + 45\log(0.375) = -79.388$$
 - Ahora evaluamos la verosimlitud según la hipótesis nula, donde asumimos
 que $p = 0.5$:
 
-$$l(p_0) = l(0.5) = 75\log(0.5) + 45\log(0.5) = -83.177$$
+$$\ell(p_0) = \ell(0.5) = 75\log(0.5) + 45\log(0.5) = -83.177$$
 - Finalmente, contrastamos estos dos números con una estadística que denotamos
 con $\lambda$:
 
-$$\lambda = 2\left[l(\hat{p}) - l(p_0)\right] = 2[l(0.625)- l(0.5)] = 2(3.79)=7.58$$
+$$\lambda = 2\left[\ell(\hat{p}) - \ell(p_0)\right] = 2[\ell(0.625)- \ell(0.5)] = 2(3.79)=7.58$$
 
-- A $\lambda$ se le llama la **estadística de cociente de verosimilitud**. Tomamos la diferencia de log verosimilitudes, que es los mismo que tomar
-el logaritmo del **cociente** de verosimilitudes, y de ahí el nombre de la prueba.
+- A $\lambda$ se le llama la **estadística de cociente de verosimilitud**.
+Tomamos la diferencia de log verosimilitudes, que es los mismo que tomar el
+logaritmo del **cociente** de verosimilitudes, y de ahí el nombre de la prueba.
 
 - Nótese que cuando este número $\lambda$ es muy grande, esto implica que la hipótesis
 nula es menos creíble, o menos consistente con los datos, pues la nula tiene mucho
@@ -444,7 +446,7 @@ Por ejemplo, podemos construir pruebas para $\theta < 0.4$.
 **Definición**. Consideramos la hipótesis nula $\theta= \theta_0$. 
 La **estadística del cociente de verosimilitudes** está dada por:
   
-$$\lambda = 2\log\left( \frac{\max_{\theta}L(\theta)}{\max_{\theta=\theta_0}L(\theta)}        \right ) = 2\log\left(  \frac{L(\hat{\theta})}{L(\theta_0)}  \right)$$
+$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta=\theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta})}{\mathcal{L}(\theta_0)}  \right)$$
 
   donde $\hat{\theta}$ es el estimador de máxima verosimilitud.
 ```
@@ -492,7 +494,7 @@ la moneda no está balanceada.
 
 **Ejemplo**. Este ejemplo es un poco artificial, pero lo usamos
 para entender mejor las pruebas de cocientes
-de verosimlitud. Supongamos que tenemos una muestra de $N(\mu, 1)$, y queremos
+de verosimlitud. Supongamos que tenemos una muestra de $\mathsf{N}(\mu, 1)$, y queremos
 probar si $\mu = 8$. Asumimos que el supuesto de normalidad y desviación
 estándar iugal a 1 se cumplen.
 
@@ -528,7 +530,7 @@ lambda
 Ahora construimos con simulación la distribución de referencia usando simulaciones
 bajo la nula
 
-```{r}
+```{r, cache = TRUE}
 sims_nula <- map(1:10000, ~ rnorm(n_muestra, 8, 1))
 lambda_nula_sim <- map_dbl(sims_nula, ~ lambda_calc(.x, crear_log_p))
 tibble(lambda = lambda_nula_sim) %>% 
@@ -577,7 +579,7 @@ condiciones que sólo un subconjunto de parámetros cumple.
 
 **Ejemplo.** Supongamos que queremos hacer una prueba de
 igualdad de medias $\mu_1 = \mu_2$ para dos poblaciones normales
-$N(\mu_1, \sigma_1)$ y $N(\mu_2, \sigma_2)$, donde extraemos las
+$\mathsf{N}(\mu_1, \sigma_1)$ y $\mathsf{N}(\mu_2, \sigma_2)$, donde extraemos las
 muestras de manera independiente, y no conocemos
 las desviaciones estándar. Obtenemos dos muestras (que supondremos
 provienen de distribuciones normales, pues ese es nuestro supuesto)
@@ -667,13 +669,13 @@ lambda <- 2 * (lambda_1 - lambda_2)
 lambda
 ```
 
-Y ahora necesitamos calcular un valor $p$. El problema que tenemos en este
+Y ahora necesitamos calcular un valor-$p$. El problema que tenemos en este
 punto es que bajo la hipótesis nula no están determinados todos los parámetros,
 así que no podemos simular de manera simple muestras para obtener la
 distribución de referencia. Podemos sin embargo usar bootstrap paramétrico
 usando los estimadores de máxima verosimilitud bajo la nula
 
-```{r}
+```{r, cache = TRUE}
 simular_boot <- function(n_1, n_2, est_mv_nula){
   x <- rnorm(n_1, est_mv_nula[1], est_mv_nula[2])
   y <- rnorm(n_2, est_mv_nula[1], est_mv_nula[3])
@@ -703,7 +705,7 @@ tibble(lambda = lambda_sim) %>%
   geom_histogram() +
   geom_vline(xintercept = lambda, colour = "red")
 ```
-Y claramente los datos son consistentes con medias iguales. El valor-p es
+Y claramente los datos son consistentes con medias iguales. El valor-$p$ es
 ```{r}
 mean(lambda_sim > lambda)
 ```
@@ -727,10 +729,10 @@ Esta es la definición generalizada de las pruebas de cociente de verosimilitude
 **Definición**. Consideramos la hipótesis nula $\theta \in \Theta_0$. 
 La **estadística del cociente de verosimilitudes** está dada por:
   
-$$\lambda = 2\log\left( \frac{\max_{\theta}L(\theta)}{\max_{\theta\in\Theta_0}L(\theta)}        \right ) = 2\log\left(  \frac{ L(\hat{\theta})}{L(\hat{\theta_0})}  \right)$$
+$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\Theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta})}{\mathcal{L}(\hat{\theta}_0)}  \right)$$
 
   donde $\hat{\theta}$ es el estimador de máxima verosimilitud de $\theta$
-  y $\hat{\theta_0}$ es el estimador de máxima verosimilitud de $\theta$ cuando
+  y $\hat{\theta}_0$ es el estimador de máxima verosimilitud de $\theta$ cuando
 restringimos a que $\theta \in \Theta_0$.
 ```
 
@@ -740,7 +742,7 @@ $\{ (\mu_1,\mu_2,\sigma_1, \sigma_2)\}$. Nótese que el espacio $\Theta_0$
 tiene tres parámetros libres, mientras que el espacio total tiene 4. 
 
 Aunque podemos usar el bootstrap paramétrico para construir distribuciones
-de referencia para estas pruebas y calcular un valor $p$, el siguiente
+de referencia para estas pruebas y calcular un valor-$p$, el siguiente
 teorema, cuya demostración no es trivial, explica las observaciones que
 hicimos arriba. Este teorema enuncia la estrategia del enfoque clásico,
 que utiliza una aproximación asintótica.
@@ -755,7 +757,7 @@ prueba.
 
 Si $\lambda$ es la estadística de cociente de verosimilitudes de esta prueba, entonces,
 bajo la nula $\theta \in \Theta_0$ tenemos que la distribución 
-de $\lambda$ es asintóticamente $\chi$-cuadrada con $q$ grados de libertad.
+de $\lambda$ es asintóticamente $\chi$-cuadrada con $q$ grados de libertad, denotada por $\chi^2_q$.
 
 El valor-$p$ para esta prueba es
 $$P(\chi^2_{q} > \lambda)$$
@@ -764,7 +766,7 @@ $$P(\chi^2_{q} > \lambda)$$
 **Observaciones**: 
 
 - Para hacer cálculos con la distribución $\chi$-cuadrada usamos rutinas numéricas
-(pro ejemplo la función pchisq en R).
+(pro ejemplo la función `pchisq` en R).
 
 - Nótese que $p$ es la dimensión del espacio $\Theta$ ($p$ parámetros),
 y que $p-q$ es la dimensión del espacio $\Theta_0$ (pues $q$ parámetros están fijos),
@@ -787,7 +789,7 @@ que es similar al que obtuvimos con la estrategia del bootstrap paramétrico.
 
 
 
-## Errores tipo I y tipo II
+## Errores tipo I y tipo II {-}
 
 En algunas ocasiones, en lugar de solamente calcular un valor-$p$ queremos
 tomar una decisión asociada a distintas hipótesis que consideramos posibles. Por
@@ -819,7 +821,7 @@ y tomamos la decisión asociada a la alternativa.
 
 **Ejemplo**. Si tenemos la hipótesis nula $p_1=0.5$ para una proporción,
 y al alternativa es $p_1\neq 0.5$, podemos usar la estadística de Wald
-$T(x) = \frac{\hat{p_1} - 0.5}{\hat{ee}}$. Podríamos definir la región
+$T(x) = \frac{\hat{p_1} - 0.5}{\hat{\textsf{ee}}}$. Podríamos definir la región
 de rechazo como $R = \{T(x) : |T(x)| > 3 \}$ (rechazamos si en valor absoluto
 la estadística de Wald es mayor que 3).
 
@@ -861,13 +863,13 @@ Como dijimos, típicamente se selecciona la región de rechazo de forma
 que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada. 
 
 ```{block2, type='mathblock'}
-Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
+**Definición.$$ Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
 no conocemos $\theta$. Supongamos que la hipótesis nula es que $\theta = \theta_0$ (que llamamos
 una hipótesis simple).
 
 La **potencia** de una prueba con estadística $T$ y región de rechazo $R$
 se define como la probabilidad de rechazar para cada posible valor del parámetro $\theta$ 
-$$\beta(\theta) = P_\theta (X\in R)$$
+$$\beta(\theta) = P_\theta (X\in R).$$
   
 El **tamaño** de una prueba se define como el valor 
 
@@ -885,7 +887,7 @@ es decir, la probabilidad de rechazo más grande cuando la hipótesis nula se cu
 Decimos que una prueba tiene **nivel de significancia** de $\alpha$ si su tamaño
 es menor o igual a $\alpha$.
 
-**Ejemplo** (Chihara) Supongamos que las calificaciones de Enlace de alumnos en México
+**Ejemplo** (@Chihara) Supongamos que las calificaciones de Enlace de alumnos en México
 se distribuye aproximadamente como una normal con media 515 y desviación estándar
 de 120. En una ciudad particular, se quiere decidir
 si es neceario pedir fondos porque la media de la ciudad es más baja
@@ -894,14 +896,14 @@ alternativa es $\mu < 515$, así que si rechazamos la nula se pedirían los fond
 
 Supondremos que la distribución de calificaciones
 en la ciudad es también aproximadamente normal con desviación estándar de 130. Se
-plantea tomar una muestra de 100 alumnos, y rechazar si la media muestral $\overline{X}$ es
+plantea tomar una muestra de 100 alumnos, y rechazar si la media muestral $\bar{X}$ es
 menor que 505. ¿Cuál es la probabilidad $\alpha$ de tener un error de tipo I?
 
 
 La función de potencia es
-$$\beta(\mu) = P_\mu(\overline{X} < 505)$$
+$$\beta(\mu) = P_\mu(\bar{X} < 505)$$
 Restando la media $\mu$ y estandarizando obtenemos
-$$\beta(\mu) = P \left (\frac{\overline{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{130/\sqrt{100}} \right )$$
+$$\beta(\mu) = P \left (\frac{\bar{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{130/\sqrt{100}} \right )$$
 así que 
 $$\beta(\mu) = \Phi \left (\frac{505 -\mu}{130/\sqrt{100}}\right ),$$
 donde $\Phi$ es la función acumulada de la normal estándar. La gráfica
@@ -935,9 +937,9 @@ tener una probabilidad de a lo más 5% de rechazar erróneamente la hipótesis n
 pedir fondos cuando en realidad su media no está debajo de la nacional) para 
 poder recibir fondos. ¿Cuál es la región de rechazo que podríamos escoger?
 
-En el caso anterior usamos la región $\overline{X}<505$. Si el tamaño de muestra
+En el caso anterior usamos la región $\bar{X}<505$. Si el tamaño de muestra
 está fijo en $n=100$ (por presupuesto), entonces tenemos que escoger un punto
-de corte más extremo. Si la región de rechazo es $\overline{X} < C)$ entonces
+de corte más extremo. Si la región de rechazo es $\bar{X} < C)$ entonces
 tenemos, siguiendo los cálculos anteriores, que
 $$0.05 = \alpha = \Phi \left ( \frac{C -515}{130/\sqrt{100}}\right) = \Phi \left( \frac{C- 515}{13}   \right)$$
 Buscamos el cuantil 0.05 de la normal estándar, que es
@@ -956,8 +958,8 @@ C <- 13*z_alpha + 515
 C
 ```
 
-Así que podemos usar la región $\overline{X} < 493.5$, que es más *estricta*
-que la anterior de $\overline{X} < 505$.
+Así que podemos usar la región $\bar{X} < 493.5$, que es más *estricta*
+que la anterior de $\bar{X} < 505$.
 
 ```{block2, type='ejercicio'}
 Considera la potencia de la prueba $\beta(\mu)$ que vimos arriba. Discute y
@@ -979,7 +981,7 @@ la muestra es más grande?
 Algunos recordatorios de lo que hemos visto:
 
 - Rechazar la nula **no quiere decir que la nula es falsa**, ni que **encotramos un
-"efecto"**. Un valor $p$ chico tampoco
+"efecto"**. Un valor-$p$ chico tampoco
 quiere decir que la nula es falsa. Lo que quiere decir es que la nula es poco consistente
 con los datos que observamos, o que es muy poco probable que la nula produzca los datos
 que observamos.
@@ -1027,7 +1029,7 @@ varios de los hallazgos que encontremos serán
 debidos a variabilidad muestral.
 
 Puedes ver en [@Wasserman], sección 10.7 métodos conservadores
-como corrección de Bonferroni (sólo rechazar cuando el valor $p$ es
+como corrección de Bonferroni (sólo rechazar cuando el valor-$p$ es
 menor a $0.05/n$), 
 o la técnica más moderna de 
 control de tasa de descubrimientos falsos (FDR). 
