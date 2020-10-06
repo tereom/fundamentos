@@ -117,7 +117,7 @@ con errores. Así que lo denotamos como una cantidad desconocida $p$. Nótese
 entonces que $P(X_2=1) = p$, $P(X_3=0) = 1-p$ y así sucesivamente, así que la cantidad
 de arriba es igual a
 
-$$p(1-p)p(1-p)(1-p)p(1-p)(1-p)(1-p) $$
+$$(1-p)p(1-p)(1-p)p(1-p)(1-p)(1-p) $$
 
 que se simplifica a 
 
@@ -204,7 +204,7 @@ Probamos esta idea con un proceso más complejo.
 corrida. Cada corrida se producen 500 productos, y se muestrean 10 para
 detectar defectos. Cuando la máquina funciona correctamente, la tasa de defectos
 es de 3%. Cuando la máquina no está funcionando correctamente la tasa de defectos
-es de 10%
+es de 20%
 
 Supongamos que escogemos al azar 11 corridas, y obervamos los siguientes
 número de defectuosos:
@@ -298,7 +298,7 @@ Para $\lambda>0$, tenemos que
 $${\mathcal L}(\lambda) = \prod_{i=1}^n \lambda e^{\lambda x_i}$$
 de modo que
 
-$${\mathcal L}(\lambda) = \lambda^n e^{\lambda \sum_{i=1}^nx_i} = \lambda^n e^{n\lambda\bar{x}} = e^{n(\log\lambda + \lambda\bar{x})}$$
+$${\mathcal L}(\lambda) = \lambda^n e^{-\lambda \sum_{i=1}^nx_i} = \lambda^n e^{-n\lambda\bar{x}} = e^{n(\log\lambda - \lambda\bar{x})}$$
 Que podemos maximizar usando cálculo para obtener 
 $\hat{\lambda}_{\mathsf{ML}} = \frac{1}{\bar{x}}$ (demuéstralo). Discute
 por qué esto es intuitivamente razonable: ¿cuál es
@@ -759,4 +759,3 @@ c(media = mean(muestra), sigma = sd_n(muestra)) %>% round(4)
 La siguiente pregunta qué nos interesa hacer es: ¿cómo estimamos la variabilidad
 de estos estimadores? Más adelante veremos una respuesta basada en teoría, pero
 también podemos resolver este problema usando el bootstrap.
-
