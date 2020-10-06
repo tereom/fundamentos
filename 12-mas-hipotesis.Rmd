@@ -41,7 +41,7 @@ veces un teorema central del límite.
 
 Así que supongamos que tenemos una estadística $\hat{\theta}_n$ que estima
 $\theta$ y es asintóticamente insesgada y normal. Denotamos por
-$\hat{\textsf{ee}}$ una estimación de su error estándar ---hay distintas maneras
+$\hat{\textsf{ee}}_n$ una estimación de su error estándar ---hay distintas maneras
 de hacerlo: por ejemplo, con simulación *(bootstrap)*, o por medios analíticos
 *(teoría)*. Recuerda que el error estándar de una estadística es *la desviación
 estándar de su distribución de muestreo*.
@@ -50,12 +50,12 @@ Si nos interesa probar la hipótesis de que $\theta = 125$, por ejemplo,
 y $\hat{\theta}_n$ es aproximadamente normal, entonces podemos construir una
 distribución de referencia aproximada como sigue:
 
-- Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta}$ 
-es aproximadamente $\mathsf{N}(125, \hat{\textsf{ee}})$.
+- Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta}_n$ 
+es aproximadamente $\mathsf{N}(125, \hat{\textsf{ee}}_n)$.
 - Esto implica que la siguiente estadística $W$ es aproximadamente normal
 estándar bajo la nula:
 
-$$W = \frac{\hat{\theta} - 125}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1)$$
+$$W = \frac{\hat{\theta}_n - 125}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1)$$
 Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
 en contra de la hipótesis nula. Como $W$ **no depende de ningún parámetro desconocido**, podemos
 usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
@@ -76,7 +76,7 @@ es consistente o no con la media nacional. Como estamos usando como
 estimador una media de una muestra iid, podemos estimar el error estándar
 de la media con
 
-$$\hat{\textsf{ee}} = s / \sqrt{n}$$
+$$\hat{\textsf{ee}}_n = s / \sqrt{n}$$
 Obtenemos:
 
 ```{r}
@@ -117,7 +117,7 @@ contra la alternativa $H_1: \theta \neq \theta_0$.
 
 Suponemos que $\hat{\theta}_n$ es asintóticamente normal e insesgada, 
 de modo que bajo la hipótesis nula
-$$\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1).$$ 
+$$\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1).$$ 
 Entonces el valor-$p$ de la **prueba de Wald** para esta hipótesis nula es
 
 $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|)).$$
@@ -130,9 +130,9 @@ $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|)).$$
 estimador usual $\hat{p}_n$ que estima una proporción poblacional $p$. 
 En este caso, utilizamos la estimación usual del error estándar de $\hat{p}_n$,
 que está dada por
-$$\hat{\textsf{ee}} = \sqrt{\frac{\hat{p}_n(1-\hat{p}_n)}{n}}.$$
+$$\hat{\textsf{ee}}_n = \sqrt{\frac{\hat{p}_n(1-\hat{p}_n)}{n}}.$$
 Supongamos por ejemplo que en nuestros datos observamos que en $n=80$
-muestras independientes, tenemos $x=47$ éxitos. ¿Es esto consistente
+muestras independientes, tenemos $S_n=47$ éxitos. ¿Es esto consistente
 con la hipótesis nula $p = 0.5$?
 
 Calcuamos primero:
@@ -149,7 +149,7 @@ w <- (p_hat - 0.5) / ee
 w
 ```
 
-Calculamos su valor p:
+Calculamos su valor-$p$:
 
 ```{r}
 valor_p <- 2 * (1 - pnorm(abs(w)))
@@ -262,7 +262,7 @@ w  <- delta / ee
 w
 ```
 
-que da un valor p de:
+que da un valor-$p$ de:
 
 ```{r}
 2 * (1 - pnorm(abs(w)))
@@ -295,22 +295,22 @@ $X_i=1$ si el algoritmo 1 clasifica correctamente, y 0 en otro caso. Igualmente,
 $Y_i=1$ si el algoritmo 2 clasifica correctamente, y 0 en otro caso. Definimos
 
 $$D_i= X_i - Y_i$$
-Y $D_1,\ldots, D_n$ es una muestra iid. Ahora observemos que la media $\bar{D}$
+Y $D_1,\ldots, D_n$ es una muestra iid. Ahora observemos que la media $\bar{D}_n$
 tiene valor esperado $p_1 - p_2$, donde $p_1$ y $p_2$ son las tasas de correctos
 del algoritmo 1 y del algoritmo 2 respectivamente. Podemos hacer una prueba
 de Wald como al principio de la sección:
 
-$$W = \frac{\bar{D} - 0}{{\textsf{ee}}}$$
+$$W = \frac{\bar{D}_n - 0}{{\textsf{ee}}}$$
 Y notemos que el error estándar **no** se calcula como en el ejemplo anterior. Podríamos
 usar bootstrap para estimarlo, pero en este caso podemos usar el estimador usual
 
-$$\hat{\textsf{ee}} = S / \sqrt{n}$$
+$$\hat{\textsf{ee}}_n = s_n / \sqrt{n}$$
 donde
-$$S = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D})^2$$
+$$s_n = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D})^2$$
 y nótese que necesitamos las decisiones indiviudales de cada algoritmo para
 cada caso, en contraste al ejemplo anterior de muestras independientes donde
 los errores estándar se calculaban de manera independiente. Esto tiene sentido,
-pues la variablidad de $\bar{D}$ depende de cómo están correlacionados
+pues la variablidad de $\bar{D}_n$ depende de cómo están correlacionados
 los aciertos de los dos algoritmos.
 
 Supongamos por ejemplo que los datos que obtenemos son:
@@ -356,7 +356,7 @@ ee <- datos_clasif %>%
 ee  
 ```
 
-Y ahora podemos calcular la estadística $W$ y el valor p correspondiente:
+Y ahora podemos calcular la estadística $W$ y el valor-$p$ correspondiente:
 
 ```{r}
 w <- d_hat / ee
@@ -391,9 +391,9 @@ Recordemos la función de log-verosimilitud para el modelo binomial
 $$\ell(p) = 75 \log(p) + (120 - 75)\log(1-p) $$
 
 - Primero calculamos el estimador de máxima verosimilitud de $p$, que
-es $\hat{p} = 75/120 = 0.625$. Evaluamos la verosimilitud 
+es $\hat{p}_n = 75/120 = 0.625$. Evaluamos la verosimilitud 
 
-$$\ell(\hat{p}) = \ell(0.625) = 75\log(0.625) + 45\log(0.375) = -79.388$$
+$$\ell(\hat{p}_n) = \ell(0.625) = 75\log(0.625) + 45\log(0.375) = -79.388$$
 - Ahora evaluamos la verosimlitud según la hipótesis nula, donde asumimos
 que $p = 0.5$:
 
@@ -401,7 +401,7 @@ $$\ell(p_0) = \ell(0.5) = 75\log(0.5) + 45\log(0.5) = -83.177$$
 - Finalmente, contrastamos estos dos números con una estadística que denotamos
 con $\lambda$:
 
-$$\lambda = 2\left[\ell(\hat{p}) - \ell(p_0)\right] = 2[\ell(0.625)- \ell(0.5)] = 2(3.79)=7.58$$
+$$\lambda = 2\left[\ell(\hat{p}_n) - \ell(p_0)\right] = 2[\ell(0.625)- \ell(0.5)] = 2(3.79)=7.58$$
 
 - A $\lambda$ se le llama la **estadística de cociente de verosimilitud**.
 Tomamos la diferencia de log verosimilitudes, que es los mismo que tomar el
@@ -445,9 +445,9 @@ Por ejemplo, podemos construir pruebas para $\theta < 0.4$.
 **Definición**. Consideramos la hipótesis nula $\theta= \theta_0$. 
 La **estadística del cociente de verosimilitudes** está dada por:
   
-$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta=\theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta})}{\mathcal{L}(\theta_0)}  \right)$$
+$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\mathcal{L}(\theta_0)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\theta_0)}  \right)$$
 
-  donde $\hat{\theta}$ es el estimador de máxima verosimilitud.
+  donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud.
 ```
 
 Para construir una prueba asociada, como siempre, necesitamos una distribución de
@@ -482,7 +482,7 @@ ggplot(sims_tbl, aes(x = lambda)) +
   geom_vline(xintercept = 2.92, colour = "red")
 ```
 Con esta aproximación a la distribución de referencia podemos calcular
-el valor p en nuestro ejemplo anterior:
+el valor-$p$ en nuestro ejemplo anterior:
 
 ```{r}
 valor_p <- mean(sims_tbl$lambda >= lambda_obs)
@@ -728,9 +728,9 @@ Esta es la definición generalizada de las pruebas de cociente de verosimilitude
 **Definición**. Consideramos la hipótesis nula $\theta \in \Theta_0$. 
 La **estadística del cociente de verosimilitudes** está dada por:
   
-$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\Theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta})}{\mathcal{L}(\hat{\theta}_0)}  \right)$$
+$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\Theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\hat{\theta}_0)}  \right)$$
 
-  donde $\hat{\theta}$ es el estimador de máxima verosimilitud de $\theta$
+  donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud de $\theta$
   y $\hat{\theta}_0$ es el estimador de máxima verosimilitud de $\theta$ cuando
 restringimos a que $\theta \in \Theta_0$.
 ```
@@ -820,7 +820,7 @@ y tomamos la decisión asociada a la alternativa.
 
 **Ejemplo**. Si tenemos la hipótesis nula $p_1=0.5$ para una proporción,
 y al alternativa es $p_1\neq 0.5$, podemos usar la estadística de Wald
-$T(x) = \frac{\hat{p_1} - 0.5}{\hat{\textsf{ee}}}$. Podríamos definir la región
+$T(x) = \frac{\hat{p_1} - 0.5}{\hat{\textsf{ee}}_n}$. Podríamos definir la región
 de rechazo como $R = \{T(x) : |T(x)| > 3 \}$ (rechazamos si en valor absoluto
 la estadística de Wald es mayor que 3).
 
@@ -969,10 +969,8 @@ corre algunos ejemplos para contestar las siguientes preguntas:
 - ¿Qué pasa con la potencia cuando hay menos variabilidad en la población? ¿Y cuando
 la muestra es más grande?
 - ¿Qué pasa si hacemos más chico el nivel de significancia?
+
 ```
-
-
-
 
 
 ## Consideraciones prácticas {-}
