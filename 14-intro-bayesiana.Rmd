@@ -507,10 +507,11 @@ Los dos ejemplos que hemos visto arriba son ejemplos de análisis conjugado:
 - (Beta-binomial) Si las observaciones $X_i$ son $Bernoulli(n, p)$ ($n$ fija)
  queremos estimar $p$, y tomamos como distribución inicial para $p$ una $Beta(a,b)$,
 entonces la posterior para $p$ cuando $X=k$ es $Beta(k + a, n - k + b)$. 
+
 - (Uniforme-Pareto) Si el modelo de datos $X_i$ es uniforme $U[0,\theta]$ ($n$ fija),
 queremos estimar $\theta$, y tomamos como distribución inicial para $\theta$ una
 Pareto $(\theta_0, \alpha)$, entonces la posterior para $p$ si el máximo de las $X_i's$
-es igual a $M$ es Pareto con parámetros $(\max{\theta_0, M}, \alpha + n)$.
+es igual a $M$ es Pareto con parámetros $(\max\{\theta_0, M\}, \alpha + n)$.
 
 Nótese que en estos casos, dada una forma de la verosimilitud, tenemos una familia
 conocida 
@@ -522,8 +523,8 @@ Otro ejemplo típico
 es el modelo normal-normal:
 
 - (Normal-normal) Si $X_i\sim N(\mu,\sigma)$, con $\sigma$ conocida, y tomamos
-como distribución inicial para $\mu ~ N(\m_0,\sigma_0)$, y definimos
-como al precisión $\tau$ como el inverso de la varianza, entonces la posterior
+como distribución inicial para $\mu \sim N(\mu_0,\sigma_0)$, y definimos
+la *precisión* $\tau$ como el inverso de la varianza $\sigma^2$, entonces la posterior
 de $mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
 y precisión $\tau_0 + n\tau$, donde $\lambda = \frac{n\tau}{\tau_0 + n\tau}$
 
@@ -534,14 +535,15 @@ varianza conocida.
 
 Más util es el siguiente modelo:
 
-- Sean $X_i\sim N(\mu, \sigma)$. Queremos estimar $\mu$ y $\sigma$. Tomamos
+- (Normal-Gamma inverso) Sean $X_i\sim N(\mu, \sigma)$. Queremos estimar $\mu$ y $\sigma$. Tomamos
 como distribuciones iniciales:
 
   - $\mu\sim N(\mu_0, \sigma_0)$ , y
   - $\tau = \frac{1}{\sigma^2} \sim Gamma(\alpha,\beta )$
   - $p(\mu, \tau) = p(\mu)p(\tau)$
 
-Entonces la posterior es:
+- Entonces la posterior es:
+
   - $\mu \sim N\left (\frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}, \tau_0 +n \right )$
   - $\tau = \frac{1}{\sigma^2} \sim Gamma \left (\alpha + n/2, \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar {x}}-\mu_{0})^2}{2}\right )$
   - $p(\mu,\tau|x) = p(\mu|x)p(\sigma^2|x)$
@@ -590,7 +592,7 @@ estándar sea de más de 13 centímetros.
 Podemos checar nuestros supuestos simulando posibles muestras usando
 sólo nuestra información previa:
 
-```{r}
+```{r, fig.width = 7, fig.height = 6}
 simular_muestra <- function(n, mu_0, sigma_0, a, b){
   # simular media
   mu <- rnorm(1, mu_0, sigma_0)
@@ -599,6 +601,7 @@ simular_muestra <- function(n, mu_0, sigma_0, a, b){
   sigma <- 1/sqrt(tau)
   rnorm(n, mu, sigma)
 }
+set.seed(3461)
 sims_tbl <- tibble(rep = 1:20) %>% 
   mutate(estatura = map(rep, ~ simular_muestra(500, mu_0, sigma_0, a, b))) %>% 
   unnest(cols = c(estatura))
