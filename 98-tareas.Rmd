@@ -414,11 +414,6 @@ las respuestas (con título fundamentos-tarea06).
 
 ### Solución y discusión de media {-}
 
----
-title: "Bootstrap - Media"
-output: html_document
----
-
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 ```
@@ -638,6 +633,156 @@ arbitrario de muestras de la población, sino que tenemos únicamente una muestr
 el error estándar, esto es seleccionar muchas muestras y calcular la estadística 
 de interés en cada una, con la diferencia que las muestras se seleccionan de la
 distribución empírica a falta de la distribución poblacional.
+
+## 7. Bootstrap en el conteo rápido
+
+
+**Conteo rápido**
+
+En México, las elecciones tienen lugar un domingo, los resultados oficiales 
+del proceso se presentan a la población una semana después. A fin de evitar 
+proclamaciones de victoria injustificadas durante ese periodo el INE organiza un 
+conteo rápido.
+El conteo rápido es un procedimiento para estimar, a partir de una muestra 
+aleatoria de casillas, el porcentaje de votos a favor de los candidatos 
+en la elección. 
+
+En este ejercicio deberás crear intervalos de confianza para la proporción de
+votos que recibió cada candidato en las elecciones de 2006. La inferencia se 
+hará a partir de una muestra de las casillas similar a la que se utilizó para el 
+conteo rápido de 2006.
+
+El diseño utilizado es *muestreo estratificado simple*, lo que quiere decir que:
+
+i) se particionan las casillas de la pablación en estratos (cada casilla
+pertenece a exactamente un estrato), y 
+
+ii) dentro de cada estrato se usa *muestreo aleatorio* para seleccionar las 
+casillas que estarán en la muestra. 
+
+En este ejercicio (similar al conteo rápido de 2006):
+
+* Se seleccionó una muestra de $7,200$ casillas
+
+* La muestra se repartió a lo largo de 300 estratos. 
+
+* La tabla `strata_sample_2006` contiene en la columna $N$ el número total de 
+casillas en el estrato y en $n$ el número de casillas que se seleccionaron en la 
+muestra, para cada estrato:
+
+```{r, echo=FALSE}
+# write_csv(strata_sample_2006, file = "data/strata_sample_2006.csv")
+strata_sample_2006 <- read_csv("data/strata_sample_2006.csv")
+# write_csv(sample_2006, file = "data/sample_2006.csv")
+sample_2006 <- read_csv("data/sample_2006.csv")
+```
+
+
+```{r, eval = FALSE}
+library(estcomp)
+strata_sample_2006
+```
+
+
+* La tabla `sample_2006` en el paquete `estcomp` contiene para cada casilla:
+    + el estrato al que pertenece: `stratum`
+    + el número de votos que recibió cada partido/coalición: `pan`, `pri_pvem`, 
+    `panal`, `prd_pt_convergencia`, `psd` y la columna `otros` indica el 
+    número de votos nulos o por candidatos no registrados.
+    + el total de votos registrado en la casilla: `total`.
+
+```{r}
+sample_2006
+```
+
+Una de las metodolgías de estimación, que se usa en el conteo rápido, es 
+*estimador de razón* y se contruyen intervalos de 95% de confianza usando el método normal con error estándar bootstrap. En este ejercicio debes construir 
+intervalos usando este procedimiento.
+
+Para cada candidato:
+
+1. Calcula el estimador de razón combinado, para muestreo estratificado la 
+fórmula es:
+
+$$\hat{p}=\frac{\sum_h \frac{N_h}{n_h} \sum_i Y_{hi}}{\sum_h \frac{N_h}{n_h} \sum_i X_{hi}}$$
+donde:
+
+* $\hat{p}$ es la estimación de la proporción de votos que recibió el candidato
+en la elección.
+
+* $Y_{hi}$ es el número total de votos que recibió el candidato
+en la $i$-ésima casillas, que pertence al $h$-ésimo estrato.
+
+* $X_{hi}$ es el número total de votos en la $i$-ésima casilla, que pertence al 
+$h$-ésimo estrato. 
+
+* $N_h$ es el número total de casillas en el $h$-ésimo estrato.
+
+* $n_h$ es el número de casillas del $h$-ésimo estrato que se seleccionaron en 
+la muestra.
+
+```{r}
+# El siguiente código estima las proporciones para todos los partidos 
+# puedes utilizarlo o escribir tu propio código
+estimaciones <- sample_2006 %>% 
+  select(polling_id, stratum, pri_pvem:total) %>% # columnas relevantes
+  pivot_longer(names_to = "party", values_to = "votes", 
+               cols = pri_pvem:otros) %>% # alargamos
+  group_by(stratum, party) %>% 
+  summarise(Y = sum(votes), 
+            X = sum(total)
+            ) %>% 
+  left_join(strata_sample_2006, by = "stratum") %>% # unimos tabla de pesos
+  group_by(party) %>% 
+  summarise(p_hat = 100 * sum(N / n * Y) / sum(N / n * X))
+estimaciones 
+```
+2. Utiliza **bootstrap** para calcular el error estándar, y reporta tu 
+estimación del error.
+    + Genera 1000 muestras bootstrap.
+    + Recuerda que las muestras bootstrap tienen que tomar en cuenta la 
+    metodología que se utilizó en la selección de la muestra original, en este
+    caso, lo que implica es que debes tomar una muestra aleatoria independient
+    dentro de cada estrato.
+
+```{r}
+boot_conteo <- function(){
+  sample_2006 %>% 
+    group_by(stratum) %>% 
+    sample_frac(replace = TRUE) %>% 
+    select(polling_id, stratum, pri_pvem:total) %>% # columnas relevantes
+    pivot_longer(names_to = "party", values_to = "votes", 
+                 cols = pri_pvem:otros) %>% # alargamos
+    group_by(stratum, party) %>% 
+    summarise(Y = sum(votes), X = sum(total), .groups = "drop") %>% 
+    left_join(strata_sample_2006, by = "stratum") %>% # unimos tabla de pesos
+    group_by(party) %>% 
+    summarise(p_hat = 100 * sum(N / n * Y) / sum(N / n * X), .groups = "drop")
+}
+# Replicaciones bootstrap
+boot_reps <- map_df(1:1000, ~boot_conteo(), .id = "sim") 
+```
+
+3. Construye un intervalo del 95% de confianza utilizando el método normal. Revisa si el supuesto de normalidad es razonable.
+
+Reporta tus intervalos en una tabla. 
+
+```{r}
+ggplot(boot_reps, aes(sample = p_hat)) +
+  geom_qq_line(color = "red") +
+  geom_qq(alpha = 0.5) +
+  facet_wrap(~ party, scales = "free_y")
+```
+```{r}
+boot_reps %>% 
+  group_by(party) %>% 
+  summarise(sd = sd(p_hat)) %>% 
+  left_join(estimaciones) %>% 
+  mutate(izq = p_hat - 2 * sd, der = p_hat + 2 * sd) %>% 
+  mutate_if(is_numeric, round, digits = 2) %>% 
+  arrange(-p_hat)
+```
+
 
 ## 8. Bootstrap en muestras complejas {-}
 
