@@ -785,3 +785,90 @@ $1$ canica roja y $9$ blancas.
 Si ahora seleccionas la apuesta $A$, esto querría decir que consideras que la 
 probabilidad de que ocurra una tormenta es mayor a $0.10$. Si consideramos ambas 
 comparaciones tenemos que tu probabilidad subjetiva se ubica entre $0.1$ y $0.5$.
+
+## La posterior predictiva {-}
+
+Una vez que ajustamos un modelo bayesiano, podemos simular nuevas observaciones
+a partir del modelo. Esto tiene dos utilidades:
+
+- Hacer predicciones acerca de datos no observados.
+- Confirmar que nuevas producidas simuladas con el modelo son similares a las
+que de hecho observamos. Esto nos permite confirmar la calidad del ajuste del
+modelo, y se llama **verificación predictiva posterior**.
+
+Supongamos que tenemos la posterior $p(\theta | x)$. Podemos generar una nueva
+muestra posible como sigue:
+
+```{block2, type='mathblock'}
+La distribución **predictiva posterior** genera nuevas observaciones a partir de
+la información observada. La de notamos como $p(\tilde{x}|x)$. Para simular de ella:
+
+- Muestreamos un valor $\tilde{\theta} \sim p(\theta|x)$.
+- Simulamos del modelo de las observaciones $\tilde{x} \sim p(x|\tilde{\theta})$.
+  
+Si queremos una muestra iid de observaciones de la predictiva posterior,
+
+- Muestreamos un valor $\tilde{\theta} \sim p(\theta|x)$.
+- Simulamos del modelo de las observaciones $\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(x|\tilde{\theta})$.
+```
+
+
+### Ejemplo: estaturas de tenores {-}
+
+En este ejemplo, usaremos la posterior predictiva para checar nuestro modelo.
+Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra predictiva posterior, y compararemos estas muestras con la observada.
+
+```{r}
+simular_obs_normal_gamma <- function(n, pars){
+  mu_0 <- pars[1]
+  sigma_0 <- pars[2]
+  a <- pars[3]
+  b <- pars[4]
+  # simular media
+  mu <- rnorm(1, mu_0, sigma_0)
+  # simular sigma
+  tau <- rgamma(1, a, b)
+  sigma <- 1/sqrt(tau)
+  # Simular observaciones iid
+  tibble(estatura_cm = rnorm(n, mu, sigma))
+}
+```
+
+Los parámetros posteriores son
+```{r}
+names(pars_posterior) <- c("m", "sigma", "a", "b")
+pars_posterior
+```
+
+Y ahora simulamos otra muestra
+
+```{r}
+muestra_sim <- simular_obs_normal_gamma(20, pars_posterior) 
+muestra_sim
+```
+
+Podemos simular varias muestras y hacer una prueba de lineup:
+
+```{r}
+library(nullabor)
+sims_obs <- tibble(.n = 1:19) %>% 
+  mutate(muestra = map(.n, ~ simular_obs_normal_gamma(20, pars_posterior))) %>% 
+  unnest(muestra)
+set.seed(9921)
+pos <- sample(1:20, 1)
+lineup_tbl <- lineup(true = cantantes %>% select(estatura_cm), 
+                     samples = sims_obs, pos = pos)
+ggplot(lineup_tbl, aes(x = estatura_cm)) + geom_histogram(binwidth = 2.55) +
+  facet_wrap(~.sample)
+```
+Con este tipo de gráficas podemos checar desajustes potenciales de nuestro modelo.
+
+```{block2, type="ejercicio"}
+
+- ¿Puedes encontrar los datos verdaderos? ¿Cuántos seleccionaron los
+datos correctos? 
+- Prueba hacer pruebas con una gráfica de cuantiles. ¿Qué problema
+ves y cómo lo resolverías?
+
+```
+
