@@ -1,0 +1,345 @@
+# Calibración bayesiana
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(patchwork)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
+El enfoque bayesiano se puede formalizar coherentemente en términos
+de probabilidades subjetivas, y como vimos, esta es una fortaleza del enfoque bayesiano.
+
+En la práctica, sin embargo, muchas veces puede ser difícil argumentar en términos
+exclusivos de probabilidad subjetiva, aunque hagamos los esfuerzos apropiados para 
+incorporar la totalidad de información que distintos actores involucrados pueden tener.
+
+Consideremos, por ejemplo, que INEGI produjera un intervalo creíble del 95%
+para el ingreso mediano de los hogares de México. Aún cuando nuestra metodología sea
+transparente y correctamente informada, algunos investigadores interesados 
+puede ser que tengan recelo en usar esta información, y quizá preferirían
+hacer estimaciones propias. Esto restaría valor al trabajo cuidadoso que pusimos
+en nuestras estimaciones oficiales.
+
+Por otra parte, el enfoque frecuentista provee de ciertas garantías mínimas
+para la utilización de las estimaciones, que no dependen de la interpretación
+subjetiva de la probabilidad, sino de las propiedades del muestreo. 
+Consideremos la cobertura de los intervalos de confianza:
+
+- Bajo ciertos supuestos de nuestros modelos, la probabilidad de que
+un intervalo de confianza del 95% cubra al verdadero valor poblacional es del 95%. Esta
+probabilidad es sobre las distintas muestras que se pueden obtener según el
+diseño del muestreo.
+
+Los intervalos creíbles en principio no tienen por qué cumplir esta propiedad, pero
+consideramos en la práctica es una garantía mínima que deberían cumplir.
+
+El enfoque resultante se llama **bayesiano calibrado**, @little2011 . La idea
+es seguir el enfoque bayesiano usual para construir nuestras estimaciones,
+pero verificar hasta donde es posible que los intervalos resultantes satisfacen
+alguna garantía frecuentista básica.
+
+**Observación**: checar que la cobertura real es similar a la nominal es importante
+en los dos enfoques: frecuentista y bayesiano. Los intervalos frecuentistas, como
+hemos visto, generalmente son aproximados, y por lo tanto no cumplen automáticamente
+esta propiedad de calibración.
+
+## Enfoque bayesiano y frecuentista {-}
+
+Los métodos estadísticos clásicos o **frecuentistas** 
+el punto de vista frecuentista se basa en los siguientes puntos (@wasserman):
+
+1. La probabilidad se refiere a un límite de frecuencias relativas, las 
+probabilidades son propiedades objetivas en el mundo real.
+
+2. En un modelo, los parámetros son constantes fijas (desconocidas). Como 
+consecuencia, no se pueden realizar afirmaciones probabilísticas útiles en 
+relación a éstos.
+
+3. Los procedimientos estadísticos deben diseñarse con el objetivo de tener 
+propiedades frecuentistas bien definidas. Por ejemplo, un intervalo de confianza 
+del $95\%$ debe contener el verdadero valor del parámetro con frecuencia límite
+de al menos el $95\%$.
+
+En contraste, el acercamiento **Bayesiano** muchas veces se describe por los siguientes postulados:
+
+1. La probabilidad describe grados de creencia, no frecuencias limite. Como 
+tal uno puede hacer afirmaciones probabilísticas acerca de muchas cosas y no 
+solo datos sujetos a variabilidad aleatoria. Por ejemplo, puedo decir: "La 
+probabilidad de que Einstein tomara una taza de té el primero de agosto de $1948$" 
+es $0.35$, esto no hace referencia a ninguna frecuencia relativa sino que refleja
+la certeza que yo tengo de que la proposición sea verdadera.
+
+2. Podemos hacer afirmaciones probabilísticas de parámetros.
+
+3. Podemos hacer inferencia de un parámetro $\theta$ por medio de 
+distribuciones de probabilidad. Las inferencias como estimaciones puntuales y 
+estimaciones de intervalos se pueden extraer de dicha distribución.
+
+Finalmente, en el enfoque **bayesiano calibrado** (@little2011):
+
+1. Usamos el enfoque bayesiano para modelar y hacer afirmaciones probabilísticas
+de los parámetros
+2. Buscamos cumplir las garantías frecuentistas del inciso 3)
+
+## Ejemplo: estimación de una proporción
+
+Recordamos nuestro problema de estimación de una proporcion $\theta$. Usando
+la distribución inicial $p(\theta)\sim Beta(2,2)$, y la verosimilitud estándar
+binomial, vimos que la posterior cuando observamos $k$
+éxitos es  $$p(\theta|k) \sim Beta(k + 2, n - k + 2)$$.
+
+La media posterior es 
+$$\frac{k + 2}{n + 4} $$
+que podemos interpretar como: agrega 2 éxitos y 2 fracasos a los datos observados
+y calcula la proporción de éxitos. Un intervalo posterior de credibilidad del 95% se calcula
+encontrando los cuantiles 0.05 y 0.95 de una $Beta(k + 2, n - k + 2)$
+
+$$I_a = \left [q_{0.025}(k+2, n+4), q_{0.975}(k+2, n+4)\right ]$$
+Que compararemos con el intervalo usual de Wald: si $\hat{\theta} = \frac{k}{n}$, entonces
+
+$$I_w = \left [\hat{\theta} - 2 \sqrt{\frac{\hat{\theta}(1-\hat{\theta})}{n}}, \hat{\theta} + 2 \sqrt{\frac{\hat{\theta}(1-\hat{\theta})}{n}}\right]$$
+¿Cómo podemos comparar la calibración de estos dos intervalos? Nominalmente, deben
+tener cobertura de 95%. Hagamos un ejercicio de simulación para distintos
+tamaños de muestra $n$ y posibles valores $\theta\in (0,1)$:
+
+```{r}
+set.seed(332)
+simular_muestras <- function(M, n, p){
+  k = rbinom(M, n, p)
+  tibble(rep = 1:M, n = n, p = p, k = k)
+}
+intervalo_wald <- function(n, k){
+  p_hat <- k / n
+  ee_hat <- sqrt(p_hat * (1 - p_hat) / n)
+  tibble(inf = p_hat - 2 * ee_hat, sup = p_hat + 2 * ee_hat)
+}
+intervalo_bayes <- function(n, k, a = 2, b = 2){
+  a <- k + a
+  b <- n - k + b
+  tibble(inf = qbeta(0.025, a, b), sup = qbeta(0.975, a, b))
+}
+set.seed(812)
+ejemplo <- simular_muestras(5, 20, 0.4)
+```
+
+```{r}
+ejemplo %>% mutate(intervalo = intervalo_wald(n, k)) %>% pull(intervalo) %>% 
+  bind_cols(ejemplo) %>% select(-rep)
+```
+
+```{r}
+ejemplo %>% mutate(intervalo = intervalo_bayes(n, k)) %>% pull(intervalo) %>% 
+  bind_cols(ejemplo) %>% select(-rep)
+```
+
+¿Cuáles de estos intervalos cubren al verdadero valor? Nótese que **no podemos
+descalificar a ningún método por no cubrir una vez**. Es fácil producir un intervalo
+con 100% de cobertura: (0,1). Pero no nos informa de dónde es probable que esté
+el parámetro.
+
+Sin embargo, podemos checar la cobertura frecuentista haciendo una cantidad grande de simulaciones:
+
+```{r}
+parametros <- crossing(n = c(5, 10, 30, 60, 100, 400), 
+                       p = c(0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.05, 0.07, 0.1, 0.15))
+set.seed(2343)
+# simulaciones
+simulaciones <- parametros %>% 
+  mutate(muestra = map2(n, p, ~ simular_muestras(50000, .x, .y) %>% select(rep, k))) %>% 
+  unnest(muestra)
+# calcular_cobertura
+calcular_cobertura <- function(simulaciones, construir_intervalo){
+  # nombre de función
+  intervalo_nombre <- substitute(construir_intervalo) %>% as.character()
+  cobertura_tbl <- simulaciones %>% 
+    mutate(intervalo  = construir_intervalo(n, k)) %>%
+    pull(intervalo) %>% 
+    bind_cols(simulaciones) %>% 
+    mutate(cubre = p >= inf & p <= sup) %>% 
+    group_by(n, p) %>% 
+    summarise(cobertura = mean(cubre), long_media = mean(sup - inf))
+  cobertura_tbl %>% mutate(tipo = intervalo_nombre)
+}
+```
+
+
+```{r}
+cobertura_wald <- calcular_cobertura(simulaciones, intervalo_wald)
+cobertura_wald
+```
+
+
+```{r}
+graficar_cobertura <- function(cobertura_tbl){
+  ggplot(cobertura_tbl, aes(x = p, y = cobertura, colour = tipo)) +
+  geom_hline(yintercept = 0.95, colour = "black") +
+  geom_line() + geom_point() +
+  facet_wrap(~n) +
+  ylim(0, 1) 
+}
+graficar_cobertura(cobertura_wald)
+```
+La cobertura real es mucho más baja que la nominal en muchos casos, especialmente
+cuando la $p$ es baja $n$ es chica. Pero incluso para muestras relativamente grandes (100),
+la cobertura es mala si $p$ es chica.
+
+Ahora probamos nuestro método alternativo:
+
+```{r}
+cobertura_bayes <- calcular_cobertura(simulaciones, intervalo_bayes)
+```
+
+
+```{r}
+graficar_cobertura(bind_rows(cobertura_bayes, cobertura_wald))
+```
+Y vemos que en general el intervalo de Bayes es superior al de Wald, en sentido
+de que su cobertura es más cercana a la nominal. El caso donde fallan los dos
+es para muestras muy chicas $n=5, 10$, con probabilidades de éxito chicas $p\leq 0.02$.
+
+- Sin embargo, si tenemos información previa acerca del tamaño de la proporción que estamos
+estimando, es posible obtener buena calibración con el método bayesiano.
+
+En este caso particular, **tenemos argumentos frecuentistas** 
+para utilizar el método bayesiano. Por ejemplo, si el INEGI utilizara estos
+intervalos creíbles, un análisis de calibración de este tipo sostendría esa decisión.
+
+## Intervalos de Agresti-Coull
+
+Un método intermedio que se usa para obtener mejores intervalos cuando
+estimamos proporciones es el siguiente:
+
+- Agregar dos 1's y dos 0's a los datos.
+- Utilizar el método de Wald con estos datos modificados.
+
+```{r}
+intervalo_agresti_coull <- function(n, k){
+  p_hat <- (k + 2)/ (n + 4)
+  ee_hat <- sqrt(p_hat * (1 - p_hat) / n)
+  tibble(inf = p_hat - 2 * ee_hat, sup = p_hat + 2 * ee_hat)
+}
+cobertura_ac <- calcular_cobertura(simulaciones, intervalo_agresti_coull)
+```
+
+```{r}
+graficar_cobertura(bind_rows(cobertura_wald, cobertura_bayes, cobertura_ac))
+```
+Que tiende a ser demasiado conservador para proporciones chicas:
+
+```{r}
+graficar_cobertura(cobertura_ac) +
+  ylim(c(0.9, 1))
+
+```
+
+**Conclusión 1**: Los intervalos de Agresti-Coull son una buena alternativa
+para estimar proporciones como sustituto de los intervalos clásicos de Wald, aunque
+tienden a ser muy conservadores para muestras chicas
+
+Idealmente podemos utilizar un método bayesiano
+pues normalmente tenemos información inicial acerca de las proporciones que
+queremos estimar.
+
+## Incorporando información inicial
+
+Nótese que generalmente tenemos información acerca de la cantidad que
+queremos estimar: por ejemplo, que proporción de visitantes de un sitio web
+compra algo (usualmente muy baja, menos de 2%), qué proporción de personas tiene diabetes tipo 1
+(una proporción muy baja, menos de 1 por millar), o qué proporción de hogares tienen ingresos trimestrales
+mayores a 200 mil pesos (menos de %5 con alta probabilidad).
+
+En este caso, tenemos que ajustar nuestra inicial. Por ejemplo, para el problema
+de ingresos, podríamos usar una $Beta(2, 100)$, cuyos cuantiles son:
+
+```{r}
+# uno de cada 100
+a <- 2
+b <- 100
+beta_sims <- rbeta(5000, a, b)
+quantile(beta_sims, c(0.01, 0.05, 0.50, 0.90, 0.99)) %>% round(3)
+```
+```{r}
+qplot(beta_sims)
+```
+
+
+Veamos cómo se ven los intervalos bayesianos producidos con esta inicial:
+
+
+```{r}
+crear_intervalo_bayes <- function(a, b){
+
+  intervalo_fun <- function(n, k){
+    a_post <- k + a
+    b_post <- n - k + b
+    tibble(inf = qbeta(0.025, a_post, b_post), sup = qbeta(0.975, a_post, b_post))
+  }
+  intervalo_fun
+}
+intervalo_bayes_2 <- crear_intervalo_bayes(a, b)
+```
+
+
+```{r}
+cobertura_bayes <- calcular_cobertura(simulaciones,
+                                      intervalo_bayes_2)
+```
+
+
+```{r}
+graficar_cobertura(bind_rows(cobertura_bayes, cobertura_ac) %>% filter(p < 0.05)) +
+  ylim(c(0.5, 1))
+```
+Y vemos que la calibración es similar. Notemos sin embargo que
+la longitud de los intervalos del intervalo bayesiano es **mucho
+más corto** que el de agresti coull cuando la muestra es chica:
+
+```{r}
+ggplot(bind_rows(cobertura_bayes, cobertura_ac), 
+       aes(x = p, y = long_media, colour = tipo)) +
+  geom_point() + facet_wrap(~n) 
+```
+Cuando la muestra es chica, los intervalos de bayes son similares
+a los iniciales, y mucho más cortos que los de Agresti-Coull. 
+Para muestras intermedias (50-100) los intervalos bayesianos
+son más informativos que los de Agresti-Coull, con calibración similar, y 
+representan aprendizaje por encima de lo que sabíamos en la inicial.
+Para muestras grandes, obtenemos resultados simililares.
+
+Por ejemplo:
+
+```{r}
+set.seed(2131)
+k <- rbinom(1, 50, 0.03)
+k
+intervalo_agresti_coull(50, k) %>% round(3)
+```
+es un intervalo muy grande que puede incluir valores negativos. En contraste, el intervalo 
+bayesiano es: 
+
+```{r}
+intervalo_bayes_2(50, k) %>% round(3)
+```
+Aún quitando valores negativos, los intervalos de Agresti-Coull son mucho más anchos. 
+La aproximación bayesiana, entonces, utiliza información previa
+para dar un resultado considerablemente
+más informativo, con calibración similar a Agresti-Coull.
+
+¿Aprendimos algo? Comparemos la posterior con la inicial:
+
+```{r}
+beta_sims_inicial <- tibble(prop = rbeta(5000, a, b), dist = "inicial")
+beta_sims_posterior <- tibble(prop = rbeta(5000, a + k, b + 50), dist = "posterior")
+bind_rows(beta_sims_inicial, beta_sims_posterior) %>% 
+  ggplot(aes(x = prop, fill = dist)) +
+    geom_histogram(alpha = 0.5, position = "identity") 
+```
+Donde vemos que no aprendimos mucho en este caso, pero nuestras creencias
+sí cambiaron en comparación con la inicial.
+
+**Conclusión 2**: con el enfoque bayesiano podemos obtener intervalos
+con buena calibración e informativos, incluso con información inicial que
+no es muy precisa. Los intervalos de Agresti-Coull son poco informativos
+para muestras chicas y/o proporciones chicas.
