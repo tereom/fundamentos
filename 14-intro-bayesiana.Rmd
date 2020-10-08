@@ -540,13 +540,13 @@ como distribuciones iniciales:
 
   - $\mu\sim N(\mu_0, \sigma_0)$ , y
   - $\tau = \frac{1}{\sigma^2} \sim Gamma(\alpha,\beta )$
-  - $p(\mu, \tau) = p(\mu)p(\tau)$
+  - $p(\mu, \sigma) = p(\mu)p(\sigma)$
 
 - Entonces la posterior es:
 
   - $\mu \sim N\left (\frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}, \tau_0 +n \right )$
   - $\tau = \frac{1}{\sigma^2} \sim Gamma \left (\alpha + n/2, \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar {x}}-\mu_{0})^2}{2}\right )$
-  - $p(\mu,\tau|x) = p(\mu|x)p(\sigma^2|x)$
+  - $p(\mu,\sigma|x) = p(\mu|x)p(\sigma|x)$
 
 
 ### Ejemplo {-}
@@ -690,7 +690,19 @@ ggplot(sims %>% filter(dist == "posterior"),
   geom_point(data = medias_post, size = 5, colour = "black") +
   coord_equal()
 ```
-Los estimadores de máxima verosimlitud son
+Podemos construir intervalos creíbles del 90% para estos dos parámetros, por ejemplo
+haciendo intervalos de percentiles:
+
+```{r}
+f <- c(0.05, 0.95)
+sims %>%  
+  pivot_longer(cols = mu:sigma, names_to = "parametro") %>% 
+  group_by(dist, parametro) %>% 
+  summarise(cuantil = quantile(value, f) %>% round(1), f= f) %>% 
+  pivot_wider(names_from = f, values_from = cuantil)
+```
+
+Como comparación, los estimadores de máxima verosimlitud son
 
 ```{r}
 media_mv <- mean(cantantes$estatura_cm)
