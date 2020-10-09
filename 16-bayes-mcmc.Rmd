@@ -1,0 +1,117 @@
+# Métodos de Cadenas de Markov Monte Carlo
+
+Hasta ahora, hemos considerado modelos bayesianos *conjugados*, donde la
+posterior tiene una forma conocida. Esto nos permitió simular directamente
+de la posterior usando las rutinas estándar de R, o utilizar cálculos teóricos
+o funciones estándar de R para calcular resúmenes de interés, como medias o 
+medianas posteriores o intervalos de credibilidad.
+
+Sin embargo, en las aplicaciones generalmente es factible este tipo de análisis conjugado
+tan simple, pues:
+
+1. Los modelos que estamos considerando son más complejos y la distribución posterior
+conjunta de los parámetros no tiene una forma simple conocida.
+2. Queremos usar distribuciones iniciales que no son conjugadas para utilizar correctamente
+nuestra información inicial.
+
+Generalmente tenemos expresiones explícitas para la inicial $p(\theta)$ y la verosimilitud
+$p(x|\theta)$, así que conocemos explícitamente la posterior módulo la constante de
+normalización
+
+$$p(\theta|x) \propto p(x|\theta) p(\theta).$$
+
+
+Supongamos por ejemplo que quisiéramos calcular las medias posteriores de los
+parámetros $\theta$. En teoría, tendríamos que calcular
+
+$$\hat{\theta} = \int \theta p(\theta|x)\, d\theta$$
+Entonces es necesario calcular también $p(x)$, que resulta de la integral
+$$p(x) = \int p(x|\theta)p(\theta)\, d\theta$$
+
+## Integrales mediante subdivisiones {-}
+
+Como tenemos una expresión analítica para el integrando, podemos intentar una
+rutina numérica de integración. Una vez calculada, podríamos entonces
+usar otra rutina numérica para calcular las medias posteriores $\hat{\theta}$.
+
+Las rutinas usuales de integración pueden sernos útiles cuando el número de parámetros
+es chico. Consideremos primero el caso de 1 dimensión, y supongamos que $a\leq\theta\leq b$.
+
+Si dividimos el rango de $\theta$ en intervalos determinados
+por $a = \theta^1<\theta^2<\cdots \theta^M =b$, tales que $\Delta\theta = \theta^{i+1} -\theta^{i}$,
+podríamos aproximar con
+
+$$p(x) \approx \sum_{i=1}^M p(x|\theta^i)p(\theta^i) \Delta\theta$$
+Lo que requiere $M$ evaluaciones del factor $p(x|\theta)p(\theta)$. Podríamos usar
+por ejemplo $M=100$ para tener precisión razonable.
+
+### Ejemplo: estimación de una proporción {-}
+
+Teníamos que $p(x|\theta) = \theta^k(1-\theta)^{n-k}$ cuando observamos $k$ éxitos
+en $n$ pruebas independientes. Supongamos que nuestra inicial es $p(\theta) = 2\theta$
+(checa que es una densidad), es decir, creemos que es más probable a priori 
+observar proporciones altas. Podemos integrar numéricamente
+
+```{r}
+crear_log_p <- function(n, k){
+  function(theta){
+    verosim <- k * log(theta) + (n - k) * log(1 - theta)
+    inicial <- log(theta)
+    log_p_factor <- verosim + inicial
+    log_p_factor
+  }
+}
+# observamos 3 éxitos en 4 pruebas:
+log_p <- crear_log_p(4, 3)
+prob_post <- function(x) { exp(log_p(x))}
+# integramos numéricamente
+p_x <- integrate(prob_post, lower = 0, upper = 1, subdivisions = 100L)
+p_x
+```
+
+Y ahora podemos calcular la media posterior:
+
+```{r}
+media_funcion <- function(theta){
+  theta * prob_post(theta) / p_x$value
+}
+integral_media <- integrate(media_funcion, lower = 0, upper = 1, subdivisions = 100L)
+media_post <- integral_media$value 
+media_post
+```
+Podemos verificar nuestro trabajo pues sabemos que la posterior es $Beta(5, 2)$
+cuya media es
+```{r}
+5/(2+5)
+```
+
+### Más de un parámetro {-}
+
+Ahora supongamos que tenemos $2$ parámetros. Dividiríamos cada parámetro
+en 100 intervalos, y luego tendríamos que calcular
+
+$$p(x) \approx \sum_{i=1}^M \sum_{j=1}^M p(x|\theta_1^i, \theta_2^j)p(\theta_1^i, \theta_2^j) \Delta\theta_1\Delta\theta_2$$
+Y esto requeriría $M^2 = 10000$ evaluaciones de $p(x|\theta)p(\theta)$. 
+
+Si tenemos $p$ parámetros, entonces tendríamos que hacer $M^p$ evaluaciones de la
+posterior. Incluso cuando $p=10$, **esta estrategia es infactible**, pues tendríamos
+que hacer millones de millones de millones de evaluaciones de la posterior.
+
+Si sólo tenemos esta técnica disponible, el análisis bayesiano está considerablemente
+restringido. Regresión bayesiana con unas 10 covariables por ejemplo, no podría hacerse.
+
+De modo que tenemos que replantearnos cómo atacar el problema de calcular o aproximar
+estas integrales.
+
+
+## Métodos Monte Carlo {-}
+
+El método Montecarlo para calcular una integral es como sigue: si queremos
+integrar una función $g(\theta)$ definida sobre $a < \theta < b$, podemos
+tomar un número grande de valores al azar $\theta^{(1)},\theta^{(2)}, \ldots \theta^{(N)}$
+en $[a,b]$, y entonces
+
+$$\int_{a}^{b} g(\theta) \, d\theta\approx \frac{\theta^{(1)}+\theta^{(2)}+ \cdots +\theta^{(N)}}{N}$$ 
+
+
+
