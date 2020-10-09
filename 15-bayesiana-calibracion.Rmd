@@ -1,9 +1,9 @@
-# Calibración bayesiana
+# Calibración bayesiana y Regularización
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 library(patchwork)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 6, fig.height=4)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
@@ -83,7 +83,7 @@ Finalmente, en el enfoque **bayesiano calibrado** (@little2011):
 de los parámetros
 2. Buscamos cumplir las garantías frecuentistas del inciso 3)
 
-## Ejemplo: estimación de una proporción
+## Ejemplo: estimación de una proporción {-}
 
 Recordamos nuestro problema de estimación de una proporcion $\theta$. Usando
 la distribución inicial $p(\theta)\sim Beta(2,2)$, y la verosimilitud estándar
@@ -206,7 +206,7 @@ En este caso particular, **tenemos argumentos frecuentistas**
 para utilizar el método bayesiano. Por ejemplo, si el INEGI utilizara estos
 intervalos creíbles, un análisis de calibración de este tipo sostendría esa decisión.
 
-## Intervalos de Agresti-Coull
+## Intervalos de Agresti-Coull {-}
 
 Un método intermedio que se usa para obtener mejores intervalos cuando
 estimamos proporciones es el siguiente:
@@ -242,13 +242,13 @@ Idealmente podemos utilizar un método bayesiano
 pues normalmente tenemos información inicial acerca de las proporciones que
 queremos estimar.
 
-## Incorporando información inicial
+## Incorporando información inicial {-}
 
 Nótese que generalmente tenemos información acerca de la cantidad que
 queremos estimar: por ejemplo, que proporción de visitantes de un sitio web
 compra algo (usualmente muy baja, menos de 2%), qué proporción de personas tiene diabetes tipo 1
 (una proporción muy baja, menos de 1 por millar), o qué proporción de hogares tienen ingresos trimestrales
-mayores a 200 mil pesos (menos de %5 con alta probabilidad).
+mayores a 150 mil pesos (menos de %5 con alta probabilidad).
 
 En este caso, tenemos que ajustar nuestra inicial. Por ejemplo, para el problema
 de ingresos, podríamos usar una $Beta(2, 100)$, cuyos cuantiles son:
@@ -294,7 +294,7 @@ graficar_cobertura(bind_rows(cobertura_bayes, cobertura_ac) %>% filter(p < 0.05)
 ```
 Y vemos que la calibración es similar. Notemos sin embargo que
 la longitud de los intervalos del intervalo bayesiano es **mucho
-más corto** que el de agresti coull cuando la muestra es chica:
+más corto** que el de Agresti-Coull cuando la muestra es chica:
 
 ```{r}
 ggplot(bind_rows(cobertura_bayes, cobertura_ac), 
@@ -340,6 +340,218 @@ Donde vemos que no aprendimos mucho en este caso, pero nuestras creencias
 sí cambiaron en comparación con la inicial.
 
 **Conclusión 2**: con el enfoque bayesiano podemos obtener intervalos
-con buena calibración e informativos, incluso con información inicial que
+informativos con calibración razonable, incluso con información inicial que
 no es muy precisa. Los intervalos de Agresti-Coull son poco informativos
 para muestras chicas y/o proporciones chicas.
+
+
+### Ejemplo: porporción de hogares de ingresos grandes {-}
+
+Usaremos los datos de ENIGH como ejemplo (ignorando el diseño, pero es posible hacer todas
+las estimaciones correctamente) para estimar
+el porcentaje de hogares que tienen ingreso corriente de más
+de 150 mil pesos al trimestre. Suponemos que la muestra del enigh es la población,
+y tomaremos una muestra iid de esta población. 
+Usamos la misma inicial que mostramos arriba, que es
+una Beta con parámetros
+
+```{r}
+c(a,b)
+```
+
+```{r}
+set.seed(2521)
+muestra_enigh <- read_csv("data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv") %>% 
+  select(ing_cor) %>% 
+  sample_n(120) %>% 
+  mutate(mas_150mil = ing_cor > 150000)
+```
+
+Un intervalo de 95% es entonces
+
+```{r}
+k <- sum(muestra_enigh$mas_150mil)
+k
+intervalo_bayes_2(120, sum(muestra_enigh$mas_150mil)) %>% round(3)
+```
+La media posterior es
+
+```{r}
+prop_post <- (a + k) / (120 + b)
+prop_post
+```
+
+El estimador de máxima verosimilitud es
+```{r}
+k / 120
+```
+
+¿Cuál es la verdadera proporción?
+
+```{r}
+read_csv("data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv") %>% 
+  select(ing_cor) %>% 
+  mutate(mas_150mil = ing_cor > 150000) %>% 
+  summarise(prop_pob = mean(mas_150mil))
+```
+En este caso, nuestro intervalo cubre a la proporción poblacional.
+
+## Inferencia bayesiana y regularización
+
+Como hemos visto en análisis y modelos anteriores, la posterior que usamos
+para hacer inferencia combina aspectos de la inicial con la verosimilitud (los datos).
+Una manera de ver esta combinación y sus beneficios es pensando en término de
+*regularización* de estimaciones.
+
+- En las muestras hay variación. Algunas muestras particulares nos dan estimaciones
+de máxima verosimilitud pobres de los parámetros de interés (estimaciones ruidosas).
+- Cuando esas estimaciones pobres están en una zona de baja probabilidad de la inicial,
+la estimación posterior tiende a moverse ( o *encogerse*) 
+hacia las zonas de alta probabilidad de la inicial.
+- Esto *filtra* ruido en las estimaciones.
+- El mecanismo resulta en una reducción del **error cuadrático medio**, mediante
+una reducción de la varianza de los estimadores (aunque quizá el sesgo aumente).
+
+Esta es una técnica poderosa, especialmente para problemas complejos donde tenemos
+pocos datos para cada parámetro. En general, excluímos resultados que no concuerdan
+con el conocimiento previo, y esto resulta en **mayor precisión** en las estimaciones.
+
+## Ejemplo: modelo normal y estaturas {-}
+
+Haremos un experimento donde simularemos muestras de los datos de cantantes. Usaremos el
+modelo normal-gama inverso que discutimos anteriormente, con la información inicial
+que elicitamos. ¿Cómo se compara la estimación de máxima verosimilitud con la media
+posterior?
+
+```{r}
+# inicial para media, ver sección anterior para discusión (normal)
+mu_0 <- 175
+sigma_0 <- 3
+# inicial para sigma^2 (gamma inversa)
+a <- 2
+b <- 60
+```
+
+Para este ejemplo chico, usaremos muestras de tamaño 5:
+
+```{r}
+set.seed(3413)
+# ver sección anterior para explicación de esta función
+calcular_pars_posterior <- function(x, mu_0, sigma_0, a_0, b_0){
+  tau_0 <- 1/sigma_0^2
+  n <- length(x)
+  media <- mean(x)
+  # precisión mu
+  tau <- tau_0 + n
+  sigma <- sqrt(1 / tau)
+  # media mu
+  mu <- (tau_0*mu_0 + n*media) / tau
+  # posterior sigma
+  a <- a_0 + 0.5 * n
+  b <- b_0 + 0.5 * sum( (x - media)^2) + 0.5*(n*tau_0 / tau)*(media - mu_0)^2
+  c(mu, sigma, a, b)
+}
+# simular muestras y calcular medias posteriores
+simular_muestra <- function(rep, mu_0, sigma_0, a_0, b_0){
+  cantantes <- lattice::singer %>% 
+    mutate(estatura_cm = 2.54 * height) %>% 
+    filter(str_detect(voice.part, "Tenor")) %>% 
+    sample_n(5, replace = FALSE)
+  pars_posterior <- calcular_pars_posterior(cantantes$estatura_cm,
+                                            mu_0, sigma_0, a_0, b_0)
+  mu_post <- pars_posterior[1]
+  sigma_post <- sqrt(1 / rgamma(10000, pars_posterior[3], pars_posterior[4])) %>% mean
+  media_mv <- mean(cantantes$estatura_cm)
+  sigma_mv <- sqrt(mean((cantantes$estatura_cm - media_mv)^2))
+  tibble(rep = rep,
+         tipo = c("media_post", "media_post", "max_verosim", "max_verosim"),
+         parametro = c("mu", "sigma", "mu", "sigma"),
+         estimador = c(mu_post, sigma_post, media_mv, sigma_mv))
+}
+```
+
+
+```{r}
+poblacion <- lattice::singer %>% 
+  mutate(estatura_cm = 2.54 * height) %>% 
+  filter(str_detect(voice.part, "Tenor")) %>% 
+  summarise(mu = mean(estatura_cm), sigma = sd(estatura_cm)) %>% 
+  pivot_longer(mu:sigma, names_to = "parametro", values_to = "valor_pob")
+simular_muestra(1, mu_0, sigma_0, a, b) %>% left_join (poblacion)
+```
+
+```{r}
+errores <- map(1:2000, ~ simular_muestra(.x, mu_0, sigma_0, a, b)) %>%
+  bind_rows() %>% left_join(poblacion) %>% 
+  mutate(error = (estimador - valor_pob))
+ggplot(errores, aes(x = error, fill = tipo)) +
+  geom_histogram(bins = 20, position = "identity", alpha = 0.5) + facet_wrap(~parametro)
+```
+Vemos claramente que la estimación de la desviación estándar de
+nuestro modelo es claramente superior a la de máxima verosimilitud. En resumen:
+```{r}
+errores %>% 
+  group_by(tipo, parametro) %>% 
+  summarise(recm = sqrt(mean(error^2)) %>% round(2)) %>% 
+  arrange(parametro)
+```
+
+Donde vemos que ganamos poco en la estimación de la media, pero 
+obtenemos una ganancia considerable en cuanto a la estimación de la desviación
+estandar de esta población. Los estimadores de la media superior
+son superiores a los de máxima verosimilitud en términos de error cuadrático medio.
+
+Podemos graficar las dos estimaciones, muestra a muestra, para entender
+cómo sucede esto:
+
+```{r}
+errores %>% 
+  select(-error) %>% 
+  pivot_wider(names_from = tipo, values_from = estimador) %>% 
+  filter(parametro == "sigma") %>% 
+ggplot(aes(x = max_verosim, y = media_post)) +
+  geom_abline(colour = "red") +
+  geom_point() +
+  labs(subtitle = "Estimación de sigma") +
+  xlab("Estimador MV de sigma") +
+  ylab("Media posterior de sigma") +
+  coord_fixed()
+```
+Nótese como estimaciones demasiado bajas o demasiada altas son contraídas
+hacia valores más consistentes con la inicial, lo cual resulta en 
+menor error.
+
+## Ejemplo: estimación de proporciones {-}
+
+Ahora repetimos el ejercicio 
+
+```{r}
+datos <- read_csv("data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv") %>% 
+    select(ing_cor)
+obtener_estimados <- function(datos){
+  muestra_enigh <-  datos %>% 
+    sample_n(120) %>% 
+    mutate(mas_150mil = ing_cor > 150000)
+  k <- sum(muestra_enigh$mas_150mil)
+  tibble(k = k, est_mv = k/120, media_post = (a + k) / (120 + b), pob = 0.02769)
+}
+estimadores_sim <- map(1:200, ~obtener_estimados(datos)) %>% 
+  bind_rows() 
+error_cm <- estimadores_sim %>% 
+  summarise(error_mv = sqrt(mean((est_mv - pob)^2)),
+         error_post = sqrt(mean((media_post - pob)^2)))
+error_cm
+```
+Podemos ver claramente que las medias posteriores están encogidas hacia valores
+más chicos (donde la inicial tiene densidad alta) comparadas con las
+estimaciones de máxima verosimilitud:
+
+```{r}
+estimadores_sim_ag <- estimadores_sim %>% 
+  group_by(k, est_mv, media_post) %>% 
+  summarise(n = n())
+ggplot(estimadores_sim_ag, aes(x = est_mv, media_post, size = n)) + geom_point() +
+  geom_abline() + coord_equal() +
+  geom_point(data = )
+```
+
