@@ -249,12 +249,12 @@ Ahora necesitamos una distribución inicial o previa $P(\theta)$. Aunque esta
 distribución puede tener cualquier forma, supongamos que nuestro conocimiento
 actual podemos resumirlo con una distribución $Beta(3, 3)$:
 
-$$P(\theta) = \theta^2(1-\theta)^2$$
-Su histograma es:
+$$P(\theta) \propto \theta^2(1-\theta)^2.$$
+La constante de normalización es 1/30, pero no la requerimos. Podemos simular para examinar su forma:
 
 ```{r}
 sim_inicial <- tibble(theta = rbeta(10000, 3, 3))  
-ggplot(sim_inicial) + geom_histogram(aes(x = theta), bins = 15)
+ggplot(sim_inicial) + geom_histogram(aes(x = theta, y = ..density..), bins = 15)
 ```
 De modo que nuestra información inicial es que la proporción puede tomar
 cualquier valor entre 0 y 1, pero es probable que tome un
