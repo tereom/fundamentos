@@ -9,22 +9,25 @@ theme_set(theme_minimal())
 ```
 
 Para esta sección seguiremos principalmente @Kruschke. Adicionalmente
-puedes ver la sección correspondiente de @Chihara
+puedes ver la sección correspondiente de @Chihara. 
 
-En las secciones anteriores estudiamos el método de máxima 
-verosimilitud y métodos de remuestreo para estimar parámetros y cuantificar 
-la incertidumbre qué tenemos acerca de valores poblacionales. 
-La inferencia bayesiana tiene objetivos similares.
+En las secciones anteriores estudiamos el método de máxima verosimilitud y
+métodos de remuestreo. Esto lo hemos hecho para estimar parámetros, y
+cuantificar la incertidumbre qué tenemos acerca de valores poblacionales. La
+inferencia bayesiana tiene objetivos similares.
 
 - Igual que en máxima verosimilitud, al inferencia bayesiana comienza con
 modelos probabilísticos y observaciones. 
-- En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada para incorporar información previa o de expertos que tengamos acerca de los parámetros de interés. 
-- La inferencia bayesiana cubre como caso particular métodos basados en máxima verosimilitud.
+- En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada
+para incorporar información previa o de expertos que tengamos acerca de los
+parámetros de interés.
+- La inferencia bayesiana cubre como caso particular métodos basados en máxima
+verosimilitud.
 
-El concepto probabilístico básico que utilizamos para construir estos
-modelos y la inferencia es el de probabilidad condicional: la probabilidad de que ocurran
+El concepto probabilístico básico que utilizamos para construir estos modelos y
+la inferencia es el de probabilidad condicional: la probabilidad de que ocurran
 ciertos eventos, o de que cantidades tomen ciertos valores, dada información
-acerca del fenómeno que nos interesa. 
+acerca del fenómeno que nos interesa.
 
 ## Un primer ejemplo completo de inferencia bayesiana {-}
 
@@ -32,14 +35,14 @@ Consideremos el siguiente problema: Nos dan una moneda, y solo sabemos
 que la moneda puede tener probabilidad $3/5$ de tirar sol (está cargada a sol)
 o puede ser una moneda cargada a águila, con probabilidad $2/5$ de tirar sol.
 
-Vamos al lanzar la moneda dos veces y observamos
-su resultado (águila o sol). Queremos decir algo acerca de qué tan probable
-es que hayamos tirado la moneda cargada a sol o la moneda cargada a águila.
+Vamos a lanzar la moneda dos veces y observamos su resultado (águila o sol).
+Queremos decir algo acerca de qué tan probable es que hayamos tirado la moneda
+cargada a sol o la moneda cargada a águila.
 
 En este caso, tenemos dos variables: $X$, que cuenta el número
-de soles obtenido en el experimento aleatorio, y $\theta$, que da la probabilidad
+de soles obtenidos en el experimento aleatorio, y $\theta$, que da la probabilidad
 de que un volado resulte en sol (por ejemplo, si la moneda es justa
-entonces $\theta = 0.5$.) 
+entonces $\theta = 0.5.$) 
 
 ¿Qué cantidades podríamos usar para evaluar 
 qué moneda es la que estamos usando? Si hacemos el experimento,
@@ -50,23 +53,21 @@ condicional de que estemos tirando la moneda con probabilidad de sol 2/5 dado
 que observamos $x$ soles. Por ejemplo, si tiramos 2 soles, deberíamos calcular
 $$P(\theta=0.4|X=2).$$
 
-¿Cómo hacemos para calcular esta probabilidad? ¿Qué sentido tiene?
+¿Cómo calculamos esta probabilidad? ¿Qué sentido tiene?
 
-Usando reglas de 
-probabildad (regla de Bayes en particular), podríamos calcular
+Usando reglas de probabildad (regla de Bayes en particular), podríamos calcular
 $$P(\theta=0.4|X=2) = \frac{P(X=2 | \theta = 0.4) P(\theta =0.4)}{P(X=2)}$$
 
-Así que primero necesitamos la verosimlitud:
-
+Nota que en el numerador uno de los factores ($P(X=2 | \theta = 0.4)$) es la
+verosimilitud. Así que primero necesitamos la verosimlitud:
 $$P(X=2|\theta = 0.4) = (0.4)^2 = 0.16.$$
 
-La novedad es que ahora tenemos que considerar
-la probabilidad $P(\theta = 0.4)$. Esta cantidad
-no la habíamos encontrado antes. Tenemos qué pensar entonces
-que este parámetro es una *cantidad aleatoria*, y puede tomar dos valores $\theta=0.4$ o
-$\theta = 0.6$.
+La novedad es que ahora tenemos que considerar la probabilidad $P(\theta =
+0.4)$. Esta cantidad no la habíamos encontrado antes. Tenemos que pensar
+entonces que este parámetro es una *cantidad aleatoria*, y puede tomar dos
+valores $\theta=0.4$ o $\theta = 0.6$.
 
-Considerar esta cantidad como aleatoria requiere pensar en este caso
+Considerar esta cantidad como aleatoria requiere pensar, en este caso,
 en cómo se escogió la moneda, o qué sabemos acerca de las monedas que se
 usan para este experimento. Supongamos que en este caso, nos dicen adicionalmente
 que la moneda se escoge al azar de una bolsa donde hay una proporción similar
@@ -75,9 +76,9 @@ de los dos tipos de moneda (0.4 o 0.6).
 En este caso podemos poner
 $$P(\theta = 0.4)=0.5$$ 
 
-Ahora queremos calcular $P(X=2)$, pero con el trabajo que hicimos
-esto es fácil usar reglas de probabilidad usuales para hacerlo. Si usamos  probabilidad
-total
+Ahora queremos calcular $P(X=2)$, pero con el trabajo que hicimos esto es fácil.
+Pues requiere usar reglas de probabilidad usuales para hacerlo. Si usamos
+probabilidad total
 $$ P(X=2) = P(X=2|\theta = 0.4)P(\theta = 0.4) +
 P(X=2|\theta=0.6)P(\theta =0.6),$$
 así que
@@ -98,8 +99,6 @@ en las probabilidades posteriores**.
 ¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿
 ¿Cómo cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
 ```
-
-
 
 #### Observación 0 {-}
 
@@ -127,7 +126,7 @@ La nomenclatura que usamos es la siguiente:
 o modelo de los datos.
 - A los datos $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
 - La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
-distribución *final* o *posterior* 
+distribución *final* o *posterior* .
 
 Para utilizar inferencia bayesiana, hay que hacer supuestos para definir 
 las primeras dos partes del modelo. La parte de iniciales o previas está ausente
@@ -137,20 +136,20 @@ de enfoques como máxima verosimlitud usual.
 
 ¿Cómo decidimos las probabilidades iniciales $P(\theta=0.4)$ ? 
 
-Quizá es un supuesto y no tenemos razón para
-pensar que se hace de otra manera. O quizá conocemos el
-mecanismo concreto con el que se selecciona la moneda. Discutiremos esto más adelante.
+Quizá es un supuesto y no tenemos razón para pensar que se hace de otra manera.
+O quizá conocemos el mecanismo concreto con el que se selecciona la moneda.
+Discutiremos esto más adelante.
 
 #### Observación 4 {-}
 
 ¿Cómo decidimos el modelo de los datos? Aquí típicamente también tenemos que
-hacer algunos supuestos, aunque algunos de estos pueden estar basados en
-el diseño del estudio, por ejemplo. Igual que cuando usamos máxima verosimilitud, 
-es necesario checar que nuestro modelo ajusta razonablemente 
-a los datos.
+hacer algunos supuestos, aunque algunos de estos pueden estar basados en el
+diseño del estudio, por ejemplo. Igual que cuando usamos máxima verosimilitud,
+es necesario checar que nuestro modelo ajusta razonablemente a los datos.
 
 #### Ejercicio {-}
-Cambia distintos parámetros de el número de soles observados, las probabilidades
+
+Cambia distintos parámetros del número de soles observados, las probabilidades
 de sol de las monedas, y las probabilidades iniciales de selección de las
 monedas. 
 
@@ -160,8 +159,8 @@ n_volados <- 2
 theta = c(0.4, 0.6)
 # probabilidades iniciales
 probs_inicial <- tibble(moneda = c(1, 2),
-                theta = theta, 
-                prob_inicial = c(0.5, 0.5))
+                        theta = theta, 
+                        prob_inicial = c(0.5, 0.5))
 probs_inicial
 # verosimilitud
 crear_verosim <- function(no_soles){
@@ -179,11 +178,14 @@ tabla_inferencia <- probs_inicial %>%
   mutate(inicial_x_verosim = prob_inicial * verosimilitud) %>% 
   # normalizar
   mutate(prob_posterior = inicial_x_verosim / sum(inicial_x_verosim))
+
 tabla_inferencia %>% 
-  select(moneda, theta, prob_inicial, verosimilitud, prob_posterior) 
+  mutate(moneda_obs = moneda) %>% 
+  select(moneda_obs, theta, prob_inicial, verosimilitud, prob_posterior) 
 ```
 
 ```{block2, type='ejercicio'}
+
 1. ¿Qué pasa cuando el número de soles es 0? ¿Cómo cambian las probabilidades
 posteriores de cada moneda?
 2. Incrementa el número de volados, por ejemplo a 10. ¿Qué pasa si observaste
@@ -199,6 +201,7 @@ son una especie de punto intermedio entre verosimilitud e probablidades iniciale
 3. Cuando tenemos muchos datos, las probabilidades posteriores están más concentradas, y no es tan importante la inicial.
 4. Si la inicial está muy concentrada en algún valor, la posterior requiere de
 muchas observaciones para que se pueda concentrar en otros valores diferentes a los de la inicial.
+
 ```
 
 Ahora resumimos los elementos básicos de la inferencia bayesiana, que son 
@@ -207,9 +210,9 @@ relativamente simples:
 ```{block2, type='mathblock'}
 **Inferencia bayesiana.** Con la notación de arriba:
 
-- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimitud*,
-o modelo de los datos.
-- A los datos $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
+- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimitud*, 
+proceso generador de datos o modelo de los datos.
+- El factor $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
 - La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
 distribución *final* o *posterior* 
 
@@ -220,19 +223,22 @@ $$P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}$$
 que también escribimos:
 
 $$P(\theta | X) \propto P(X | \theta) P(\theta)$$
-donde $\propto$ significa "proporcional a". No ponemos $P(X)$ pues como
-vimos arriba, es una constante de normalización.
+donde $\propto$ significa "proporcional a". No ponemos 
+$P(X)$ pues como vimos arriba, es una constante de normalización.
 ```
 
 
-En estadística Bayesiana, las probablidades posteriores $P(\theta|X)$ dan
-toda la información que necesitamos para hacer inferencia. ¿Cuándo damos probablidad alta a un parámetro particular $\theta$? Cuando
-su verosimilitud es alta y/o cuando su probabilidad inicial es alta. 
-De este modo, la posterior combina la información inicial que tenemos acerca
-de los parámetros con la información en la muestra acerca de los parámetros 
-(verosimilitud). Podemos ilustrar como sigue:
+En estadística Bayesiana, las probablidades posteriores $P(\theta|X)$ dan toda
+la información que necesitamos para hacer inferencia. ¿Cuándo damos probablidad
+alta a un parámetro particular $\theta$? Cuando su verosimilitud es alta y/o
+cuando su probabilidad inicial es alta. De este modo, la posterior combina la
+información inicial que tenemos acerca de los parámetros con la información en
+la muestra acerca de los parámetros (verosimilitud). Podemos ilustrar como
+sigue:
 
-![](images/perros.png)
+```{r, echo = FALSE}
+knitr::include_graphics('images/perros.png')
+```
 
 
 ## Ejemplo: estimando una proporción {-}
@@ -240,14 +246,15 @@ de los parámetros con la información en la muestra acerca de los parámetros
 Regresamos ahora a nuestro problema de estimar una proporción $\theta$ de una
 población dada usando una muestra iid $X_1,X_2,\ldots, X_n$ de variables 
 Bernoulli. Ya sabemos calcular la verosimilitud (el modelo de los datos)
-según el modelo bernoulli. Si 
-$X$ es el número de éxitos que observamos en las $n$ pruebas, tenemos que
+según el modelo de $n$ observaciones independientes Bernoulli. Si 
+$S_n$ es el número de éxitos que observamos en las $n$ pruebas, tenemos que
 
-$$P(X=k|\theta) = \theta^k(1-\theta)^{n-k}$$
+$$P(S_n=k|\theta) = {n \choose k} \, \theta^k(1-\theta)^{n-k},$$
 
+es decir, la suma de éxitos es Binomial con parámetros $n$ y $\theta.$
 Ahora necesitamos una distribución inicial o previa $P(\theta)$. Aunque esta
 distribución puede tener cualquier forma, supongamos que nuestro conocimiento
-actual podemos resumirlo con una distribución $Beta(3, 3)$:
+actual podemos resumirlo con una distribución $\mathsf{Beta}(3, 3)$:
 
 $$P(\theta) \propto \theta^2(1-\theta)^2.$$
 La constante de normalización es 1/30, pero no la requerimos. Podemos simular para examinar su forma:
@@ -263,11 +270,11 @@ que $\theta$ está en el intervalo
 ```{r}
 quantile(sim_inicial$theta, c(0.025, 0.975)) %>% round(2)
 ```
-Es difícil justificar en abstracto por qué escogeriamos una inicial con esta forma. 
-*Aunque esto los detallaremos más adelante*, puedes pensar por el momento,
-por ejemplo que alguien observó
-algunos casos de esta población, y quizá vio dos éxitos y dos fracasos. Esto sugeriría
-que es poco probable que la probablidad $\theta$ sea muy cercana a 0 o muy cercana a 1.
+Es difícil justificar en abstracto por qué escogeriamos una inicial con esta
+forma. *Aunque esto los detallaremos más adelante*, puedes pensar, por el
+momento, que alguien observó algunos casos de esta población, y quizá vio dos
+éxitos y dos fracasos. Esto sugeriría que es poco probable que la probablidad
+$\theta$ sea muy cercana a 0 o muy cercana a 1.
 
 Ahora podemos construir nuestra posterior. Tenemos que
 
@@ -282,10 +289,10 @@ $$P(\theta | X = 19) \propto \theta^{19 + 2} (1-\theta)^{30 - 19 +2} = \theta^{2
  
 La cantidad de la derecha, una vez que normalizemos por el número $P(X=19)$, nos
 dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos obtenerla
-usando cálculo, pero recordamos que una distribución $Beta(a,b)$ tiene como fórmula
+usando cálculo, pero recordamos que una distribución $\mathsf{\mathsf{Beta}}(a,b)$ tiene como fórmula
 $$\frac{1}{B(a,b)} \theta^{a-1}(1-\theta)^{b-1}$$
-Concluimos entonces que la posterior tiene una distribución $B(22, 14)$. Podemos
-simular de usando estándar para ver cómo luce:
+Concluimos entonces que la posterior tiene una distribución $\mathsf{Beta}(22, 14)$. Podemos
+simular de la posterior usando código estándar para ver cómo luce:
 
 ```{r}
 sim_inicial <- sim_inicial %>% mutate(dist = "inicial")
@@ -336,7 +343,7 @@ hacer cuando nuestra inicial no es de un tipo "conveniente".
 - Como tenemos la forma analítica de la posterior, es posible hacer los cálculos
 de la media posterior, por ejemplo, **integrando** la densidad posterior a mano. Esto
 generalmente no es factible, y en este ejemplo preferimos hacer una aproximación numérica. En este caso
-particular es posible usando cálculo, y sabemos que la media de una $Beta(a,b)$ es
+particular es posible usando cálculo, y sabemos que la media de una $\mathsf{\mathsf{Beta}}(a,b)$ es
 $a/(a+b)$, de modo que nuestra media posterior es
 
 $$\hat{\mu} = (19 + 2)/(30 + 4) = 21/34 = 0.617 $$
@@ -388,14 +395,13 @@ La función acumulada de la pareto es $1- (300/\theta)^\alpha$, así que el cuan
 alpha <- 1.1
 (300/(0.01)^(1/alpha))
 ```
-es decir, alrededor de 20 millones de números.  Creemos que es una poco probable
+es decir, alrededor de 20 millones de números.  Creemos que es un poco probable
 que el número de boletos sea mayor a esta cota.
 Nótese ahora que la posterior cumple (multiplicando verosimilitud por inicial):
 
-
 $$P(\theta|X_1,\ldots, X_n |\theta) \propto \theta^{-(n + 2.1)}$$
 
-para $\theta mayor que el máximo de las X_n's y 300, y cero en otro caso. Esta distribución
+para $\theta$ mayor que el máximo de las $X_n$'s y 300, y cero en otro caso. Esta distribución
 es pareto con $\theta_0' = \max\{300, X_1,\ldots, X_n\}$ y $\alpha = n + 1.1$
 
 Una vez planteado nuestro modelo, veamos los datos. Obtuvimos la siguiente
@@ -475,7 +481,7 @@ qplot(rgamma(2000, 5, 0.001), geom="histogram", bins = 20) +
 
 Sin embargo, los cálculos no son tan simples en este caso, pues la posterior
 no tiene un forma reconocible. Tendremos que usar otras estrategias de simulación
-para ejemplos como este (Markov Chain Montecarlo, que veremos más adelante).
+para ejemplos como este (Monte Carlo por medio de Cadenas de Markov, que veremos más adelante).
 
 ## Probabilidad a priori {-}
 
@@ -500,30 +506,28 @@ en términos del conocimiento de expertos.
 - Las probabilidades iniciales son supuestos que hacemos acerca del problema de 
 interés, y también están sujetas a críticas y confrontación con datos. 
  
-## Análisis conjugado
+## Análisis conjugado {-}
 
 Los dos ejemplos que hemos visto arriba son ejemplos de análisis conjugado:
 
-- (Beta-binomial) Si las observaciones $X_i$ son $Bernoulli(n, p)$ ($n$ fija)
- queremos estimar $p$, y tomamos como distribución inicial para $p$ una $Beta(a,b)$,
-entonces la posterior para $p$ cuando $X=k$ es $Beta(k + a, n - k + b)$. 
+- (Beta-binomial) Si las observaciones $X_i$ son $\mathsf{Binomial}(n, p)$ ($n$ fija)
+ queremos estimar $p$, y tomamos como distribución inicial para $p$ una $\mathsf{Beta}(a,b)$,
+entonces la posterior para $p$ cuando $X=k$ es $\mathsf{Beta}(k + a, n - k + b)$. 
 
-- (Uniforme-Pareto) Si el modelo de datos $X_i$ es uniforme $U[0,\theta]$ ($n$ fija),
+- (Uniforme-Pareto) Si el modelo de datos $X_i$ es uniforme $\mathsf{U}[0,\theta]$ ($n$ fija),
 queremos estimar $\theta$, y tomamos como distribución inicial para $\theta$ una
-Pareto $(\theta_0, \alpha)$, entonces la posterior para $p$ si el máximo de las $X_i's$
+Pareto $(\theta_0, \alpha)$, entonces la posterior para $p$ si el máximo de las $X_i$'s
 es igual a $M$ es Pareto con parámetros $(\max\{\theta_0, M\}, \alpha + n)$.
 
-Nótese que en estos casos, dada una forma de la verosimilitud, tenemos una familia
-conocida 
-de iniciales tales que las posteriores están en la misma familia. Estos modelos
-son convenientes porque podemos hacer simulaciones de la posterior
-de manera fácil, o usar sus propiedades teóricas.
+Nótese que en estos casos, dada una forma de la verosimilitud, tenemos una
+familia conocida de iniciales tales que las posteriores están en la misma
+familia. Estos modelos son convenientes porque podemos hacer simulaciones de la
+posterior de manera fácil, o usar sus propiedades teóricas.
 
-Otro ejemplo típico
-es el modelo normal-normal:
+Otro ejemplo típico es el modelo normal-normal:
 
-- (Normal-normal) Si $X_i\sim N(\mu,\sigma)$, con $\sigma$ conocida, y tomamos
-como distribución inicial para $\mu \sim N(\mu_0,\sigma_0)$, y definimos
+- (Normal-normal) Si $X_i\sim \mathsf{N}(\mu,\sigma)$, con $\sigma$ conocida, y tomamos
+como distribución inicial para $\mu \sim \mathsf{N}(\mu_0,\sigma_0)$, y definimos
 la *precisión* $\tau$ como el inverso de la varianza $\sigma^2$, entonces la posterior
 de $mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
 y precisión $\tau_0 + n\tau$, donde $\lambda = \frac{n\tau}{\tau_0 + n\tau}$
@@ -533,25 +537,25 @@ Completa cuadrados para mostrar las fórmulas del modelo normal-normal con
 varianza conocida.
 ```
 
-Más util es el siguiente modelo:
+Más útil es el siguiente modelo:
 
-- (Normal-Gamma inverso) Sean $X_i\sim N(\mu, \sigma)$. Queremos estimar $\mu$ y $\sigma$. Tomamos
+- (Normal-Gamma inverso) Sean $X_i\sim \mathsf{N}(\mu, \sigma)$. Queremos estimar $\mu$ y $\sigma$. Tomamos
 como distribuciones iniciales:
 
-  - $\mu\sim N(\mu_0, \sigma_0)$ , y
-  - $\tau = \frac{1}{\sigma^2} \sim Gamma(\alpha,\beta )$
+  - $\mu\sim \mathsf{N}(\mu_0, \sigma_0)$ , y
+  - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta )$
   - $p(\mu, \sigma) = p(\mu)p(\sigma)$
 
 - Entonces la posterior es:
 
-  - $\mu \sim N\left (\frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}, \tau_0 +n \right )$
-  - $\tau = \frac{1}{\sigma^2} \sim Gamma \left (\alpha + n/2, \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar {x}}-\mu_{0})^2}{2}\right )$
+  - $\mu \sim \mathsf{N}\left (\frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}, \tau_0 +n \right )$
+  - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma} \left (\alpha + n/2, \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar {x}}-\mu_{0})^2}{2}\right )$
   - $p(\mu,\sigma|x) = p(\mu|x)p(\sigma|x)$
 
 
 ### Ejemplo {-}
 Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor con 
-una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de forma que $X_i\sim N(\mu, \sigma^2)$.
+una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de forma que $X_i\sim \mathsf{N}(\mu, \sigma^2)$.
 
 Una vez decidido el modelo, tenemos que poner distribución inicial para los parámetros
 $(\mu, \sigma^2)$. Comenzamos con $\mu$. Sabemos, por ejemplo, que 
