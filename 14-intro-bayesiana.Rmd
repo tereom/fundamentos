@@ -100,6 +100,18 @@ en las probabilidades posteriores**.
 ¿Cómo cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
 ```
 
+Finalmente, podríamos hacer predicciones usando la **posterior predictiva**.
+Si $X_{nueva}$ es una tirada adicional de la moneda que estamos usando, nos
+interesaría saber:
+$$P(X_{nueva}=\mathsf{sol}|X=2)$$
+Que podemos calcular observando que $P(X_{nueva}|X=2, \theta)$ es una variable 
+Bernoulli con probabilidad $\theta$, que puede valer 0.4 o 0.6. Como tenemos las probabilidades
+posteriores $P(\theta|X=2)$ podemos usar probabilidad total, todo condicionado a $X=2$:
+
+$$P(X_{nueva}=\mathsf{sol}|\theta=0.4, X=2)P(\theta=0.4|X=2) +P(X_{nueva}=\mathsf{sol}|\theta = 0.6, X=2)P(\theta =0.6|X=2)$$
+Es decir, promediamos ponderando con las probabilidades posteriores. Obtendríamos entonces
+$$P(X_{nueva} = \mathbf{sol}) =  0.4 ( 0.31) + 0.6 (0.69) = 0.538$$
+
 #### Observación 0 {-}
 
 Nótese que en contraste con máxima verosimilitud, en este ejemplo
