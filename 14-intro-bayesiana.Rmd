@@ -257,15 +257,13 @@ knitr::include_graphics('images/perros.png')
 
 Regresamos ahora a nuestro problema de estimar una proporción $\theta$ de una
 población dada usando una muestra iid $X_1,X_2,\ldots, X_n$ de variables 
-Bernoulli. Sabemos que el orden en que ocurren los éxitos no importa, así
-que podemos reducir el problema considerando $S_n = X_1 + X_2 +\cdots, X_n$, 
-el número de éxitos que
-observamos en las $n$ pruebas. Ya sabemos calcular la 
+Bernoulli.  Ya sabemos calcular la 
 verosimilitud (el modelo de los datos):
 
-$$P(S_n=k|\theta) = {n \choose k} \, \theta^k(1-\theta)^{n-k},$$
+$$P(X_1=x_1,X_2 =x_2,\ldots, X_n=x_n|\theta) = \theta^k(1-\theta)^{n-k},$$
 
-es decir, la suma de éxitos es Binomial con parámetros $n$ y $\theta.$ 
+donde $k = x_1 + x_2 +\cdots + x_k$ es el número de éxitos que observamos.
+
 Ahora necesitamos una distribución inicial o previa $P(\theta)$. Aunque esta
 distribución puede tener cualquier forma, supongamos que nuestro conocimiento
 actual podemos resumirlo con una distribución $\mathsf{Beta}(3, 3)$:
@@ -292,7 +290,7 @@ $\theta$ sea muy cercana a 0 o muy cercana a 1.
 
 Ahora podemos construir nuestra posterior. Tenemos que
 
-$$P(\theta|S_n=k) \propto P(S_n = k | \theta)P(\theta) = \theta^{k+1}(1-\theta)^{n-k + 1}$$
+$$P(\theta| X_1=x_1, \ldots, X_n=x_n) \propto P(X_1 = x_1,\ldots X_n=x_n | \theta)P(\theta) = \theta^{k+1}(1-\theta)^{n-k + 1}$$
 donde la constante de normalización no depende de $\theta$. Como $\theta$ es un
 parámetro continuo, la expresión de la derecha nos debe dar una densidad posterior.
 
@@ -524,9 +522,21 @@ interés, y también están sujetas a críticas y confrontación con datos.
 
 Los dos ejemplos que hemos visto arriba son ejemplos de análisis conjugado:
 
-- (Beta-binomial) Si las observaciones $X_i$ son $\mathsf{Binomial}(n, p)$ ($n$ fija)
+
+- (Beta-bernoulli) Si las observaciones $X_i$ son $\mathsf{Bernoulli}(p)$ ($n$ fija)
  queremos estimar $p$, y tomamos como distribución inicial para $p$ una $\mathsf{Beta}(a,b)$,
-entonces la posterior para $p$ cuando $X=k$ es $\mathsf{Beta}(k + a, n - k + b)$. 
+entonces la posterior para $p$ cuando $S_n=k$ es $\mathsf{Beta}(k + a, n - k + b)$,
+donde $S_n = X_1 + X_2 +\cdots +X_n$.
+
+Y en más en general:
+
+- (Beta-binomial) Si las observaciones $X_i, i=1,2,\ldots, m$ 
+son $\mathsf{Binomial}(n_i, p)$ ($n_i$'s fijas) independientes,
+ queremos estimar $p$, y tomamos como distribución inicial para $p$ una $\mathsf{Beta}(a,b)$,
+entonces la posterior para $p$ cuando $S_n=k$ es $\mathsf{Beta}(k + a, n - k + b)$, 
+donde $S_m = X_1 + X_2 +\cdots +X_m$ y $n= n_1+n_2+\cdots+n_m$
+
+También aplicamos:
 
 - (Uniforme-Pareto) Si el modelo de datos $X_i$ es uniforme $\mathsf{U}[0,\theta]$ ($n$ fija),
 queremos estimar $\theta$, y tomamos como distribución inicial para $\theta$ una
