@@ -1,5 +1,14 @@
 # Métodos de Cadenas de Markov Monte Carlo
 
+
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(patchwork)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+comma <- function(x) format(x, digits = 2, big.mark = ",")
+theme_set(theme_minimal())
+```
+
 Hasta ahora, hemos considerado modelos bayesianos *conjugados*, donde la
 posterior tiene una forma conocida. Esto nos permitió simular directamente
 de la posterior usando las rutinas estándar de R, o utilizar cálculos teóricos
@@ -85,6 +94,10 @@ cuya media es
 5/(2+5)
 ```
 
+Y podríamos intentar una estrategia similar, por ejemplo, para calcular intervalos
+de credibilidad. Sin embargo, veremos abajo que este método no escala con el número de
+parámetros.
+
 ### Más de un parámetro {-}
 
 Ahora supongamos que tenemos $2$ parámetros. Dividiríamos cada parámetro
@@ -95,23 +108,387 @@ Y esto requeriría $M^2 = 10000$ evaluaciones de $p(x|\theta)p(\theta)$.
 
 Si tenemos $p$ parámetros, entonces tendríamos que hacer $M^p$ evaluaciones de la
 posterior. Incluso cuando $p=10$, **esta estrategia es infactible**, pues tendríamos
-que hacer millones de millones de millones de evaluaciones de la posterior.
-
-Si sólo tenemos esta técnica disponible, el análisis bayesiano está considerablemente
+que hacer más de millones de millones de millones de evaluaciones de la posterior. Si sólo 
+tenemos esta técnica disponible, el análisis bayesiano está considerablemente
 restringido. Regresión bayesiana con unas 10 covariables por ejemplo, no podría hacerse.
 
 De modo que tenemos que replantearnos cómo atacar el problema de calcular o aproximar
 estas integrales.
 
+## Modelos con varios parámetros
+
+Hasta ahora hemos visto principalmente modelos con un sólo parámetro (excluyendo
+el modelo normal-gamma inversa). En general, hay más de un parámetro de interés,
+y varios parámetros que no son directamente de interés pero es necesario incluir 
+en nuestros modelos.
+
+Supongamos entonces que tenemos parámetros $\theta_1,\theta_2,\theta_3$ en nuestro
+modelo. El enfoque estándar es establecer una inicial para cada parámetro $p(\theta_i)$,
+y después definir la conjunta inicial como
+
+$$p(\theta_1,\theta_2,\theta_3) = p(\theta_1)p(\theta_2)p(\theta_3)$$,
+
+es decir, a priori los parámetro son independientes. En casos particulares, puede ser
+que esto no incluya toda la información inicial que tenemos.
+
+### Ejemplo: estaturas y pesos {-}
+
+Supongamos que queremos modelar la media de peso y estatura en una población de hombres
+adultos en algún estado de México. 
+Es posible comenzar poniendo $p(\mu_{est})$ y $p(\mu_{peso})$ y considerando
+estos parámetros independientes a priori. Sin embargo, sabemos que es probable que
+poblaciones con más estatura tengan pesos más grandes. Podríamos entonces comenzar
+poniendo, por ejemplo
+
+$$p(\mu_{est}) \sim N(1.70, 0.03)$$
+
+y definiendo después
+
+$$p(\mu_{peso}|\mu_{est}) \sim \mu_{est}^2N(23, 1.5)$$
+Usando el hecho de que el IMC es peso entre estatura al cuadrado, y valores promedio
+en México probablemente tienden a ser altos (normal es entre 18 y 25). La conjunta inicial
+es entonces
+
+$$p(\mu_{est}, \mu_{peso}) = p(\mu_{est})p(\mu_{peso}|\mu_{est})$$
+```{r}
+simular_inicial <- function(n = 10000){
+  media_est <- rnorm(n, 1.70, 0.03)
+  media_peso <- (media_est^2) * rnorm(n, 23, 1.5)
+  tibble(media_est = media_est, media_peso = media_peso)
+}
+ggplot(simular_inicial(), aes(x = media_est, y = media_peso)) +
+  geom_point()
+```
+
+Y esta inicial es informativa, y tiene a excluir, por ejemplo, medias de 1.65 para
+estatura junto con un peso medio de 80kg. Recuérdese que este es el modelo inicial
+*para las medias poblacionales*, no para los individuos.
+
+**Ojo**: abajo completamos el modelo para este tipo de datos, pero los argumentos
+son más avanzados. 
+
+Ahora podemos poner, por ejemplo
+$$p(\sigma_{est}) \sim U(0.1, 0.5)$$
+y
+
+$$p(\sigma_{peso}) \sim ~ U(5, 20)$$
+y ponemos 
+
+$$p(\sigma_{est}, \sigma_{peso}) = p(\sigma_{est})p(\sigma_{peso})$$
+
+Finalmente, construimos un modelo para las observaciones. Esto requiere
+ntroducir un parámetro de correlación entre las medidas de estatura y peso, pues
+no son independientes dentro de poblaciones. Aquí no veremos detalles, pero **puedes
+entender esto en el curso de regresión**. Ponemos:
+
+$$p(x_{est}|\theta) = N(\mu_{est}, \sigma_{est})$$
+
+y
+
+$$p(x_{peso}|\theta, x_{est}) = N \left (\mu_{peso} + \rho\frac{\sigma_{peso}}{\sigma_{est}}  (x_{est} - \mu_{est}), \sigma_{peso}\sqrt{1-\rho^2} \right )$$
+Otra manera de decir esto es que las observaciones (x_{est}, x_{peso}) son normales
+multivariadas con medias $(\mu_{est}, \mu_{peso})$, desviaciones estándar $\sigma_{est}$,
+$\sigma_{peso}$ y correlación $\rho$. Ponemos una inicial para $\rho$, por ejemplo:
+
+$\rho \sim U[0.2, 0.8]$
+
+
+Simulemos algunas poblaciones:
+
+```{r}
+simular_personas <- function(n){
+  mu_est <- rnorm(1, 1.70, 0.03)
+  mu_peso <- mu_est^2 * rnorm(1, 23, 1.5)
+  sigma_est <- runif(1, 0.02, 0.2)
+  sigma_peso <- runif(1, 10, 30)
+  rho <- runif(1, 0.2, 0.9)
+  estaturas <- rnorm(n, mu_est, sigma_est)
+  pred_peso <- mu_peso + rho * (sigma_peso / sigma_est) * (estaturas - mu_est)
+  pesos <- rnorm(n, pred_peso, sigma_peso * sqrt(1 - rho^2))
+  tibble(estatura = estaturas, peso = pesos)
+} 
+set.seed(221)
+datos_sim <- tibble(rep = as.character(1:11)) %>% 
+  mutate(personas = map(rep, ~ simular_personas(140))) %>%
+  unnest(personas)
+           
+```
+
+Y comparamos con los datos de un estado:
+
+```{r, fig.width = 8, fig.height = 6}
+# existen personas chiquitas, 
+# y también hay datos
+# Esto complica el análisis y requiere refinación del modelo,
+# pero también podemos filtrarlos. 
+# Intentamos Quintana Roo:
+ensanut_qroo <- read_csv("data/CN_ANTROPOMETRIA.csv") %>% 
+  filter(ENT == "07") %>% # Muestra de Chiapas
+  filter(SEXO==1, EDAD_MESES >= 12 * 20, !is.na(TALLA4_1), !is.na(PESO1_1)) %>% 
+  mutate(estatura = as.numeric(TALLA4_1) / 100, peso = as.numeric(PESO1_1)) %>% 
+  filter(estatura < 2.15, peso < 215) %>% # quitar el código de faltantes 222.222
+  select(estatura, peso) 
+
+datos <- datos_sim %>% bind_rows(ensanut_qroo %>% mutate(rep = "Chiapas"))
+ggplot(datos, aes(x = estatura, y = peso, alpha = 0.1)) + geom_point() +
+  facet_wrap(~rep)
+```
+
+- Podremos ajustar este modelo con los métodos que mostramos más abajo. Nótese también
+que la distribución de IMC probablemente debería tener una cola más larga hacia arriba.
 
 ## Métodos Monte Carlo {-}
 
-El método Montecarlo para calcular una integral es como sigue: si queremos
+El método Monte Varlo para calcular una integral es como sigue: si queremos
 integrar una función $g(\theta)$ definida sobre $a < \theta < b$, podemos
 tomar un número grande de valores al azar $\theta^{(1)},\theta^{(2)}, \ldots \theta^{(N)}$
 en $[a,b]$, y entonces
 
-$$\int_{a}^{b} g(\theta) \, d\theta\approx \frac{\theta^{(1)}+\theta^{(2)}+ \cdots +\theta^{(N)}}{N}$$ 
+$$\int_{a}^{b} g(\theta) \, d\theta\approx \frac{g(\theta^{(1)})+g(\theta^{(2)})+ \cdots +g(\theta^{(N)})}{N}$$ 
+
+### Ejemplo {-}
+
+Supongamos que queremos integrar $g(\theta) = \theta^2$ en el intervalo [0,1]. Sabemos
+que esta integral vale 1/3. Podemos usar el método montecarlo de integración:
+
+```{r}
+set.seed(9932)
+theta <- runif(30000, 0, 1)
+g <- function(theta) theta^2
+integral_aprox <- mean(g(theta))
+integral_aprox
+```
+
+que es correcto a tres decimales.
+
+---
+
+Podemos generalizar este resultado. Supongamos que tenemos una densidad $p(\theta)$. 
+
+```{block2, type='mathblock'}
+**Integración Monte Carlo**. Supongamos que queremos calcular el valor esperado de
+$g(X)$, donde $X\sim p(\theta)$
+
+$$E =  \int g(\theta) p(\theta)\, d\theta$$
+
+Si tomamos una muestra 
+$\theta^{(1)},\theta^{(2)}, \ldots \theta^{(N)} \sim p(\theta)$, entonces
+
+$$\frac{g(\theta^{(1)})+g(\theta^{(2)})+ \cdots +g(\theta^{(N)})}{N}\approx E$$
+
+cuando $N$ es grande.
+```
+
+Esto es simplemente una manera de escribir la ley de los grandes números, y hemos
+aplicado este teorema en varias ocasiones. Nos ha sido útil cuando 
+**sabemos cómo simular de distribución** $p(\theta | x)$ (usando alguna rutina de R, por
+ejemplo, o usando un método estándar como inversión de la función de distribución acumulada).
+
+### Ejemplo {-}
+En este ejemplo repetimos cosas que ya hemos visto. En el caso de estimación
+de una proporción $\theta, tenemos como inicial
+$p(\theta) \propto \theta$, que es $Beta(2,1)$. Si observamos 3 éxitos en 4 pruebas,
+entonces sabemos que la posterior es $p(\theta|x)\propto \theta^4(1-\theta)$, que 
+es $Beta(5, 2)$. Si queremos calcular media y desviación estándar posterior para $\theta$,
+integramos con Monte Carlo
+
+```{r}
+theta <- rbeta(10000, 5, 2)
+media_post <- mean(theta)
+sd_post <- sd(theta)
+c(media_post, sd_post)
+```
+
+Y podemos aproximar de esta manera cualquier cantidad de interés que esté basada
+en integrales, como probabilidades asociadas a $\theta$ o cuantiles asociados.
+Por ejemplo, podemos aprxoimar fácilmente $P(e^{\theta}> 2|x)$ haciendo
+
+```{r}
+mean(exp(theta) > 2)
+```
+y así sucesivamente. 
+
+Este enfoque, sin embargo, es mucho más flexible y poderoso:
+
+### Ejemplo: varias pruebas independientes
+
+Supongamos que probamos el nivel de gusto para 4 sabores distintos de una paleta. Usamos
+4 muestras de aproximadamente 
+50 personas diferentes para cada sabor, y cada uno evalúa si le gustó mucho o no.
+Obtenemos los siguientes resultados:
+
+```{r}
+datos <- tibble(
+  sabor = c("fresa", "limón", "mango", "guanábana"),
+  n = c(50, 45, 51, 50), gusto = c(36, 35, 42, 29)) %>% 
+  mutate(prop_gust = gusto / n)
+datos
+```
+
+Usaremos como inicial $Beta(2, 1)$ (pues hemos obervado cierto sesgo de cortesía
+en la calificación de sabores, y no es tan probable tener valores muy bajos) para todos los sabores,
+es decir $p(\theta_i|k_i)$ es $Beta(2, 1)$. La inicial conjunta la definimos entonces,
+usando idependiencia inicial, como
+
+$$p(\theta_1,\theta_2, \theta_3,\theta_4) = p(\theta_1)p(\theta_2)p(\theta_3)p(\theta_4)$$
+Pues inicialmente establecemos que ningún parámetro da información sobre otro: saber que
+mango es muy gustado no nos dice nada acerca del gusto por fresa. Bajo este supuesto,
+y el supuesto adicional de que las muestras de cada sabor son independientes, podemos mostrar que
+las posteriores son independientes:
+
+$$p(\theta_1,\theta_2,\theta_3, \theta_4|k_1,k_2,k_3,k_4) = p(\theta_4|k_1)p(\theta_4|k_2)p(\theta_4|k_3)p(\theta_4|k_4)$$
+
+De forma que podemos trabajar individualmente con cada muestra. Calculamos los parámetros de las posteriores individuales:
+
+```{r}
+datos <- datos %>% 
+  mutate(a_post = gusto + 2, b_post = n - gusto + 1)
+datos
+```
+
+Ahora nos preguntamos, ¿cuál es la probabilidad posterior de que mango sea el sabor 
+más preferido de la población? Conocemos la posterior para cada parámetro, y sabemos
+que los parámetros son independientes para la posterior. Eso quiere decir
+que podemos simular de cada parámetro independientemente para obtener simulaciones
+de la conjunta posterior.
+
+```{r}
+simular_conjunta <- function(rep, datos){
+  datos %>% mutate(valor_sim = map2_dbl(a_post, b_post, ~ rbeta(1, .x, .y))) %>% 
+    select(sabor, valor_sim) 
+}
+simular_conjunta(1, datos) 
+```
+
+```{r}
+# esta no es una manera muy rápida, podríamos calcular todas las
+# simulaciones de cada parámetro de manera vectorizada
+sims_posterior <- tibble(rep = 1:5000) %>% 
+  mutate(sims = map(rep, ~ simular_conjunta(.x, datos))) %>% 
+  unnest(cols = sims)
+sims_posterior
+```
+
+
+Y ahora podemos aproximar fácilmente la probabilidad de interés:
+
+```{r}
+sims_posterior %>% 
+  group_by(rep) %>% 
+  mutate(sabor = sabor[which.max(valor_sim)]) %>% 
+  group_by(sabor) %>% 
+  count() %>% 
+  ungroup() %>% 
+  mutate(prop = n / sum(n))
+```
+Y vemos que los mejores sabores son mango y limón. La probabilidad posterior de
+que mango sea el sabor preferido por la población es de 66%. La integral correspondiente
+no es trivial.
+
+
+```{block2, type='ejercicio'}
+- ¿Cuáles son las probabilidades a priori de que cada sabor sea el preferido
+por la población?
+- ¿Cuál es la integral correspondiente a las probabilidades que acabamos de calcular?
+  ¿Qué tan fácil es hacer esta integral de manera analítica?
+- Calcula la probabilidad de que mango sea preferido a limón?
+- ¿Qué conclusión práctica sacas de estos resultados?
+```
+
+
+## Simulando de la posterior
+
+Hemos establecido que podemos contestar varias preguntas de inferencia
+usando simulación Monte Carlo, y que este enfoque es potencialmente
+escalable (en contraste con métodos de integración numérica por cuadrícula). Ahora
+el problema que necesitamos resolver es el siguiente:
+
+- Conocemos $p(\theta |x)$ módulo una constante de integración.
+- En general, $p(\theta|x)$ no tiene una forma reconocible que corresponda a un
+simulador estándar.
+- ¿Cómo simulamos de esta posterior cuando sólo sabemos calcular $p(|\theta)p(\theta)$?
+
+Hay varias maneras de hacer esto. Presentaremos los algoritmos en términos
+de una distribución cualquiera $p(\theta) = K f(\theta)$, donde sólo conocemos
+la función $f(\theta)$.
+
+
+## Método de Metropolis
+
+En el método de Metropolis, uno de los más antiguos, comenzamos
+con un valor inicial de los parámetros $\theta^{(0)}$. 
+
+Para $i=1, \ldots, M$, hacemos:
+
+1. Partiendo de $\theta^{(i)}$, hacemos un salto
+corto en una dirección al azar para obtener una propuesta $\theta_{prop}$.
+2. Aceptamos or rechazamos el salto:
+  - Si $\frac{f(\theta_{prop})}{f(\theta_{i})} >= 1$, aceptamos el salto y ponemos $\theta^{(i+1)}=\theta_{prop}$. Regresamos a 1 para la siguiente $i$
+  - Si $p = \frac{f(\theta_{prop})}{f(\theta_{i})} < 1$, entonces aceptamos con probabilidad
+  $p$ el salto, ponemos $\theta^{(i+1)}=\theta_{prop}$ y regresamos a 1 para la siguiente $i$.
+  Si rechazamos el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ 
+  regresamos a 1 para la siguiente $i$.
+
+Abajo implementamos el algoritmo con un salto de tipo normal:
+
+```{r}
+crear_metropolis <- function(f, sigma_salto = 0.1){
+  iterar_metropolis <- function(theta_inicial, n){
+    iteraciones <- numeric(n)
+    iteraciones[1] <- theta_inicial
+    for(i in 2:n){
+      theta <- iteraciones[i - 1]
+      theta_prop <- theta + rnorm(length(theta), 0, sigma_salto)
+      cociente <- f(theta_prop) / f(theta)
+      iteraciones[i] <- ifelse(cociente >= 1 || runif(1,0,1) < cociente,
+                              theta_prop, theta)
+    }
+    iteraciones
+  }
+  iterar_metropolis
+}
+```
+
+E intentamos simular de una exponencial no normalizada:
+
+```{r}
+exp_no_norm <- function(x) ifelse(x > 0, exp(-0.5 * x), 0)
+iterador_metro <- crear_metropolis(exp_no_norm, sigma_salto = 0.25)
+sims <- iterador_metro(0.5, 50000)
+ggplot(tibble(sims = sims), aes(x = sims)) + geom_histogram()
+```
+
+Ahora probemos con una beta(3, 2):
+
+```{r}
+beta_no_norm <- function(x) ifelse(x > 0 && x < 1, (x^2)*(1-x), 0)
+iterador_metro <- crear_metropolis(beta_no_norm, sigma_salto = 0.04)
+sims <- iterador_metro(0.5, 50000)
+g_1 <- ggplot(tibble(sims = sims), aes(x = sims)) + geom_histogram() +
+  labs(subtitle = "Metropolis")
+g_2 <- ggplot(tibble(sims = rbeta(30000, 3, 2)), aes(x = sims)) + geom_histogram() +
+  labs(subtitle = "rbeta")
+g_1 + g_2
+```
+Y vemos que esto funciona. Revisa el ejemplo de las islas en @Kruschke (7.2) para 
+tener más intuición de cómo funciona este algoritmo.
+
+Nótese sin embargo un aspecto de estas simulaciones que no habíamos encontrado
+en el curso. Aunque la distribución final de las simulaciones es muy cercana
+a la de la distribución que queremos simular, lo cual era nuestro propósito,
+las **simulaciones no son extracciones independientes** de esa distribución.
+
+La construcción del algoritmo muestra eso, pero podemos también graficar las
+simulaciones:
+
+```{r}
+
+```
+
+
+
+
+
 
 
 
