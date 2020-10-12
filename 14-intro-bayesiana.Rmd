@@ -423,7 +423,7 @@ muestra de números:
 
 
 ```{r}
-loteria_tbl <- read_csv("data/nums_loteria.csv", col_names = c("id", "numero")) %>% 
+loteria_tbl <- read_csv("data/nums_loteria_avion.csv", col_names = c("id", "numero")) %>% 
   mutate(numero = as.integer(numero))
 set.seed(334)
 muestra <- sample_n(loteria_tbl, 25) %>% 
