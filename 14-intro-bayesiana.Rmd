@@ -257,13 +257,15 @@ knitr::include_graphics('images/perros.png')
 
 Regresamos ahora a nuestro problema de estimar una proporción $\theta$ de una
 población dada usando una muestra iid $X_1,X_2,\ldots, X_n$ de variables 
-Bernoulli. Ya sabemos calcular la verosimilitud (el modelo de los datos)
-según el modelo de $n$ observaciones independientes Bernoulli. Si 
-$S_n$ es el número de éxitos que observamos en las $n$ pruebas, tenemos que
+Bernoulli. Sabemos que el orden en que ocurren los éxitos no importa, así
+que podemos reducir el problema considerando $S_n = X_1 + X_2 +\cdots, X_n$, 
+el número de éxitos que
+observamos en las $n$ pruebas. Ya sabemos calcular la 
+verosimilitud (el modelo de los datos):
 
 $$P(S_n=k|\theta) = {n \choose k} \, \theta^k(1-\theta)^{n-k},$$
 
-es decir, la suma de éxitos es Binomial con parámetros $n$ y $\theta.$
+es decir, la suma de éxitos es Binomial con parámetros $n$ y $\theta.$ 
 Ahora necesitamos una distribución inicial o previa $P(\theta)$. Aunque esta
 distribución puede tener cualquier forma, supongamos que nuestro conocimiento
 actual podemos resumirlo con una distribución $\mathsf{Beta}(3, 3)$:
@@ -290,14 +292,14 @@ $\theta$ sea muy cercana a 0 o muy cercana a 1.
 
 Ahora podemos construir nuestra posterior. Tenemos que
 
-$$P(\theta|X=k) \propto P(X = k | \theta)P(\theta) = \theta^{k+1}(1-\theta)^{n-k + 1}$$
+$$P(\theta|S_n=k) \propto P(S_n = k | \theta)P(\theta) = \theta^{k+1}(1-\theta)^{n-k + 1}$$
 donde la constante de normalización no depende de $\theta$. Como $\theta$ es un
 parámetro continuo, la expresión de la derecha nos debe dar una densidad posterior.
 
 Supongamos entonces que hicimos la prueba con $n = 30$ (número de prueba) y observamos
 19 éxitos. Tendríamos entonces
 
-$$P(\theta | X = 19) \propto \theta^{19 + 2} (1-\theta)^{30 - 19 +2} = \theta^{21}(1-\theta)^{13}$$
+$$P(\theta | S_n = 19) \propto \theta^{19 + 2} (1-\theta)^{30 - 19 +2} = \theta^{21}(1-\theta)^{13}$$
  
 La cantidad de la derecha, una vez que normalizemos por el número $P(X=19)$, nos
 dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos obtenerla
