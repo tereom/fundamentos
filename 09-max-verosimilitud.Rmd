@@ -721,10 +721,9 @@ crear_log_p <- function(x){
   log_p <- function(pars){
     media = pars[1]
     desv_est = pars[2]
-    n <- length(x)
     # ve la ecuación del ejercicio anterior
     z <- (x - media) / desv_est
-    log_verosim <- -(log(desv_est) +  0.5 * mean(z^2))
+    log_verosim <- -(log(desv_est) + 0.5 * mean(z ^ 2))
     log_verosim
   }  
   log_p
