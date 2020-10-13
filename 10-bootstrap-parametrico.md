@@ -6,8 +6,7 @@
 Cuando nuestras observaciones provienen de un modelo teórico parametrizado
 con algunos parámetros que queremos estimar, y utilizamos máxima verosimilitud 
 para hacer nuestra estimación, no podemos aplicar directamente el *bootstrap* no
-paramétrico que vimos en las secciones anteriores. La razón es que nuestro
-estimador, en general, no es un estimador de *plug-in* necesariamente.
+paramétrico que vimos en las secciones anteriores. 
 
 Sin embargo, suponiendo que el modelo paramétrico que estamos usando es apropiado,
 podemos remuestrear de tal modelo para estimar la varianza de nuestros estimadores.
@@ -39,7 +38,6 @@ crear_log_p <- function(x){
   log_p <- function(pars){
     media = pars[1]
     desv_est = pars[2]
-    n <- length(x)
     # ve la ecuación del ejercicio anterior
     z <- (x - media) / desv_est
     log_verosim <- -(log(desv_est) +  0.5 * mean(z^2))
@@ -81,7 +79,7 @@ est_mv
 ## sigma  1.838421
 ```
 
-Sustitumos estos parámetros en la distribución normal y simulamos una muestra del
+Sustituimos estos parámetros en la distribución normal y simulamos una muestra del
 mismo tamaño que la original:
 
 
@@ -90,8 +88,8 @@ simular_modelo <- function(n, media, sigma){
   rnorm(n, media, sigma)
 }
 muestra_bootstrap <- simular_modelo(length(muestra), 
-                             est_mv["media", "estimador"], 
-                             est_mv["sigma", "estimador"])
+                                    est_mv["media", "estimador"],
+                                    est_mv["sigma", "estimador"])
 head(muestra_bootstrap)
 ```
 
@@ -150,28 +148,27 @@ rep_boot <- function(rep, crear_log_p, est_mv, n){
   res_boot <- optim(c(0, 0.5), log_p_boot, 
     control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
   try(if(res_boot$convergence != 0) stop("No se alcanzó convergencia."))
-  est_mv_boot <- tibble(parametro = c("media", "sigma"), estimador_boot = res_boot$par) 
-  est_mv_boot$rep <- rep
-  est_mv_boot
+  tibble(parametro = c("media", "sigma"), estimador_boot = res_boot$par) 
 }
-reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra))) 
+reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, 
+                                        n = length(muestra)), rep = ".id") 
 reps_boot
 ```
 
 ```
-## # A tibble: 10,000 x 3
-##    parametro estimador_boot   rep
-##    <chr>              <dbl> <int>
-##  1 media              0.797     1
-##  2 sigma              1.90      1
-##  3 media              1.23      2
-##  4 sigma              1.96      2
-##  5 media              1.14      3
-##  6 sigma              1.89      3
-##  7 media              1.33      4
-##  8 sigma              1.73      4
-##  9 media              1.19      5
-## 10 sigma              1.73      5
+## # A tibble: 10,000 x 2
+##    parametro estimador_boot
+##    <chr>              <dbl>
+##  1 media              0.797
+##  2 sigma              1.90 
+##  3 media              1.23 
+##  4 sigma              1.96 
+##  5 media              1.14 
+##  6 sigma              1.89 
+##  7 media              1.33 
+##  8 sigma              1.73 
+##  9 media              1.19 
+## 10 sigma              1.73 
 ## # … with 9,990 more rows
 ```
 
@@ -233,8 +230,7 @@ ggplot(reps_boot, aes(sample = estimador_boot)) +
 
 <img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" />
 La distribuciones son aproximadamente normales. Nótese que esto no siempre
-sucede, especialmente con parámetros de dispersión como $\sigma$. (Examina
-las curvas de nivel del ejemplo de arriba).
+sucede, especialmente con parámetros de dispersión como $\sigma$. 
 
 
 **Ejemplo**. Supongamos que tenemos una muestra más chica. Repasa los pasos
@@ -266,28 +262,29 @@ est_mv
 ## media 0.3982829
 ## sigma 2.3988969
 ```
+
 Hacemos *bootstrap* paramétrico
 
 
 ```r
-reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra))) 
+reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra)), .id = "rep") 
 reps_boot
 ```
 
 ```
 ## # A tibble: 10,000 x 3
-##    parametro estimador_boot   rep
-##    <chr>              <dbl> <int>
-##  1 media              0.789     1
-##  2 sigma              0.945     1
-##  3 media             -0.103     2
-##  4 sigma              1.37      2
-##  5 media              1.96      3
-##  6 sigma              1.70      3
-##  7 media              1.55      4
-##  8 sigma              2.28      4
-##  9 media             -0.228     5
-## 10 sigma              1.73      5
+##    rep   parametro estimador_boot
+##    <chr> <chr>              <dbl>
+##  1 1     media              0.789
+##  2 1     sigma              0.945
+##  3 2     media             -0.103
+##  4 2     sigma              1.37 
+##  5 3     media              1.96 
+##  6 3     sigma              1.70 
+##  7 4     media              1.55 
+##  8 4     sigma              2.28 
+##  9 5     media             -0.228
+## 10 5     sigma              1.73 
 ## # … with 9,990 more rows
 ```
 
@@ -306,6 +303,7 @@ ggplot(reps_boot, aes(x = estimador_boot)) +
 ```
 
 <img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-14-2.png" width="480" style="display: block; margin: auto;" />
+
 Donde vemos que la distribución de $\sigma$ tienen sesgo a la derecha, pues en algunos
 casos obtenemos estimaciones muy cercanas a cero. Podemos
 usar intervalos de percentiles.
@@ -322,7 +320,7 @@ ggplot(reps_boot %>% pivot_wider(names_from = parametro, values_from = estimador
 
 <img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" />
 Esta es nuestra aproximación a la distribución de remuestreo de nuestro
-par de estadísticas $(\mu_{\mathsf{mv}}, \sigma_{\mathsf{mv}})$. En este caso, parecen ser
+par de estadísticas $(\mu_{\mathsf{MLE}}, \sigma_{\mathsf{MLE}})$. En este caso, parecen ser
 independientes (lo cual es posible demostrar).
 
 
@@ -464,7 +462,7 @@ propinas_mv
 ## 4 Comida  sdlog      0.302    0.0259
 ```
 
-Ojo: estos parámetros están en escala logarítmica. Puedes checar aqui
+Ojo: estos parámetros están en escala logarítmica. Puedes revisar [aquí](https://en.wikipedia.org/wiki/Log-normal_distribution)
 para ver cómo calcular media y desviación estándar de las distribuciones originales.
 Ahora verificamos el ajuste:
 
@@ -628,8 +626,8 @@ reps_boot %>% mutate(across(everything(), round, 2)) %>% head
 ## 5         0.36        -0.55     5           0
 ## 6         0.74        -0.61     6           0
 ```
-En primer lugar, notamos varíación muy alta en los estimadores. El optimizador
-encontró resultados que no tienen sentido:
+
+El optimizador encontró resultados que no tienen sentido:
 
 
 ```r

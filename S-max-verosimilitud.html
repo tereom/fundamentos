@@ -844,15 +844,14 @@ para nuestra muestra:</p>
 <span id="cb292-2"><a href="S-max-verosimilitud.html#cb292-2"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
 <span id="cb292-3"><a href="S-max-verosimilitud.html#cb292-3"></a>    media =<span class="st"> </span>pars[<span class="dv">1</span>]</span>
 <span id="cb292-4"><a href="S-max-verosimilitud.html#cb292-4"></a>    desv_est =<span class="st"> </span>pars[<span class="dv">2</span>]</span>
-<span id="cb292-5"><a href="S-max-verosimilitud.html#cb292-5"></a>    n &lt;-<span class="st"> </span><span class="kw">length</span>(x)</span>
-<span id="cb292-6"><a href="S-max-verosimilitud.html#cb292-6"></a>    <span class="co"># ve la ecuación del ejercicio anterior</span></span>
-<span id="cb292-7"><a href="S-max-verosimilitud.html#cb292-7"></a>    z &lt;-<span class="st"> </span>(x <span class="op">-</span><span class="st"> </span>media) <span class="op">/</span><span class="st"> </span>desv_est</span>
-<span id="cb292-8"><a href="S-max-verosimilitud.html#cb292-8"></a>    log_verosim &lt;-<span class="st"> </span><span class="op">-</span>(<span class="kw">log</span>(desv_est) <span class="op">+</span><span class="st">  </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(z<span class="op">^</span><span class="dv">2</span>))</span>
-<span id="cb292-9"><a href="S-max-verosimilitud.html#cb292-9"></a>    log_verosim</span>
-<span id="cb292-10"><a href="S-max-verosimilitud.html#cb292-10"></a>  }  </span>
-<span id="cb292-11"><a href="S-max-verosimilitud.html#cb292-11"></a>  log_p</span>
-<span id="cb292-12"><a href="S-max-verosimilitud.html#cb292-12"></a>}</span>
-<span id="cb292-13"><a href="S-max-verosimilitud.html#cb292-13"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span></code></pre></div>
+<span id="cb292-5"><a href="S-max-verosimilitud.html#cb292-5"></a>    <span class="co"># ve la ecuación del ejercicio anterior</span></span>
+<span id="cb292-6"><a href="S-max-verosimilitud.html#cb292-6"></a>    z &lt;-<span class="st"> </span>(x <span class="op">-</span><span class="st"> </span>media) <span class="op">/</span><span class="st"> </span>desv_est</span>
+<span id="cb292-7"><a href="S-max-verosimilitud.html#cb292-7"></a>    log_verosim &lt;-<span class="st"> </span><span class="op">-</span>(<span class="kw">log</span>(desv_est) <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(z <span class="op">^</span><span class="st"> </span><span class="dv">2</span>))</span>
+<span id="cb292-8"><a href="S-max-verosimilitud.html#cb292-8"></a>    log_verosim</span>
+<span id="cb292-9"><a href="S-max-verosimilitud.html#cb292-9"></a>  }  </span>
+<span id="cb292-10"><a href="S-max-verosimilitud.html#cb292-10"></a>  log_p</span>
+<span id="cb292-11"><a href="S-max-verosimilitud.html#cb292-11"></a>}</span>
+<span id="cb292-12"><a href="S-max-verosimilitud.html#cb292-12"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span></code></pre></div>
 <p>Ahora optimizamos (checa que el método converge):</p>
 <div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="S-max-verosimilitud.html#cb293-1"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
 <span id="cb293-2"><a href="S-max-verosimilitud.html#cb293-2"></a>res<span class="op">$</span>convergence</span></code></pre></div>
