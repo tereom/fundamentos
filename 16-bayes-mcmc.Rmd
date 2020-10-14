@@ -15,7 +15,7 @@ de la posterior usando las rutinas estándar de R, o utilizar cálculos teórico
 o funciones estándar de R para calcular resúmenes de interés, como medias o 
 medianas posteriores o intervalos de credibilidad.
 
-Sin embargo, en las aplicaciones generalmente es factible este tipo de análisis conjugado
+Sin embargo, en las aplicaciones rara vez es factible este tipo de análisis conjugado
 tan simple, pues:
 
 1. Los modelos que estamos considerando son más complejos y la distribución posterior
@@ -23,7 +23,7 @@ conjunta de los parámetros no tiene una forma simple conocida.
 2. Queremos usar distribuciones iniciales que no son conjugadas para utilizar correctamente
 nuestra información inicial.
 
-Generalmente tenemos expresiones explícitas para la inicial $p(\theta)$ y la verosimilitud
+Recuérdes que tenemos expresiones explícitas para la inicial $p(\theta)$ y la verosimilitud
 $p(x|\theta)$, así que conocemos explícitamente la posterior módulo la constante de
 normalización
 
@@ -36,6 +36,24 @@ parámetros $\theta$. En teoría, tendríamos que calcular
 $$\hat{\theta} = \int \theta p(\theta|x)\, d\theta$$
 Entonces es necesario calcular también $p(x)$, que resulta de la integral
 $$p(x) = \int p(x|\theta)p(\theta)\, d\theta$$
+
+Si no tenemos expresiones analíticas simples, tendremos que aproximar numéricamente
+estas integrales de alguna forma. 
+
+1. Si la posterior tiene una forma conocida, podemos calcular cantidades de interés usando
+fórmulas o rutinas de simulación de distribuciones conocidas que producen muestras independientes.
+
+Cuando la posterior no tiene una forma conocida, sin embargo:
+
+2. Podemos intentar usar integración numérica usual. Como veremos, este enfoque no es muy escalable.
+3. Podemos usar simulaciones bajo cadenas de Markov (**Markov Chain Monte Carlo**, MCMC),
+que es un enfoque más escalable.
+
+Mucho del uso generalizado actual de la estadística bayesiana se debe a que gracias al
+poder de cómputo disponible y los métodos MCMC, no estamos restringidos al uso de 1 y 2,
+que tienen desventajas grandes. Primero mostraremos cómo el método de integración
+por subdivisión no es escalable.
+
 
 ## Integrales mediante subdivisiones {-}
 
@@ -56,7 +74,7 @@ por ejemplo $M=100$ para tener precisión razonable.
 
 ### Ejemplo: estimación de una proporción {-}
 
-Teníamos que $p(x|\theta) = \theta^k(1-\theta)^{n-k}$ cuando observamos $k$ éxitos
+Teníamos que $p(S_n = k|\theta) \propto \theta^k(1-\theta)^{n-k}$ cuando observamos $k$ éxitos
 en $n$ pruebas independientes. Supongamos que nuestra inicial es $p(\theta) = 2\theta$
 (checa que es una densidad), es decir, creemos que es más probable a priori 
 observar proporciones altas. Podemos integrar numéricamente
@@ -177,7 +195,7 @@ y ponemos
 $$p(\sigma_{est}, \sigma_{peso}) = p(\sigma_{est})p(\sigma_{peso})$$
 
 Finalmente, construimos un modelo para las observaciones. Esto requiere
-ntroducir un parámetro de correlación entre las medidas de estatura y peso, pues
+introducir un parámetro de correlación entre las medidas de estatura y peso, pues
 no son independientes dentro de poblaciones. Aquí no veremos detalles, pero **puedes
 entender esto en el curso de regresión**. Ponemos:
 
@@ -186,7 +204,7 @@ $$p(x_{est}|\theta) = N(\mu_{est}, \sigma_{est})$$
 y
 
 $$p(x_{peso}|\theta, x_{est}) = N \left (\mu_{peso} + \rho\frac{\sigma_{peso}}{\sigma_{est}}  (x_{est} - \mu_{est}), \sigma_{peso}\sqrt{1-\rho^2} \right )$$
-Otra manera de decir esto es que las observaciones (x_{est}, x_{peso}) son normales
+Otra manera de decir esto es que las observaciones $(x_{est}, x_{peso})$ son normales
 multivariadas con medias $(\mu_{est}, \mu_{peso})$, desviaciones estándar $\sigma_{est}$,
 $\sigma_{peso}$ y correlación $\rho$. Ponemos una inicial para $\rho$, por ejemplo:
 
