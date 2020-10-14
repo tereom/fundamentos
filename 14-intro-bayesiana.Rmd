@@ -577,6 +577,13 @@ como distribuciones iniciales:
   - $p(\mu,\sigma|x) = p(\mu|x)p(\sigma|x)$
 
 
+**Observaciones.** Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
+el objeto de interés es la **posterior conjunta** de los parámetros $p(\theta_1,\theta_2,\cdots, \theta_p|x)$.
+Estos dos ejemplos son simples pues por la selección de iniciales, los parámetros resultan ser
+condicionalmente independientes, con distribución conocida, de forma que podemos simular de cada uno
+por separado sin dificultad.
+
+
 ### Ejemplo {-}
 Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor con 
 una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de forma que $X_i\sim \mathsf{N}(\mu, \sigma^2)$.
