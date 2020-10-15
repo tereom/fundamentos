@@ -104,20 +104,22 @@ Finalmente, podríamos hacer predicciones usando la **posterior predictiva**.
 Si ${X}_{nv}$ es una nueva tirada adicional de la moneda que estamos usando, nos
 interesaría saber:
 $$P({X}_{nv}=\mathsf{sol}|X=2)$$
-Que podemos calcular observando que $P({X}_{nv}|X=2, \theta)$ es una variable 
-Bernoulli con probabilidad $\theta$, que puede valer 0.4 o 0.6. Como tenemos las probabilidades
-posteriores $P(\theta|X=2)$ podemos usar probabilidad total, todo condicionado a $X=2$:
+Que podemos calcular observando que $P({X}_{nv}|X=2, \theta)$ es una variable
+Bernoulli con probabilidad $\theta$, que puede valer 0.4 o 0.6. Como tenemos las
+probabilidades posteriores $P(\theta|X=2)$ podemos usar probabilidad total, todo
+condicionado a $X=2$:
 
 $$P(X_{nv}=\mathsf{sol}|\theta=0.4, X=2)P(\theta=0.4|X=2) +P(X_{nv}=\mathsf{sol}|\theta = 0.6, X=2)P(\theta =0.6|X=2)$$
-Es decir, promediamos ponderando con las probabilidades posteriores. Obtendríamos entonces
+Es decir, promediamos ponderando con las probabilidades posteriores.
+Obtendríamos entonces
 $$P(X_{nv} = \mathsf{sol}|X=2) =  0.4 ( 0.31) + 0.6 (0.69) = 0.538$$
 
 #### Observación 0 {-}
 
-Nótese que en contraste con máxima verosimilitud, en este ejemplo
-*cuantificamos con probabilidad los parámetros que no conocemos*. En máxima
-verosimilitud esta probabilidad no tiene mucho sentido, pues nunca consideramos
-el parámetro desconocido como una cantidad aleatoria.
+Nótese que en contraste con máxima verosimilitud, en este ejemplo *cuantificamos
+con probabilidad los parámetros que no conocemos*. En máxima verosimilitud esta
+probabilidad no tiene mucho sentido, pues nunca consideramos el parámetro
+desconocido como una cantidad aleatoria.
 
 #### Observación 1 {-}
 
@@ -140,9 +142,9 @@ o modelo de los datos.
 - La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
 distribución *final* o *posterior* .
 
-Para utilizar inferencia bayesiana, hay que hacer supuestos para definir 
-las primeras dos partes del modelo. La parte de iniciales o previas está ausente
-de enfoques como máxima verosimlitud usual.
+Para utilizar inferencia bayesiana, hay que hacer supuestos para definir las
+primeras dos partes del modelo. La parte de iniciales o previas está ausente de
+enfoques como máxima verosimlitud usual.
 
 #### Observación 3 {-}
 
@@ -300,11 +302,12 @@ Supongamos entonces que hicimos la prueba con $n = 30$ (número de prueba) y obs
 $$P(\theta | S_n = 19) \propto \theta^{19 + 2} (1-\theta)^{30 - 19 +2} = \theta^{21}(1-\theta)^{13}$$
  
 La cantidad de la derecha, una vez que normalizemos por el número $P(X=19)$, nos
-dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos obtenerla
-usando cálculo, pero recordamos que una distribución $\mathsf{\mathsf{Beta}}(a,b)$ tiene como fórmula
+dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos
+obtenerla usando cálculo, pero recordamos que una distribución
+$\mathsf{\mathsf{Beta}}(a,b)$ tiene como fórmula
 $$\frac{1}{B(a,b)} \theta^{a-1}(1-\theta)^{b-1}$$
-Concluimos entonces que la posterior tiene una distribución $\mathsf{Beta}(22, 14)$. Podemos
-simular de la posterior usando código estándar para ver cómo luce:
+Concluimos entonces que la posterior tiene una distribución $\mathsf{Beta}(22,
+14)$. Podemos simular de la posterior usando código estándar para ver cómo luce:
 
 ```{r}
 sim_inicial <- sim_inicial %>% mutate(dist = "inicial")
@@ -937,7 +940,7 @@ ves y cómo lo resolverías?
 ```
 
 
-### Ejemplo: modelo Poisson
+### Ejemplo: modelo Poisson {-}
 
 Supongamos que pensamos el modelo para las observaciones es
 Poisson con parámetro $\lambda$. Pondremos como inicial para $\lambda$ una exponencial
@@ -1054,7 +1057,7 @@ qt(c(0.025, 0.5, 0.975), 2 * alpha_post) * s + mu_post
 
 
 
-### Ejemplo: posterior predictiva de Pareto-Uniforme.
+### Ejemplo: posterior predictiva de Pareto-Uniforme. {-}
 
  La posterior predictiva del modelo Pareto-Uniforme no tiene un nombre estándar, pero
  podemos aproximarla usando simulación. Usando los mismos datos del ejercicio de la lotería, haríamos:
