@@ -290,7 +290,7 @@ $\theta$ sea muy cercana a 0 o muy cercana a 1.
 
 Ahora podemos construir nuestra posterior. Tenemos que
 
-$$P(\theta| X_1=x_1, \ldots, X_n=x_n) \propto P(X_1 = x_1,\ldots X_n=x_n | \theta)P(\theta) = \theta^{k+1}(1-\theta)^{n-k + 1}$$
+$$P(\theta| X_1=x_1, \ldots, X_n=x_n) \propto P(X_1 = x_1,\ldots X_n=x_n | \theta)P(\theta) = \theta^{k+2}(1-\theta)^{n-k + 2}$$
 donde la constante de normalización no depende de $\theta$. Como $\theta$ es un
 parámetro continuo, la expresión de la derecha nos debe dar una densidad posterior.
 
@@ -569,15 +569,16 @@ Más útil es el siguiente modelo:
 - (Normal-Gamma inverso) Sean $X_i\sim \mathsf{N}(\mu, \sigma)$. Queremos estimar $\mu$ y $\sigma$. Tomamos
 como distribuciones iniciales:
 
-  - $\mu\sim \mathsf{N}(\mu_0, \sigma_0)$ , y
   - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta )$
-  - $p(\mu, \sigma) = p(\mu)p(\sigma)$
+  - $\mu|\tau$ es normal con media $\mu_0$ y precisión $\tau n_0$ , y
+  - $p(\mu, \tau) = p(\mu|\tau)p(\tau)$
 
 - Entonces la posterior es:
-  - $\mu$ es normal con media $\mu' = \frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}$ y precisión $\tau' = \tau_0 +n$.
-  - $\tau = \frac{1}{\sigma^2}$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
-  $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar{x}}-\mu_{0})^2}{2}$
-  - $p(\mu,\sigma|x) = p(\mu|x)p(\sigma|x)$
+  - $\tau|x = \frac{1}{\sigma^2}$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
+  $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$
+  - $\mu|\tau,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y precisión $\tau' = \tau(n_0 +n)$.
+  
+  - $p(\mu,\tau|x) = p(\mu|x,\tau)p(\tau|x)$
 
 
 **Observaciones.** Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
@@ -592,7 +593,30 @@ Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor c
 una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de forma que $X_i\sim \mathsf{N}(\mu, \sigma^2)$.
 
 Una vez decidido el modelo, tenemos que poner distribución inicial para los parámetros
-$(\mu, \sigma^2)$. Comenzamos con $\mu$. Sabemos, por ejemplo, que 
+$(\mu, \sigma^2)$. 
+
+Comenzamos con $\sigma^2$. Como está el modelo,
+esta inicial debe estar dada para la precisión $\tau$, pero podemos simular para ver cómo
+se ve nuestra inicial para la desviación estándar. En la población general la desviación
+estándar es alrededor de 8 centímetros
+
+```{r}
+# la media es a/b y la varianza a/b^2
+# si ponemos la media en
+a <- 3
+b <- 120
+tau <- rgamma(1000, a, b)
+quantile(tau, c(0.05, 0.95))
+sigma <- 1 / sqrt(tau)
+mean(sigma)
+quantile(sigma, c(0.05, 0.95))
+```
+Que es dispersión considerable: con poca probabilidad la desviación estándar
+es menor a 4 centímetros, y también creemos que es poco creíble la desviación
+estándar sea de más de 12 centímetros.
+
+
+Comenzamos con $\mu$. Sabemos, por ejemplo, que 
 con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Esto es
 Podemos investigar: la media
 nacional en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82. 
@@ -603,45 +627,30 @@ cantantes tienden a ser un poco más altos o bajos que la población general, as
 podríamos agregar algo de dispersión. Podemos escoger por ejemplo:
 
 ```{r}
+tau_0 <- 0.02 # media de la inicial de tau
 mu_0 <- 175
-sigma_0 <- 3
+n_0 <- 5 # cuánta precisión en la inicial
+sigma_0 <- 1/sqrt(n_0*tau_0)
 qnorm(c(0.05, 0.95), mu_0, sigma_0) %>% round(2)
 ```
 
-Ahora tenemos que poner una inicial para la desviacion estándar. Como está el modelo,
-esta inicial debe estar dada para la precisión, pero podemos simular para ver cómo
-se ve nuestra inicial para la desviación estándar. En la población general la desviación
-estándar es alrededor de 8 centímetros
-
-```{r}
-# la media es a/b y la varianza a/b^2
-# si ponemos la media en
-a <- 2
-b <- 60
-tau <- rgamma(1000, a, b)
-sigma <- 1 / sqrt(tau)
-mean(sigma)
-quantile(sigma, c(0.05, 0.95))
-```
-Que es dispersión considerable: con poca probabilidad la desviación estándar
-es menor a 3 centímetros, y también creemos que es poco creíble la desviación
-estándar sea de más de 13 centímetros.
+Ahora tenemos que poner una inicial para la desviacion estándar. 
 
 Podemos checar nuestros supuestos simulando posibles muestras usando
 sólo nuestra información previa:
 
 ```{r, fig.width = 7, fig.height = 6}
-simular_muestra <- function(n, mu_0, sigma_0, a, b){
+simular_muestra <- function(n, mu_0, n_0, a, b){
   # simular media
-  mu <- rnorm(1, mu_0, sigma_0)
-  # simular sigma
   tau <- rgamma(1, a, b)
+  mu <- rnorm(1, mu_0, 1/sqrt(n_0 * tau))
+  # simular sigma
   sigma <- 1/sqrt(tau)
   rnorm(n, mu, sigma)
 }
 set.seed(3461)
 sims_tbl <- tibble(rep = 1:20) %>% 
-  mutate(estatura = map(rep, ~ simular_muestra(500, mu_0, sigma_0, a, b))) %>% 
+  mutate(estatura = map(rep, ~ simular_muestra(500, mu_0, n_0, a, b))) %>% 
   unnest(cols = c(estatura))
 ggplot(sims_tbl, aes(x = estatura)) + geom_histogram() +
   facet_wrap(~ rep) +
@@ -670,19 +679,19 @@ cantantes
 Los cálculos son un poco tediosos, pero podemos construir una función apropiada:
 
 ```{r}
-calcular_pars_posterior <- function(x, mu_0, sigma_0, a_0, b_0){
-  tau_0 <- 1/sigma_0^2
+calcular_pars_posterior <- function(x, mu_0, n_0, a_0, b_0){
   n <- length(x)
   media <- mean(x)
   # precisión mu
-  tau <- tau_0 + n
+  mu <- (n_0*mu_0 + n*media) / (n + n_0)
+  n_1 <- n + n_0
   sigma <- sqrt(1 / tau)
   # media mu
-  mu <- (tau_0*mu_0 + n*media) / tau
+  
   # posterior sigma
   a <- a_0 + 0.5 * n
-  b <- b_0 + 0.5 * sum( (x - media)^2) + 0.5*(n*tau_0 / tau)*(media - mu_0)^2
-  c(mu, sigma, a, b)
+  b <- b_0 + 0.5 * sum( (x - media)^2) + 0.5 * (n*n_0) / (n + n_0) * (media - mu_0)^2
+  c(mu, n_1, a, b)
 }
 pars_posterior <- calcular_pars_posterior(cantantes$estatura_cm, mu_0, sigma_0, a, b)
 pars_posterior
@@ -693,23 +702,23 @@ pars_posterior
 ```{r}
 simular_normal_gamma <- function(n, pars){
   mu_0 <- pars[1]
-  sigma_0 <- pars[2]
+  n_0 <- pars[2]
   a <- pars[3]
   b <- pars[4]
   # simular media
-  mu <- rnorm(n, mu_0, sigma_0)
-  # simular sigma
   tau <- rgamma(n, a, b)
+  mu <- rnorm(n, mu_0, 1/sqrt(n_0 * tau))
+  # simular sigma
   sigma <- 1/sqrt(tau)
   tibble(mu = mu, sigma = sigma)
 }
-sims_inicial <- simular_normal_gamma(2000, c(mu_0, sigma_0, a, b)) %>% 
+sims_inicial <- simular_normal_gamma(5000, c(mu_0, n_0, a, b)) %>% 
   mutate(dist = "inicial")
-sims_posterior <- simular_normal_gamma(2000, pars_posterior) %>% 
+sims_posterior <- simular_normal_gamma(5000, pars_posterior) %>% 
   mutate(dist = "posterior")
 sims <- bind_rows(sims_inicial, sims_posterior)
 ggplot(sims, aes(x = mu, y = sigma, colour = dist)) +
-  geom_point() + coord_equal()
+  geom_point() 
 ```
 
 Y vemos que nuestra posterior es consistente con la información inicial
@@ -724,7 +733,7 @@ medias_post <- sims %>% filter(dist == "posterior") %>%
 ggplot(sims %>% filter(dist == "posterior"), 
     aes(x = mu, y = sigma)) + 
   geom_point(colour = "#00BFC4") +
-  scale_x_continuous(breaks = c(175, 176, 177), limits = c(175, 177)) +
+  scale_x_continuous(breaks = c(175, 176, 177)) +
   geom_point(data = medias_post, size = 5, colour = "black") +
   coord_equal()
 ```
@@ -732,7 +741,7 @@ Podemos construir intervalos creíbles del 90% para estos dos parámetros, por e
 haciendo intervalos de percentiles:
 
 ```{r}
-f <- c(0.05, 0.95)
+f <- c(0.05, 0.5, 0.95)
 sims %>%  
   pivot_longer(cols = mu:sigma, names_to = "parametro") %>% 
   group_by(dist, parametro) %>% 
@@ -853,13 +862,13 @@ Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra
 ```{r}
 simular_obs_normal_gamma <- function(n, pars){
   mu_0 <- pars[1]
-  sigma_0 <- pars[2]
+  no_0 <- pars[2]
   a <- pars[3]
   b <- pars[4]
-  # simular media
-  mu <- rnorm(1, mu_0, sigma_0)
   # simular sigma
   tau <- rgamma(1, a, b)
+  # simular media
+  mu <- rnorm(1, mu_0, n_0 * tau)
   sigma <- 1/sqrt(tau)
   # Simular observaciones iid
   tibble(estatura_cm = rnorm(n, mu, sigma))
