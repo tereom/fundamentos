@@ -424,9 +424,9 @@ muestra de números:
 loteria_tbl <- read_csv("data/nums_loteria_avion.csv", col_names = c("id", "numero")) %>% 
   mutate(numero = as.integer(numero))
 set.seed(334)
-muestra <- sample_n(loteria_tbl, 25) %>% 
+muestra_loteria <- sample_n(loteria_tbl, 25) %>% 
   mutate(numero = numero/1000)
-muestra %>% as.data.frame %>% head
+muestra_loteria %>% as.data.frame %>% head
 ```
 
 Podemos simular de una Pareto como sigue:
@@ -451,14 +451,17 @@ Y con los datos de la muestra, simulamos de la posterior:
 
 ```{r}
 sims_pareto_posterior <- tibble(
-  theta = rpareto(20000, max(c(300, muestra$numero)), nrow(muestra) + 1.1),
+  theta = rpareto(20000, 
+                  max(c(300, muestra_loteria$numero)), 
+                  nrow(muestra_loteria) + 1.1),
   dist = "posterior")
 sims_theta <- bind_rows(sims_pareto_inicial, sims_pareto_posterior)
 ggplot(sims_theta) + 
   geom_histogram(aes(x = theta, fill = dist), 
-                 bins = 70, alpha = 0.5, position = "identity", boundary = max(muestra$numero))  +
+                 bins = 70, alpha = 0.5, position = "identity", 
+                 boundary = max(muestra_loteria$numero))  +
   xlim(0, 15000) + scale_y_sqrt() +
-  geom_rug(data = muestra, aes(x = numero))
+  geom_rug(data = muestra_loteria, aes(x = numero))
 ```
 Nótese que cortamos algunos valores de la inicial en la cola derecha: un defecto
 de esta distribución inicial, con una cola tan larga a la derecha, es que 
@@ -477,7 +480,7 @@ sims_theta %>% group_by(dist) %>%
 Estimamos entre 5.8 millones y 6.7 millones de boletos. El máximo en la muestra
 es de
 ```{r}
-max(muestra$numero)
+max(muestra_loteria$numero)
 ```
 
 Escoger la distribución pareto como inicial es conveniente y nos permitió
@@ -571,9 +574,9 @@ como distribuciones iniciales:
   - $p(\mu, \sigma) = p(\mu)p(\sigma)$
 
 - Entonces la posterior es:
-
-  - $\mu \sim \mathsf{N}\left (\frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}, \tau_0 +n \right )$
-  - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma} \left (\alpha + n/2, \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar {x}}-\mu_{0})^2}{2}\right )$
+  - $\mu$ es normal con media $\mu' = \frac{\tau_0\mu_{0}+n{\bar{x}}}{\tau_0 +n}$ y precisión $\tau' = \tau_0 +n$.
+  - $\tau = \frac{1}{\sigma^2}$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
+  $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{n\tau_0}{\tau_0 + n}\frac{({\bar{x}}-\mu_{0})^2}{2}$
   - $p(\mu,\sigma|x) = p(\mu|x)p(\sigma|x)$
 
 
@@ -745,14 +748,8 @@ sigma_mv <- mean((cantantes$estatura_cm - media_mv)^2) %>% sqrt
 c(media_mv, sigma_mv)
 ```
 
-Ahora solo resta checar que el modelo es razonable. En este caso podemos
-hacerlo con una gráfica de cuantiles normales:
-
-```{r}
-ggplot(cantantes, aes(sample = estatura_cm)) +
-  geom_qq_line() +
-  geom_qq(colour = "red") 
-```
+Ahora solo resta checar que el modelo es razonable. Veremos más adelante cómo hacer esto,
+usando la distribución predictiva posterior.
 
 
 
@@ -821,7 +818,7 @@ Si ahora seleccionas la apuesta $A$, esto querría decir que consideras que la
 probabilidad de que ocurra una tormenta es mayor a $0.10$. Si consideramos ambas 
 comparaciones tenemos que tu probabilidad subjetiva se ubica entre $0.1$ y $0.5$.
 
-## La posterior predictiva {-}
+## La predictiva posterior {-}
 
 Una vez que ajustamos un modelo bayesiano, podemos simular nuevas observaciones
 a partir del modelo. Esto tiene dos utilidades:
@@ -838,13 +835,13 @@ muestra posible como sigue:
 La distribución **predictiva posterior** genera nuevas observaciones a partir de
 la información observada. La de notamos como $p(\tilde{x}|x)$. Para simular de ella:
 
-- Muestreamos un valor $\tilde{\theta} \sim p(\theta|x)$.
-- Simulamos del modelo de las observaciones $\tilde{x} \sim p(x|\tilde{\theta})$.
+- Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
+- Simulamos del modelo de las observaciones $\tilde{x} \sim p(\tilde{x}|\tilde{\theta})$.
   
 Si queremos una muestra iid de observaciones de la predictiva posterior,
 
-- Muestreamos un valor $\tilde{\theta} \sim p(\theta|x)$.
-- Simulamos del modelo de las observaciones $\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(x|\tilde{\theta})$.
+- Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
+- Simulamos del modelo de las observaciones $\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(\tilde{x}|\tilde{\theta})$.
 ```
 
 
@@ -907,3 +904,37 @@ ves y cómo lo resolverías?
 
 ```
 
+
+En algunos casos, la posterior predictiva tiene una forma conocida, y se puede
+simular directamente de ésta (ver notación arriba). Por ejemplo:
+
+1. (Beta-Bernoulli) La posterior predictiva es Bernoulli con parámetro $p = \frac{a'}{a'+b'}$,
+donde $(a',b')$ son los parámetros de la beta posterior.
+2. (Normal-Gamma inverso) Lo posterior predictiva es $t$ con $2\alpha'$ grados de libertad,
+centrada en $\mu'$ y escalada por $\frac{\beta'}{\alpha'}\frac{\tau' + 1}{\tau'}$
+
+**Ejemplo** (posterior predictiva de Pareto-Uniforme).
+Para el modelo Pareto-Uniforme no hay nombre para la forma de su predictiva posterior, 
+pero podemos calcularla analíticamente o aproximarla por
+simulación. Usando los mismos datos del ejercicio de la lotería, haríamos:
+
+```{r}
+rpareto <- function(n, theta_0, alpha){
+  # usar el método de inverso de distribución acumulada
+  u <- runif(n, 0, 1)
+  theta_0 / (1 - u)^(1/alpha)
+}
+# Simulamos de la posterior de los parámetros
+lim_inf_post <- max(c(300, muestra_loteria$numero))
+k_posterior <- nrow(muestra_loteria) + 1.1
+sims_pareto_posterior <- tibble(
+  theta = rpareto(100000, lim_inf_post, k_posterior))
+# Simulamos una observación para cada una de las anteriores:
+sims_post_pred <- sims_pareto_posterior %>% 
+  mutate(x_pred = map_dbl(theta, ~ runif(1, 0, .x)))
+# Graficamos
+ggplot(sims_post_pred, aes(x = x_pred)) +
+  geom_histogram(binwidth = 50) +
+  geom_vline(xintercept = lim_inf_post, colour = "red")
+```
+Que es una mezcla de una uniforme con una Pareto.
