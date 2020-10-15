@@ -583,9 +583,10 @@ como distribuciones iniciales:
 
 **Observaciones.** Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
 el objeto de interés es la **posterior conjunta** de los parámetros $p(\theta_1,\theta_2,\cdots, \theta_p|x)$.
-Estos dos ejemplos son simples pues por la selección de iniciales, los parámetros resultan ser
-condicionalmente independientes, con distribución conocida, de forma que podemos simular de cada uno
-por separado sin dificultad.
+Este útlimo ejemplo es relativamente simple pues por la selección de iniciales, pues
+para simular de la conjunta de $\mu$ y $\tau$ podemos simular primero $\tau$, y después
+usar este valor para simular de $\mu$: el par de valores resultantes son una simulación
+de la conjunta.
 
 
 ### Ejemplo {-}
