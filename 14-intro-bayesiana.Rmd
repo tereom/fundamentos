@@ -567,26 +567,45 @@ varianza conocida.
 Más útil es el siguiente modelo:
 
 - (Normal-Gamma inverso) Sean $X_i\sim \mathsf{N}(\mu, \sigma)$. Queremos estimar $\mu$ y $\sigma$. Tomamos
-como distribuciones iniciales:
+como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\beta$):
 
-  - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta )$
-  - $\mu|\tau$ es normal con media $\mu_0$ y precisión $\tau n_0$ , y
-  - $p(\mu, \tau) = p(\mu|\tau)p(\tau)$
+  - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta)$
+  - $\mu|\sigma$ es normal con media $\mu_0$ y varianza $\sigma / \sqrt{n_0}$ , y
+  - $p(\mu, \sigma) = p(\mu|\sigma)p(\sigma)$
 
 - Entonces la posterior es:
-  - $\tau|x = \frac{1}{\sigma^2}$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
+  - $\tau|x$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
   $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$
-  - $\mu|\tau,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y precisión $\tau' = \tau(n_0 +n)$.
+  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $\sigma' = \sigma/\sqrt{n_0 +n}$.
   
-  - $p(\mu,\tau|x) = p(\mu|x,\tau)p(\tau|x)$
+  - $p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)$
 
 
-**Observaciones.** Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
+**Observaciones** 
+
+1. Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
 el objeto de interés es la **posterior conjunta** de los parámetros $p(\theta_1,\theta_2,\cdots, \theta_p|x)$.
 Este útlimo ejemplo es relativamente simple pues por la selección de iniciales, pues
 para simular de la conjunta de $\mu$ y $\tau$ podemos simular primero $\tau$, y después
 usar este valor para simular de $\mu$: el par de valores resultantes son una simulación
 de la conjunta.
+
+2. Los parámetros $a,b$ para la inicial de $\tau$ pueden interpretarse como sigue: $\sqrt{b/a}$ es
+un valor "típico" a priori para la varianza poblacional, y $a$ indica qué tan seguros estamos de
+este valor típico.
+
+3. Nótese que para que funcionen las fórmulas de la manera más simple, 
+escogimos una dependencia a priori
+entre la media y la precisión: $\tau = \sigma^{-2}$ indica la escala de variabilidad que hay en la
+población, la incial de la media tiene varianza $\sigma^2/n_0$. Si la escala
+de variabilidad de la población es más grande, tenemos más incertidumbre acerca de la localización 
+de la media.
+
+4. Aunque esto tiene sentido en algunas aplicaciones, y por convenviencia usamos esta familia
+conjugada, muchas veces es preferible otro tipo de especificaciones para las iniciales: por ejemplo,
+la media normal y la desviación estándar uniforme, o media normal, con iniciales
+independientes. Sin embargo, estos casos
+no son tratables con análisis conjugado (veremos más adelante cómo tratarlos con MCMC).
 
 
 ### Ejemplo {-}
@@ -599,13 +618,22 @@ $(\mu, \sigma^2)$.
 Comenzamos con $\sigma^2$. Como está el modelo,
 esta inicial debe estar dada para la precisión $\tau$, pero podemos simular para ver cómo
 se ve nuestra inicial para la desviación estándar. En la población general la desviación
-estándar es alrededor de 8 centímetros
+estándar es alrededor de 7 centímetros
 
 ```{r}
-# la media es a/b y la varianza a/b^2
-# si ponemos la media en
+# Comenzamos seleccionando un valor que creemos típico para la desviación estándar
+sigma_0 <- 7
+# seleccionamos un valor para a, por ejemplo: si es más chico sigma tendrá más
+# disperisón
 a <- 3
-b <- 120
+# ponemos 8 = sqrt(b/a) -> b = a * 64
+b <- a * sigma_0^2
+c(a = a, b = b)
+```
+
+Ahora simulamos para calcular cuantiles
+
+```{r}
 tau <- rgamma(1000, a, b)
 quantile(tau, c(0.05, 0.95))
 sigma <- 1 / sqrt(tau)
@@ -614,7 +642,7 @@ quantile(sigma, c(0.05, 0.95))
 ```
 Que es dispersión considerable: con poca probabilidad la desviación estándar
 es menor a 4 centímetros, y también creemos que es poco creíble la desviación
-estándar sea de más de 12 centímetros.
+estándar sea de más de 13 centímetros.
 
 
 Comenzamos con $\mu$. Sabemos, por ejemplo, que 
@@ -625,33 +653,43 @@ Esto es *variabilidad en la población*: debe ser muy poco probable, por ejemplo
 media de tenores sea 1.82
 Quizá los
 cantantes tienden a ser un poco más altos o bajos que la población general, así que 
-podríamos agregar algo de dispersión. Podemos escoger por ejemplo:
+podríamos agregar algo de dispersión.
+
+Podemos establecer parámetros y simular de la marginal a partir
+de las fórmulas de arriba para entender
+cómo se ve la inicial de $\mu$:
+
 
 ```{r}
-tau_0 <- 0.02 # media de la inicial de tau
-mu_0 <- 175
-n_0 <- 5 # cuánta precisión en la inicial
-sigma_0 <- 1/sqrt(n_0*tau_0)
-qnorm(c(0.05, 0.95), mu_0, sigma_0) %>% round(2)
+mu_0 <- 175 # valor medio de inicial
+n_0 <- 5 # cuánta concentración en la inicial
+tau <- rgamma(1000, a,b)
+sigma <- 1/sqrt(tau)
+mu <- map_dbl(sigma, ~ rnorm(1, mu_0, .x / sqrt(n_0)))
+quantile(mu, c(0.05, 0.5, 0.95))
 ```
-
-Ahora tenemos que poner una inicial para la desviacion estándar. 
+Que consideramos un rango en el que con alta probabilidad debe estar
+la media poblacional de los cantantes.
 
 Podemos checar nuestros supuestos simulando posibles muestras usando
 sólo nuestra información previa:
 
 ```{r, fig.width = 7, fig.height = 6}
-simular_muestra <- function(n, mu_0, n_0, a, b){
+simular_normal_invgamma <- function(n, pars){
+  mu_0 <- pars[1]
+  n_0 <- pars[2]
+  a <- pars[3]
+  b <- pars[4]
   # simular media
   tau <- rgamma(1, a, b)
-  mu <- rnorm(1, mu_0, 1/sqrt(n_0 * tau))
+  sigma <- 1 / sqrt(tau)
+  mu <- rnorm(1, mu_0, sigma/sqrt(n_0))
   # simular sigma
-  sigma <- 1/sqrt(tau)
   rnorm(n, mu, sigma)
 }
 set.seed(3461)
 sims_tbl <- tibble(rep = 1:20) %>% 
-  mutate(estatura = map(rep, ~ simular_muestra(500, mu_0, n_0, a, b))) %>% 
+  mutate(estatura = map(rep, ~ simular_normal_invgamma(500, c(mu_0, n_0, a, b)))) %>% 
   unnest(cols = c(estatura))
 ggplot(sims_tbl, aes(x = estatura)) + geom_histogram() +
   facet_wrap(~ rep) +
@@ -671,7 +709,7 @@ Ahora podemos usar los datos para calcular nuestras posteriores.
 ```{r}
 set.seed(3413)
 cantantes <- lattice::singer %>% 
-  mutate(estatura_cm = 2.54 * height) %>% 
+  mutate(estatura_cm = round(2.54 * height)) %>% 
   filter(str_detect(voice.part, "Tenor")) %>% 
   sample_n(20)
 cantantes 
@@ -680,42 +718,46 @@ cantantes
 Los cálculos son un poco tediosos, pero podemos construir una función apropiada:
 
 ```{r}
-calcular_pars_posterior <- function(x, mu_0, n_0, a_0, b_0){
+calcular_pars_posterior <- function(x, pars_inicial){
+  # iniciales
+  mu_0 <- pars_inicial[1]
+  n_0 <- pars_inicial[2]
+  a_0 <- pars_inicial[3]
+  b_0 <- pars_inicial[4]
+  # muestra
   n <- length(x)
   media <- mean(x)
-  # precisión mu
-  mu <- (n_0*mu_0 + n*media) / (n + n_0)
+  S2 <- sum((x - media)^2)
+  # sigma post
+  a_1 <- a_0 + 0.5 * n
+  b_1 <- b_0 + 0.5 * S2 + 0.5 * (n * n_0) / (n + n_0) * (media - mu_0)^2
+  # posterior mu
+  mu_1 <- (n_0 * mu_0 + n * media) / (n + n_0)
   n_1 <- n + n_0
-  sigma <- sqrt(1 / tau)
-  # media mu
-  
-  # posterior sigma
-  a <- a_0 + 0.5 * n
-  b <- b_0 + 0.5 * sum( (x - media)^2) + 0.5 * (n*n_0) / (n + n_0) * (media - mu_0)^2
-  c(mu, n_1, a, b)
+  c(mu_1, n_1, a_1, b_1)
 }
-pars_posterior <- calcular_pars_posterior(cantantes$estatura_cm, mu_0, sigma_0, a, b)
+pars_posterior <- calcular_pars_posterior(cantantes$estatura_cm, c(mu_0, n_0, a, b))
 pars_posterior
 ```
 
 ¿Cómo se ve nuestra posterior comparada con la inicial? Podemos hacer simulaciones:
 
 ```{r}
-simular_normal_gamma <- function(n, pars){
+sim_params <- function(m, pars){
   mu_0 <- pars[1]
   n_0 <- pars[2]
   a <- pars[3]
   b <- pars[4]
-  # simular media
-  tau <- rgamma(n, a, b)
-  mu <- rnorm(n, mu_0, 1/sqrt(n_0 * tau))
-  # simular sigma
-  sigma <- 1/sqrt(tau)
-  tibble(mu = mu, sigma = sigma)
+  # simular sigmas
+  sims <- tibble(tau = rgamma(m, a, b)) %>% 
+    mutate(sigma = 1 / sqrt(tau))
+  # simular mu
+  sims <- sims %>% mutate(mu = rnorm(m, mu_0, sigma / sqrt(n_0)))
+  sims
 }
-sims_inicial <- simular_normal_gamma(5000, c(mu_0, n_0, a, b)) %>% 
+sims_inicial <- sim_params(5000, c(mu_0, n_0, a, b)) %>% 
   mutate(dist = "inicial")
-sims_posterior <- simular_normal_gamma(5000, pars_posterior) %>% 
+sims_posterior <- sim_params(5000, pars_posterior) %>% 
   mutate(dist = "posterior")
 sims <- bind_rows(sims_inicial, sims_posterior)
 ggplot(sims, aes(x = mu, y = sigma, colour = dist)) +
@@ -734,7 +776,6 @@ medias_post <- sims %>% filter(dist == "posterior") %>%
 ggplot(sims %>% filter(dist == "posterior"), 
     aes(x = mu, y = sigma)) + 
   geom_point(colour = "#00BFC4") +
-  scale_x_continuous(breaks = c(175, 176, 177)) +
   geom_point(data = medias_post, size = 5, colour = "black") +
   coord_equal()
 ```
@@ -828,7 +869,7 @@ Si ahora seleccionas la apuesta $A$, esto querría decir que consideras que la
 probabilidad de que ocurra una tormenta es mayor a $0.10$. Si consideramos ambas 
 comparaciones tenemos que tu probabilidad subjetiva se ubica entre $0.1$ y $0.5$.
 
-## La predictiva posterior {-}
+## Verificación predictiva posterior {-}
 
 Una vez que ajustamos un modelo bayesiano, podemos simular nuevas observaciones
 a partir del modelo. Esto tiene dos utilidades:
@@ -839,19 +880,22 @@ que de hecho observamos. Esto nos permite confirmar la calidad del ajuste del
 modelo, y se llama **verificación predictiva posterior**.
 
 Supongamos que tenemos la posterior $p(\theta | x)$. Podemos generar una nueva
-muestra posible como sigue:
+*replicación* de los datos como sigue:
 
 ```{block2, type='mathblock'}
 La distribución **predictiva posterior** genera nuevas observaciones a partir de
-la información observada. La de notamos como $p(\tilde{x}|x)$. Para simular de ella:
+la información observada. La denotamos como $p(\tilde{x}|x)$. Para simular de ella:
 
 - Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
 - Simulamos del modelo de las observaciones $\tilde{x} \sim p(\tilde{x}|\tilde{\theta})$.
+- Repetimos el proceso hasta obtener una muestra grande.
   
-Si queremos una muestra iid de observaciones de la predictiva posterior,
+Si queremos una replicación de las observaciones de la predictiva posterior,
 
 - Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
-- Simulamos del modelo de las observaciones $\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(\tilde{x}|\tilde{\theta})$.
+- Simulamos del modelo de las observaciones $\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(\tilde{x}|\tilde{\theta})$,
+done $n$ es el tamaño de muestra de la muestra original $x$.
+
 ```
 
 
@@ -860,33 +904,11 @@ Si queremos una muestra iid de observaciones de la predictiva posterior,
 En este ejemplo, usaremos la posterior predictiva para checar nuestro modelo.
 Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra predictiva posterior, y compararemos estas muestras con la observada.
 
-```{r}
-simular_obs_normal_gamma <- function(n, pars){
-  mu_0 <- pars[1]
-  no_0 <- pars[2]
-  a <- pars[3]
-  b <- pars[4]
-  # simular sigma
-  tau <- rgamma(1, a, b)
-  # simular media
-  mu <- rnorm(1, mu_0, n_0 * tau)
-  sigma <- 1/sqrt(tau)
-  # Simular observaciones iid
-  tibble(estatura_cm = rnorm(n, mu, sigma))
-}
-```
-
-Los parámetros posteriores son
-```{r}
-names(pars_posterior) <- c("m", "sigma", "a", "b")
-pars_posterior
-```
-
 Y ahora simulamos otra muestra
 
 ```{r}
-muestra_sim <- simular_obs_normal_gamma(20, pars_posterior) 
-muestra_sim
+muestra_sim <- simular_normal_invgamma(20, pars_posterior) 
+muestra_sim %>% round(0)
 ```
 
 Podemos simular varias muestras y hacer una prueba de lineup:
@@ -894,13 +916,13 @@ Podemos simular varias muestras y hacer una prueba de lineup:
 ```{r}
 library(nullabor)
 sims_obs <- tibble(.n = 1:19) %>% 
-  mutate(muestra = map(.n, ~ simular_obs_normal_gamma(20, pars_posterior))) %>% 
-  unnest(muestra)
+  mutate(estatura_cm = map(.n, ~ simular_normal_invgamma(20, pars_posterior))) %>% 
+  unnest(estatura_cm)
 set.seed(9921)
 pos <- sample(1:20, 1)
 lineup_tbl <- lineup(true = cantantes %>% select(estatura_cm), 
                      samples = sims_obs, pos = pos)
-ggplot(lineup_tbl, aes(x = estatura_cm)) + geom_histogram(binwidth = 2.55) +
+ggplot(lineup_tbl, aes(x = estatura_cm)) + geom_histogram(binwidth = 2.5) +
   facet_wrap(~.sample)
 ```
 Con este tipo de gráficas podemos checar desajustes potenciales de nuestro modelo.
@@ -915,18 +937,127 @@ ves y cómo lo resolverías?
 ```
 
 
-En algunos casos, la posterior predictiva tiene una forma conocida, y se puede
-simular directamente de ésta (ver notación arriba). Por ejemplo:
+### Ejemplo: modelo Poisson
 
-1. (Beta-Bernoulli) La posterior predictiva es Bernoulli con parámetro $p = \frac{a'}{a'+b'}$,
-donde $(a',b')$ son los parámetros de la beta posterior.
-2. (Normal-Gamma inverso) Lo posterior predictiva es $t$ con $2\alpha'$ grados de libertad,
-centrada en $\mu'$ y escalada por $\frac{\beta'}{\alpha'}\frac{\tau' + 1}{\tau'}$
+Supongamos que pensamos el modelo para las observaciones es
+Poisson con parámetro $\lambda$. Pondremos como inicial para $\lambda$ una exponencial
+con media 10.
 
-**Ejemplo** (posterior predictiva de Pareto-Uniforme).
-Para el modelo Pareto-Uniforme no hay nombre para la forma de su predictiva posterior, 
-pero podemos calcularla analíticamente o aproximarla por
-simulación. Usando los mismos datos del ejercicio de la lotería, haríamos:
+Nótese que la posterior está dada por
+
+$$p(\lambda|x_1,\ldots, x_n) \propto e^{-n\lambda}\lambda^{\sum_i x_i} e^{-0.1\lambda} = \lambda^{n\overline{x}}e^{-\lambda(n + 0.1)}$$
+que es una distribución gamma con parámetros $(n\overline{x} + 1, n+0.1)$
+
+Ahora supongamos que observamos la siguiente muestra, ajustamos nuestro modelo
+y hacemos replicaciones posteriores de los datos observados:
+
+```{r}
+x <- rnbinom(250, mu = 20, size = 3)
+crear_sim_rep <- function(x){
+  n <- length(x)
+  suma <- sum(x)
+  sim_rep <- function(rep){
+    lambda <- rgamma(1, sum(x) + 1, n + 0.1)
+    x_rep <- rpois(n, lambda)
+    tibble(rep = rep, x_rep = x_rep)  
+  }
+}
+sim_rep <- crear_sim_rep(x)
+lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>% 
+  bind_rows() %>% 
+  bind_rows(tibble(rep = 6, x_rep = x))
+ggplot(lineup_tbl, aes(x = x_rep)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~rep)
+```
+Y vemos claramente que nuestro modelo no explica apropiadamente la variación
+de los datos observados. Contrasta con:
+
+```{r}
+set.seed(223)
+x <- rpois(250, 15)
+crear_sim_rep <- function(x){
+  n <- length(x)
+  suma <- sum(x)
+  sim_rep <- function(rep){
+    lambda <- rgamma(1, sum(x) + 1, n + 0.1)
+    x_rep <- rpois(n, lambda)
+    tibble(rep = rep, x_rep = x_rep)  
+  }
+}
+sim_rep <- crear_sim_rep(x)
+lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>% 
+  bind_rows() %>% 
+  bind_rows(tibble(rep = 6, x_rep = x))
+ggplot(lineup_tbl, aes(x = x_rep)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~rep)
+```
+Y verificamos que en este caso el ajuste del modelo es apropiado.
+
+
+
+
+## Predicción {-}
+
+Cuando queremos hacer predicciones particulares acerca de datos
+que observemos en el futuro, también podemos usar la
+posterior predictiva. En este caso, tenemos que considerar
+
+1. La variabilidad que produce la incertidumbre en la estimación de los parámetros
+2. La variabilidad de las observaciones dados los parámetros.
+
+Es decir, tenemos que simular sobre todos las combinaciones factibles de los
+parámetros.
+
+### Ejemplo: cantantes {-}
+
+Si un nuevo tenor llega a un coro, ¿cómo hacemos una predicción de su estatura? Como
+siempre, quisiéramos obtener un intervalo que exprese nuestra incertidumbre acerca
+del valor que vamos a observar. Entonces haríamos:
+
+```{r}
+sims_posterior <- sim_params(50000, pars_posterior) %>% 
+  mutate(y_pred = rnorm(n(), mu, sigma)) 
+sims_posterior %>% head
+```
+```{r}
+f <- c(0.025, 0.5, 0.975)
+sims_posterior %>% summarise(f = f, y_pred = quantile(y_pred, f))
+```
+
+Y con esto obtenemos el intervalo (163, 189), al 95%, para una nueva observación. Nótese
+que este intervalo no puede construirse con una simulación particular de la posterior de los parámetros,
+pues sería demasiado corto.
+
+Es posible demostrar que en este caso, la posterior predictiva tiene una forma conocida:
+
+- La posterior predictiva para el modelo normal-gamma inverso es una distribución
+$t$ con $2\alpha'$ grados de libertad, centrada en $\mu'$, y con escala $s^2 = \frac{beta'}{alpha'}\frac{n + n_0 + 1}{n +n_0}$
+
+```{r}
+mu_post <- pars_posterior[1]
+n_post <- pars_posterior[2]
+alpha_post <- pars_posterior[3]
+beta_post <- pars_posterior[4]
+s <- sqrt(beta_post/alpha_post) * sqrt((n_post + 1)/n_post)
+qt(c(0.025, 0.5, 0.975), 2 * alpha_post) * s + mu_post
+```
+
+
+
+
+```{block2, type='ejercicio'}
+- Calcula la posterior predictiva del modelo Beta-Bernoulli y Beta-Binomial.
+- (Más difícil) Calcula la posterior predictiva del modelo Poisson-Gamma.
+```
+
+
+
+### Ejemplo: posterior predictiva de Pareto-Uniforme.
+
+ La posterior predictiva del modelo Pareto-Uniforme no tiene un nombre estándar, pero
+ podemos aproximarla usando simulación. Usando los mismos datos del ejercicio de la lotería, haríamos:
 
 ```{r}
 rpareto <- function(n, theta_0, alpha){
@@ -947,4 +1078,5 @@ ggplot(sims_post_pred, aes(x = x_pred)) +
   geom_histogram(binwidth = 50) +
   geom_vline(xintercept = lim_inf_post, colour = "red")
 ```
+
 Que es una mezcla de una uniforme con una Pareto.
