@@ -206,7 +206,7 @@ ggplot(reps_boot %>% pivot_wider(names_from = parametro, values_from = estimador
   
 ```
 Esta es nuestra aproximación a la distribución de remuestreo de nuestro
-par de estadísticas $(\mu_{\mathsf{mv}}, \sigma_{\mathsf{mv}})$. En este caso, parecen ser
+par de estadísticas $(\mu_{\mathsf{MLE}}, \sigma_{\mathsf{MLE}})$. En este caso, parecen ser
 independientes (lo cual es posible demostrar).
 
 
@@ -214,16 +214,16 @@ independientes (lo cual es posible demostrar).
 
 **Bootstrap paramétrico**. Supongamos que tenemos una muestra iid
 $X_1,\ldots, X_n \sim f(x;\theta)$ de un modelo paramétrico, y un estimador
-de máxima verosimilitud $\hat{\theta}_{\mathsf{mv}}$ para $\theta$. El error
-estándar estimado para $\hat{\theta}_{\mathsf{mv}}$ por medio del bootstrap
+de máxima verosimilitud $\hat{\theta}_{\mathsf{MLE}}$ para $\theta$. El error
+estándar estimado para $\hat{\theta}_{\mathsf{MLE}}$ por medio del bootstrap
 paramétrico se calcula como sigue:  
 
-1. Se calcula $\hat{\theta}_{\mathsf{mv}}$ para la muestra observada. 
-2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{mv}})$ (muestra bootstrap). 
-3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{mv}}.$
+1. Se calcula $\hat{\theta}_{\mathsf{MLE}}$ para la muestra observada. 
+2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{MLE}})$ (muestra bootstrap). 
+3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{MLE}}.$
 4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000). 
-5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}.$
-obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{mv}}.$ 
+5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{MLE}}.$
+obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{MLE}}.$ 
 
 
 ```
@@ -254,8 +254,8 @@ la de los qq-plots, donde podemos juzgar fácilmente el tamaño de las desviacio
 y si estas tienen implicaciones prácticas importantes.
 
 El proceso es como sigue: si $X_1,X_,\ldots, X_n$ es una muestra de $f(x;\theta)$, 
-calculamos el estimador de máxima verosimilitud $\theta_{\mathsf{mv}}$ con los datos
-observados. Enchufamos $\hat{f} = f(x;\theta_{\mathsf{mv}})$, y hacemos una gráfica
+calculamos el estimador de máxima verosimilitud $\hat \theta_{\mathsf{MLE}}$ con los datos
+observados. Enchufamos $\hat{f} = f(x;\hat \theta_{\mathsf{MLE}})$, y hacemos una gráfica
 de los cuantiles teóricos de $\hat{f}$ contra los cuantiles muestrales.
 
 **Ejemplo**. Consideramos la siguiente muestra:
@@ -298,10 +298,10 @@ g_exp + g_gamma
 ```
 
 El ajuste es considerablemente mejor para la distribución gamma
-(puedes hacer el protocolo *rorschach* para
+(puedes hacer el protocolo *Rorschach* para
 afinar tu diagnóstico de este tipo de gráficas).
 
-**Ejempĺo**. Examinamos un modelo teórico para las cuentas totales del 
+**Ejemplo**. Examinamos un modelo teórico para las cuentas totales del 
 conjunto de datos de propinas. En primer lugar:
 
 1. Separamos comida y cena, pues sabemos que las cuentas tienden a ser
@@ -435,7 +435,7 @@ names(probs_mv) <- c("p_azar", "p_corr")
 probs_mv
 ```
 
-En primer lugar, parece ser que nuestras estimaciones son menos precias. Vamos 
+En primer lugar, parece ser que nuestras estimaciones son menos precisas. Vamos 
 a hacer *bootstrap* paramétrico:
 
 ```{r}
