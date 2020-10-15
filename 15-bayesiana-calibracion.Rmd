@@ -426,10 +426,9 @@ posterior?
 ```{r}
 # inicial para media, ver sección anterior para discusión (normal)
 mu_0 <- 175
-sigma_0 <- 3
+n_0 <- 5
 # inicial para sigma^2 (gamma inversa)
-a <- 2
-b <- 60
+a <- c(3, 140)
 ```
 
 Para este ejemplo chico, usaremos muestras de tamaño 5:
@@ -437,36 +436,63 @@ Para este ejemplo chico, usaremos muestras de tamaño 5:
 ```{r}
 set.seed(3413)
 # ver sección anterior para explicación de esta función
-calcular_pars_posterior <- function(x, mu_0, sigma_0, a_0, b_0){
-  tau_0 <- 1/sigma_0^2
+calcular_pars_posterior <- function(x, pars_inicial){
+  # iniciales
+  mu_0 <- pars_inicial[1]
+  n_0 <- pars_inicial[2]
+  a_0 <- pars_inicial[3]
+  b_0 <- pars_inicial[4]
+  # muestra
   n <- length(x)
   media <- mean(x)
-  # precisión mu
-  tau <- tau_0 + n
-  sigma <- sqrt(1 / tau)
-  # media mu
-  mu <- (tau_0*mu_0 + n*media) / tau
-  # posterior sigma
-  a <- a_0 + 0.5 * n
-  b <- b_0 + 0.5 * sum( (x - media)^2) + 0.5*(n*tau_0 / tau)*(media - mu_0)^2
-  c(mu, sigma, a, b)
+  S2 <- sum((x - media)^2)
+  # sigma post
+  a_1 <- a_0 + 0.5 * n
+  b_1 <- b_0 + 0.5 * S2 + 0.5 * (n * n_0) / (n + n_0) * (media - mu_0)^2
+  # posterior mu
+  mu_1 <- (n_0 * mu_0 + n * media) / (n + n_0)
+  n_1 <- n + n_0
+  c(mu_1, n_1, a_1, b_1)
 }
+```
+
+Y también de la sección anterior:
+
+```{r}
+sim_params <- function(m, pars){
+  mu_0 <- pars[1]
+  n_0 <- pars[2]
+  a <- pars[3]
+  b <- pars[4]
+  # simular sigmas
+  sims <- tibble(tau = rgamma(m, a, b)) %>% 
+    mutate(sigma = 1 / sqrt(tau))
+  # simular mu
+  sims <- sims %>% mutate(mu = rnorm(m, mu_0, sigma / sqrt(n_0)))
+  sims
+}
+```
+
+
+```{r}
 # simular muestras y calcular medias posteriores
-simular_muestra <- function(rep, mu_0, sigma_0, a_0, b_0){
+simular_muestra <- function(rep, mu_0, n_0, a_0, b_0){
   cantantes <- lattice::singer %>% 
     mutate(estatura_cm = 2.54 * height) %>% 
     filter(str_detect(voice.part, "Tenor")) %>% 
     sample_n(5, replace = FALSE)
   pars_posterior <- calcular_pars_posterior(cantantes$estatura_cm,
-                                            mu_0, sigma_0, a_0, b_0)
-  mu_post <- pars_posterior[1]
-  sigma_post <- sqrt(1 / rgamma(10000, pars_posterior[3], pars_posterior[4])) %>% mean
-  media_mv <- mean(cantantes$estatura_cm)
-  sigma_mv <- sqrt(mean((cantantes$estatura_cm - media_mv)^2))
-  tibble(rep = rep,
-         tipo = c("media_post", "media_post", "max_verosim", "max_verosim"),
-         parametro = c("mu", "sigma", "mu", "sigma"),
-         estimador = c(mu_post, sigma_post, media_mv, sigma_mv))
+                                            c(mu_0, n_0, a_0, b_0))
+  medias_post <- 
+    sim_params(1000, pars_posterior) %>% 
+    summarise(across(everything(), mean)) %>% 
+    select(mu, sigma)
+  media <- mean(cantantes$estatura_cm)
+  est_mv <- c("mu" = media,
+              "sigma" = sqrt(mean((cantantes$estatura_cm - media)^2)))
+  bind_rows(medias_post, est_mv) %>% 
+    mutate(rep = rep, tipo = c("media_post", "max_verosim")) %>% 
+    pivot_longer(mu:sigma, names_to = "parametro", values_to = "estimador")
 }
 ```
 
@@ -477,11 +503,10 @@ poblacion <- lattice::singer %>%
   filter(str_detect(voice.part, "Tenor")) %>% 
   summarise(mu = mean(estatura_cm), sigma = sd(estatura_cm)) %>% 
   pivot_longer(mu:sigma, names_to = "parametro", values_to = "valor_pob")
-simular_muestra(1, mu_0, sigma_0, a, b) %>% left_join (poblacion)
 ```
 
 ```{r}
-errores <- map(1:2000, ~ simular_muestra(.x, mu_0, sigma_0, a, b)) %>%
+errores <- map(1:2000, ~ simular_muestra(.x, mu_0, n_0, a, b)) %>%
   bind_rows() %>% left_join(poblacion) %>% 
   mutate(error = (estimador - valor_pob))
 ggplot(errores, aes(x = error, fill = tipo)) +
@@ -496,8 +521,7 @@ errores %>%
   arrange(parametro)
 ```
 
-Donde vemos que ganamos poco en la estimación de la media, pero 
-obtenemos una ganancia considerable en cuanto a la estimación de la desviación
+Obtenemos una ganancia considerable en cuanto a la estimación de la desviación
 estandar de esta población. Los estimadores de la media superior
 son superiores a los de máxima verosimilitud en términos de error cuadrático medio.
 
@@ -526,8 +550,15 @@ menor error.
 Ahora repetimos el ejercicio 
 
 ```{r}
+# inicial
+a <- 2
+b <- 100
+qbeta(c(0.01, 0.99), a, b)
+
+# datos
 datos <- read_csv("data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv") %>% 
     select(ing_cor)
+# estimaciones
 obtener_estimados <- function(datos){
   muestra_enigh <-  datos %>% 
     sample_n(120) %>% 
@@ -537,6 +568,7 @@ obtener_estimados <- function(datos){
 }
 estimadores_sim <- map(1:200, ~obtener_estimados(datos)) %>% 
   bind_rows() 
+# calculo de errores
 error_cm <- estimadores_sim %>% 
   summarise(error_mv = sqrt(mean((est_mv - pob)^2)),
          error_post = sqrt(mean((media_post - pob)^2)))
@@ -551,7 +583,6 @@ estimadores_sim_ag <- estimadores_sim %>%
   group_by(k, est_mv, media_post) %>% 
   summarise(n = n())
 ggplot(estimadores_sim_ag, aes(x = est_mv, media_post, size = n)) + geom_point() +
-  geom_abline() + coord_equal() +
-  geom_point(data = )
+  geom_abline()
 ```
 
