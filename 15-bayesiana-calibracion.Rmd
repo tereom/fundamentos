@@ -586,3 +586,272 @@ ggplot(estimadores_sim_ag, aes(x = est_mv, media_post, size = n)) + geom_point()
   geom_abline()
 ```
 
+## Teoría de decisión {-}
+
+En esta parte (que sigue a @Wasserman a grandes rasgos),
+discutimos brevemente teoría general que nos sirve para seleccionar
+estimadores puntuales, y que esperemos ponga en contexto la parte
+anterior que acabamos de discutir. Usaremos algunos conceptos que vimos
+en la parte de propiedades de estimadores de máxima verosimilitud.
+
+
+Definimos una **función de pérdida** $L(\theta, \hat{\theta))$, que 
+mide en costo la discrepancia entre nuestro estimador 
+
+$$\hat{\theta} = t(X_1,\ldots, X_n) = t(X)$$ 
+
+y el verdadero valor $\theta$
+poblacional. Es posible considerar distintas funciones de pérdida, pero
+como en secciones anteriores, usaremos la **pérdida cuadrática**, definida por:
+
+$$L(\theta, \hat{\theta}) = (\theta - \hat{\theta})^2$$
+
+Esta función toma distintos valores dependiendo de la muestra y del parámetro
+$\theta$, y necesitamos resumirla para dar una evaluación de qué tan bueno
+es el estimador $\hat{\theta}$.
+
+Ahora que hemos considerado tanto estadística bayesiana como frecuentista,
+podemos pensar en resumir esta función de distintas maneras. 
+
+Comenzamos pensando de manera frecuentista. En este caso, consideramos a $\theta$ como 
+un valor fijo, y nos preguntamos qué pasaría con la pérdida con distintas muestras
+potenciales que podríamos observar.
+
+Definimos como antes el **riesgo** (frecuentista) como:
+
+$$R(\theta, t) = E_X\left( (\theta - \hat{\theta})^2|\theta\right)$$
+
+donde promediamos a lo largo de las muestras posibles, con $\theta$ fijo. 
+Esta cantidad no nos dice
+necesariamente cómo escoger un buen estimador para $\theta$, pues dependiendo
+de dónde está $\theta$ puede tomar valores distintos.
+
+
+
+Ahora vamos a pensar de manera bayesiana: en este caso, los datos serán fijos una vez
+que los obervemos de manera que $\hat{\theta}$ está fijo, y el parámetro
+$\theta$ es una cantidad aleatoria con distribución inicial $p(\theta)$. Entonces consideraríamos el promedio sobre la posterior dado por:
+
+
+$$\rho(t, X) = E_{p(\theta|X)}\left ((\theta - \hat{\theta})^2 | X \right )$$
+que llamamos **riesgo posterior**. Esta cantidad se calcula con la posterior
+de los parámetros dados los datos, y nos dice, una vez que vimos los datos,
+cómo es el error de nuestro
+estimador. Nótese que esta cantidad no es útil para escoger un estimador bueno $t$
+antes de ver los datos, pero nos sirve para evaluar a un estimador dados los datos.
+
+En el primer caso, promediamos sobre posibles muestras, y
+en el segundo por valores posibles de $\theta$ para una muestra dada.
+
+### Ejemplo: riesgo frecuentista {-}
+
+Para observaciones bernoulli, el estimador de máxima verosimilitud es
+$\hat{p}_1 = k /n $, donde $n$ es el tamaño de muestra y $k$ el número de éxitos
+observados. Podemos usar también como estimador la media posterior de un modelo
+Beta-Bernoulli con inicial $a=2, b=2$, que nos daría $\hat{p}_2 = \frac{k + 2}{n + 4}$.
+
+Aunque podemos hacer los cálculos analíticos, aproximaremos el riesgo bajo
+el error cuadrático usando simulación
+
+```{r}
+perdida_cuad <- function(p, p_hat){
+ (p - p_hat)^2 
+}
+# dos estimadores
+t_1 <- function(n, x)  x / n 
+t_2 <- function(n, x)  (x + 2) / (n + 4)
+estimar_riesgo <- function(n = 20, theta, perdida, reps = 10000){
+  x <- rbinom(reps, n, theta)
+  # calcular estimaciones
+  theta_1 <- t_1(n, x)
+  theta_2 <- t_2(n, x)
+  # calcular pérdida
+  media_perdida <- tibble(
+    n = n, theta = theta,
+    estimador = c("t_1", "t_2"), 
+    riesgo = c(mean(perdida(theta, theta_1)), mean(perdida(theta, theta_2))))
+  media_perdida
+}
+estimar_riesgo(n = 20, theta = 0.1, perdida = perdida_cuad)
+```
+Como dijimos, esta cantidad depende de $\theta$ que no conocemos. Así que
+calculamos para cada valor de $\theta$:
+
+Las funciones de riesgo $R(\theta, t_1)$ y $R(\theta, t_2)$ (dependen de \theta)
+se ven aproximadamente como sigue:
+
+```{r}
+p_seq <- seq(0, 1, 0.001)
+riesgo_tbl <- map(p_seq, ~ estimar_riesgo(n = 20, theta = .x, perdida = perdida_cuad)) %>% 
+  bind_rows()
+ggplot(riesgo_tbl, aes(x = theta, y = riesgo, colour = estimador)) +
+  geom_line() 
+```
+
+Y vemos que el riesgo depende del verdadero valor del parametro:
+en los extremos, el estimador de máxima verosimilitud tiene menos riesgo,
+pero en el centro tiene más (esto es indepedentemente del tipo de intervalos
+que construyamos y su cobertura).
+
+La razón es que las estimaciones de tipo Agresti-Coull ($\theta_2$) 
+están contraídas hacia 0.5 (agregamos dos éxitos y dos fracasos). Esto produce
+sesgo en la estimación para valores extremos de $\theta$. Sin embargo,
+para valores centrales de $\theta$  tiene menos variabilidad
+(por regularización) que el estimador de máxima verosimilitud, y sufre poco
+de sesgo.
+
+### Ejemplo: riesgo posterior {-}
+
+Supongamos que la inicial es $p(\theta) ~ \mathsf{Beta}(5,3)$
+
+```{r}
+estimar_riesgo_post <- function(n = 20, x, perdida, reps = 20000){
+  # calcular estimaciones
+  theta_1 <- t_1(n, x)
+  theta_2 <- t_2(n, x)
+  # simular de posterior
+  theta_post <- rbeta(reps, x + 5, n - x + 3)
+  # calcular pérdida
+  media_perdida <- tibble(
+    n = n, x = x,
+    estimador = c("t_1", "t_2"), 
+    riesgo_post= c(mean(perdida(theta_post, theta_1)), mean(perdida(theta_post, theta_2))))
+  media_perdida
+}
+estimar_riesgo_post(n = 20, x = 8, perdida = perdida_cuad)
+```
+Como dijimos, esta cantidad depende de los datos $x$ que no hemos observado. Así que
+calculamos para cada valor de $x$:
+
+Las funciones de pérdida promedio 
+$\rho(x, t_1)$ y $\rho(x, t_2)$ (dependen de $x$)
+se ven aproximadamente como sigue:
+
+```{r}
+x_seq <- seq(0, 20, 1)
+riesgo_post_tbl <- 
+  map(x_seq, ~ estimar_riesgo_post(n = 20, x = .x, perdida = perdida_cuad)) %>% 
+  bind_rows()
+ggplot(riesgo_post_tbl, aes(x = x, y = riesgo_post, colour = estimador)) +
+  geom_line() + geom_point() 
+```
+
+Donde vemos que la pérdida del estimador bayesiano es mejor para valores extremos
+de número de éxitos observado $x$, pero tiene más riesgo posterior
+para valores chicos de $x$. En general es mejor el estimador $\theta_2$. El
+estimador de máxima verosimilitud tiene más riesgo en los extremos, lo que esperaríamos
+porque no tenemos la regularización que aporta la posterior. Igualmente,
+vemos más riesgo para valores chicos de $x$ que para valores grandes: esto
+es porque la inicial está concentrada en valores reslativamente grandes
+de $\theta$.
+
+
+
+## Riesgo de Bayes {-}
+
+Finalmente, podemos crear un resumen unificado considerando:
+
+- Si no conocemos el valor del parámetro $\theta$, podemos promediar
+el riesgo frecuentista con la inicial $p(\theta)$
+- Si no conocemos los datos observados, podemos promediar usando 
+datos generados por la marginal $p(x)$ de $x$ bajo el modelo de datos
+$p(x|\theta)$ y la inicial $p(\theta)$.
+
+Por la ley de la esperanza iterada, estos dos resultados son iguales. La cantidad
+resultante
+
+$$r(t) = \int R(\theta,t) p(\theta)\, d\theta = \int r(x, t)p(x|\theta)p(\theta)\, d\theta\, dx$$
+Se llama **riesgo de Bayes** para el estimador $t$.
+
+### Ejemplo {-}
+
+Podemos calcular
+
+```{r}
+marginal_tbl <- function(n = 20, m = 5000){
+  theta <- rbeta(m, 5, 3)
+  x <- rbinom(m, size = n, p = theta)
+  tibble(x = x) %>% group_by(x) %>% 
+    summarise(n_x = n())
+}
+riesgo_post_tbl %>% left_join(marginal_tbl()) %>%  
+  group_by(estimador) %>% 
+  summarise(riesgo_bayes = sum(riesgo_post * n_x) / sum(n_x))
+```
+
+o también
+
+```{r}
+theta_tbl <- tibble(theta = rbeta(50000, 5, 3) %>% round(3)) %>% 
+  group_by(theta) %>% 
+    summarise(n_x = n())
+  
+riesgo_tbl %>% left_join(theta_tbl) %>%
+  mutate(n_x = ifelse(is.na(n_x), 0, n_x)) %>% 
+  group_by(estimador) %>% 
+  summarise(riesgo_bayes = sum(riesgo * n_x) / sum(n_x))
+```
+
+
+
+
+Ahora consideremos cómo decidiríamos, desde el punto de vista Bayesiano, qué
+estimador usar: 
+
+1. (Estimador de Bayes) Si tenemos los datos $X$, escogeríamos una
+función $t_X$ que minimice el riesgo posterior $\rho(t, X)$, y nuestro
+estimador es $\hat{\theta} = t_X (X)$.
+2. (Regla de Bayes) Si no tenemos los datos, escogeríamos el estimador una función 
+$t$  que minimice el riesgo de Bayes $r(t)$, y estimaríamos usando $\hat{\theta} = t(X)$
+3. Pero como el riesgo de Bayes es el promedio del riesgo posterior, la
+solución de 1 nos da la solución de 2. Es decir, el estimador que escogemos
+condicional a los datos $X$ es el mismo que escogeríamos antes de escoger los
+datos, dada una distribución inicial $p(\theta)$
+
+
+Por ejemplo, es posible demostrar que bajo la pérdida cuadrática, 
+la regla de Bayes es utilizar la media posterior, bajo la pérdida absoluta,
+la mediana posterior, etc.
+
+Este estimador de Bayes tiene sentido desde el punto de vista frecuentista, 
+también, porque **minimiza
+el riesgo frecuentista promedio**, suponiendo la inicial $p(\theta)$. Por ejemplo, para
+la pérdida cuadrática podemos usar la descomposición de sesgo y varianza y obtenemos:
+
+$$r(t) = E[R(\theta,t)] = E[ \mathsf{Sesgo}_\theta^2(t)] +E[\mathsf{Var}_\theta(t)] $$
+
+Podemos ver entonces que el estimador de Bayes, en este caso la media posterior, es resultado de minimizar
+la suma de estas dos cantidades: por eso puede incurrir en sesgo, si ese costo
+se subsana con una reducción considerable de la varianza. Los estimadores
+insesgados que vimos en esta sección fueron subóptimos en muchos casos justamente
+porque son insesgados, e incurren en varianza grande.
+
+```{block2, type = 'ejercicio'}
+Regresa a los ejemplos anteriores donde evaluamos el desempeño de la media
+posterior en varios ejemplos. Muestra en las gráficas dónde ves el balance
+entre sesgo y varianza que cumplen cuando los comparamos con estimadores
+insesgados.
+```
+
+
+Desde el punto de vista frecuentista, la cuestión es más complicada y 
+hay varias maneras de proceder. En primer lugar, comenzaríamos con el 
+riesgo frecuentista $R(\theta, t)$. Una idea es,por ejemplo, calcular el 
+riesgo máximo:
+$$R_{\max} (t) = \max_\theta R(\theta, t)$$
+E nuestro ejemplo de arriba el máximo se alcanza en 0.5, y tomaríamos
+eso evaluación de los estimadores $\theta_1$ o $\theta_2$.  Buscaríamos entonces
+estimadores que minimicen este máximo,es decir, **estimadores minimax**. Pero también
+es posible enfocar este problema considerando sólo estimadores *insesgados*, lo que
+nos lleva por ejemplo a buscar estimadores con mínima varianza. También podemos
+enfocarnos en buscar estimador *admisibles*, que son aquellos cuyo riesgo no está
+dominado para toda $\theta$ por otro estimador, y así sucesivamente.
+
+Finalmente, es posible demostrar (ver @Wasserman) que típicamente, para muestras
+grandes, el estimador de máxima verosimilitud  es cercano
+a ser minimax y además es una regla de Bayes. Estas son buenas propiedades, pero
+debemos contar con que el régimen asintótico se cumpla aproximadamente.
+
+
+
+
