@@ -23,7 +23,7 @@ conjunta de los parámetros no tiene una forma simple conocida.
 2. Queremos usar distribuciones iniciales que no son conjugadas para utilizar correctamente
 nuestra información inicial.
 
-Recuérdes que tenemos expresiones explícitas para la inicial $p(\theta)$ y la verosimilitud
+Recordamos que tenemos expresiones explícitas para la inicial $p(\theta)$ y la verosimilitud
 $p(x|\theta)$, así que conocemos explícitamente la posterior módulo la constante de
 normalización
 
@@ -80,7 +80,7 @@ en $n$ pruebas independientes. Supongamos que nuestra inicial es $p(\theta) = 2\
 observar proporciones altas. Podemos integrar numéricamente
 
 ```{r}
-crear_log_p <- function(n, k){
+crear_log_post <- function(n, k){
   function(theta){
     verosim <- k * log(theta) + (n - k) * log(1 - theta)
     inicial <- log(theta)
@@ -89,8 +89,8 @@ crear_log_p <- function(n, k){
   }
 }
 # observamos 3 éxitos en 4 pruebas:
-log_p <- crear_log_p(4, 3)
-prob_post <- function(x) { exp(log_p(x))}
+log_post <- crear_log_post(4, 3)
+prob_post <- function(x) { exp(log_post(x))}
 # integramos numéricamente
 p_x <- integrate(prob_post, lower = 0, upper = 1, subdivisions = 100L)
 p_x
@@ -133,155 +133,12 @@ restringido. Regresión bayesiana con unas 10 covariables por ejemplo, no podrí
 De modo que tenemos que replantearnos cómo atacar el problema de calcular o aproximar
 estas integrales.
 
-## Modelos con varios parámetros
-
-Hasta ahora hemos visto principalmente modelos con un sólo parámetro (excluyendo
-el modelo normal-gamma inversa). En general, hay más de un parámetro de interés,
-y varios parámetros que no son directamente de interés pero es necesario incluir 
-en nuestros modelos.
-
-Supongamos entonces que tenemos parámetros $\theta_1,\theta_2,\theta_3$ en nuestro
-modelo. El enfoque estándar es establecer una inicial para cada parámetro $p(\theta_i)$,
-y después definir la conjunta inicial como
-
-$$p(\theta_1,\theta_2,\theta_3) = p(\theta_1)p(\theta_2)p(\theta_3)$$,
-
-es decir, a priori los parámetro son independientes. En casos particulares, puede ser
-que esto no incluya toda la información inicial que tenemos.
-
-### Ejemplo: estaturas y pesos {-}
-
-Supongamos que queremos modelar la media de peso y estatura en una población de hombres
-adultos en algún estado de México. 
-Es posible comenzar poniendo $p(\mu_{est})$ y $p(\mu_{peso})$ y considerando
-estos parámetros independientes a priori. Sin embargo, sabemos que es probable que
-poblaciones con más estatura tengan pesos más grandes. Podríamos entonces comenzar
-poniendo, por ejemplo
-
-$$p(\mu_{est}) \sim N(1.70, 0.03)$$
-
-y definiendo después
-
-$$p(\mu_{peso}|\mu_{est}) \sim \mu_{est}^2N(23, 1.5)$$
-Usando el hecho de que el IMC es peso entre estatura al cuadrado, y valores promedio
-en México probablemente tienden a ser altos (normal es entre 18 y 25). La conjunta inicial
-es entonces
-
-$$p(\mu_{est}, \mu_{peso}) = p(\mu_{est})p(\mu_{peso}|\mu_{est})$$
-```{r}
-simular_inicial <- function(n = 10000){
-  media_est <- rnorm(n, 1.70, 0.03)
-  media_peso <- (media_est^2) * rnorm(n, 23, 1.5)
-  tibble(media_est = media_est, media_peso = media_peso)
-}
-ggplot(simular_inicial(), aes(x = media_est, y = media_peso)) +
-  geom_point()
-```
-
-Y esta inicial es informativa, y tiene a excluir, por ejemplo, medias de 1.65 para
-estatura junto con un peso medio de 80kg. Recuérdese que este es el modelo inicial
-*para las medias poblacionales*, no para los individuos.
-
-**Ojo**: abajo completamos el modelo para este tipo de datos, pero los argumentos
-son más avanzados. 
-
-Ahora podemos poner, por ejemplo
-$$p(\sigma_{est}) \sim U(0.1, 0.5)$$
-y
-
-$$p(\sigma_{peso}) \sim ~ U(5, 20)$$
-y ponemos 
-
-$$p(\sigma_{est}, \sigma_{peso}) = p(\sigma_{est})p(\sigma_{peso})$$
-
-Finalmente, construimos un modelo para las observaciones. Esto requiere
-introducir un parámetro de correlación entre las medidas de estatura y peso, pues
-no son independientes dentro de poblaciones. Aquí no veremos detalles, pero **puedes
-entender esto en el curso de regresión**. Ponemos:
-
-$$p(x_{est}|\theta) = N(\mu_{est}, \sigma_{est})$$
-
-y
-
-$$p(x_{peso}|\theta, x_{est}) = N \left (\mu_{peso} + \rho\frac{\sigma_{peso}}{\sigma_{est}}  (x_{est} - \mu_{est}), \sigma_{peso}\sqrt{1-\rho^2} \right )$$
-Otra manera de decir esto es que las observaciones $(x_{est}, x_{peso})$ son normales
-multivariadas con medias $(\mu_{est}, \mu_{peso})$, desviaciones estándar $\sigma_{est}$,
-$\sigma_{peso}$ y correlación $\rho$. Ponemos una inicial para $\rho$, por ejemplo:
-
-$\rho \sim U[0.2, 0.8]$
-
-
-Simulemos algunas poblaciones:
-
-```{r}
-simular_personas <- function(n){
-  mu_est <- rnorm(1, 1.70, 0.03)
-  mu_peso <- mu_est^2 * rnorm(1, 23, 1.5)
-  sigma_est <- runif(1, 0.02, 0.2)
-  sigma_peso <- runif(1, 10, 30)
-  rho <- runif(1, 0.2, 0.9)
-  estaturas <- rnorm(n, mu_est, sigma_est)
-  pred_peso <- mu_peso + rho * (sigma_peso / sigma_est) * (estaturas - mu_est)
-  pesos <- rnorm(n, pred_peso, sigma_peso * sqrt(1 - rho^2))
-  tibble(estatura = estaturas, peso = pesos)
-} 
-set.seed(221)
-datos_sim <- tibble(rep = as.character(1:11)) %>% 
-  mutate(personas = map(rep, ~ simular_personas(140))) %>%
-  unnest(personas)
-           
-```
-
-Y comparamos con los datos de un estado:
-
-```{r, fig.width = 8, fig.height = 6}
-# existen personas chiquitas, 
-# y también hay datos
-# Esto complica el análisis y requiere refinación del modelo,
-# pero también podemos filtrarlos. 
-# Intentamos Quintana Roo:
-ensanut_qroo <- read_csv("data/CN_ANTROPOMETRIA.csv") %>% 
-  filter(ENT == "07") %>% # Muestra de Chiapas
-  filter(SEXO==1, EDAD_MESES >= 12 * 20, !is.na(TALLA4_1), !is.na(PESO1_1)) %>% 
-  mutate(estatura = as.numeric(TALLA4_1) / 100, peso = as.numeric(PESO1_1)) %>% 
-  filter(estatura < 2.15, peso < 215) %>% # quitar el código de faltantes 222.222
-  select(estatura, peso) 
-
-datos <- datos_sim %>% bind_rows(ensanut_qroo %>% mutate(rep = "Chiapas"))
-ggplot(datos, aes(x = estatura, y = peso, alpha = 0.1)) + geom_point() +
-  facet_wrap(~rep)
-```
-
-- Podremos ajustar este modelo con los métodos que mostramos más abajo. Nótese también
-que la distribución de IMC probablemente debería tener una cola más larga hacia arriba.
-
 ## Métodos Monte Carlo {-}
 
-El método Monte Varlo para calcular una integral es como sigue: si queremos
-integrar una función $g(\theta)$ definida sobre $a < \theta < b$, podemos
-tomar un número grande de valores al azar $\theta^{(1)},\theta^{(2)}, \ldots \theta^{(N)}$
-en $[a,b]$, y entonces
+En varias ocasiones anteriormente hemos usado el método Monte Carlo para
+aproximar integrales: por ejemplo, para calcular medias posteriores.
 
-$$\int_{a}^{b} g(\theta) \, d\theta\approx \frac{g(\theta^{(1)})+g(\theta^{(2)})+ \cdots +g(\theta^{(N)})}{N}$$ 
-
-### Ejemplo {-}
-
-Supongamos que queremos integrar $g(\theta) = \theta^2$ en el intervalo [0,1]. Sabemos
-que esta integral vale 1/3. Podemos usar el método montecarlo de integración:
-
-```{r}
-set.seed(9932)
-theta <- runif(30000, 0, 1)
-g <- function(theta) theta^2
-integral_aprox <- mean(g(theta))
-integral_aprox
-```
-
-que es correcto a tres decimales.
-
----
-
-Podemos generalizar este resultado. Supongamos que tenemos una densidad $p(\theta)$. 
+Supongamos que tenemos una densidad $p(\theta)$. 
 
 ```{block2, type='mathblock'}
 **Integración Monte Carlo**. Supongamos que queremos calcular el valor esperado de
@@ -307,14 +164,18 @@ En este ejemplo repetimos cosas que ya hemos visto. En el caso de estimación
 de una proporción $\theta, tenemos como inicial
 $p(\theta) \propto \theta$, que es $Beta(2,1)$. Si observamos 3 éxitos en 4 pruebas,
 entonces sabemos que la posterior es $p(\theta|x)\propto \theta^4(1-\theta)$, que 
-es $Beta(5, 2)$. Si queremos calcular media y desviación estándar posterior para $\theta$,
+es $Beta(5, 2)$. Si queremos calcular media y segundo momento posterior para $\theta$,
+en teoría necesitamos calcular
+
+$$\mu = \int_0^1 \theta p(\theta|X = 3)\, d\theta,\,\, \mu_2=\int_0^1 \theta^2 p(\theta|X = 3)\, d\theta$$
+
 integramos con Monte Carlo
 
 ```{r}
 theta <- rbeta(10000, 5, 2)
 media_post <- mean(theta)
-sd_post <- sd(theta)
-c(media_post, sd_post)
+momento_2_post <- mean(theta^2)
+c(media_post, momento_2_post)
 ```
 
 Y podemos aproximar de esta manera cualquier cantidad de interés que esté basada
@@ -345,7 +206,7 @@ datos
 
 Usaremos como inicial $Beta(2, 1)$ (pues hemos obervado cierto sesgo de cortesía
 en la calificación de sabores, y no es tan probable tener valores muy bajos) para todos los sabores,
-es decir $p(\theta_i|k_i)$ es $Beta(2, 1)$. La inicial conjunta la definimos entonces,
+es decir $p(\theta_i)$ es $Beta(2, 1)$. La inicial conjunta la definimos entonces,
 usando idependiencia inicial, como
 
 $$p(\theta_1,\theta_2, \theta_3,\theta_4) = p(\theta_1)p(\theta_2)p(\theta_3)p(\theta_4)$$
@@ -424,7 +285,7 @@ el problema que necesitamos resolver es el siguiente:
 - Conocemos $p(\theta |x)$ módulo una constante de integración.
 - En general, $p(\theta|x)$ no tiene una forma reconocible que corresponda a un
 simulador estándar.
-- ¿Cómo simulamos de esta posterior cuando sólo sabemos calcular $p(|\theta)p(\theta)$?
+- ¿Cómo simulamos de esta posterior cuando sólo sabemos calcular $p(x|\theta)p(\theta)$?
 
 Hay varias maneras de hacer esto. Presentaremos los algoritmos en términos
 de una distribución cualquiera $p(\theta) = K f(\theta)$, donde sólo conocemos
@@ -434,7 +295,7 @@ la función $f(\theta)$.
 ## Método de Metropolis
 
 En el método de Metropolis, uno de los más antiguos, comenzamos
-con un valor inicial de los parámetros $\theta^{(0)}$. 
+con un valor inicial de los parámetros $\theta^{(0)}$ en el soporte de $p(\theta)$.. 
 
 Para $i=1, \ldots, M$, hacemos:
 
@@ -472,8 +333,8 @@ E intentamos simular de una exponencial no normalizada:
 ```{r}
 exp_no_norm <- function(x) ifelse(x > 0, exp(-0.5 * x), 0)
 iterador_metro <- crear_metropolis(exp_no_norm, sigma_salto = 0.25)
-sims <- iterador_metro(0.5, 50000)
-ggplot(tibble(sims = sims), aes(x = sims)) + geom_histogram()
+sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000))
+ggplot(sims_tbl, aes(x = theta)) + geom_histogram()
 ```
 
 Ahora probemos con una beta(3, 2):
@@ -481,10 +342,12 @@ Ahora probemos con una beta(3, 2):
 ```{r}
 beta_no_norm <- function(x) ifelse(x > 0 && x < 1, (x^2)*(1-x), 0)
 iterador_metro <- crear_metropolis(beta_no_norm, sigma_salto = 0.04)
-sims <- iterador_metro(0.5, 50000)
-g_1 <- ggplot(tibble(sims = sims), aes(x = sims)) + geom_histogram() +
+sims_metro_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000))
+sims_indep_tbl <- tibble(num_iter = 1:30000, theta = rbeta(30000, 3, 2))
+g_1 <- ggplot(sims_metro_tbl, aes(x = theta)) + geom_histogram() +
   labs(subtitle = "Metropolis")
-g_2 <- ggplot(tibble(sims = rbeta(30000, 3, 2)), aes(x = sims)) + geom_histogram() +
+g_2 <- ggplot(sims_indep_tbl, aes(x = theta)) + 
+  geom_histogram() +
   labs(subtitle = "rbeta")
 g_1 + g_2
 ```
@@ -499,14 +362,371 @@ las **simulaciones no son extracciones independientes** de esa distribución.
 La construcción del algoritmo muestra eso, pero podemos también graficar las
 simulaciones:
 
-```{r}
+```{r, fig.width = 8}
+g_metropolis <- sims_metro_tbl %>% 
+  filter(num_iter < 500) %>% 
+  ggplot(aes(x = num_iter, y = theta)) +
+  geom_line() + labs(subtitle = "Metropolis")
+g_indep <- sims_indep_tbl %>% 
+  filter(num_iter < 500) %>% 
+  ggplot(aes(x = num_iter, y = theta)) +
+  geom_line() + labs(subtitle = "Independientes")
+g_metropolis + g_indep
+```
 
+Donde vemos claramente que las simulaciones de metropolis están autocorrelacionadas:
+la siguiente simulación depende de la anterior. Esto define una cadena de Markov.
+
+En cualquiera de los dos casos, como vimos en los histogramas de arriba,
+las simulaciones "visitan" cada parte [0,1] de manera proporcional a la densidad,
+de manera que podemos usar ambos tipos de simulaciones para aproximar la integral
+o cantidad que nos interesa. Por ejemplo, la media posterior es:
+
+```{r}
+media_1 <- sims_metro_tbl %>% summarise(media_post = mean(theta)) %>% pull(media_post)
+media_2 <- sims_indep_tbl %>% summarise(media_post = mean(theta)) %>% pull(media_post)
+media_exacta <- 3/(3 + 2)
+tibble(metodo = c("sim Metropolis", "sim Independiente", "exacto"),
+       media_post = c(media_1, media_2, media_exacta))
+```
+
+
+
+```{block2, type='mathblock'}
+Supongamos que queremos simular de una distribución $p(\theta)$, 
+pero sólo conocemos $p(\theta)$ módulo una constante. Bajo ciertas condiciones de regularidad:
+
+El **algoritmo Metrópolis** para la distribución $p(\theta)$ define una **cadena de Markov** cuya distribución a largo plazo es $p(\theta)$. Esto implica que si 
+$\theta^{(1)},\theta^{(2)}, \ldots, \theta^{(M)}$ es una simulación de esta cadena,  
+y $M$ es suficientemente grande
+
+1. La distribución de las $\theta^{(i)}$ es aproximadamente $p(\theta)$,
+2. Tenemos que
+$$\frac{h(\theta^{(1)}) + h(\theta^{(2)})+ \ldots + h(\theta^{(M)})}{M} \to \int h(\theta)p(\theta)\, d\theta$$
+cuando $M\to \infty$
+```
+
+**Observaciones**: 
+
+1. Aunque hay distintas *condiciones de regularidad* que
+pueden funcionar, generalmente el supuesto es que la cadena de Markov construída
+es [ergódica](https://en.wikipedia.org/wiki/Ergodic_theory), y hay varias condiciones que garantizan esta propiedad. Una condición simple, por ejemplo, es que el soporte
+de la distribución $p(\theta)$ es un conjunto conexo del espacio de parámetros.
+
+2. Más crucialmente, este resultado no dice qué tan grande debe ser $M$ para que la aproximación sea buena. Esto depende de cómo es $p(\theta)$, y de la distribución que se utiliza para obtener los saltos propuestos. Dependiendo de estos dos factores,
+la convergencia puede ser rápida (exponencial) o tan lenta que es infactible usarla. 
+Más adelante veremos diagnósticos para descartar los peores casos de no-convergencia.
+
+## Ajustando el tamaño de salto {-}
+
+En el algoritmo Metropolis, generalmente es importante escoger la 
+dispersión de la distribución que genera propuestas con cuidado. 
+
+- Si la dispersión de la propuesta es demasiado grande, tenderemos a rechazar mucho,
+y la convergencia será lenta.
+- Si la dispersión de la propuesta es demasiado chica, tardaremos mucho tiempo
+en explorar las distintas partes de la distribución objetivo.
+
+### Ejemplo
+
+Supongamos que queremos simular usando metróplis de una distribución 
+$\textsf{Gamma(20, 100)$. Abajo vemos la forma de esta distribución:
+
+```{r}
+sim_indep <- tibble(theta = rgamma(10000, 20, 100))
+ggplot(sim_indep, aes(x = theta)) + geom_histogram()
+```
+
+```{r}
+f_dist <- function(x) 210 * dgamma(x, 20, 100)
+iterador_metro_chico <- crear_metropolis(f_dist, sigma_salto = 0.001)
+sims_chico_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_chico(0.02, 50000))
+g_sim <- ggplot(sims_chico_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
+dist_bplot <- ggplot(tibble(x = rgamma(10000, 20, 100)), aes(y = x, x = "a")) + geom_violin() + ylab("") + ylim(0, 0.5)
+g_sim + dist_bplot + plot_layout(widths = c(5, 1))
+```
+
+Nótese que después de 5 mil iteraciones estamos muy lejos de tener una muestra
+que se aproxime a la distribución objetivo. Empezamos en un lugar bajo, y
+la cadena sólo ha ido lentamente hacia las zonas de alta densidad. *Cualquier
+resumen con esta cadena estaría fuertemente sesgado* al valor donde iniciamos
+la iteración. Decimos que la cadena todavía no *mezcla* en las primeras 5 mil iteraciones.
+
+Ahora vemos qué pasa si ponemos el tamaño de salto demasiado grande:
+
+```{r}
+set.seed(831)
+iterador_metro_grande <- crear_metropolis(f_dist, sigma_salto = 20)
+sims_grande_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_grande(0.02, 50000))
+g_sim <- ggplot(sims_grande_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
+g_sim + dist_bplot + plot_layout(widths = c(5, 1))
+```
+
+En este caso, la cadena se *atora* muchas veces, pues las propuestas tienen
+probabilidad muy baja, y tendemos a tener una tasa de rechazos muy alta. Esto 
+quiere decir que la información que tenemos acerca de la posterior
+es relativamente poca, pues muchos datos son repeticiones del mismo valor. 
+*Cualquier resumen con esta cadena podría estar muy lejos del verdadero valor**, pues
+su varianza es alta - otra corrida se "atoraría" en otros valores distintos.
+
+Nótese que cualquiera de estas cadenas, si la corremos suficientemente
+tiempo, nos daría resultados buenos. Sin embargo, el número de simulaciones
+puede ser infactible.
+
+Un valor intermedio nos dará mucho mejores resultados:
+
+```{r}
+set.seed(831)
+iterador_metro_apropiada <- crear_metropolis(f_dist, sigma_salto = 0.1)
+sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_apropiada(0.02, 50000))
+g_sim <- ggplot(sims_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
+g_sim + dist_bplot + plot_layout(widths = c(5, 1))
+```
+Donde vemos que esta cadena parece mezclar bien (está explorando la totalidad
+de la distribución objetivo), y también parece estar en un estado estable.
+
+Comparemos cómo saldría por ejemplo la media posterior aproximada según 
+los tres métodos:
+
+```{r}
+estimaciones_media <- map_dfr(list(sims_chico_tbl, sims_grande_tbl, sims_tbl), 
+    ~ filter(.x, num_iter < 3000) %>% 
+      summarise(media = mean(theta))) %>% 
+  mutate(tipo = c("salto chico", "salto grande", "salto apropiado"))
+estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>% 
+  select(tipo, media)
+```
+
+Veamos otra corrida:
+
+```{r}
+set.seed(261)
+sims_chica_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_chico(0.02, 5000))
+sims_grande_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_grande(0.02, 5000))
+sims_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_apropiada(0.02, 5000))
+estimaciones_media <- map_dfr(list(sims_chico_tbl, sims_grande_tbl, sims_tbl), 
+    ~ filter(.x, num_iter < 3000) %>% 
+      summarise(media = mean(theta))) %>% 
+  mutate(tipo = c("salto chico", "salto grande", "salto apropiado"))
+estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>% 
+  select(tipo, media)
+```
+
+```{block2, type='ejercicio'}
+Repite este proceso varias veces. Verifica que:
+
+  - Si el tamaño de paso es muy chico, las estimaciones de la media están muy sesgadas
+  - Si el tamaño de paso es muy grande, las estimaciones tienen varianza alta
+  - Si el tamaño de paso es adecuado, obtenemos buena precisión en la estimación de la media posterior
+
+Explica estos tres casos en términos de la convergencia de las realizaciones de la
+cadena de Markov.
 ```
 
 
 
 
+## ¿Por qué funciona Metropolis? {-}
 
+Veremos un ejemplo relativemente simple que nos puede ayudar
+a mejorar nuestra intuición acerca de este algoritmo.
+
+Supongamos que un vendedor de 
+*yakult* trabaja a lo largo de una cadena de islas:
+
+* constantemente viaja entre las islas ofreciendo sus productos,
+
+* al final de un día de trabajo decide si permanece en la misma isla o se 
+transporta a una de las $2$ islas vecinas.
+
+* El vendedor ignora la distribución de la población en las islas y el número 
+total de islas; sin embargo, 
+una vez que se encuentra en una isla puede investigar la población de la misma y 
+también  de la isla a la que se propone viajar después. 
+
+* El objetivo del vendedor es visitar las islas de manera proporcional a la 
+población de cada una. Con esto en mente el vendedor utiliza el siguiente 
+proceso: 
+    1) Lanza un volado, si el resultado es águila se propone ir a la isla 
+del lado izquierdo de su ubicación actual y si es sol a la del lado derecho.
+    2) Si la isla propuesta en el paso anterior tiene población mayor a la 
+población de la isla actual, el vendedor decide viajar a ella. Si la isla vecina 
+tiene población menor, entonces visita la isla propuesta con una probabilidad que 
+depende de la población de las islas. Sea $P_{prop}$ la población de la isla 
+propuesta y $P_{actual}$ la población de la isla actual. Entonces el vendedor
+cambia de isla con probabilidad 
+$$p_{mover}=P_{prop}/P_{actual}$$
+
+A la larga, si el vendedor sigue la heurística anterior la probabilidad de que
+el vendedor este en alguna de las islas coincide con la población relativa de
+la isla. 
+
+```{r, fig.height=6, fig.width=3.5}
+islas <- tibble(islas = 1:10, pob = 1:10)
+camina_isla <- function(i){ # i: isla actual
+    u <- runif(1) # volado
+    v <- ifelse(u < 0.5, i - 1, i + 1)  # isla vecina (índice)
+    if (v < 1 | v > 10) { # si estas en los extremos y el volado indica salir
+      return(i)
+    }
+    u2 <- runif(1)
+    p_move = min(islas$pob[v] / islas$pob[i], 1)
+    if (p_move  > u2) {
+        return(v) # isla destino
+    }
+    else {
+      return(i) # me quedo en la misma isla
+    }
+}
+pasos <- 100000
+camino <- numeric(pasos)
+camino[1] <- sample(1:10, 1) # isla inicial
+for (j in 2:pasos) {
+    camino[j] <- camina_isla(camino[j - 1])
+}
+caminata <- tibble(pasos = 1:pasos, isla = camino)
+plot_caminata <- ggplot(caminata[1:1000, ], aes(x = pasos, y = isla)) +
+    geom_point(size = 0.8) +
+    geom_path(alpha = 0.5) +
+    coord_flip() + 
+    labs(title = "Caminata aleatoria") +
+    scale_y_continuous(expression(theta), breaks = 1:10) +
+    scale_x_continuous("Tiempo")
+plot_dist <- ggplot(caminata, aes(x = isla)) +
+    geom_histogram() +
+    scale_x_continuous(expression(theta), breaks = 1:10) +
+    labs(title = "Distribución objetivo", 
+       y = expression(P(theta)))
+plot_caminata / plot_dist
+```
+
+Entonces:
+
+* Para aproximar la distribución objetivo debemos permitir que el vendedor 
+recorra las islas durante una sucesión larga de pasos y registramos sus visitas. 
+
+* Nuestra aproximación de la distribución es justamente el registro de sus 
+visitas. 
+
+* Más aún, debemos tener cuidado y excluir la porción de las visitas que se 
+encuentran bajo la influencia de la posición inicial. Esto es, debemos excluir 
+el **periodo de calentamiento**. 
+
+* Una vez que tenemos un registro _largo_ de los viajes del vendedor (excluyendo 
+el calentamiento) podemos aproximar la distribución objetivo de cada valor de 
+$\theta$ simplemente contando el número relativo de veces que el vendedor visitó
+dicha isla.
+
+```{r, warning=FALSE, message=FALSE, fig.width=8, fig.height=7.5}
+t <- c(1:10, 20, 50, 100, 200, 1000, 5000)
+plots_list <- map(t, function(i){
+    ggplot(caminata[1:i, ], aes(x = isla)) +
+        geom_histogram() +
+        labs(y = "", x = "", title = paste("t = ", i, sep = "")) +
+        scale_x_continuous(expression(theta), breaks = 1:10, limits = c(0, 11))
+})
+wrap_plots(plots_list)
+```
+
+
+Escribamos el algoritmo, para esto indexamos las islas por el valor
+$\theta$, es así que la isla del extremo oeste corresponde a $\theta=1$ y la 
+población relativa de cada isla es $P(\theta)$:
+
+1. El vendedor se ubica en $\theta_{actual}$ y propone moverse a la izquierda
+o derecha con probabilidad $0.5$.  
+El rango de los posibles valores para moverse, y la probabilidad de proponer 
+cada uno se conoce como **distribución propuesta**, en nuestro ejemplo sólo 
+toma dos valores cada uno con probabilidad $0.5$. 
+
+2. Una vez que se propone un movimiento, decidimos si aceptarlo. La decisión de
+aceptar se basa en el valor de la distribución **objetivo** en la posición
+propuesta, relativo al valor de la distribución objetivo en la posición actual:
+$$p_{mover}=min\bigg\{\frac{P(\theta_{propuesta})}{P(\theta_{actual})},1\bigg\}$$
+Notemos que la distribución objetivo $P(\theta)$ no necesita estar normalizada, 
+esto es porque lo que nos interesa es el cociente $P(\theta_{propuesta})/P(\theta_{actual})$.
+
+3. Una vez que propusimos un movimiento y calculamos la probabilidad de aceptar 
+el movimiento aceptamos o rechazamos el movimiento generando un valor de una
+distribución uniforme, si dicho valor es menor a $p_{mover}$ entonces hacemos
+el movimiento.
+
+Entonces, para utilizar el algoritmo necesitamos ser capaces de:
+
+* Generar un valor de la distribución propuesta (para crear $\theta_{propuesta}$).
+
+* Evaluar la distribución objetivo en cualquier valor propuesto (para calcular
+$P(\theta_{propuesta})/P(\theta_{actual})$).
+
+* Generar un valor uniforme (para movernos con probabilidad $p_{mover}$)
+
+Las $3$ puntos anteriores nos permiten generar muestras aleatorias de la
+distribución objetivo, sin importar si esta está normalizada. Esta técnica es
+particularmente útil cuando cuando la distribución objetivo es una posterior
+proporcional a $p(x|\theta)p(\theta)$.
+
+
+Para entender porque funciona el algoritmo de Metrópolis hace falta entender $2$
+puntos, primero que la distribución objetivo es **estable**: si la probabilidad
+_actual_ de ubicarse en una posición coincide con la probabilidad en la 
+distribución objetivo, entonces el algoritmo preserva las probabilidades.
+
+```{r, warning=FALSE, message=FALSE, fig.width=8, fig.height=7.5}
+library(expm)
+transMat <- function(P){ # recibe vector de probabilidades (o población)
+    T <- matrix(0, 10, 10)
+    n <- length(P - 1) # número de estados
+    for (j in 2:n - 1) { # llenamos por fila
+        T[j, j - 1] <- 0.5 * min(P[j - 1] / P[j], 1)
+        T[j, j] <- 0.5 * (1 - min(P[j - 1] / P[j], 1)) + 
+                   0.5 * (1 - min(P[j + 1] / P[j], 1))
+        T[j, j + 1] <- 0.5 * min(P[j + 1] / P[j], 1)
+    }
+    # faltan los casos j = 1 y j = n
+    T[1, 1] <- 0.5 + 0.5 * (1 - min(P[2] / P[1], 1))
+    T[1, 2] <- 0.5 * min(P[2] / P[1], 1)
+    T[n, n] <- 0.5 + 0.5 * (1 - min(P[n - 1] / P[n], 1))
+    T[n, n - 1] <- 0.5 * min(P[n - 1] / P[n], 1)
+    T
+}
+T <- transMat(islas$pob)
+w <- c(0, 1, rep(0, 8))
+t <- c(1:10, 20, 50, 100, 200, 1000, 5000)
+expT <- map_df(t, ~data.frame(t = ., w %*% (T %^% .)))
+expT_long <- expT %>%
+    gather(theta, P, -t) %>% 
+    mutate(theta = parse_number(theta))
+ggplot(expT_long, aes(x = theta, y = P)) +
+    geom_bar(stat = "identity", fill = "darkgray") + 
+    facet_wrap(~ t) +
+    scale_x_continuous(expression(theta), breaks = 1:10, limits = c(0, 11))
+```
+
+El segundo punto es que el proceso converge a la distribución objetivo. 
+Podemos ver, (en nuestro ejemplo sencillo) que sin importar el punto de inicio
+se alcanza la distribución objetivo.
+
+```{r, warning=FALSE, message=FALSE, fig.width=8, fig.height=7.5}
+inicioP <- function(i){
+    w <- rep(0, 10)
+    w[i] <- 1
+    t <- c(1, 10, 50, 100)
+    expT <- map_df(t, ~data.frame(t = ., inicio = i, w %*% (T %^% .))) %>%
+        gather(theta, P, -t, -inicio) %>% 
+        mutate(theta = parse_number(theta))
+    expT
+}
+expT <- map_df(c(1, 3, 5, 9), inicioP)
+ggplot(expT, aes(x = as.numeric(theta), y = P)) +
+    geom_bar(stat = "identity", fill = "darkgray") + 
+    facet_grid(inicio ~ t) +
+    scale_x_continuous(expression(theta), breaks = 1:10, limits = c(0, 11))
+```
+
+## Metropolis con varios parámetros
+
+
+Ahora aplicaremos el algoritmo metrópolis cuando tenemos varios parámetros.
 
 
 
