@@ -311,16 +311,23 @@ corto en una dirección al azar para obtener una propuesta $\theta_{prop}$.
 Abajo implementamos el algoritmo con un salto de tipo normal:
 
 ```{r}
-crear_metropolis <- function(f, sigma_salto = 0.1){
+crear_metropolis <- function(fun, sigma_salto = 0.1){
+  
   iterar_metropolis <- function(theta_inicial, n){
-    iteraciones <- numeric(n)
-    iteraciones[1] <- theta_inicial
+    iteraciones <- list()
+    iteraciones[[1]] <- theta_inicial
+    p <- length(theta_inicial)
+    nombres <- names(theta_inicial)
     for(i in 2:n){
-      theta <- iteraciones[i - 1]
-      theta_prop <- theta + rnorm(length(theta), 0, sigma_salto)
-      cociente <- f(theta_prop) / f(theta)
-      iteraciones[i] <- ifelse(cociente >= 1 || runif(1,0,1) < cociente,
-                              theta_prop, theta)
+      theta <- iteraciones[[i - 1]]
+      theta_prop <- theta + rnorm(p, 0, sigma_salto)
+      cociente <- fun(theta_prop) / fun(theta)
+      if(cociente >= 1 || runif(1,0,1) < cociente){
+        iteraciones[[i]] <- theta_prop
+      } else {
+        iteraciones[[i]] <- theta  
+      }
+      names(iteraciones[[i]]) <- nombres
     }
     iteraciones
   }
@@ -333,7 +340,8 @@ E intentamos simular de una exponencial no normalizada:
 ```{r}
 exp_no_norm <- function(x) ifelse(x > 0, exp(-0.5 * x), 0)
 iterador_metro <- crear_metropolis(exp_no_norm, sigma_salto = 0.25)
-sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000))
+sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000)) %>% 
+  unnest()
 ggplot(sims_tbl, aes(x = theta)) + geom_histogram()
 ```
 
@@ -342,7 +350,8 @@ Ahora probemos con una beta(3, 2):
 ```{r}
 beta_no_norm <- function(x) ifelse(x > 0 && x < 1, (x^2)*(1-x), 0)
 iterador_metro <- crear_metropolis(beta_no_norm, sigma_salto = 0.04)
-sims_metro_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000))
+sims_metro_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000)) %>% 
+  unnest()
 sims_indep_tbl <- tibble(num_iter = 1:30000, theta = rbeta(30000, 3, 2))
 g_1 <- ggplot(sims_metro_tbl, aes(x = theta)) + geom_histogram() +
   labs(subtitle = "Metropolis")
@@ -440,7 +449,9 @@ ggplot(sim_indep, aes(x = theta)) + geom_histogram()
 ```{r}
 f_dist <- function(x) 210 * dgamma(x, 20, 100)
 iterador_metro_chico <- crear_metropolis(f_dist, sigma_salto = 0.001)
-sims_chico_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_chico(0.02, 50000))
+sims_chico_tbl <- tibble(num_iter = 1:50000, 
+                         theta = iterador_metro_chico(0.02, 50000)) %>% 
+  unnest()
 g_sim <- ggplot(sims_chico_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
 dist_bplot <- ggplot(tibble(x = rgamma(10000, 20, 100)), aes(y = x, x = "a")) + geom_violin() + ylab("") + ylim(0, 0.5)
 g_sim + dist_bplot + plot_layout(widths = c(5, 1))
@@ -457,7 +468,9 @@ Ahora vemos qué pasa si ponemos el tamaño de salto demasiado grande:
 ```{r}
 set.seed(831)
 iterador_metro_grande <- crear_metropolis(f_dist, sigma_salto = 20)
-sims_grande_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_grande(0.02, 50000))
+sims_grande_tbl <- tibble(num_iter = 1:50000, 
+                          theta = iterador_metro_grande(0.02, 50000)) %>% 
+  unnest()
 g_sim <- ggplot(sims_grande_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
 g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
@@ -478,7 +491,8 @@ Un valor intermedio nos dará mucho mejores resultados:
 ```{r}
 set.seed(831)
 iterador_metro_apropiada <- crear_metropolis(f_dist, sigma_salto = 0.1)
-sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_apropiada(0.02, 50000))
+sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_apropiada(0.02, 50000)) %>% 
+  unnest()
 g_sim <- ggplot(sims_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
 g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
@@ -505,7 +519,7 @@ sims_chica_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_chico(0.02, 5
 sims_grande_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_grande(0.02, 5000))
 sims_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_apropiada(0.02, 5000))
 estimaciones_media <- map_dfr(list(sims_chico_tbl, sims_grande_tbl, sims_tbl), 
-    ~ filter(.x, num_iter < 3000) %>% 
+    ~ filter(unnest(.x), num_iter < 3000) %>% 
       summarise(media = mean(theta))) %>% 
   mutate(tipo = c("salto chico", "salto grande", "salto apropiado"))
 estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>% 
@@ -515,13 +529,16 @@ estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>%
 ```{block2, type='ejercicio'}
 Repite este proceso varias veces. Verifica que:
 
-  - Si el tamaño de paso es muy chico, las estimaciones de la media están muy sesgadas
+  - Si el tamaño de paso es muy chico, las estimaciones de la media tienen sesgo alto
   - Si el tamaño de paso es muy grande, las estimaciones tienen varianza alta
   - Si el tamaño de paso es adecuado, obtenemos buena precisión en la estimación de la media posterior
 
-Explica estos tres casos en términos de la convergencia de las realizaciones de la
-cadena de Markov.
+  - Explica estos tres casos en términos de la convergencia de las realizaciones de la
+cadena de Markov. Explica cómo afecta a cada caso el valor inicial
+de las simulaciones de Metropolis.
+  - Repite para otra estadística, como la desviación estándar o el rangon intercuartil.
 ```
+
 
 
 
@@ -707,17 +724,17 @@ Podemos ver, (en nuestro ejemplo sencillo) que sin importar el punto de inicio
 se alcanza la distribución objetivo.
 
 ```{r, warning=FALSE, message=FALSE, fig.width=8, fig.height=7.5}
-inicioP <- function(i){
+inicio_p <- function(i){
     w <- rep(0, 10)
     w[i] <- 1
     t <- c(1, 10, 50, 100)
-    expT <- map_df(t, ~data.frame(t = ., inicio = i, w %*% (T %^% .))) %>%
+    exp_t <- map_df(t, ~ data.frame(t = .x, inicio = i, w %*% (T %^% .))) %>%
         gather(theta, P, -t, -inicio) %>% 
         mutate(theta = parse_number(theta))
-    expT
+    exp_t
 }
-expT <- map_df(c(1, 3, 5, 9), inicioP)
-ggplot(expT, aes(x = as.numeric(theta), y = P)) +
+exp_t <- map_df(c(1, 3, 5, 9), inicio_p)
+ggplot(exp_t, aes(x = as.numeric(theta), y = P)) +
     geom_bar(stat = "identity", fill = "darkgray") + 
     facet_grid(inicio ~ t) +
     scale_x_continuous(expression(theta), breaks = 1:10, limits = c(0, 11))
@@ -725,8 +742,73 @@ ggplot(expT, aes(x = as.numeric(theta), y = P)) +
 
 ## Metropolis con varios parámetros
 
+Ahora aplicaremos el algoritmo Metrópolis cuando tenemos varios parámetros. La idea
+es la misma, pero nuestra distribución de salto debe ser multivariada. Una selección
+usual es usando saltos normales independientes para cada parámetro, es decir, la
+ normal multivariada con matriz de varianza y covarianza diagonal.
 
-Ahora aplicaremos el algoritmo metrópolis cuando tenemos varios parámetros.
+### Ejemplo: el modelo normal
+
+Veremos cómo simular con Metropolis para el problema de los cantantes. 
+Sabemos como calcular la posterior:
+
+```{r}
+crear_posterior <- function(x = datos, m_0, n_0, a, b){
+  # calcula log_posterior
+  posterior <- function(mu, sigma){
+      log_verosim <- sum(dnorm(x, mu, sigma, log = TRUE))
+      tau <- 1 / sigma^2
+      log_inicial <- dgamma(tau, a, b, log = TRUE) + 
+        dnorm(mu, mu_0, sigma/sqrt(n_0))
+      log_p <- log_verosim + log_inicial
+      post <- exp(log_p)
+      post
+  }
+  posterior
+}
+```
+
+
+```{r}
+# parametros de inicial y datos
+a <- 3
+b <- 150
+mu_0 <- 175
+n_0 <- 5
+set.seed(3413)
+cantantes <- lattice::singer %>% 
+  mutate(estatura_cm = round(2.54 * height)) %>% 
+  filter(str_detect(voice.part, "Tenor")) %>% 
+  sample_n(20)
+
+p <- crear_posterior(cantantes$estatura_cm, mu_0, n_0, a, b) 
+post <- function(pars) { p(pars[1], pars[2]) }
+```
+
+Vemos cómo se ven las primeras iteraciones de nuestra cadena de Markov:
+
+```{r}
+set.seed(823)
+metro_normal <- crear_metropolis(post, sigma_salto = 0.5)
+simulaciones <- metro_normal(c(mu = 172, sigma = 3), 20000) %>% transpose() %>% as_tibble
+sim_tbl <- bind_rows(simulaciones) %>% unnest
+ggplot(sim_tbl %>% filter(row_number()< 100), aes(x = mu, y = sigma)) + geom_path() +
+  geom_point()
+```
+
+Y resumimos:;
+
+```{r}
+ggplot(sim_tbl, aes(x = mu, y = sigma)) + 
+  geom_point(alpha = 0.05)
+```
+
+Y las medias posteriores son:
+
+```{r}
+sim_tbl %>% summarise(across(is.numeric, mean))
+```
+
 
 
 
