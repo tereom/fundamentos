@@ -295,7 +295,8 @@ la función $f(\theta)$.
 ## Método de Metropolis
 
 En el método de Metropolis, uno de los más antiguos, comenzamos
-con un valor inicial de los parámetros $\theta^{(0)}$ en el soporte de $p(\theta)$.. 
+con un valor inicial de los parámetros $\theta^{(0)}$ en el soporte de $p(\theta)$,
+es decir $p(\theta^{(0)})>0$.
 
 Para $i=1, \ldots, M$, hacemos:
 
@@ -304,9 +305,16 @@ corto en una dirección al azar para obtener una propuesta $\theta_{prop}$.
 2. Aceptamos or rechazamos el salto:
   - Si $\frac{f(\theta_{prop})}{f(\theta_{i})} >= 1$, aceptamos el salto y ponemos $\theta^{(i+1)}=\theta_{prop}$. Regresamos a 1 para la siguiente $i$
   - Si $p = \frac{f(\theta_{prop})}{f(\theta_{i})} < 1$, entonces aceptamos con probabilidad
-  $p$ el salto, ponemos $\theta^{(i+1)}=\theta_{prop}$ y regresamos a 1 para la siguiente $i$.
-  Si rechazamos el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ 
+  $p$ el salto, ponemos $\theta^{(i+1)}=\theta_{prop}$ y regresamos a 1 para la siguiente $i$. Si rechazamos el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ 
   regresamos a 1 para la siguiente $i$.
+
+Requerimos también que la función que propone los saltos sea simétrica: es decir,
+$p_{propuesta}(\theta_{prop}|\theta_{actual})$ debe ser igual a 
+$p_{propuesta}(\theta_{actual}|\theta_{prop})$. Se puede modificar el algoritmo
+para tratar con una propuesta que no sea simétrica.
+
+Una elección común es escoger $p_{propuesta}(\theta_{prop} |\theta_{actual})$ como
+una $N(\theta_{actual}, \sigma_{salto})$.
 
 Abajo implementamos el algoritmo con un salto de tipo normal:
 
@@ -758,8 +766,9 @@ crear_posterior <- function(x = datos, m_0, n_0, a, b){
   posterior <- function(mu, sigma){
       log_verosim <- sum(dnorm(x, mu, sigma, log = TRUE))
       tau <- 1 / sigma^2
-      log_inicial <- dgamma(tau, a, b, log = TRUE) + 
-        dnorm(mu, mu_0, sigma/sqrt(n_0))
+      log_inicial <- 
+        dgamma(tau, a, b, log = TRUE) + 
+        dnorm(mu, mu_0, sigma/sqrt(n_0), log = TRUE)
       log_p <- log_verosim + log_inicial
       post <- exp(log_p)
       post
@@ -772,7 +781,7 @@ crear_posterior <- function(x = datos, m_0, n_0, a, b){
 ```{r}
 # parametros de inicial y datos
 a <- 3
-b <- 150
+b <- 140
 mu_0 <- 175
 n_0 <- 5
 set.seed(3413)
@@ -790,7 +799,7 @@ Vemos cómo se ven las primeras iteraciones de nuestra cadena de Markov:
 ```{r}
 set.seed(823)
 metro_normal <- crear_metropolis(post, sigma_salto = 0.5)
-simulaciones <- metro_normal(c(mu = 172, sigma = 3), 20000) %>% transpose() %>% as_tibble
+simulaciones <- metro_normal(c(mu = 172, sigma = 3), 50000) %>% transpose() %>% as_tibble
 sim_tbl <- bind_rows(simulaciones) %>% unnest
 ggplot(sim_tbl %>% filter(row_number()< 100), aes(x = mu, y = sigma)) + geom_path() +
   geom_point()
@@ -799,8 +808,9 @@ ggplot(sim_tbl %>% filter(row_number()< 100), aes(x = mu, y = sigma)) + geom_pat
 Y resumimos:;
 
 ```{r}
-ggplot(sim_tbl, aes(x = mu, y = sigma)) + 
-  geom_point(alpha = 0.05)
+g_normal <- ggplot(sim_tbl, aes(x = mu, y = sigma)) + 
+  geom_point(alpha = 0.05)+ coord_equal() + ylim(c(0, 14))
+g_normal
 ```
 
 Y las medias posteriores son:
@@ -809,6 +819,183 @@ Y las medias posteriores son:
 sim_tbl %>% summarise(across(is.numeric, mean))
 ```
 
+### Ejemplo: observaciones normales, no conjugado
+
+Arriba repetimos el análisis conjugado usando Metropolis. Pero
+ya no es necesario usar el modelo conjugado, y podemos poner
+iniciales que sean más intuitivas y acorde con nuestr
+
+Por ejemplo, podemos poner $p(\mu, \sigma) = p(\mu)p(\sigma)$, donde
+la densidad de $\mu \sim N(175, 2)$ y $\sigma \sim U[5, 20]$. Igual
+que antes, la verosimilitud $p(x|\mu, \sigma)$ es normal con media $\mu$
+y desviación estándar $\sigma$
+
+Escribir
+la posterior es fácil
+
+```{r}
+crear_posterior <- function(x, m_0, sigma_0, inf, sup){
+  # calcula log_posterior
+  posterior <- function(mu, sigma){
+      log_verosim <- sum(dnorm(x, mu, sigma, log = TRUE))
+      log_inicial <- 
+        dunif(sigma, inf, sup, log = TRUE) + 
+        dnorm(mu, mu_0, sigma_0, log = TRUE)
+      log_p <- log_verosim + log_inicial
+      post <- exp(log_p)
+      post
+  }
+  posterior
+}
+```
+
+```{r}
+p <- crear_posterior(cantantes$estatura_cm, 175, 3, 2, 20) 
+post <- function(pars) { p(pars[1], pars[2]) }
+```
 
 
+```{r, fig.width = 7}
+set.seed(8231)
+metro_normal <- crear_metropolis(post, sigma_salto = 0.5)
+simulaciones <- metro_normal(c(mu = 172, sigma = 5), 50000) %>% transpose() %>% as_tibble
+sim_tbl <- bind_rows(simulaciones) %>% unnest()
+g_normal_2 <- ggplot(sim_tbl, aes(x = mu, y = sigma))  +
+  geom_point(alpha = 0.05) + coord_equal() + ylim(c(0, 14))
+g_normal + g_normal_2
+```
+Los resultados son similares, pero en 
+nuestras estimaciones bajo el segundo modelo, la $\sigma$ es está
+concentrada en valores un poco más bajos que el modelo normal - inverso gamma.
+Las medias posteriores son:
+
+```{r}
+sim_tbl %>% summarise(across(is.numeric, mean))
+```
+
+Nótese que la inicial para el modelo normal-invgamma pone muy poca
+probabilidad para valores bajos de $\sigma$, mientras que el segundo
+modelo hay un 10% de probabilidad de que la $\sigma$ sea menor que 4.
+
+```{r}
+tau <- rgamma(5000, 3, 150)
+sigma <- 1/sqrt(tau)
+quantile(sigma, c(0.01,0.1, 0.9, 0.99))
+quantile(runif(5000, 2, 25), c(0.01,0.1, 0.9, 0.99))
+```
+
+
+
+### Ejemplo: examenes
+
+Recordamos un ejemplo que vimos en máxima verosimilitud:
+
+Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron un
+examen de opción múltiple al azar (1 de 5), y otros contestaron las preguntas intentando
+sacar una buena calificación. Suponemos que una vez que conocemos el tipo de 
+estudiante, todas las preguntas tienen la misma probabilidad de ser contestadas
+correctamente, de manera independiente. El modelo
+teórico está representado por la siguiente simulación:
+
+```{r}
+sim_formas <- function(p_azar, p_corr){
+  tipo <- rbinom(1, 1, 1 - p_azar)
+  if(tipo==0){
+    # al azar
+    x <- rbinom(1, 10, 1/5)
+  } else {
+    # no al azar
+    x <- rbinom(1, 10, p_corr)
+  }
+  x
+}
+```
+
+Y una muestra se ve como sigue:
+
+```{r}
+set.seed(12)
+muestra <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
+qplot(muestra)
+```
+
+Supongamos que no conocemos la probabildad de contestar correctamente  ni la
+proporción de estudiantes que contestó al azar. ¿Como estimamos estas dos cantidades?
+
+La verosimilitud la escribimos en el ejercicio anterior en la sección de máxima verosimilitud, está dada, para las repuestas de un estudiante, por:
+
+$$p(X = k|\theta_{azar}, \theta_{corr}) \propto \theta_{azar}(1/5)^k(4/5)^{10-k} +
+(1-\theta_{azar})\theta_{corr}^k(1-\theta_{corr})^{10-k}$$
+
+Suponiendo que todas las preguntas tienen la misma dificultad, y que
+los estudiantes que estudiaron son homogéneos (podemos discutir qué haríamos
+para introducir heterogeneidad que típicamente observaríamos).
+
+Creemos que la mayoría de los estudiantes no contesta al azar, así que pondremos
+como inicial
+
+$$\theta_{azar} \sim \mathsf{Beta}(1, 5)$$
+
+```{r}
+qbeta(c(0.1, 0.9), 1, 5) %>% round(2)
+```
+Ahora tenemos que pensar en la probabilidad $\theta_{corr}$ para los estudiantes
+que sí estudiaron. Imaginemos que lo probamos con un estudiante que
+sabemos que sí estudió, y obtuvo un porcentaje de correctos de 7/10, Podríamos
+poner entonces (vimos 10 intentos, con 3 fracasos y 7 éxitos):
+
+$$\theta_{corr} \sim \mathsf{Beta}(7, 3)$$
+Finalmente, necesitamos la conjunta inicial. Pondremos
+$$p(\theta_{azar},\theta_{corr}) = p(\theta_{azar})p(\theta_{corr})$$
+con lo que expresamos que inicialmente no creemos que estos dos parámetros estén
+relacionados. Si pensáramos, por ejemplo, que cuando hacemos exámenes difíciles
+menos estudiantes estudian, entonces deberíamos intentar otra conjunta.
+
+Escribimos el producto de la verosimilitud con la inicial:
+
+```{r}
+crear_posterior <- function(x){
+ 
+  posterior <- function(theta_azar, theta_corr){
+    log_verosim <- sum(log(theta_azar * dbinom(x, 10, 1/5) + 
+                          (1 - theta_azar) * dbinom(x, 10, theta_corr)))
+    log_inicial <- dbeta(theta_azar, 1, 5, log = TRUE) +
+      dbeta(theta_corr, 7, 3, log = TRUE)
+    log_post <- log_verosim + log_inicial
+    exp(log_post)
+  }  
+  posterior
+
+}
+```
+
+Creamos la función de verosimilitud con los datos
+
+```{r}
+p <- crear_posterior(muestra)
+post <- function(pars) { p(pars[1], pars[2]) }
+set.seed(8231)
+metro_examenes <- crear_metropolis(post, sigma_salto = 0.02)
+simulaciones <- metro_examenes(c(theta_azar = 0.5, theta_corr = 0.5), 20000) %>% transpose() %>% as_tibble
+sim_tbl <- bind_rows(simulaciones) %>% unnest()
+g_1 <- ggplot(sim_tbl, aes(x = theta_azar, y = theta_corr))  +
+  geom_point(alpha = 0.05) + coord_equal() 
+g_1
+```
+Nótese que hay cierta correlación entre las dos proporciones, y esto produce
+intervalos posteriores relativamente amplios. Esto es de esperarse, pues
+los datos son consistentes con una proporción relativamente chica de
+estudiantes que contestan al azar, y tasas de correctos más altas entre los
+que sí estudian, y una proporción más grande de respuestas al azar con
+tasas de correctos más altas.
+
+```{r}
+f <- c(0.05, 0.5, 0.95)
+sim_tbl %>% mutate(rep = row_number()) %>%
+  pivot_longer(-rep, names_to = "parametro", values_to = "valor") %>% 
+  group_by(parametro) %>% 
+  summarise(cuantil = quantile(valor, f), f = f) %>% 
+  mutate(cuantil = round(cuantil, 2)) %>% 
+  pivot_wider(names_from = f, values_from = cuantil)
+```
 
