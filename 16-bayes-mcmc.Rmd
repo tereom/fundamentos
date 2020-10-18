@@ -604,12 +604,12 @@ camina_isla <- function(i){ # i: isla actual
     }
 }
 pasos <- 100000
-camino <- numeric(pasos)
-camino[1] <- sample(1:10, 1) # isla inicial
+iteraciones <- numeric(pasos)
+iteraciones[1] <- sample(1:10, 1) # isla inicial
 for (j in 2:pasos) {
-    camino[j] <- camina_isla(camino[j - 1])
+    iteraciones[j] <- camina_isla(iteraciones[j - 1])
 }
-caminata <- tibble(pasos = 1:pasos, isla = camino)
+caminata <- tibble(pasos = 1:pasos, isla = iteraciones)
 plot_caminata <- ggplot(caminata[1:1000, ], aes(x = pasos, y = isla)) +
     geom_point(size = 0.8) +
     geom_path(alpha = 0.5) +
@@ -821,17 +821,17 @@ sim_tbl %>% summarise(across(is.numeric, mean))
 
 ### Ejemplo: observaciones normales, no conjugado {-}
 
-Arriba repetimos el análisis conjugado usando Metropolis. Pero
+Arriba repetimos el análisis conjugado usando Metropolis. Aunque 
 ya no es necesario usar el modelo conjugado, y podemos poner
-iniciales que sean más intuitivas y acorde con nuestr
+iniciales que sean más intuitivas y acorde con nuestro conocimiento
+existente.
 
 Por ejemplo, podemos poner $p(\mu, \sigma) = p(\mu)p(\sigma)$, donde
 la densidad de $\mu \sim N(175, 2)$ y $\sigma \sim U[5, 20]$. Igual
 que antes, la verosimilitud $p(x|\mu, \sigma)$ es normal con media $\mu$
 y desviación estándar $\sigma$
 
-Escribir
-la posterior es fácil
+Escribimos la posterior:
 
 ```{r}
 crear_posterior <- function(x, m_0, sigma_0, inf, sup){
@@ -1045,6 +1045,171 @@ El muestreador de Gibbs es útil cuando no podemos determinar de manera analíti
 la distribución conjunta y no se puede simular directamente de ella, pero sí 
 podemos determinar todas las distribuciones condicionales y simular de ellas.
 
+### Ejemplo: dos proporciones
+
+Supongamos que queremos evaluar el balanceo de dos dados de 20 lados que produce una fábrica. En particular, evaluar la probabilidad de
+tirar un 20, y quizá escoger el dado que nos de mayor probabilidad de
+tirar un 20.
+
+Tiramos cada dado $n$ veces, y denotamos por $X_1$ y $X_2$ el número
+de 20s que tiramos en cada ocasion. El modelo de datos está dado por
+
+$$p(x_1, x_2|\theta_1, \theta_2)\propto \theta_1^{x_1}(1-\theta_1)^{n - x_1}\theta_2^{x_2}(1-\theta_2)^{n - x_2}$$
+que es el producto de dos densidades binomiales, pues suponemos que
+las tiradas son independientes cuando conocemos los parámetros
+$\theta_1$ y $\theta_2$.
+
+Ahora ponemos una inicial
+$$p(\theta_i)\sim \mathsf{Beta}(100, 1900)$$
+
+y aquí están las razones de nuestra elección:
+```{r}
+media <- 1/20
+k <- 2000
+a <- media * k
+b <- (1 - media) * k
+c(a,b)
+qbeta(c(0.05, 0.95), a, b) %>% round(3)
+```
+y suponemos que 
+
+$$p(\theta_1,\theta_2) = p (\theta_1)p(\theta_2)$$
+
+es decir, apriori saber el desempeño de un dado no nos da información adicional del otro (esto podría no ser cierto, por ejemplo, si el defecto es
+provocado por la impresión del número 20).
+
+Por lo tanto, la posterior es
+
+$$p(\theta_1,\theta_2|x_1, x_2)\propto \theta_1^{x_1+100-1}(1-\theta_1)^{n - x_1 + 1900-1}\theta_2^{x_2+100 -1}(1-\theta_2)^{n - x_2 + 1900-1}$$
+
+Ahora consideramoso qué pasa cuando conocemos $\theta_2$ y los datos. Pensamos en todo lo que no sea $\theta_1$ como constante de modo que nos
+queda:
+
+$$p(\theta_1 | \theta_2, x) \propto \theta_1^{x_1+100 -1}(1-\theta_1)^{n - x_1 + 1900 -1}$$
+que es $\mathsf{Beta}(x_1 + 100, n - x_1 + 1900)$, y por la misma razón,
+
+$$p(\theta_2 | \theta_1, x) \propto \theta_2^{x_2+100-1}(1-\theta_2)^{n - x_2 + 1900-1}$$
+
+que también es es $\mathsf{Beta}(x_1 + 100, n - x_1 + 1900)$
+
+De hecho, estas condicionales son fáciles de deducir de otra manera: en
+realidad estamos haciendo dos experimentos separados (pues suponemos
+que las iniciales son independientes y las pruebas también), así que
+podriamos usar el análisis Beta-Binomial para cada uno de ellos. En realidad no es necesario usar MCMC para este ejemplo.
+
+Usaremos esta función para hacer nuestras iteraciones de Gibbs:
+
+
+```{r}
+iterar_gibbs <- function(pasos, n, x_1, x_2){
+  iteraciones <- matrix(0, nrow = pasos + 1, ncol = 2) # vector guardará las simulaciones
+  iteraciones[1, 1] <- 0.5 # valor inicial media
+  colnames(iteraciones) <- c("theta_1", "theta_2")
+  # Generamos la caminata aleatoria
+  for (j in seq(2, pasos, 2)) {
+    # theta_1
+    a <- x_2 + 100 - 1
+    b <- n - x_2 + 1900 - 1
+    iteraciones[j, "theta_2"] <- rbeta(1, a, b) # Actualizar theta_1
+    iteraciones[j, "theta_1"] <- iteraciones[j-1, "theta_1"]
+    # theta_2
+    a <- x_1 + 100 - 1
+    b <- n - x_1 + 1900 - 1
+    iteraciones[j + 1, "theta_1"] <- rbeta(1, a, b) # Actualizar theta_1
+    iteraciones[j + 1, "theta_2"] <- iteraciones[j, "theta_2"]
+  }
+  iteraciones
+}
+```
+
+
+Y supongamos que estamos comparando los dados de dos compañías: Chessex y GameScience. Tiramos cada dado 10 mil veces, y obtenemos:
+
+```{r}
+# Datos de https://www.awesomedice.com/blogs/news/d20-dice-randomness-test-chessex-vs-gamescience
+n <- 10000
+x_1 <- 408 # Chessex, alrededor de 0.85 dólares por dado
+x_2 <- 474 # GameScience, alrededor 1.60 dólares por dado
+```
+
+E iteramos:
+
+```{r}
+iteraciones <- iterar_gibbs(20000, n, x_1, x_2) %>% 
+  as_tibble() %>% 
+  mutate(iter_num = row_number())
+head(iteraciones)
+```
+
+```{r}
+ggplot(filter(iteraciones, iter_num > 1000, iter_num< 1050), 
+       aes(x = theta_1, y = theta_2)) + 
+  geom_path(alpha = 0.3) + geom_point() 
+```
+
+```{r}
+g_1 <- ggplot(iteraciones, 
+       aes(x = theta_1, y = theta_2)) + 
+  geom_path(alpha = 0.3) + geom_point() 
+g_2 <- ggplot(iteraciones %>% filter(iter_num > 10), 
+       aes(x = theta_1, y = theta_2)) + 
+  geom_path(alpha = 0.3) + geom_point() +
+  geom_abline(colour = "red") +
+  geom_point(data= tibble(theta_1=1/20, theta_2=1/20), colour = "red", size = 5)
+g_1 + g_2
+```
+
+Notamos el dado de Cheesex no es consistente con 1/20 de tiros de 20s,
+pero el dado de GameScience sí lo es. De este gráfica vemos
+que Cheesex está sesgado hacia abajo, así que deberíamos escoger
+el dado de GameScience
+
+Podemos ver directamente cómo se distribuye la diferencia $\theta_1 - \theta_2$. Cualquier estadística es fácil de evaluar, pues simplemente
+la calculamos para cada simulación y después resumimos:
+
+```{r}
+iteraciones <- iteraciones %>% 
+  mutate(dif = theta_1 - theta_2)
+ggplot(iteraciones %>% filter(iter_num > 10), aes(x = dif)) +
+  geom_histogram(bins = 100) +
+  geom_vline(xintercept = 0, colour = "red")
+```
+
+Y vemos que es altamente probable que el dado de Cheesex produce
+más 20's que el dado de GameScience.
+
+```{r}
+iteraciones %>% mutate(theta_1_mayor = dif > 0) %>% 
+  summarise(prob_theta_1_mayor = mean(theta_1_mayor))
+```
+
+
+Finalmente, verificamos nuestro modelo y cuánto aprendimos. Podemos
+hacerlo simulando de la inicial y comparando con la posterior:
+
+```{r}
+inicial_tbl <- tibble(theta_1 = rbeta(20000, 100, 1900),
+                      theta_2 = rbeta(20000, 100, 1900),
+                      dist = "inicial")
+posterior_tbl <- iteraciones %>% filter(iter_num > 10) %>% 
+  mutate(dist = "posterior")
+sims_tbl <- bind_rows(inicial_tbl, posterior_tbl)
+ggplot(sims_tbl, aes(x = theta_1, y = theta_2, colour = dist)) +
+  geom_point(alpha = 0.1)
+```
+donde vemos que el resultado que obtuvimos es razonablemente consistente
+con nuestra información inicial, y las 10 mil tiradas de dado
+fueron altamente informativas. 
+
+```{block2, type="ejercicio"}
+¿Qué crees que pasaría si sólo hubieramos tirado 40 veces cada
+dado? ¿Qué tanto habríamos aprendido? Puedes usar datos
+simulados y repetir este ejercicio.
+```
+
+
+
+
 
 ### Ejemplo: Modelo normal no conjugado {-}
 
@@ -1097,26 +1262,26 @@ n <- 20
 x <- cantantes$estatura_cm
 m <- 175; sigma_0 <- 3; alpha <- 3; beta <- 150 # parámetros de iniciales
 pasos <- 20000
-camino <- matrix(0, nrow = pasos + 1, ncol = 2) # vector guardará las simulaciones
-camino[1, 1] <- 0 # valor inicial media
-colnames(camino) <- c("mu", "sigma")
+iteraciones <- matrix(0, nrow = pasos + 1, ncol = 2) # vector guardará las simulaciones
+iteraciones[1, 1] <- 0 # valor inicial media
+colnames(iteraciones) <- c("mu", "sigma")
 # Generamos la caminata aleatoria
 for (j in seq(2, pasos, 2)) {
   # sigma^2
-  mu <- camino[j - 1, "mu"]
+  mu <- iteraciones[j - 1, "mu"]
   a <- n / 2 + alpha
   b <- sum((x  - mu) ^ 2) / 2 + beta
-  camino[j, "sigma"] <- sqrt(1/rgamma(1, a, b)) # Actualizar sigma
-  camino[j, "mu"] <- camino[j-1, "mu"]
+  iteraciones[j, "sigma"] <- sqrt(1/rgamma(1, a, b)) # Actualizar sigma
+  iteraciones[j, "mu"] <- iteraciones[j-1, "mu"]
   # mu
-  sigma <- camino[j, "sigma"]
+  sigma <- iteraciones[j, "sigma"]
   media <- (n * sigma_0^2 * mean(x) + sigma^2 * m) / (n * sigma_0^2 + sigma^2)
   varianza <- sigma^2 * sigma_0^2 / (n * sigma_0^2 + sigma^2)
-  camino[j+1, "mu"] <- rnorm(1, media, sd = sqrt(varianza)) # actualizar mu
-  camino[j+1, "sigma"] <- camino[j, "sigma"]
+  iteraciones[j+1, "mu"] <- rnorm(1, media, sd = sqrt(varianza)) # actualizar mu
+  iteraciones[j+1, "sigma"] <- iteraciones[j, "sigma"]
 }
-caminata <- data.frame(pasos = 1:pasos, mu = camino[1:pasos, "mu"], 
-  sigma = camino[1:pasos, "sigma"])
+caminata <- data.frame(pasos = 1:pasos, mu = iteraciones[1:pasos, "mu"], 
+  sigma = iteraciones[1:pasos, "sigma"])
 caminata_g <- caminata %>%
   gather(parametro, val, mu, sigma) %>%
   arrange(pasos)
