@@ -840,8 +840,8 @@ Desde el punto de vista frecuentista, la cuestión es más complicada y
 hay varias maneras de proceder. En primer lugar, comenzaríamos con el 
 riesgo frecuentista $R(\theta, t)$. Una idea es,por ejemplo, calcular el 
 riesgo máximo:
-$$R_{\max} (t) = \underset{\theta}{\max} R(\theta, t)$$
-E nuestro ejemplo de arriba el máximo se alcanza en 0.5, y tomaríamos
+$$R_{\max} (t) = \underset{\theta}{\max} R(\theta, t).$$
+En nuestro ejemplo de arriba el máximo se alcanza en 0.5, y tomaríamos
 eso evaluación de los estimadores $\theta_1$ o $\theta_2$.  Buscaríamos entonces
 estimadores que minimicen este máximo, es decir, **estimadores minimax**. Pero también
 es posible enfocar este problema considerando sólo estimadores *insesgados*, lo que
