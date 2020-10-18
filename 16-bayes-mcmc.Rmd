@@ -1202,9 +1202,14 @@ con nuestra información inicial, y las 10 mil tiradas de dado
 fueron altamente informativas. 
 
 ```{block2, type="ejercicio"}
-¿Qué crees que pasaría si sólo hubieramos tirado 40 veces cada
+
+- ¿Qué crees que pasaría si sólo hubieramos tirado 40 veces cada
 dado? ¿Qué tanto habríamos aprendido? Puedes usar datos
 simulados y repetir este ejercicio.
+
+- Puedes examinar los resultados para cada cara con los datos originales.
+Un modelo apropiado es el Dirichlet-Multinomial.
+
 ```
 
 
