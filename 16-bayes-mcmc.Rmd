@@ -755,7 +755,7 @@ es la misma, pero nuestra distribución de salto debe ser multivariada. Una sele
 usual es usando saltos normales independientes para cada parámetro, es decir, la
  normal multivariada con matriz de varianza y covarianza diagonal.
 
-### Ejemplo: el modelo normal
+### Ejemplo: el modelo normal {-}
 
 Veremos cómo simular con Metropolis para el problema de los cantantes. 
 Sabemos como calcular la posterior:
@@ -1045,7 +1045,7 @@ El muestreador de Gibbs es útil cuando no podemos determinar de manera analíti
 la distribución conjunta y no se puede simular directamente de ella, pero sí 
 podemos determinar todas las distribuciones condicionales y simular de ellas.
 
-### Ejemplo: dos proporciones
+### Ejemplo: dos proporciones {-}
 
 Supongamos que queremos evaluar el balanceo de dos dados de 20 lados que produce una fábrica. En particular, evaluar la probabilidad de
 tirar un 20, y quizá escoger el dado que nos de mayor probabilidad de
@@ -1350,7 +1350,7 @@ Y obtenemos un resultado similar a los anteriores.
 
 
 
-### Conclusiones y observaciones Metrópolis y Gibbs {-}
+## Conclusiones y observaciones Metrópolis y Gibbs {-}
 
 * Una generalización del algoritmo de Metrópolis es Metrópolis-Hastings. 
 
@@ -1397,8 +1397,7 @@ unidimensional para el resto, o de manera más general separamos en bloques, un
 bloque se actualiza con Gibbs y otro con Metrópolis.
 
 * El algoritmo de Gibbs puede *atorarse* cuando hay correlación alta entre los 
-parámetros, reparametrizar puede ayudar, o se pueden usar otros algoritmos que 
-veremos más adelante.
+parámetros, reparametrizar puede ayudar, o se pueden usar otros algoritmos.
 
 * [JAGS](http://mcmc-jags.sourceforge.net) (Just Another Gibbs Sampler), WinBUGS
 y OpenBUGS son programas que implementan métodos MCMC para generar simulaciones 
@@ -1409,7 +1408,7 @@ los datos observados. Para aprender a usar JAGS se puede revisar la sección
 correspondiente en las [notas de 2018](https://tereom.github.io/est-computacional-2018/jags.html),
 ahora nos concentraremos en el uso de Stan.
 
-## HMC y Stan
+## HMC y Stan {-}
 
 > It appears to be quite a general principle that, whenever there is a 
 randomized way of doinf something, then there is a nonrandomized way that 
