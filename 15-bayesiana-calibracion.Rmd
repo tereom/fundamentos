@@ -47,11 +47,11 @@ esta propiedad de calibración.
 
 ## Enfoque bayesiano y frecuentista {-}
 
-Los métodos estadísticos clásicos o **frecuentistas** 
-el punto de vista frecuentista se basa en los siguientes puntos (@wasserman):
+Los métodos estadísticos clásicos toman el punto de vista **frecuentista** y se
+basa en los siguientes puntos (@Wasserman):
 
-1. La probabilidad se refiere a un límite de frecuencias relativas, las 
-probabilidades son propiedades objetivas en el mundo real.
+1. La probabilidad se interpreta como un límite de frecuencias relativas, donde
+las probabilidades son propiedades objetivas en el mundo real.
 
 2. En un modelo, los parámetros son constantes fijas (desconocidas). Como 
 consecuencia, no se pueden realizar afirmaciones probabilísticas útiles en 
@@ -62,7 +62,8 @@ propiedades frecuentistas bien definidas. Por ejemplo, un intervalo de confianza
 del $95\%$ debe contener el verdadero valor del parámetro con frecuencia límite
 de al menos el $95\%$.
 
-En contraste, el acercamiento **Bayesiano** muchas veces se describe por los siguientes postulados:
+En contraste, el acercamiento **Bayesiano** muchas veces se describe por los
+siguientes postulados:
 
 1. La probabilidad describe grados de creencia, no frecuencias limite. Como 
 tal uno puede hacer afirmaciones probabilísticas acerca de muchas cosas y no 
@@ -80,21 +81,21 @@ estimaciones de intervalos se pueden extraer de dicha distribución.
 Finalmente, en el enfoque **bayesiano calibrado** (@little2011):
 
 1. Usamos el enfoque bayesiano para modelar y hacer afirmaciones probabilísticas
-de los parámetros
-2. Buscamos cumplir las garantías frecuentistas del inciso 3)
+de los parámetros.
+2. Buscamos cumplir las garantías frecuentistas del inciso 3).
 
 ## Ejemplo: estimación de una proporción {-}
 
 Recordamos nuestro problema de estimación de una proporcion $\theta$. Usando
 la distribución inicial $p(\theta)\sim Beta(2,2)$, y la verosimilitud estándar
 binomial, vimos que la posterior cuando observamos $k$
-éxitos es  $$p(\theta|k) \sim Beta(k + 2, n - k + 2)$$.
+éxitos es  $$p(\theta|k) \sim \mathsf{Beta}(k + 2, n - k + 2)$$.
 
 La media posterior es 
 $$\frac{k + 2}{n + 4} $$
 que podemos interpretar como: agrega 2 éxitos y 2 fracasos a los datos observados
 y calcula la proporción de éxitos. Un intervalo posterior de credibilidad del 95% se calcula
-encontrando los cuantiles 0.05 y 0.95 de una $Beta(k + 2, n - k + 2)$
+encontrando los cuantiles 0.05 y 0.95 de una $\mathsf{Beta}(k + 2, n - k + 2)$
 
 $$I_a = \left [q_{0.025}(k+2, n+4), q_{0.975}(k+2, n+4)\right ]$$
 Que compararemos con el intervalo usual de Wald: si $\hat{\theta} = \frac{k}{n}$, entonces
@@ -251,7 +252,7 @@ compra algo (usualmente muy baja, menos de 2%), qué proporción de personas tie
 mayores a 150 mil pesos (menos de %5 con alta probabilidad).
 
 En este caso, tenemos que ajustar nuestra inicial. Por ejemplo, para el problema
-de ingresos, podríamos usar una $Beta(2, 100)$, cuyos cuantiles son:
+de ingresos, podríamos usar una $\mathsf{Beta}(2, 100)$, cuyos cuantiles son:
 
 ```{r}
 # uno de cada 100
@@ -282,7 +283,7 @@ intervalo_bayes_2 <- crear_intervalo_bayes(a, b)
 ```
 
 
-```{r}
+```{r, cache = TRUE}
 cobertura_bayes <- calcular_cobertura(simulaciones,
                                       intervalo_bayes_2)
 ```
@@ -396,7 +397,7 @@ read_csv("data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentrado
 ```
 En este caso, nuestro intervalo cubre a la proporción poblacional.
 
-## Inferencia bayesiana y regularización
+## Inferencia bayesiana y regularización {-}
 
 Como hemos visto en análisis y modelos anteriores, la posterior que usamos
 para hacer inferencia combina aspectos de la inicial con la verosimilitud (los datos).
@@ -405,9 +406,9 @@ Una manera de ver esta combinación y sus beneficios es pensando en término de
 
 - En las muestras hay variación. Algunas muestras particulares nos dan estimaciones
 de máxima verosimilitud pobres de los parámetros de interés (estimaciones ruidosas).
-- Cuando esas estimaciones pobres están en una zona de baja probabilidad de la inicial,
-la estimación posterior tiende a moverse ( o *encogerse*) 
-hacia las zonas de alta probabilidad de la inicial.
+- Cuando esas estimaciones pobres están en una zona de baja probabilidad de la
+inicial, la estimación posterior tiende a moverse (o *encogerse*) hacia las
+zonas de alta probabilidad de la inicial.
 - Esto *filtra* ruido en las estimaciones.
 - El mecanismo resulta en una reducción del **error cuadrático medio**, mediante
 una reducción de la varianza de los estimadores (aunque quizá el sesgo aumente).
@@ -505,7 +506,7 @@ poblacion <- lattice::singer %>%
   pivot_longer(mu:sigma, names_to = "parametro", values_to = "valor_pob")
 ```
 
-```{r}
+```{r, cache = TRUE}
 errores <- map(1:2000, ~ simular_muestra(.x, mu_0, n_0, a, b)) %>%
   bind_rows() %>% left_join(poblacion) %>% 
   mutate(error = (estimador - valor_pob))
@@ -595,20 +596,20 @@ anterior que acabamos de discutir. Usaremos algunos conceptos que vimos
 en la parte de propiedades de estimadores de máxima verosimilitud.
 
 
-Definimos una **función de pérdida** $L(\theta, \hat{\theta))$, que 
-mide en costo la discrepancia entre nuestro estimador 
+Definimos una **función de pérdida** $L(\theta, \hat{\theta}_n)$, que 
+mide el costo de la discrepancia entre nuestro estimador 
 
-$$\hat{\theta} = t(X_1,\ldots, X_n) = t(X)$$ 
+$$\hat{\theta}_n = t(X_1,\ldots, X_n) = t(X)$$ 
 
 y el verdadero valor $\theta$
 poblacional. Es posible considerar distintas funciones de pérdida, pero
 como en secciones anteriores, usaremos la **pérdida cuadrática**, definida por:
 
-$$L(\theta, \hat{\theta}) = (\theta - \hat{\theta})^2$$
+$$L(\theta, \hat{\theta}_n) = (\theta - \hat{\theta}_n)^2$$
 
 Esta función toma distintos valores dependiendo de la muestra y del parámetro
 $\theta$, y necesitamos resumirla para dar una evaluación de qué tan bueno
-es el estimador $\hat{\theta}$.
+es el estimador $\hat{\theta}_n$.
 
 Ahora que hemos considerado tanto estadística bayesiana como frecuentista,
 podemos pensar en resumir esta función de distintas maneras. 
@@ -619,36 +620,37 @@ potenciales que podríamos observar.
 
 Definimos como antes el **riesgo** (frecuentista) como:
 
-$$R(\theta, t) = E_X\left( (\theta - \hat{\theta})^2|\theta\right)$$
+$$R(\theta, t) = \mathbb{E}_X\left[ (\theta - \hat{\theta}_n)^2 \, \big| \, \theta\right]$$
 
-donde promediamos a lo largo de las muestras posibles, con $\theta$ fijo. 
-Esta cantidad no nos dice
-necesariamente cómo escoger un buen estimador para $\theta$, pues dependiendo
-de dónde está $\theta$ puede tomar valores distintos.
-
+donde promediamos a lo largo de las muestras posibles, con $\theta$ fijo. Esta
+cantidad no nos dice necesariamente cómo escoger un buen estimador para
+$\theta$, pues dependiendo de dónde está $\theta$ puede tomar valores distintos.
 
 
-Ahora vamos a pensar de manera bayesiana: en este caso, los datos serán fijos una vez
-que los obervemos de manera que $\hat{\theta}$ está fijo, y el parámetro
-$\theta$ es una cantidad aleatoria con distribución inicial $p(\theta)$. Entonces consideraríamos el promedio sobre la posterior dado por:
+
+Ahora vamos a pensar de manera bayesiana: en este caso, los datos serán fijos
+una vez que los obervemos de manera que $\hat{\theta}_n$ está fijo, y el parámetro
+$\theta$ es una cantidad aleatoria con distribución inicial $p(\theta)$.
+Entonces consideraríamos el promedio sobre la posterior dado por:
 
 
-$$\rho(t, X) = E_{p(\theta|X)}\left ((\theta - \hat{\theta})^2 | X \right )$$
-que llamamos **riesgo posterior**. Esta cantidad se calcula con la posterior
-de los parámetros dados los datos, y nos dice, una vez que vimos los datos,
-cómo es el error de nuestro
-estimador. Nótese que esta cantidad no es útil para escoger un estimador bueno $t$
-antes de ver los datos, pero nos sirve para evaluar a un estimador dados los datos.
+$$\rho(t, X) = \mathbb{E}_{p(\theta|X)}\left[(\theta - \hat{\theta})^2 \, \big | \, X \right]$$
+que llamamos **riesgo posterior**. Esta cantidad se calcula con la posterior de
+los parámetros dados los datos, y nos dice, una vez que vimos los datos, cómo es
+el error de nuestro estimador. Nótese que esta cantidad no es útil para escoger
+un estimador bueno $t$ antes de ver los datos, pero nos sirve para evaluar a un
+estimador dados los datos.
 
-En el primer caso, promediamos sobre posibles muestras, y
-en el segundo por valores posibles de $\theta$ para una muestra dada.
+En el primer caso, promediamos sobre posibles muestras, y en el segundo por
+valores posibles de $\theta$ para una muestra dada.
 
 ### Ejemplo: riesgo frecuentista {-}
 
-Para observaciones bernoulli, el estimador de máxima verosimilitud es
-$\hat{p}_1 = k /n $, donde $n$ es el tamaño de muestra y $k$ el número de éxitos
-observados. Podemos usar también como estimador la media posterior de un modelo
-Beta-Bernoulli con inicial $a=2, b=2$, que nos daría $\hat{p}_2 = \frac{k + 2}{n + 4}$.
+Para observaciones bernoulli, el estimador de máxima verosimilitud es $\hat{p}_1
+= k /n$, donde $n$ es el tamaño de muestra y $k$ el número de éxitos observados.
+Podemos usar también como estimador la media posterior de un modelo
+Beta-Bernoulli con inicial $a=2, b=2$, que nos daría $\hat{p}_2 = \frac{k + 2}{n
++ 4}$.
 
 Aunque podemos hacer los cálculos analíticos, aproximaremos el riesgo bajo
 el error cuadrático usando simulación
@@ -675,9 +677,9 @@ estimar_riesgo <- function(n = 20, theta, perdida, reps = 10000){
 estimar_riesgo(n = 20, theta = 0.1, perdida = perdida_cuad)
 ```
 Como dijimos, esta cantidad depende de $\theta$ que no conocemos. Así que
-calculamos para cada valor de $\theta$:
+calculamos para cada valor de $\theta:$
 
-Las funciones de riesgo $R(\theta, t_1)$ y $R(\theta, t_2)$ (dependen de \theta)
+Las funciones de riesgo $R(\theta, t_1)$ y $R(\theta, t_2)$ (dependen de $\theta$)
 se ven aproximadamente como sigue:
 
 ```{r}
@@ -690,7 +692,7 @@ ggplot(riesgo_tbl, aes(x = theta, y = riesgo, colour = estimador)) +
 
 Y vemos que el riesgo depende del verdadero valor del parametro:
 en los extremos, el estimador de máxima verosimilitud tiene menos riesgo,
-pero en el centro tiene más (esto es indepedentemente del tipo de intervalos
+pero en el centro tiene más (esto es independiente del tipo de intervalos
 que construyamos y su cobertura).
 
 La razón es que las estimaciones de tipo Agresti-Coull ($\theta_2$) 
@@ -702,7 +704,7 @@ de sesgo.
 
 ### Ejemplo: riesgo posterior {-}
 
-Supongamos que la inicial es $p(\theta) ~ \mathsf{Beta}(5,3)$
+Supongamos que la inicial es $\theta \sim \mathsf{Beta}(5,3)$
 
 ```{r}
 estimar_riesgo_post <- function(n = 20, x, perdida, reps = 20000){
@@ -800,31 +802,31 @@ estimador usar:
 
 1. (Estimador de Bayes) Si tenemos los datos $X$, escogeríamos una
 función $t_X$ que minimice el riesgo posterior $\rho(t, X)$, y nuestro
-estimador es $\hat{\theta} = t_X (X)$.
+estimador es $\hat{\theta}_n = t_X (X)$.
 2. (Regla de Bayes) Si no tenemos los datos, escogeríamos el estimador una función 
-$t$  que minimice el riesgo de Bayes $r(t)$, y estimaríamos usando $\hat{\theta} = t(X)$
+$t$  que minimice el riesgo de Bayes $r(t)$, y estimaríamos usando $\hat{\theta}_n = t(X)$
 3. Pero como el riesgo de Bayes es el promedio del riesgo posterior, la
 solución de 1 nos da la solución de 2. Es decir, el estimador que escogemos
 condicional a los datos $X$ es el mismo que escogeríamos antes de escoger los
-datos, dada una distribución inicial $p(\theta)$
+datos, dada una distribución inicial $p(\theta).$
 
 
-Por ejemplo, es posible demostrar que bajo la pérdida cuadrática, 
-la regla de Bayes es utilizar la media posterior, bajo la pérdida absoluta,
-la mediana posterior, etc.
+Por ejemplo, es posible demostrar que bajo la pérdida cuadrática, la regla de
+Bayes es utilizar la media posterior, bajo la pérdida absoluta, la mediana
+posterior, etc.
 
-Este estimador de Bayes tiene sentido desde el punto de vista frecuentista, 
-también, porque **minimiza
-el riesgo frecuentista promedio**, suponiendo la inicial $p(\theta)$. Por ejemplo, para
-la pérdida cuadrática podemos usar la descomposición de sesgo y varianza y obtenemos:
+Este estimador de Bayes tiene sentido desde el punto de vista frecuentista,
+también, porque **minimiza el riesgo frecuentista promedio**, suponiendo la
+inicial $p(\theta)$. Por ejemplo, para la pérdida cuadrática podemos usar la
+descomposición de sesgo y varianza y obtenemos:
 
-$$r(t) = E[R(\theta,t)] = E[ \mathsf{Sesgo}_\theta^2(t)] +E[\mathsf{Var}_\theta(t)] $$
+$$r(t) = \mathbb{E}[R(\theta,t)] = \mathbb{E}[ \mathsf{Sesgo}_\theta^2(t)] +\mathbb{E}[\mathsf{Var}_\theta(t)] $$
 
-Podemos ver entonces que el estimador de Bayes, en este caso la media posterior, es resultado de minimizar
-la suma de estas dos cantidades: por eso puede incurrir en sesgo, si ese costo
-se subsana con una reducción considerable de la varianza. Los estimadores
-insesgados que vimos en esta sección fueron subóptimos en muchos casos justamente
-porque son insesgados, e incurren en varianza grande.
+Podemos ver entonces que el estimador de Bayes, en este caso la media posterior,
+es resultado de minimizar la suma de estas dos cantidades: por eso puede
+incurrir en sesgo, si ese costo se subsana con una reducción considerable de la
+varianza. Los estimadores insesgados que vimos en esta sección fueron subóptimos
+en muchos casos justamente porque son insesgados, e incurren en varianza grande.
 
 ```{block2, type = 'ejercicio'}
 Regresa a los ejemplos anteriores donde evaluamos el desempeño de la media
@@ -838,10 +840,10 @@ Desde el punto de vista frecuentista, la cuestión es más complicada y
 hay varias maneras de proceder. En primer lugar, comenzaríamos con el 
 riesgo frecuentista $R(\theta, t)$. Una idea es,por ejemplo, calcular el 
 riesgo máximo:
-$$R_{\max} (t) = \max_\theta R(\theta, t)$$
+$$R_{\max} (t) = \underset{\theta}{\max} R(\theta, t)$$
 E nuestro ejemplo de arriba el máximo se alcanza en 0.5, y tomaríamos
 eso evaluación de los estimadores $\theta_1$ o $\theta_2$.  Buscaríamos entonces
-estimadores que minimicen este máximo,es decir, **estimadores minimax**. Pero también
+estimadores que minimicen este máximo, es decir, **estimadores minimax**. Pero también
 es posible enfocar este problema considerando sólo estimadores *insesgados*, lo que
 nos lleva por ejemplo a buscar estimadores con mínima varianza. También podemos
 enfocarnos en buscar estimador *admisibles*, que son aquellos cuyo riesgo no está
