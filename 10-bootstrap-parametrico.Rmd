@@ -60,14 +60,14 @@ Ahora optimizamos (checa que el método converge):
 ```{r}
 res <- optim(c(0, 0.5), log_p, control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
 res$convergence
-est_mv <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>% 
+est_mle <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>% 
   column_to_rownames(var = "parametro")
 ```
 
 Una vez que tenemos nuestros estimadores puntuales,
 
 ```{r}
-est_mv
+est_mle
 ```
 
 Sustituimos estos parámetros en la distribución normal y simulamos una muestra del
@@ -78,8 +78,8 @@ simular_modelo <- function(n, media, sigma){
   rnorm(n, media, sigma)
 }
 muestra_bootstrap <- simular_modelo(length(muestra), 
-                                    est_mv["media", "estimador"],
-                                    est_mv["sigma", "estimador"])
+                                    est_mle["media", "estimador"],
+                                    est_mle["sigma", "estimador"])
 head(muestra_bootstrap)
 ```
 
@@ -94,26 +94,26 @@ log_p_boot <- crear_log_p(muestra_bootstrap)
 res_boot <- optim(c(0, 0.5), log_p_boot, 
   control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
 res_boot$convergence
-est_mv_boot <- tibble(parametro = c("media", "sigma"), estimador = res_boot$par) %>% 
+est_mle_boot <- tibble(parametro = c("media", "sigma"), estimador = res_boot$par) %>% 
   column_to_rownames(var = "parametro")
-est_mv_boot
+est_mle_boot
 ```
 
 Y esta es nuestra replicación *bootstrap* de los estimadores de máxima verosimilitud.
 
 La idea es la misma que el *bootstrap*, con la ventaja de que estamos simulando
 del modelo que suponemos es el correcto, es decir, estamos usando información adicional
-que no teníamos en el *bootstrap* paramétrico. Ahora es necesario repetir un 
+que no teníamos en el *bootstrap* no paramétrico. Ahora es necesario repetir un 
 número grande de veces.
 
 Nótese que esta función solo envuelve el proceso de remuestreo,
 cálculo de la función de verosimilitud y optimización:
 
 ```{r, cache = TRUE}
-rep_boot <- function(rep, crear_log_p, est_mv, n){
+rep_boot <- function(rep, crear_log_p, est_mle, n){
   muestra_bootstrap <- simular_modelo(length(muestra), 
-                               est_mv["media", "estimador"], 
-                               est_mv["sigma", "estimador"])
+                               est_mle["media", "estimador"], 
+                               est_mle["sigma", "estimador"])
   log_p_boot <- crear_log_p(muestra_bootstrap)
   # optimizamos
   res_boot <- optim(c(0, 0.5), log_p_boot, 
@@ -121,7 +121,7 @@ rep_boot <- function(rep, crear_log_p, est_mv, n){
   try(if(res_boot$convergence != 0) stop("No se alcanzó convergencia."))
   tibble(parametro = c("media", "sigma"), estimador_boot = res_boot$par) 
 }
-reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, 
+reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mle, 
                                         n = length(muestra)), rep = ".id") 
 reps_boot
 ```
@@ -136,7 +136,7 @@ error_est
 Así que nuestra estimación final sería:
 
 ```{r}
-bind_cols(est_mv, error_est) %>% 
+bind_cols(est_mle, error_est) %>% 
   mutate(across(where(is.numeric), round, 3)) %>% 
   select(parametro, estimador, ee_boot)
 ```
@@ -170,15 +170,15 @@ log_p <- crear_log_p(muestra)
 # máxima verosimilitud
 res <- optim(c(0, 0.5), log_p, control = list(fnscale = -1, maxit = 1000), method = "Nelder-Mead")
 res$convergence
-est_mv <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>% 
+est_mle <- tibble(parametro = c("media", "sigma"), estimador = res$par) %>% 
   column_to_rownames(var = "parametro")
-est_mv
+est_mle
 ```
 
 Hacemos *bootstrap* paramétrico
 
 ```{r, cache = TRUE}
-reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mv, n = length(muestra)), .id = "rep") 
+reps_boot <- map_dfr(1:5000, ~ rep_boot(.x, crear_log_p, est_mle, n = length(muestra)), .id = "rep") 
 reps_boot
 ```
 
@@ -210,16 +210,16 @@ independientes (lo cual es posible demostrar).
 
 ```{block, type = 'mathblock'}
 **Bootstrap paramétrico**. Supongamos que tenemos una muestra iid $X_1,X_2,\ldots, X_n \sim f(x;\theta)$ de un modelo
-paramétrico, y un estimador de máxima verosimilitud $\hat{\theta}_{\mathsf{mv}}$ para $\theta$.
-El error estándar estimado para $\hat{\theta}_{\mathsf{mv}}$ por medio del bootstrap
+paramétrico, y un estimador de máxima verosimilitud $\hat{\theta}_{\mathsf{MLE}}$ para $\theta$.
+El error estándar estimado para $\hat{\theta}_{\mathsf{MLE}}$ por medio del bootstrap
 paramétrico se calcula como sigue:
 
-1. Se calcula $\hat{\theta}_{\mathsf{mv}}$ para la muestra observada
-2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{mv}})$ (muestra bootstrap)
-3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{mv}}$
+1. Se calcula $\hat{\theta}_{\mathsf{MLE}}$ para la muestra observada
+2. Se simula una muestra iid de tamaño $n$ de $f(x; \hat{\theta}_{\mathsf{MLE}})$ (muestra bootstrap)
+3. Se recalcula el estimador de máxima verosimilitud para la muestra *bootstrap* $\hat{\theta^*}_{\mathsf{MLE}}$
 4. Se repiten 2-3 una cantidad grande de veces (1000 - 10000)
-5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{mv}}$
-obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{mv}}$ 
+5. Se calcula la desviación estándar de los valores $\hat{\theta^*}_{\mathsf{MLE}}$
+obtenidos. Este es el error estándar estimado para el estimador $\hat{\theta}_{\mathsf{MLE}}$ 
 
 ```
 
@@ -249,8 +249,8 @@ la de los qq-plots, donde podemos juzgar fácilmente el tamaño de las desviacio
 y si estas tienen implicaciones prácticas importantes.
 
 El proceso es como sigue: si $X_1,X_,\ldots, X_n$ es una muestra de $f(x;\theta)$, 
-calculamos el estimador de máxima verosimilitud $\theta_{\mathsf{mv}}$ con los datos
-observados. Enchufamos $\hat{f} = f(x;\theta_{\mathsf{mv}})$, y hacemos una gráfica
+calculamos el estimador de máxima verosimilitud $\theta_{\mathsf{MLE}}$ con los datos
+observados. Enchufamos $\hat{f} = f(x;\theta_{\mathsf{MLE}})$, y hacemos una gráfica
 de los cuantiles teóricos de $\hat{f}$ contra los cuantiles muestrales.
 
 **Ejemplo**. Consideramos la siguiente muestra:
@@ -265,13 +265,13 @@ Y queremos usar un modelo exponencial. Encontramos los estimadores de maxima
 verosimilitud
 
 ```{r}
-est_mv <- MASS::fitdistr(muestra, "exponential")
-rate_mv <- est_mv$estimate
-rate_mv
+est_mle <- MASS::fitdistr(muestra, "exponential")
+rate_mle <- est_mle$estimate
+rate_mle
 ```
 ```{r, fig.width = 5, fig.height=3.5}
 g_exp <- ggplot(tibble(muestra = muestra), aes(sample = muestra)) +
-  geom_qq(distribution = stats::qexp, dparams = list(rate = rate_mv)) +
+  geom_qq(distribution = stats::qexp, dparams = list(rate = rate_mle)) +
   geom_abline() + labs(subtitle = "Gráfica de cuantiles exponenciales")
 g_exp
 ```
@@ -284,10 +284,10 @@ izquierda está más comprimida en los datos que en una exponencial.
 Sin embargo, si ajustamos una gamma:
 
 ```{r, fig.width = 8, fig.height=3.5}
-est_mv <- MASS::fitdistr(muestra, "gamma")$estimate
+est_mle <- MASS::fitdistr(muestra, "gamma")$estimate
 g_gamma <- ggplot(tibble(muestra = muestra), aes(sample = muestra)) +
   geom_qq(distribution = stats::qgamma, 
-          dparams = list(shape = est_mv[1], rate = est_mv[2])) +
+          dparams = list(shape = est_mle[1], rate = est_mle[2])) +
   geom_abline() + labs(subtitle = "Gráfica de cuantiles gamma")
 g_exp + g_gamma
 ```
@@ -317,11 +317,11 @@ ajustando un modelo para cada horario:
 ```{r}
 propinas <- read_csv("data/propinas.csv") %>% 
     mutate(cuenta_persona = cuenta_total / num_personas)
-propinas_mv <- propinas %>% 
+propinas_mle <- propinas %>% 
   group_by(momento) %>% 
-  summarise(est_mv = list(tidy(MASS::fitdistr(cuenta_persona, "lognormal"))))  %>% 
-  unnest(est_mv)
-propinas_mv 
+  summarise(est_mle = list(tidy(MASS::fitdistr(cuenta_persona, "lognormal"))))  %>% 
+  unnest(est_mle)
+propinas_mle 
 ```
 
 Ojo: estos parámetros están en escala logarítmica. Puedes revisar [aquí](https://en.wikipedia.org/wiki/Log-normal_distribution)
@@ -330,11 +330,11 @@ Ahora verificamos el ajuste:
 
 ```{r}
 g_1 <- ggplot(propinas %>% filter(momento == "Cena"), aes(sample = cuenta_persona)) +
-  geom_qq(dparams = list(mean = propinas_mv$estimate[1], sd = propinas_mv$estimate[2]),
+  geom_qq(dparams = list(mean = propinas_mle$estimate[1], sd = propinas_mle$estimate[2]),
           distribution = stats::qlnorm) + ylim(c(0, 20)) +
   geom_abline() + labs(subtitle = "Cena")
 g_2 <- ggplot(propinas %>% filter(momento == "Comida"), aes(sample = cuenta_persona)) +
-  geom_qq(dparams = list(mean = propinas_mv$estimate[3], sd = propinas_mv$estimate[4]),
+  geom_qq(dparams = list(mean = propinas_mle$estimate[3], sd = propinas_mle$estimate[4]),
           distribution = stats::qlnorm) + ylim(c(0, 20)) +
   geom_abline() + labs(subtitle = "Comida")
 g_1 + g_2
@@ -420,12 +420,12 @@ qplot(muestra)
 log_p <- crear_log_p(muestra)
 res <- optim(c(0.0, 0.0), log_p, control = list(fnscale = -1))
 res$convergence
-est_mv <- res$par
-names(est_mv) <- c("p_azar_logit", "p_corr_logit")
-est_mv
-probs_mv <- inv_logit(est_mv)
-names(probs_mv) <- c("p_azar", "p_corr")
-probs_mv
+est_mle <- res$par
+names(est_mle) <- c("p_azar_logit", "p_corr_logit")
+est_mle
+probs_mle <- inv_logit(est_mle)
+names(probs_mle) <- c("p_azar", "p_corr")
+probs_mle
 ```
 
 En primer lugar, parece ser que nuestras estimaciones son menos precias. Vamos 
@@ -439,14 +439,14 @@ rep_boot <- function(rep, simular, crear_log_p, pars, n){
   res_boot <- optim(c(0.0, 0.0), log_p_boot, 
     control = list(fnscale = -1))
   try(if(res_boot$convergence != 0) stop("No se alcanzó convergencia."))
-  est_mv_boot <- res_boot$par 
-  names(est_mv_boot) <- names(pars)
-  est_mv_boot["rep"] <- rep
-  est_mv_boot["convergence"] <- res_boot$convergence
-  est_mv_boot
+  est_mle_boot <- res_boot$par 
+  names(est_mle_boot) <- names(pars)
+  est_mle_boot["rep"] <- rep
+  est_mle_boot["convergence"] <- res_boot$convergence
+  est_mle_boot
 }
 set.seed(8934)
-reps_boot <- map(1:500, ~ rep_boot(.x, simular_modelo, crear_log_p, est_mv, 
+reps_boot <- map(1:500, ~ rep_boot(.x, simular_modelo, crear_log_p, est_mle, 
                                    n = length(muestra))) %>% 
   bind_rows
 reps_boot %>% mutate(across(everything(), round, 2)) %>% head
@@ -475,7 +475,7 @@ datos.
 ```{block, type="ejercicio"}
 - ¿Qué conclusiones acerca del examen obtienes al ver estas simulaciones bootstrap?
 ¿Cómo se deberían reportar estos resultados?
-- Qué pasa en este ejemplo si la $p_corr$ es más grande, o el tamaño de muestra es más 
+- Qué pasa en este ejemplo si la $p_{corr}$ es más grande, o el tamaño de muestra es más 
 grande?
 - Repite el ejercicio con los parámetros del primer ejemplo ($p_azar = 0.3, p_corr=0.75$)
 y el mismo tamaño de muestra. ¿Qué sucede en este caso?
