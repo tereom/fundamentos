@@ -286,8 +286,7 @@ quantile(sim_inicial$theta, c(0.025, 0.975)) %>% round(2)
 ```
 Es difícil justificar en abstracto por qué escogeriamos una inicial con esta
 forma. *Aunque esto los detallaremos más adelante*, puedes pensar, por el
-momento, que alguien observó algunos casos de esta población, y quizá vio dos
-éxitos y dos fracasos. Esto sugeriría que es poco probable que la probablidad
+momento, que alguien observó algunos casos de esta población, y quizá vio tres éxitos y tres fracasos. Esto sugeriría que es poco probable que la probablidad
 $\theta$ sea muy cercana a 0 o muy cercana a 1.
 
 Ahora podemos construir nuestra posterior. Tenemos que
@@ -534,12 +533,12 @@ Los dos ejemplos que hemos visto arriba son ejemplos de análisis conjugado:
 entonces la posterior para $p$ cuando $S_n=k$ es $\mathsf{Beta}(k + a, n - k + b)$,
 donde $S_n = X_1 + X_2 +\cdots +X_n$.
 
-Y en más en general:
+Y más en general:
 
 - (Beta-binomial) Si las observaciones $X_i, i=1,2,\ldots, m$ 
 son $\mathsf{Binomial}(n_i, p)$ ($n_i$'s fijas) independientes,
  queremos estimar $p$, y tomamos como distribución inicial para $p$ una $\mathsf{Beta}(a,b)$,
-entonces la posterior para $p$ cuando $S_n=k$ es $\mathsf{Beta}(k + a, n - k + b)$, 
+entonces la posterior para $p$ cuando $S_m=k$ es $\mathsf{Beta}(k + a, n - k + b)$, 
 donde $S_m = X_1 + X_2 +\cdots +X_m$ y $n= n_1+n_2+\cdots+n_m$
 
 También aplicamos:
@@ -559,7 +558,7 @@ Otro ejemplo típico es el modelo normal-normal:
 - (Normal-normal) Si $X_i\sim \mathsf{N}(\mu,\sigma)$, con $\sigma$ conocida, y tomamos
 como distribución inicial para $\mu \sim \mathsf{N}(\mu_0,\sigma_0)$, y definimos
 la *precisión* $\tau$ como el inverso de la varianza $\sigma^2$, entonces la posterior
-de $mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
+de $\mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
 y precisión $\tau_0 + n\tau$, donde $\lambda = \frac{n\tau}{\tau_0 + n\tau}$
 
 ```{block2, type='ejercicio'}
@@ -573,13 +572,13 @@ Más útil es el siguiente modelo:
 como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\beta$):
 
   - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta)$
-  - $\mu|\sigma$ es normal con media $\mu_0$ y varianza $\sigma / \sqrt{n_0}$ , y
+  - $\mu|\sigma$ es normal con media $\mu_0$ y varianza $\sigma^2 / {n_0}$ , y
   - $p(\mu, \sigma) = p(\mu|\sigma)p(\sigma)$
 
 - Entonces la posterior es:
   - $\tau|x$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
   $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$
-  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $\sigma' = \sigma/\sqrt{n_0 +n}$.
+  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $ \sigma^2/({n_0 +n})$.
   
   - $p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)$
 
@@ -588,8 +587,8 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
 
 1. Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
 el objeto de interés es la **posterior conjunta** de los parámetros $p(\theta_1,\theta_2,\cdots, \theta_p|x)$.
-Este útlimo ejemplo es relativamente simple pues por la selección de iniciales, pues
-para simular de la conjunta de $\mu$ y $\tau$ podemos simular primero $\tau$, y después
+Este último ejemplo es relativamente simple pues por la selección de iniciales,
+para simular de la conjunta de $\mu$ y $\tau$ podemos simular primero $\tau$ (o $\sigma$), y después
 usar este valor para simular de $\mu$: el par de valores resultantes son una simulación
 de la conjunta.
 
@@ -649,8 +648,7 @@ estándar sea de más de 13 centímetros.
 
 
 Comenzamos con $\mu$. Sabemos, por ejemplo, que 
-con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Esto es
-Podemos investigar: la media
+con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Podemos investigar: la media
 nacional en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82. 
 Esto es *variabilidad en la población*: debe ser muy poco probable, por ejemplo, que la 
 media de tenores sea 1.82
@@ -887,17 +885,21 @@ Supongamos que tenemos la posterior $p(\theta | x)$. Podemos generar una nueva
 
 ```{block2, type='mathblock'}
 La distribución **predictiva posterior** genera nuevas observaciones a partir de
-la información observada. La denotamos como $p(\tilde{x}|x)$. Para simular de ella:
+la información observada. La denotamos como $p(\tilde{x}|x)$. 
+
+Para simular de ella:
 
 - Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
 - Simulamos del modelo de las observaciones $\tilde{x} \sim p(\tilde{x}|\tilde{\theta})$.
 - Repetimos el proceso hasta obtener una muestra grande.
+- Usamos este método para producir, por ejemplo, **intervalos de predicción** para nuevos datos. 
   
 Si queremos una replicación de las observaciones de la predictiva posterior,
 
 - Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
 - Simulamos del modelo de las observaciones $\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(\tilde{x}|\tilde{\theta})$,
 done $n$ es el tamaño de muestra de la muestra original $x$.
+- Usamos este método para producir conjuntos de datos simulados que comparamos con los observados para verificar nuestro modelo.
 
 ```
 
@@ -1036,7 +1038,7 @@ pues sería demasiado corto.
 Es posible demostrar que en este caso, la posterior predictiva tiene una forma conocida:
 
 - La posterior predictiva para el modelo normal-gamma inverso es una distribución
-$t$ con $2\alpha'$ grados de libertad, centrada en $\mu'$, y con escala $s^2 = \frac{beta'}{alpha'}\frac{n + n_0 + 1}{n +n_0}$
+$t$ con $2\alpha'$ grados de libertad, centrada en $\mu'$, y con escala $s^2 = \frac{\beta'}{\alpha'}\frac{n + n_0 + 1}{n +n_0}$
 
 ```{r}
 mu_post <- pars_posterior[1]
