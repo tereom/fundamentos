@@ -319,8 +319,8 @@ una $N(\theta_{actual}, \sigma_{salto})$.
 Abajo implementamos el algoritmo con un salto de tipo normal:
 
 ```{r}
-crear_metropolis <- function(fun, sigma_salto = 0.1){
-  
+crear_metropolis <- function(fun_log, sigma_salto = 0.1){
+  # la entrada es la log posterior
   iterar_metropolis <- function(theta_inicial, n){
     iteraciones <- list()
     iteraciones[[1]] <- theta_inicial
@@ -329,7 +329,8 @@ crear_metropolis <- function(fun, sigma_salto = 0.1){
     for(i in 2:n){
       theta <- iteraciones[[i - 1]]
       theta_prop <- theta + rnorm(p, 0, sigma_salto)
-      cociente <- fun(theta_prop) / fun(theta)
+      # exp(log(p) - log(q)) = p/q
+      cociente <- exp(fun_log(theta_prop) - fun_log(theta))
       if(cociente >= 1 || runif(1,0,1) < cociente){
         iteraciones[[i]] <- theta_prop
       } else {
@@ -346,7 +347,11 @@ crear_metropolis <- function(fun, sigma_salto = 0.1){
 E intentamos simular de una exponencial no normalizada:
 
 ```{r}
-exp_no_norm <- function(x) ifelse(x > 0, exp(-0.5 * x), 0)
+exp_no_norm <- function(x) {
+  z <- ifelse(x > 0, exp(-0.5 * x), 0)
+  log(z)
+}
+
 iterador_metro <- crear_metropolis(exp_no_norm, sigma_salto = 0.25)
 sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000)) %>% 
   unnest()
@@ -356,7 +361,11 @@ ggplot(sims_tbl, aes(x = theta)) + geom_histogram()
 Ahora probemos con una beta(3, 2):
 
 ```{r}
-beta_no_norm <- function(x) ifelse(x > 0 && x < 1, (x^2)*(1-x), 0)
+beta_no_norm <- function(x) {
+  z <- ifelse(x > 0 && x < 1, (x^2)*(1-x), 0)
+  log(z)
+}
+
 iterador_metro <- crear_metropolis(beta_no_norm, sigma_salto = 0.04)
 sims_metro_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000)) %>% 
   unnest()
@@ -455,8 +464,10 @@ ggplot(sim_indep, aes(x = theta)) + geom_histogram()
 ```
 
 ```{r}
-f_dist <- function(x) 210 * dgamma(x, 20, 100)
-iterador_metro_chico <- crear_metropolis(f_dist, sigma_salto = 0.001)
+# logaritmo de densidad no normalizada
+log_f_dist <- function(x) 210 + dgamma(x, 20, 100, log = TRUE)
+# iterar
+iterador_metro_chico <- crear_metropolis(log_f_dist, sigma_salto = 0.001)
 sims_chico_tbl <- tibble(num_iter = 1:50000, 
                          theta = iterador_metro_chico(0.02, 50000)) %>% 
   unnest()
@@ -475,7 +486,7 @@ Ahora vemos qué pasa si ponemos el tamaño de salto demasiado grande:
 
 ```{r}
 set.seed(831)
-iterador_metro_grande <- crear_metropolis(f_dist, sigma_salto = 20)
+iterador_metro_grande <- crear_metropolis(log_f_dist, sigma_salto = 20)
 sims_grande_tbl <- tibble(num_iter = 1:50000, 
                           theta = iterador_metro_grande(0.02, 50000)) %>% 
   unnest()
@@ -498,7 +509,7 @@ Un valor intermedio nos dará mucho mejores resultados:
 
 ```{r}
 set.seed(831)
-iterador_metro_apropiada <- crear_metropolis(f_dist, sigma_salto = 0.1)
+iterador_metro_apropiada <- crear_metropolis(log_f_dist, sigma_salto = 0.1)
 sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_apropiada(0.02, 50000)) %>% 
   unnest()
 g_sim <- ggplot(sims_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
@@ -761,19 +772,18 @@ Veremos cómo simular con Metropolis para el problema de los cantantes.
 Sabemos como calcular la posterior:
 
 ```{r}
-crear_posterior <- function(x = datos, m_0, n_0, a, b){
+crear_log_posterior_norm <- function(x = datos, m_0, n_0, a, b){
   # calcula log_posterior
-  posterior <- function(mu, sigma){
+  log_posterior <- function(mu, sigma){
       log_verosim <- sum(dnorm(x, mu, sigma, log = TRUE))
       tau <- 1 / sigma^2
       log_inicial <- 
         dgamma(tau, a, b, log = TRUE) + 
         dnorm(mu, mu_0, sigma/sqrt(n_0), log = TRUE)
       log_p <- log_verosim + log_inicial
-      post <- exp(log_p)
-      post
+      log_p
   }
-  posterior
+  log_posterior
 }
 ```
 
@@ -789,17 +799,16 @@ cantantes <- lattice::singer %>%
   mutate(estatura_cm = round(2.54 * height)) %>% 
   filter(str_detect(voice.part, "Tenor")) %>% 
   sample_n(20)
-
-p <- crear_posterior(cantantes$estatura_cm, mu_0, n_0, a, b) 
-post <- function(pars) { p(pars[1], pars[2]) }
 ```
 
 Vemos cómo se ven las primeras iteraciones de nuestra cadena de Markov:
 
 ```{r}
+log_p <- crear_log_posterior_norm(cantantes$estatura_cm, mu_0, n_0, a, b) 
+log_post <- function(pars) { p(pars[1], pars[2]) }
 set.seed(823)
 metro_normal <- crear_metropolis(post, sigma_salto = 0.5)
-simulaciones <- metro_normal(c(mu = 172, sigma = 3), 50000) %>% transpose() %>% as_tibble
+simulaciones <- metro_normal(c(mu = 170, sigma = 3), 50000) %>% transpose() %>% as_tibble
 sim_tbl <- bind_rows(simulaciones) %>% unnest
 ggplot(sim_tbl %>% filter(row_number()< 100), aes(x = mu, y = sigma)) + geom_path() +
   geom_point()
@@ -834,30 +843,29 @@ y desviación estándar $\sigma$
 Escribimos la posterior:
 
 ```{r}
-crear_posterior <- function(x, m_0, sigma_0, inf, sup){
+crear_log_posterior <- function(x, m_0, sigma_0, inf, sup){
   # calcula log_posterior
-  posterior <- function(mu, sigma){
+  log_posterior <- function(mu, sigma){
       log_verosim <- sum(dnorm(x, mu, sigma, log = TRUE))
       log_inicial <- 
         dunif(sigma, inf, sup, log = TRUE) + 
         dnorm(mu, mu_0, sigma_0, log = TRUE)
       log_p <- log_verosim + log_inicial
-      post <- exp(log_p)
-      post
+      log_p
   }
-  posterior
+  log_posterior
 }
 ```
 
 ```{r}
-p <- crear_posterior(cantantes$estatura_cm, 175, 3, 2, 20) 
-post <- function(pars) { p(pars[1], pars[2]) }
+log_p <- crear_log_posterior(cantantes$estatura_cm, 175, 3, 2, 20) 
+log_post <- function(pars) { p(pars[1], pars[2]) }
 ```
 
 
 ```{r, fig.width = 7}
 set.seed(8231)
-metro_normal <- crear_metropolis(post, sigma_salto = 0.5)
+metro_normal <- crear_metropolis(log_post, sigma_salto = 0.5)
 simulaciones <- metro_normal(c(mu = 172, sigma = 5), 50000) %>% transpose() %>% as_tibble
 sim_tbl <- bind_rows(simulaciones) %>% unnest()
 g_normal_2 <- ggplot(sim_tbl, aes(x = mu, y = sigma))  +
@@ -954,17 +962,17 @@ menos estudiantes estudian, entonces deberíamos intentar otra conjunta.
 Escribimos el producto de la verosimilitud con la inicial:
 
 ```{r}
-crear_posterior <- function(x){
+crear_log_posterior <- function(x){
  
-  posterior <- function(theta_azar, theta_corr){
+  log_posterior <- function(theta_azar, theta_corr){
     log_verosim <- sum(log(theta_azar * dbinom(x, 10, 1/5) + 
                           (1 - theta_azar) * dbinom(x, 10, theta_corr)))
     log_inicial <- dbeta(theta_azar, 1, 5, log = TRUE) +
       dbeta(theta_corr, 7, 3, log = TRUE)
     log_post <- log_verosim + log_inicial
-    exp(log_post)
+    log_post
   }  
-  posterior
+  log_posterior
 
 }
 ```
@@ -972,10 +980,10 @@ crear_posterior <- function(x){
 Creamos la función de verosimilitud con los datos
 
 ```{r}
-p <- crear_posterior(muestra)
-post <- function(pars) { p(pars[1], pars[2]) }
+log_p <- crear_log_posterior(muestra)
+log_post <- function(pars) { log_p(pars[1], pars[2]) }
 set.seed(8231)
-metro_examenes <- crear_metropolis(post, sigma_salto = 0.02)
+metro_examenes <- crear_metropolis(log_post, sigma_salto = 0.02)
 simulaciones <- metro_examenes(c(theta_azar = 0.5, theta_corr = 0.5), 20000) %>% transpose() %>% as_tibble
 sim_tbl <- bind_rows(simulaciones) %>% unnest()
 g_1 <- ggplot(sim_tbl, aes(x = theta_azar, y = theta_corr))  +
@@ -1422,3 +1430,6 @@ es computacionalmente más costoso que Metropolis o Gibbs, sin embargo, sus
 propuestas suelen ser más eficientes, y por consiguiente no necesita muestras
 tan grandes. En particular cuando se ajustan modelos grandes y complejos (por 
 ejemplo, con variables con correlación alta) HMC supera a otros.
+
+
+
