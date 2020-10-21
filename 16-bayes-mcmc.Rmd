@@ -316,6 +316,20 @@ para tratar con una propuesta que no sea simétrica.
 Una elección común es escoger $p_{propuesta}(\theta_{prop} |\theta_{actual})$ como
 una $N(\theta_{actual}, \sigma_{salto})$.
 
+```{block,type="comentario"}
+En este curso, escribiremos varios métodos Markov Chain Monte Carlo
+desde cero para entender los básicos de cómo funciona.
+Sin embargo, **en la práctica no hacemos esto**, sino que usamos
+software estándar (Stan, JAGS, BUGS, etc.) para hacer este trabajo.
+
+**Expertos** en MCMC, métodos numéricos, y estadística a veces escriben partes de sus rutinas de simulación, y pueden lograr mejoras de 
+desempeño considerables. Excepto para modelos simples, esto no
+es trivial de hacer garantizando resultados correctos.
+```
+
+En resumen, todo el código de esta sección es de carácter ilustrativo.
+Utiliza implementaciones establecidas en las aplicaciones.
+
 Abajo implementamos el algoritmo con un salto de tipo normal:
 
 ```{r}
@@ -804,10 +818,10 @@ Vemos cómo se ven las primeras iteraciones de nuestra cadena de Markov:
 
 ```{r}
 log_p <- crear_log_posterior_norm(cantantes$estatura_cm, mu_0, n_0, a, b) 
-log_post <- function(pars) { p(pars[1], pars[2]) }
+log_post <- function(pars) { log_p(pars[1], pars[2]) }
 set.seed(823)
 metro_normal <- crear_metropolis(log_post, sigma_salto = 0.5)
-simulaciones <- metro_normal(c(mu = 172, sigma = 3), 50000) 
+sim_tbl <- metro_normal(c(mu = 172, sigma = 3), 50000) 
 ggplot(sim_tbl %>% filter(iter_num < 100), 
        aes(x = mu, y = sigma)) + 
   geom_path() +
@@ -1486,8 +1500,9 @@ todas <- ggplot(sim_g, aes(x = iter_num, y = valor)) +
   geom_line(alpha = 0.5) +
   facet_wrap(~ parametro, ncol = 1, scales = "free_y") +
   labs(subtitle = "Todas las simulaciones")
-sin_burnin <- ggplot(sim_g %>% filter(iter_num > 200), 
-                     aes(x = iter_num, y = valor)) +
+sin_burnin <- 
+  sim_g %>% filter(iter_num > 200)
+  ggplot(aes(x = iter_num, y = valor)) +
   geom_line(alpha = 0.5) +
   facet_wrap(~ parametro, ncol = 1, scales = "free_y") +
   labs(subtitle = "Quitando 200 de burn-in")
