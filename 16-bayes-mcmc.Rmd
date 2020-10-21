@@ -322,23 +322,27 @@ Abajo implementamos el algoritmo con un salto de tipo normal:
 crear_metropolis <- function(fun_log, sigma_salto = 0.1){
   # la entrada es la log posterior
   iterar_metropolis <- function(theta_inicial, n){
-    iteraciones <- list()
-    iteraciones[[1]] <- theta_inicial
     p <- length(theta_inicial)
     nombres <- names(theta_inicial)
+    iteraciones <- matrix(0, nrow = n, ncol = p)
+    colnames(iteraciones) <- nombres
+    iteraciones[1,] <- theta_inicial
     for(i in 2:n){
-      theta <- iteraciones[[i - 1]]
+      theta <- iteraciones[i - 1, ]
       theta_prop <- theta + rnorm(p, 0, sigma_salto)
       # exp(log(p) - log(q)) = p/q
       cociente <- exp(fun_log(theta_prop) - fun_log(theta))
       if(cociente >= 1 || runif(1,0,1) < cociente){
-        iteraciones[[i]] <- theta_prop
+        iteraciones[i, ] <- theta_prop
       } else {
-        iteraciones[[i]] <- theta  
+        iteraciones[i, ] <- theta  
       }
-      names(iteraciones[[i]]) <- nombres
     }
-    iteraciones
+    iteraciones_tbl <- iteraciones %>% 
+      as_tibble() %>%  
+      mutate(iter_num = row_number()) %>% 
+      select(iter_num, everything())
+    iteraciones_tbl
   }
   iterar_metropolis
 }
@@ -353,8 +357,7 @@ exp_no_norm <- function(x) {
 }
 
 iterador_metro <- crear_metropolis(exp_no_norm, sigma_salto = 0.25)
-sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000)) %>% 
-  unnest()
+sims_tbl <- iterador_metro(c(theta = 0.5), 50000)
 ggplot(sims_tbl, aes(x = theta)) + geom_histogram()
 ```
 
@@ -367,9 +370,8 @@ beta_no_norm <- function(x) {
 }
 
 iterador_metro <- crear_metropolis(beta_no_norm, sigma_salto = 0.04)
-sims_metro_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro(0.5, 50000)) %>% 
-  unnest()
-sims_indep_tbl <- tibble(num_iter = 1:30000, theta = rbeta(30000, 3, 2))
+sims_metro_tbl <- iterador_metro(c(theta = 0.5), 50000)
+sims_indep_tbl <- tibble(iter_num = 1:30000, theta = rbeta(30000, 3, 2))
 g_1 <- ggplot(sims_metro_tbl, aes(x = theta)) + geom_histogram() +
   labs(subtitle = "Metropolis")
 g_2 <- ggplot(sims_indep_tbl, aes(x = theta)) + 
@@ -390,12 +392,12 @@ simulaciones:
 
 ```{r, fig.width = 8}
 g_metropolis <- sims_metro_tbl %>% 
-  filter(num_iter < 500) %>% 
-  ggplot(aes(x = num_iter, y = theta)) +
+  filter(iter_num < 500) %>% 
+  ggplot(aes(x = iter_num, y = theta)) +
   geom_line() + labs(subtitle = "Metropolis")
 g_indep <- sims_indep_tbl %>% 
-  filter(num_iter < 500) %>% 
-  ggplot(aes(x = num_iter, y = theta)) +
+  filter(iter_num < 500) %>% 
+  ggplot(aes(x = iter_num, y = theta)) +
   geom_line() + labs(subtitle = "Independientes")
 g_metropolis + g_indep
 ```
@@ -468,10 +470,8 @@ ggplot(sim_indep, aes(x = theta)) + geom_histogram()
 log_f_dist <- function(x) 210 + dgamma(x, 20, 100, log = TRUE)
 # iterar
 iterador_metro_chico <- crear_metropolis(log_f_dist, sigma_salto = 0.001)
-sims_chico_tbl <- tibble(num_iter = 1:50000, 
-                         theta = iterador_metro_chico(0.02, 50000)) %>% 
-  unnest()
-g_sim <- ggplot(sims_chico_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
+sims_chico_tbl <- iterador_metro_chico(c(theta = 0.02), 50000)
+g_sim <- ggplot(sims_chico_tbl %>% filter(iter_num < 3000), aes(x = iter_num, y = theta)) + geom_line() + ylim(c(0, 0.5))
 dist_bplot <- ggplot(tibble(x = rgamma(10000, 20, 100)), aes(y = x, x = "a")) + geom_violin() + ylab("") + ylim(0, 0.5)
 g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
@@ -487,10 +487,8 @@ Ahora vemos qué pasa si ponemos el tamaño de salto demasiado grande:
 ```{r}
 set.seed(831)
 iterador_metro_grande <- crear_metropolis(log_f_dist, sigma_salto = 20)
-sims_grande_tbl <- tibble(num_iter = 1:50000, 
-                          theta = iterador_metro_grande(0.02, 50000)) %>% 
-  unnest()
-g_sim <- ggplot(sims_grande_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
+sims_grande_tbl <- iterador_metro_grande(c(theta = 0.02), 50000)
+g_sim <- ggplot(sims_grande_tbl %>% filter(iter_num < 3000), aes(x = iter_num, y = theta)) + geom_line() + ylim(c(0, 0.5))
 g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
 
@@ -510,9 +508,9 @@ Un valor intermedio nos dará mucho mejores resultados:
 ```{r}
 set.seed(831)
 iterador_metro_apropiada <- crear_metropolis(log_f_dist, sigma_salto = 0.1)
-sims_tbl <- tibble(num_iter = 1:50000, theta = iterador_metro_apropiada(0.02, 50000)) %>% 
-  unnest()
-g_sim <- ggplot(sims_tbl %>% filter(num_iter < 3000), aes(x = num_iter, y = theta)) + geom_line() + ylim(c(0, 0.5))
+sims_tbl <-iterador_metro_apropiada(c(theta = 0.02), 50000)
+g_sim <- ggplot(sims_tbl %>% filter(iter_num < 3000), 
+  aes(x = iter_num, y = theta)) + geom_line() + ylim(c(0, 0.5))
 g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
 Donde vemos que esta cadena parece mezclar bien (está explorando la totalidad
@@ -522,10 +520,11 @@ Comparemos cómo saldría por ejemplo la media posterior aproximada según
 los tres métodos:
 
 ```{r}
-estimaciones_media <- map_dfr(list(sims_chico_tbl, sims_grande_tbl, sims_tbl), 
-    ~ filter(.x, num_iter < 3000) %>% 
-      summarise(media = mean(theta))) %>% 
-  mutate(tipo = c("salto chico", "salto grande", "salto apropiado"))
+estimaciones_media <- map_dfr(
+  list(sims_chico_tbl, sims_grande_tbl, sims_tbl), 
+  ~ filter(.x, iter_num < 3000) %>% 
+    summarise(media = mean(theta))) %>% 
+    mutate(tipo = c("salto chico", "salto grande", "salto apropiado"))
 estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>% 
   select(tipo, media)
 ```
@@ -533,13 +532,13 @@ estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>%
 Veamos otra corrida:
 
 ```{r}
-set.seed(261)
-sims_chica_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_chico(0.02, 5000))
-sims_grande_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_grande(0.02, 5000))
-sims_tbl <- tibble(num_iter = 1:5000, theta = iterador_metro_apropiada(0.02, 5000))
-estimaciones_media <- map_dfr(list(sims_chico_tbl, sims_grande_tbl, sims_tbl), 
-    ~ filter(unnest(.x), num_iter < 3000) %>% 
-      summarise(media = mean(theta))) %>% 
+set.seed(6222131)
+sims_chica_tbl <- iterador_metro_chico(c(theta = 0.02), 5000)
+sims_grande_tbl <- iterador_metro_grande(c(theta = 0.02), 5000)
+estimaciones_media <- map_dfr(
+    list(sims_chica_tbl, sims_grande_tbl, sims_tbl), 
+    ~ filter(.x, iter_num < 3000) %>% 
+  summarise(media = mean(theta))) %>% 
   mutate(tipo = c("salto chico", "salto grande", "salto apropiado"))
 estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>% 
   select(tipo, media)
@@ -807,14 +806,15 @@ Vemos cómo se ven las primeras iteraciones de nuestra cadena de Markov:
 log_p <- crear_log_posterior_norm(cantantes$estatura_cm, mu_0, n_0, a, b) 
 log_post <- function(pars) { p(pars[1], pars[2]) }
 set.seed(823)
-metro_normal <- crear_metropolis(post, sigma_salto = 0.5)
-simulaciones <- metro_normal(c(mu = 170, sigma = 3), 50000) %>% transpose() %>% as_tibble
-sim_tbl <- bind_rows(simulaciones) %>% unnest
-ggplot(sim_tbl %>% filter(row_number()< 100), aes(x = mu, y = sigma)) + geom_path() +
+metro_normal <- crear_metropolis(log_post, sigma_salto = 0.5)
+simulaciones <- metro_normal(c(mu = 172, sigma = 3), 50000) 
+ggplot(sim_tbl %>% filter(iter_num < 100), 
+       aes(x = mu, y = sigma)) + 
+  geom_path() +
   geom_point()
 ```
 
-Y resumimos:;
+Y ahora vemos todas las simulaciones:
 
 ```{r}
 g_normal <- ggplot(sim_tbl, aes(x = mu, y = sigma)) + 
@@ -825,7 +825,7 @@ g_normal
 Y las medias posteriores son:
 
 ```{r}
-sim_tbl %>% summarise(across(is.numeric, mean))
+sim_tbl %>% summarise(across(is_double, mean))
 ```
 
 ### Ejemplo: observaciones normales, no conjugado {-}
@@ -859,15 +859,14 @@ crear_log_posterior <- function(x, m_0, sigma_0, inf, sup){
 
 ```{r}
 log_p <- crear_log_posterior(cantantes$estatura_cm, 175, 3, 2, 20) 
-log_post <- function(pars) { p(pars[1], pars[2]) }
+log_post <- function(pars) { log_p(pars[1], pars[2]) }
 ```
 
 
 ```{r, fig.width = 7}
 set.seed(8231)
 metro_normal <- crear_metropolis(log_post, sigma_salto = 0.5)
-simulaciones <- metro_normal(c(mu = 172, sigma = 5), 50000) %>% transpose() %>% as_tibble
-sim_tbl <- bind_rows(simulaciones) %>% unnest()
+sim_tbl <- metro_normal(c(mu = 172, sigma = 5), 50000) 
 g_normal_2 <- ggplot(sim_tbl, aes(x = mu, y = sigma))  +
   geom_point(alpha = 0.05) + coord_equal() + ylim(c(0, 14))
 g_normal + g_normal_2
@@ -984,8 +983,7 @@ log_p <- crear_log_posterior(muestra)
 log_post <- function(pars) { log_p(pars[1], pars[2]) }
 set.seed(8231)
 metro_examenes <- crear_metropolis(log_post, sigma_salto = 0.02)
-simulaciones <- metro_examenes(c(theta_azar = 0.5, theta_corr = 0.5), 20000) %>% transpose() %>% as_tibble
-sim_tbl <- bind_rows(simulaciones) %>% unnest()
+sim_tbl <- metro_examenes(c(theta_azar = 0.5, theta_corr = 0.5), 20000)
 g_1 <- ggplot(sim_tbl, aes(x = theta_azar, y = theta_corr))  +
   geom_point(alpha = 0.05) + coord_equal() 
 g_1
@@ -999,8 +997,8 @@ tasas de correctos más altas.
 
 ```{r}
 f <- c(0.05, 0.5, 0.95)
-sim_tbl %>% mutate(rep = row_number()) %>%
-  pivot_longer(-rep, names_to = "parametro", values_to = "valor") %>% 
+sim_tbl %>% 
+  pivot_longer(-iter_num, names_to = "parametro", values_to = "valor") %>% 
   group_by(parametro) %>% 
   summarise(cuantil = quantile(valor, f), f = f) %>% 
   mutate(cuantil = round(cuantil, 2)) %>% 
@@ -1203,7 +1201,7 @@ posterior_tbl <- iteraciones %>% filter(iter_num > 10) %>%
   mutate(dist = "posterior")
 sims_tbl <- bind_rows(inicial_tbl, posterior_tbl)
 ggplot(sims_tbl, aes(x = theta_1, y = theta_2, colour = dist)) +
-  geom_point(alpha = 0.1)
+  geom_point(alpha = 0.2)
 ```
 donde vemos que el resultado que obtuvimos es razonablemente consistente
 con nuestra información inicial, y las 10 mil tiradas de dado
@@ -1352,7 +1350,8 @@ caminata_g %>%
     mean(val), 
     sd(val), 
     median(val)
-    )
+    ) %>% 
+  mutate(across(is_double, round, 2))
 ```
 Y obtenemos un resultado similar a los anteriores.
 
