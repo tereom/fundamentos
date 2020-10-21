@@ -680,7 +680,7 @@ estimar_riesgo <- function(n = 20, theta, perdida, reps = 10000){
   # calcular pérdida
   media_perdida <- tibble(
     n = n, theta = theta,
-    estimador = c("t_1", "t_2"), 
+    estimador = c("MLE", "Posterior"), 
     riesgo = c(mean(perdida(theta, theta_1)), mean(perdida(theta, theta_2))))
   media_perdida
 }
@@ -726,7 +726,7 @@ estimar_riesgo_post <- function(n = 20, x, perdida, reps = 20000){
   # calcular pérdida
   media_perdida <- tibble(
     n = n, x = x,
-    estimador = c("t_1", "t_2"), 
+    estimador = c("MLE", "Posterior"), 
     riesgo_post= c(mean(perdida(theta_post, theta_1)), mean(perdida(theta_post, theta_2))))
   media_perdida
 }
