@@ -227,14 +227,15 @@ cobertura_ac <- calcular_cobertura(simulaciones, intervalo_agresti_coull)
 ```
 
 ```{r}
-graficar_cobertura(bind_rows(cobertura_wald, cobertura_bayes, cobertura_ac))
+bind_rows(cobertura_wald, cobertura_bayes, cobertura_ac) %>% 
+  mutate(tipo = factor(tipo, levels = c('intervalo_wald', 'intervalo_bayes', 'intervalo_agresti_coull'))) %>% 
+  graficar_cobertura()
 ```
 Que tiende a ser demasiado conservador para proporciones chicas:
 
 ```{r}
 graficar_cobertura(cobertura_ac) +
   ylim(c(0.9, 1))
-
 ```
 
 **Conclusión 1**: Los intervalos de Agresti-Coull son una buena alternativa
@@ -431,7 +432,8 @@ posterior?
 mu_0 <- 175
 n_0 <- 5
 # inicial para sigma^2 (gamma inversa)
-a <- c(3, 140)
+a <- 3
+b <- 140
 ```
 
 Para este ejemplo chico, usaremos muestras de tamaño 5:
@@ -538,15 +540,21 @@ errores %>%
   filter(parametro == "sigma") %>% 
 ggplot(aes(x = max_verosim, y = media_post)) +
   geom_abline(colour = "red") +
+  geom_hline(yintercept = sqrt(b/(a - 1)), lty = 2, color = 'black') + 
   geom_point() +
   labs(subtitle = "Estimación de sigma") +
   xlab("Estimador MV de sigma") +
   ylab("Media posterior de sigma") +
-  coord_fixed()
+  coord_fixed() + 
+  geom_segment(aes(x = 13, y = 11, xend = 13, yend = sqrt(b/(a - 1))), 
+               colour='red', size=1, arrow =arrow(length = unit(0.5, "cm"))) + 
+  geom_segment(aes(x = .5, y = 6, xend = .5, yend = sqrt(b/(a - 1))), 
+               colour='red', size=1, arrow =arrow(length = unit(0.5, "cm")))
 ```
 Nótese como estimaciones demasiado bajas o demasiada altas son contraídas
 hacia valores más consistentes con la inicial, lo cual resulta en 
-menor error.
+menor error. El valor esperado de $\sigma$ bajo la distribución inicial 
+se muestra como una horizontal punteada.
 
 ## Ejemplo: estimación de proporciones {-}
 
