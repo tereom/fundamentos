@@ -1432,3 +1432,64 @@ ejemplo, con variables con correlación alta) HMC supera a otros.
 
 
 
+
+
+## Diagnósticos generales para MCMC {-}
+
+Cuando generamos una muestra de la distribución posterior usando MCMC, sin 
+importar el método (Metrópolis, Gibbs, HMC), buscamos que:
+
+1. Los valores simulados sean representativos de la distribución posterior. Esto  implica que no deben estar influenciados por el valor inicial (arbitrario) y deben explorar todo el rango de la posterior, con suficientes retornos para evaluar cuánta masa hay en cada región.
+
+2. Debemos tener suficientes simulaciones de tal manera que las
+estimaciones sean precisas y estables.
+
+3. Queremos tener un método eficiente para generar las simulaciones.
+
+
+En la práctica intentamos cumplir lo más posible estos objetivos, pues aunque en principio los métodos MCMC garantizan que una cadena infinitamente larga logrará  una representación perfecta, siempre debemos tener un criterio para cortar la cadena y evaluar la calidad de las simulaciones.
+
+### Representatividad {-}
+
+**Burn-in e iteraciones iniciales**- En primer lugar, en muchas ocasiones las condiciones iniciales de las
+cadenas están en partes del espacio de parámetros que son "atípicos" en
+términos de la posterior. Así que es común quitar algunas observaciones
+iniciales (iteraciones de *burn-in*) para minimizar su efecto en
+resúmenes posteriores. 
+
+
+Por ejemplo, para el ejemplo de los cantantes, podemos
+ver que las iteraciones iniciales tienen como función principal
+llegar a las regiones de probabilidad posterior alta:
+
+```{r}
+log_p <- crear_log_posterior_norm(cantantes$estatura_cm, mu_0, n_0, a, b) 
+log_post <- function(pars) { log_p(pars[1], pars[2]) }
+set.seed(823)
+metro_normal <- crear_metropolis(log_post, sigma_salto = 0.5)
+sim_tbl <- metro_normal(c(mu = 162, sigma = 1), 5000) 
+ggplot(sim_tbl %>% filter(iter_num < 500), aes(x = mu, y = sigma)) + geom_path(alpha = 0.5) + geom_point(aes(colour = iter_num))
+```
+
+De modo que puede ser buena idea eliminar las
+primeras iteraciones. En teoría, no es necesario hacer esto si
+hacemos suficientes iteraciones, pues la cadena va a terminar
+en su estado estable explorando la posterior. En la práctica, y
+con pocas iteraciones, puede ayudar un poco a mejorar la precisión
+numérica de las cantidades que queramos calcular.
+
+```{r, fig.width=7}
+sim_g <- sim_tbl %>% pivot_longer(-iter_num, 
+                                    names_to = "parametro",
+                                    values_to = "valor")
+todas <- ggplot(sim_g, aes(x = iter_num, y = valor)) +
+  geom_line(alpha = 0.5) +
+  facet_wrap(~ parametro, ncol = 1, scales = "free_y") +
+  labs(subtitle = "Todas las simulaciones")
+sin_burnin <- ggplot(sim_g %>% filter(iter_num > 200), 
+                     aes(x = iter_num, y = valor)) +
+  geom_line(alpha = 0.5) +
+  facet_wrap(~ parametro, ncol = 1, scales = "free_y") +
+  labs(subtitle = "Quitando 200 de burn-in")
+todas + sin_burnin
+```
