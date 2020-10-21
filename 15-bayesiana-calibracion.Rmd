@@ -87,7 +87,7 @@ de los parámetros.
 ## Ejemplo: estimación de una proporción {-}
 
 Recordamos nuestro problema de estimación de una proporcion $\theta$. Usando
-la distribución inicial $p(\theta)\sim Beta(2,2)$, y la verosimilitud estándar
+la distribución inicial $p(\theta)\sim \mathsf{Beta}(2,2)$, y la verosimilitud estándar
 binomial, vimos que la posterior cuando observamos $k$
 éxitos es  $$p(\theta|k) \sim \mathsf{Beta}(k + 2, n - k + 2)$$.
 
@@ -95,7 +95,7 @@ La media posterior es
 $$\frac{k + 2}{n + 4} $$
 que podemos interpretar como: agrega 2 éxitos y 2 fracasos a los datos observados
 y calcula la proporción de éxitos. Un intervalo posterior de credibilidad del 95% se calcula
-encontrando los cuantiles 0.05 y 0.95 de una $\mathsf{Beta}(k + 2, n - k + 2)$
+encontrando los cuantiles 0.025 y 0.975 de una $\mathsf{Beta}(k + 2, n - k + 2)$
 
 $$I_a = \left [q_{0.025}(k+2, n+4), q_{0.975}(k+2, n+4)\right ]$$
 Que compararemos con el intervalo usual de Wald: si $\hat{\theta} = \frac{k}{n}$, entonces
@@ -165,7 +165,6 @@ calcular_cobertura <- function(simulaciones, construir_intervalo){
 }
 ```
 
-
 ```{r}
 cobertura_wald <- calcular_cobertura(simulaciones, intervalo_wald)
 cobertura_wald
@@ -180,7 +179,8 @@ graficar_cobertura <- function(cobertura_tbl){
   facet_wrap(~n) +
   ylim(0, 1) 
 }
-graficar_cobertura(cobertura_wald)
+cobertura_wald %>% 
+  graficar_cobertura()
 ```
 La cobertura real es mucho más baja que la nominal en muchos casos, especialmente
 cuando la $p$ es baja $n$ es chica. Pero incluso para muestras relativamente grandes (100),
@@ -194,7 +194,9 @@ cobertura_bayes <- calcular_cobertura(simulaciones, intervalo_bayes)
 
 
 ```{r}
-graficar_cobertura(bind_rows(cobertura_bayes, cobertura_wald))
+bind_rows(cobertura_wald, cobertura_bayes) %>% 
+  mutate(tipo = factor(tipo, levels = c('intervalo_wald', 'intervalo_bayes'))) %>% 
+  graficar_cobertura()
 ```
 Y vemos que en general el intervalo de Bayes es superior al de Wald, en sentido
 de que su cobertura es más cercana a la nominal. El caso donde fallan los dos
