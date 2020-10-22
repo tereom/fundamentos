@@ -1,0 +1,302 @@
+---
+title: "Ejemplos de inferencia bayesiana en Stan"
+output: html_notebook
+---
+
+En esta parte veremos cómo correr y diagnosticar en Stan varios ejemplos vistos en clase. Para instalar *cmdstanr* y Stan, puedes ver [aquí](https://mc-stan.org/cmdstanr/). En python puedes usar *pystan*, por ejemplo.
+
+```{r}
+# install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+library(cmdstanr)
+library(posterior)
+library(tidyverse)
+```
+
+
+## Estimación de una proporción
+
+Escribimos el código para el modelo en un archivo *modelo-1.stan*, 
+y compilamos:
+
+```{r}
+archivo_stan <- file.path("stan/modelo-1.stan")
+# compilar
+mod <- cmdstan_model(archivo_stan)
+mod
+```
+
+Pasamos datos y muestreamos
+
+```{r}
+datos_lista <- list(n = 30, y = 19)
+ajuste <- mod$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  parallel_chains = 4,
+  refresh = 500)
+```
+Checamos diagnósticos:
+
+```{r}
+ajuste$cmdstan_diagnose()
+```
+
+Si no hay problemas, podemos ver el resumen:
+
+```{r}
+ajuste$summary()
+```
+Donde verificamos que el tamaño de muestra efectivo (ess) y el diagnóstico de
+$\hat{R}$ son apropiados.
+
+Podemos ver las cadenas de la siguiente forma:
+
+```{r}
+theta_tbl <- ajuste$draws(c("theta", "theta_inicial")) %>% as_draws_df()
+ggplot(theta_tbl, aes(x = .iteration, y = theta)) +
+  geom_line() +
+  facet_wrap(~.chain, ncol = 1)
+```
+Y replicamos la gráfica de las notas haciendo:
+
+```{r, fig.width=6, fig.height = 4}
+sims_tbl <- theta_tbl %>% pivot_longer(theta:theta_inicial, names_to = "dist", values_to = "theta")
+ggplot(sims_tbl, aes(x = theta, fill = dist)) + 
+  geom_histogram(aes(x = theta), bins = 30, alpha = 0.5, position = "identity")
+```
+## Estimación del máximo de una uniforme.
+
+Tomamos el ejemplo de los boletos de lotería
+
+```{r}
+loteria_tbl <- read_csv("../data/nums_loteria_avion.csv", col_names = c("id", "numero")) %>% 
+  mutate(numero = as.integer(numero))
+set.seed(334)
+muestra_loteria <- sample_n(loteria_tbl, 25) %>% 
+  mutate(numero = numero/1000)
+```
+
+```{r}
+archivo_stan <- file.path("stan/modelo-2.stan")
+# compilar
+mod <- cmdstan_model(archivo_stan)
+mod
+```
+
+Pasamos datos y muestreamos
+
+```{r}
+datos_lista <- list(n = nrow(muestra_loteria), y = muestra_loteria$numero)
+ajuste <- mod$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  iter_sampling = 20000,
+  parallel_chains = 4,
+  refresh = 2000)
+```
+Checamos diagnósticos:
+
+```{r}
+ajuste$cmdstan_diagnose()
+```
+
+Si no hay problemas, podemos ver el resumen:
+
+```{r}
+resumen <- ajuste$summary()
+resumen
+```
+
+El intervalo 95% que obtenemos es:
+
+```{r}
+ajuste$draws("theta") %>% as_draws_df() %>% 
+  summarise(theta_inf = quantile(theta, 0.025), 
+            theta_mediana = quantile(theta, 0.5),
+            theta_sup = quantile(theta, 0.975))
+```
+
+
+Podemos ahora intentar con la inicial gamma que nos pareció 
+más intuitiva, aún cuando el modelo no es conjugado:
+
+```{r}
+archivo_stan <- file.path("stan/modelo-3.stan")
+# compilar
+mod <- cmdstan_model(archivo_stan)
+mod
+```
+
+Pasamos datos y muestreamos
+
+```{r}
+datos_lista <- list(n = nrow(muestra_loteria), y = muestra_loteria$numero)
+ajuste <- mod$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  iter_sampling = 10000,
+  parallel_chains = 4,
+  refresh = 2000)
+```
+Checamos diagnósticos:
+
+```{r}
+ajuste$cmdstan_diagnose()
+```
+
+Si no hay problemas, podemos ver el resumen:
+
+```{r}
+resumen <- ajuste$summary()
+resumen
+```
+
+El intervalo 95% que obtenemos es:
+
+```{r}
+ajuste$draws("theta") %>% as_draws_df() %>% 
+  summarise(theta_inf = quantile(theta, 0.025), 
+            theta_mediana = quantile(theta, 0.5),
+            theta_sup = quantile(theta, 0.975))
+```
+
+Y la posterior se ve como sigue:
+
+```{r}
+theta_post_sim <- ajuste$draws("theta") %>% as.numeric
+qplot(theta_post_sim)
+```
+
+## Ejemplo de cantantes
+
+Haremos el ejemplo no conjugado de estaturas de cantantes, con 
+verificación predictiva posterior.
+
+```{r}
+archivo_stan <- file.path("stan/modelo-cantantes.stan")
+# compilar
+mod <- cmdstan_model(archivo_stan)
+mod
+```
+
+Pasamos datos y muestreamos
+
+```{r}
+set.seed(3413)
+cantantes <- lattice::singer %>% 
+  mutate(estatura_cm = (2.54 * height)) %>% 
+  filter(str_detect(voice.part, "Tenor")) %>% 
+  sample_n(20)
+datos_lista <- list(n = nrow(cantantes), y = cantantes$estatura_cm)
+ajuste <- mod$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  iter_warmup = 4000,
+  iter_sampling = 4000,
+  refresh = 2000)
+```
+Checamos diagnósticos:
+
+```{r}
+ajuste$cmdstan_diagnose()
+```
+
+Si no hay problemas, podemos ver el resumen:
+
+```{r}
+resumen <- ajuste$summary()
+resumen
+```
+
+El intervalo 95% que obtenemos es:
+
+```{r}
+ajuste$draws(c("mu", "sigma")) %>% as_draws_df() %>% 
+ggplot(aes(x = mu, y = sigma)) + geom_point(alpha = 0.1) +
+  coord_equal()
+```
+
+
+Y ahora extraemos algunas replicaciones de la posterior predictiva:
+
+```{r}
+y_sim_tbl <- ajuste$draws("y_sim") %>% as_draws_df() %>% 
+  pivot_longer(cols = starts_with("y_sim"), "nombre") %>% 
+  separate(nombre, c("nombre", "n_obs", "vacio"), "[\\[\\]]") %>% 
+  select(-nombre, -vacio) %>% 
+  filter(.chain == 1, .iteration < 12) %>% 
+  select(.iteration, value) %>% 
+  bind_rows(tibble(.iteration = 12, value = round(cantantes$estatura_cm, 0)))
+ggplot(y_sim_tbl, aes(sample = value)) +
+  geom_qq() +
+  facet_wrap(~ .iteration)
+```
+
+
+
+## Ejemplo: exámenes
+
+
+```{r}
+sim_formas <- function(p_azar, p_corr){
+  tipo <- rbinom(1, 1, 1 - p_azar)
+  if(tipo==0){
+    # al azar
+    x <- rbinom(1, 10, 1/5)
+  } else {
+    # no al azar
+    x <- rbinom(1, 10, p_corr)
+  }
+  x
+}
+set.seed(12)
+muestra <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
+```
+
+
+
+```{r}
+archivo_stan <- file.path("stan/modelo-examenes.stan")
+# compilar
+mod <- cmdstan_model(archivo_stan)
+mod
+```
+
+Pasamos datos y muestreamos
+
+```{r}
+set.seed(3413)
+datos_lista <- list(n = length(muestra), y = muestra)
+ajuste <- mod$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  iter_warmup = 4000,
+  iter_sampling = 4000,
+  refresh = 2000)
+```
+Checamos diagnósticos:
+
+```{r}
+ajuste$cmdstan_diagnose()
+```
+
+Si no hay problemas, podemos ver el resumen:
+
+```{r}
+resumen <- ajuste$summary()
+resumen
+```
+
+```{r}
+sims_theta_tbl <- 
+  ajuste$draws(c("theta_azar", "theta_corr")) %>% 
+  as_draws_df()  
+ggplot(sims_theta_tbl, aes(x = theta_azar, y = theta_corr)) +
+  geom_point(alpha = 0.1)
+```
+
