@@ -477,9 +477,9 @@ datos.
 ```{block, type="ejercicio"}
 - ¿Qué conclusiones acerca del examen obtienes al ver estas simulaciones bootstrap?
 ¿Cómo se deberían reportar estos resultados?
-- Qué pasa en este ejemplo si la $p_corr$ es más grande, o el tamaño de muestra es más 
+- Qué pasa en este ejemplo si la $p_{corr}$ es más grande, o el tamaño de muestra es más 
 grande?
-- Repite el ejercicio con los parámetros del primer ejemplo ($p_azar = 0.3, p_corr=0.75$)
+- Repite el ejercicio con los parámetros del primer ejemplo ($p_{azar} = 0.3, p_{corr}=0.75$)
 y el mismo tamaño de muestra. ¿Qué sucede en este caso?
 - En el caso extremo, decimos que el modelo no está indentificado, y eso generalmente
 sucede por un problema en el planteamiento del modelo, independientemente de los datos.
