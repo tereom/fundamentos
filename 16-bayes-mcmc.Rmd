@@ -850,7 +850,7 @@ iniciales que sean más intuitivas y acorde con nuestro conocimiento
 existente.
 
 Por ejemplo, podemos poner $p(\mu, \sigma) = p(\mu)p(\sigma)$, donde
-la densidad de $\mu \sim N(175, 2)$ y $\sigma \sim U[5, 20]$. Igual
+la densidad de $\mu \sim N(175, 2)$ y $\sigma \sim U[2, 20]$. Igual
 que antes, la verosimilitud $p(x|\mu, \sigma)$ es normal con media $\mu$
 y desviación estándar $\sigma$
 
