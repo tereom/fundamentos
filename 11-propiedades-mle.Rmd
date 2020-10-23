@@ -213,8 +213,7 @@ g1 <- dt %>%
   geom_ribbon(aes(ymin = p_true-TOL, ymax = p_true + TOL ), alpha = .3) + 
   geom_line(aes(group = muestra), alpha = .05) + 
   geom_hline(yintercept = p_true, lty = 2, color = 'red') +
-  ylab(TeX('$\\bar{x}_n$')) + 
-  # geom_line(data = esperado, aes(x = 1:n_muestra, y = media), lty = 1, color = 'lightblue') +
+  ylab(expression(bar(x)[n])) + 
   scale_x_log10()
 
 
