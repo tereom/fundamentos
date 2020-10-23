@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Sección 3 Tipos de estudio y experimentos | EST-46111: Fundamentos de Estadística con Remuestreo</title>
+  <title>Sección 9 Propiedades teóricas de MLE | EST-46111: Fundamentos de Estadística con Remuestreo</title>
   <meta name="description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
   <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Sección 3 Tipos de estudio y experimentos | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  <meta property="og:title" content="Sección 9 Propiedades teóricas de MLE | EST-46111: Fundamentos de Estadística con Remuestreo" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="tereom/fundamentos" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Sección 3 Tipos de estudio y experimentos | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  <meta name="twitter:title" content="Sección 9 Propiedades teóricas de MLE | EST-46111: Fundamentos de Estadística con Remuestreo" />
   
   <meta name="twitter:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="análisis-exploratorio.html"/>
-<link rel="next" href="pruebas-de-hipótesis.html"/>
+<link rel="prev" href="bootstrap-paramétrico.html"/>
+<link rel="next" href="tareas.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -337,452 +337,379 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="tipos-de-estudio-y-experimentos" class="section level1">
-<h1><span class="header-section-number">Sección 3</span> Tipos de estudio y experimentos</h1>
-<div id="motivación" class="section level3 unnumbered">
-<h3>Motivación</h3>
+<div id="propiedades-teóricas-de-mle" class="section level1">
+<h1><span class="header-section-number">Sección 9</span> Propiedades teóricas de MLE</h1>
+<p>El método de máxima verosimiltud es uno de los métodos más utilizados en la
+inferencia estadística paramétrica. En esta sección estudiaremos las propiedades
+teóricas que cumplen los estimadores de máxima verosimilitud (<span class="math inline">\(\textsf{MLE}\)</span>) y que
+han ayudado en su <em>casi</em> adopción universal.</p>
+<p>Estas propiedades de los <span class="math inline">\(\textsf{MLE}\)</span> son válidas siempre y cuando el modelo
+<span class="math inline">\(f(x; \theta)\)</span> satisfaga ciertas condiciones de regularidad. En particular
+veremos las condiciones para que los estimadores de máxima verosimilitud sean:
+consistentes, asintóticamente normales, asintóticamente insesgados,
+asintóticamente eficientes, y equivariantes.</p>
+<div class="comentario">
+<p>
+Los estimadores <span class="math inline"><span class="math inline">\(\textsf{MLE}\)</span></span> en ocasiones son malinterpretados como una estimación puntual en la inferencia, y por ende, incapaces de cuantificar incertidumbre. A lo largo de estas notas hemos visto cómo extraer intervalos de confianza por medio de simulación y por lo tanto incorporar incertidumbre en la estimación. Sin embargo, hay otros maneras de reportar incertidumbre para <span class="math inline"><span class="math inline">\(\textsf{MLE}\)</span></span>. Y hablaremos de ello en esta sección.
+</p>
+</div>
+<p>A lo largo de esta sección asumiremos muestras de la forma
+<span class="math display">\[\begin{align}
+  X_1, \ldots, X_n \overset{\text{iid}}{\sim} f(x; \theta^*),
+\end{align}\]</span>
+donde <span class="math inline">\(\theta^*\)</span> es el valor verdadero —que suponemos desconocido pero fijo—
+del parámetro <span class="math inline">\(\theta \in \Theta\)</span>, y sea <span class="math inline">\(\hat \theta_n\)</span> el estimador de máxima
+verosimilitud de <span class="math inline">\(\theta.\)</span></p>
+<div id="ejemplo-10" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Usaremos este ejemplo para ilustrar los diferentes puntos teóricos a lo largo de
+esta sección. Consideremos el caso de una muestra de variables binarias que
+registran el éxito o fracaso de un experimento. Es decir, <span class="math inline">\(X_1, \ldots, X_n \sim \textsf{Bernoulli}(p),\)</span> donde el párametro desconocido es el procentaje de
+éxitos. Éste último denotado por <span class="math inline">\(p.\)</span> Este ejemplo lo hemos estudiado en
+secciones pasadas (ver Sección <a href="S-max-verosimilitud.html#S:max-verosimilitud">7</a>), y sabemos que el <span class="math inline">\(\textsf{MLE}\)</span> es
+<span class="math display">\[\begin{align}
+  \hat p_n = \frac{S_n}{n} = \bar X_n,
+\end{align}\]</span>
+donde <span class="math inline">\(S_n= \sum_i X_i\)</span> es el número total de éxitos en la muestra.</p>
+<p>La figura siguiente ilustra el estimador <span class="math inline">\(\hat p_n\)</span> como función del número de
+observaciones en nuestra muestra. Podemos apreciar cómo el promedio parece
+estabilizarse alrededor del verdadero valor de <span class="math inline">\(p^* = 0.25\)</span> cuando tenemos una
+cantidad suficientemente grande de observaciones.</p>
+<p><img src="11-propiedades-mle_files/figure-html/unnamed-chunk-2-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Como es de esperarse, diferentes muestras tendrán diferentes valores de <span class="math inline">\(n\)</span> dónde las
+trayectorias parezca que se haya estabilizado (Ver figura siguiente). Sin embargo,
+se puede notar que este comportamiento parece estar controlado y son <em>raras</em> las
+trayectorias que se encuentran más lejos.</p>
+<p><img src="11-propiedades-mle_files/figure-html/unnamed-chunk-3-1.png" width="480" style="display: block; margin: auto;" />
+Los conceptos siguientes nos permitirán cuantificar el porcentaje de
+trayectorias que se mantienen cercanas a <span class="math inline">\(p^*,\)</span> en el caso límite de un número
+grande de observaciones, cuando trabajemos con estimadores de máxima
+verosimilitud. Más aún, nos permitirán cracterizar la distribución para dicho
+límite y aprenderemos de otras propiedades bajo este supuesto asintótico.</p>
+</div>
+<div id="consistencia" class="section level2 unnumbered">
+<h2>Consistencia</h2>
+<p>Es prudente pensar que para un estimador, lo que nos interesa es que conforme
+más información tengamos, más cerca esté del valor desconocido. Esta propiedad
+la representamos por medio del concepto de <em>consistencia</em>. Para hablar de
+esta propiedad necesitamos definir un tipo de convergencia para una
+secuencia de variables aleatorias, <strong>convergencia en probabilidad.</strong></p>
+
+<div class="mathblock">
+<strong>Definición.</strong> Una sucesión de variables aleatorias <span class="math inline">\(X_n\)</span> converge en
+probabilidad a la variable aleatoria <span class="math inline">\(X,\)</span> lo cual denotamos por
+<span class="math inline">\(X_n \overset{P}{\rightarrow} X\)</span>, si para toda <span class="math inline">\(\epsilon \gt 0\)</span>,
+</div>
+
+<p><span class="math display">\[\lim_{n \rightarrow \infty}  \mathbb{P}(|X_n - X| &gt; \epsilon) = 0.\]</span></p>
+Ahora, definimos un estimador consistente como:
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> Un estimador <span class="math inline"><span class="math inline">\(\tilde \theta_n\)</span></span> es <strong>consistente</strong> si converge en probabilidad a <span class="math inline"><span class="math inline">\(\theta^*.\)</span></span> Donde <span class="math inline"><span class="math inline">\(\theta^*\)</span></span> denota el verdadero valor del parámetro, que asumimos fijo.
+</p>
+</div>
+En particular, los estimadores <span class="math inline">\(\textsf{MLE}\)</span> son consistentes.
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> Sea <span class="math inline"><span class="math inline">\(X_n \sim f(X; \theta^*),\)</span></span> una muestra iid, tal que <span class="math inline"><span class="math inline">\(f(X; \theta)\)</span></span> cumple con ciertas condiciones de regularidad. Entonces, <span class="math inline"><span class="math inline">\(\hat \theta_n,\)</span></span> el estimador de máxima verosimilitud, converge en probabilidad a <span class="math inline"><span class="math inline">\(\theta^*.\)</span></span> Es decir, <span class="math inline"><span class="math inline">\(\hat \theta_n\)</span></span> es consistente.
+</p>
+</div>
+<p>La demostración de este teorema la pueden encontrar en <span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span> y escapa
+a los objetivos del curso. Sin embargo, el boceto es importante pues
+nos permite hablar de un concepto muy útil en probabilidad, aprendizaje de máquina
+y teoría de la información: <em>divergencia de Kullback-Leibler,</em> la cual mide la diferencia
+entre dos distribuciones, y está definida como
+<span class="math display">\[ D(f\, \|\, g) = \int f(x) \log \frac{f(x)}{g(x)} \, \text{d}x.\]</span>
+Nota que <span class="math inline">\(D(f\, \|\, g) \geq 0,\)</span> no es simétrica, y <span class="math inline">\(D(f\, \|\, g) =0\)</span> si y sólo si
+<span class="math inline">\(f = g.\)</span></p>
+<p><em>Idea de la demostración.</em> Este boceto nos permite ilustrar la importancia
+teórica de la log-verosimilitud. Pues para buscar el <span class="math inline">\(\textsf{MLE}\)</span> necesitamos maximizar
+<span class="math display">\[\ell_n(\theta) = \sum_{i = 1}^n \log f(X_i; \theta).\]</span></p>
+<p>Esta expresión como suma nos permite ligar la <em>Ley de los Grandes Números</em> mediante:
+<span class="math display">\[\frac{\ell_n(\theta)}{n}= \frac1n\sum_{i = 1}^n \log f(X_i; \theta) \approx \mathbb{E}[\log f(X; \theta)],\]</span>
+donde el valor esperado se toma con respecto a la distribución de la muestra.
+Es decir,
+<span class="math display">\[\mathbb{E}[\log f(X; \theta)] = \int f(x; \theta^*)  \log f(x; \theta)\,  \text{d}x,\]</span>
+misma que podemos rescribir como
+<span class="math display">\[\mathbb{E}[\log f(X; \theta)] = -D( \theta^* \| \theta) + \Psi (\theta^*).\]</span>
+Ahora, dado que sabemos que <span class="math inline">\(D( \theta^* \| \theta) \geq 0\)</span> y <span class="math inline">\(D( \theta^* \| \theta) = 0,\)</span> si y sólo si <span class="math inline">\(\theta^* = \theta,\)</span> la log-verosimilitud es máxima
+en <span class="math inline">\(\hat \theta_n \approx \theta^*,\)</span> y la approximación se vuelve una identidad
+en el límite <span class="math inline">\(n\rightarrow \infty.\)</span></p>
 <div class="ejercicio">
 <p>
-<strong>Pregunta de entrevista de Google <span class="citation"><span class="citation">(Chihara and Hesterberg <a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span></span></strong><br />
-Imagina que eres consultor y te preguntan lo siguiente (ver siguiente figura):<br />
-Estoy haciendo una comparación de antes y después donde la hipótesis alternativa es pre.media.error &gt; post.media.error. La distribución de ambas muestras es sesgada a la derecha. ¿Qué prueba me recomiendas para ésta situación?
+En los pasos anteriores:
+</p>
+<ul>
+<li>
+deriva el término faltante <span class="math inline"><span class="math inline">\(\Psi (\theta^*);\)</span></span>
+</li>
+<li>
+describe en tus propias palabras lo que significa <span class="math inline"><span class="math inline">\(D( \theta^* \| \theta).\)</span></span> Recuerda, que arriba la definimos para distribuciones <span class="math inline"><span class="math inline">\(f\)</span></span> y <span class="math inline"><span class="math inline">\(g\)</span></span>. Es decir, <span class="math inline"><span class="math inline">\(D( f \| g).\)</span></span>
+</li>
+</ul>
+</div>
+<div id="ejemplo-11" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>El estimador <span class="math inline">\(\hat p_n\)</span> es <strong>consistente.</strong> Esto quiere decir que el
+estimador se vuelve más preciso conforme obtengamos más información. En general
+esta es una propiedad que usualmente los estimadores deben satisfacer para ser
+útiles en la práctica. La figura siguiente muestra el estimador <span class="math inline">\(\hat p_n\)</span> como
+función del número de observaciones utilizado. Distintas curvas corresponden a
+distintas realizaciones de muestras obtenidas del modelo (<span class="math inline">\(B = 500\)</span>).</p>
+<p><img src="11-propiedades-mle_files/figure-html/consistency-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Nota que la banda definida por <span class="math inline">\(\epsilon\)</span> se puede hacer tan pequeña como se requiera,
+lo único que sucederá es que necesitaremos un mayor número de observaciones para garantizar
+que las trayectorias de los estimadores <span class="math inline">\(\hat p_n\)</span> se mantengan dentro de las bandas con
+alta probabilidad conforme <span class="math inline">\(n\)</span> aumenta.</p>
+</div>
+</div>
+<div id="equivarianza-del-textsfmle" class="section level2 unnumbered">
+<h2>Equivarianza del <span class="math inline">\(\textsf{MLE}\)</span></h2>
+<p>Muchas veces nos interesa reparametrizar la función de verosimilitud con el motivo
+de simplificar el problema de optimización asociado, o simplemente por conveniencia
+interpretativa. Por ejemplo, si el parámetro de interés es tal que <span class="math inline">\(\theta \in [a, b],\)</span> entonces
+encontrar el <span class="math inline">\(\textsf{MLE}\)</span> se traduce en optimizar la log-verosimilitud en el espacio restringido al
+intervalo <span class="math inline">\([a,b].\)</span> En este caso, los métodos tradicionales de búsqueda local por descenso en gradiente
+podrían tener problemas de estabilidad cuando la búsqueda se realice cerca de las cotas.</p>
+<p>El concepto de equivarianza nos dice que si el cambio de coordenadas
+parametrales está definida, y si este cambio de variable se realiza por medio de
+una función bien comportada (derivable y cuya derivada no es cero$), entonces la solución de encontrar el <span class="math inline">\(\textsf{MLE}\)</span> en las
+coordenadas originales y transformar, es igual a realizar la inferencia en las
+coordenadas <em>fáciles.</em></p>
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> Sea <span class="math inline"><span class="math inline">\(\tau = g(\theta)\)</span></span> una función de <span class="math inline"><span class="math inline">\(\theta\)</span></span> bien comportada. Entonces si <span class="math inline"><span class="math inline">\(\hat \theta_n\)</span></span> es el <span class="math inline"><span class="math inline">\(\textsf{MLE}\)</span></span> de <span class="math inline"><span class="math inline">\(\theta,\)</span></span> entonces <span class="math inline"><span class="math inline">\(\hat \tau_n = g(\hat \theta_n)\)</span></span> es el <span class="math inline"><span class="math inline">\(\textsf{MLE}\)</span></span> de <span class="math inline"><span class="math inline">\(\tau.\)</span></span>
 </p>
 </div>
-<div class="figure" style="text-align: center"><span id="fig:grafica-pcr"></span>
-<img src="03-tipos-de-estudio_files/figure-html/grafica-pcr-1.png" alt="Error CPR, gráfica de densidad." width="70%" />
-<p class="caption">
-Figure 3.1: Error CPR, gráfica de densidad.
-</p>
-</div>
-<p>La siguiente imagen <a href="https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/">Roger Peng</a>
-representa una situación común a la que se enfrenta el analista de datos, y se
-desarrolló en el contexto de preguntas vagas. En el esquema hay tres caminos:
-uno es uno ideal que pocas veces sucede,
-otro produce respuestas poco útiles pero es fácil, y otro es tortuoso pero que
-caracteriza el mejor trabajo de análisis de datos:</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-2"></span>
-<img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-2-1.png" alt="Adaptado de R. Peng: [Tukey, design thinking and better questions.](https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/)" width="70%" />
-<p class="caption">
-Figure 3.2: Adaptado de R. Peng: <a href="https://simplystatistics.org/2019/04/17/tukey-design-thinking-and-better-questions/">Tukey, design thinking and better questions.</a>
-</p>
-</div>
-<p>Ejemplos: Alguien nos pregunta cuáles son las tiendas que mas venden de una
-cadena. Podríamos consultar bases de datos, hacer extracciones, definir
-periodos, etc. y dar una respuesta que probablemente es poco útil. Nos damos
-cuenta, por ejemplo, porque la
-peor tienda es una que abrió hace relativamente poco, y la mejor es una de las tiendas
-más grandes que está en una zona de tráfico de alto costo. Una pregunta más interesante
-es, ¿qué equipos de ventas tienen mejor desempeño? ¿Cuánto aporta tener una cafetería dentro
-de la tienda en términos de ventas?, etc.</p>
-</div>
-<div id="proceso-generador-de-datos" class="section level3 unnumbered">
-<h3>Proceso Generador de Datos</h3>
-<p>Entre las preguntas que se debe hacer el analista de datos una fundamental es
-entender el <strong>proceso generador de datos</strong>, pues esto determinará que
-otras preguntas son relevantes, tanto en términos prácticos como estadísticos.</p>
-<ul>
-<li><p>La <strong>inferencia estadística</strong> busca hacer afirmaciones, cuantificadas de
-manera probabilista, acerca de datos que no tenemos, usando regularidades y
-conocimiento de datos que sí tenemos disponibles y métodos cuantitativos.</p></li>
-<li><p>Para hacer afirmaciones inferenciales <strong>eficientes y bien calibradas</strong> (con
-garantías estadísticas de calibración) a preguntas donde queremos generalizar de
-muestra a población, se requiere conocer con precisión el proceso que genera los
-datos muestrales.</p></li>
-<li><p>Esto incluye saber con detalle cómo se seleccionaron los datos a partir de
-los que se quiere hacer inferencia.</p></li>
-</ul>
-<p>En este caso, eficiente quiere decir que aprovechamos toda la información que
-está en los datos observados de manera que nuestros rangos de incertidumbre son
-lo más chico posibles (además de estar correctamente calibrados).</p>
-<p>Por su parte, probabilísticamente bien calibrados se refiere a que, lo que
-decimos que puede ocurrir con 10% de probabilidad ocurre efectivamente 1 de cada
-10 veces, si decimos 20% entonces ocurre 2 de 20, etc.</p>
-<p>Veremos que para muestras dadas naturalmente, a veces es muy difiícil entender a
-fondo el proceso generación de la muestra.</p>
-</div>
-<div id="ejemplo-prevalencia-de-anemia" class="section level3 unnumbered">
-<h3>Ejemplo: Prevalencia de anemia</h3>
-<p>Supongamos que nos interesa conocer el porcentaje de menores en edad escolar,
-(entre 6 y 15 años), con
-anemia en México. La fuente de datos disponible corresponde a registros de
-del IMSS de hospitalizaciones de menores, ya sea por anemia o
-que por otra causa (infecciones gastrointestinales, apendicitis, tratamiento de
-leucemia, …), se registró
-si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="tipos-de-estudio-y-experimentos.html#cb52-1"></a><span class="kw">head</span>(paciente)</span>
-<span id="cb52-2"><a href="tipos-de-estudio-y-experimentos.html#cb52-2"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
-<span id="cb52-3"><a href="tipos-de-estudio-y-experimentos.html#cb52-3"></a><span class="co">#&gt;    edad padecimiento         sexo   anemia</span></span>
-<span id="cb52-4"><a href="tipos-de-estudio-y-experimentos.html#cb52-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;   &lt;int&gt;</span></span>
-<span id="cb52-5"><a href="tipos-de-estudio-y-experimentos.html#cb52-5"></a><span class="co">#&gt; 1     8 picadura alacrán     mujer       0</span></span>
-<span id="cb52-6"><a href="tipos-de-estudio-y-experimentos.html#cb52-6"></a><span class="co">#&gt; 2    10 infección intestinal hombre      1</span></span>
-<span id="cb52-7"><a href="tipos-de-estudio-y-experimentos.html#cb52-7"></a><span class="co">#&gt; 3     7 mordedura de perro   hombre      1</span></span>
-<span id="cb52-8"><a href="tipos-de-estudio-y-experimentos.html#cb52-8"></a><span class="co">#&gt; 4     8 asma                 hombre      1</span></span>
-<span id="cb52-9"><a href="tipos-de-estudio-y-experimentos.html#cb52-9"></a><span class="co">#&gt; 5    13 infección intestinal mujer       0</span></span>
-<span id="cb52-10"><a href="tipos-de-estudio-y-experimentos.html#cb52-10"></a><span class="co">#&gt; 6     7 picadura alacrán     hombre      0</span></span></code></pre></div>
-<ul>
-<li>¿Qué nos dice esta cantidad acerca de la anemia en la población?<br />
-</li>
-<li>¿Podemos hacer inferencia estadística?<br />
-</li>
-<li>¿Cómo calculamos intervalos de confianza?</li>
-</ul>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="tipos-de-estudio-y-experimentos.html#cb53-1"></a><span class="co"># Si calculo el error estándar de la p estimada como sigue, es correcto?</span></span>
-<span id="cb53-2"><a href="tipos-de-estudio-y-experimentos.html#cb53-2"></a>p &lt;-<span class="st"> </span><span class="kw">mean</span>(paciente<span class="op">$</span>anemia)</span>
-<span id="cb53-3"><a href="tipos-de-estudio-y-experimentos.html#cb53-3"></a><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span><span class="dv">5000</span>)</span>
-<span id="cb53-4"><a href="tipos-de-estudio-y-experimentos.html#cb53-4"></a><span class="co">#&gt; [1] 0.007060751</span></span></code></pre></div>
-</div>
-<div id="muestreo-aleatorio" class="section level2 unnumbered">
-<h2>Muestreo aleatorio</h2>
-<p>En la situación ideal diseñaríamos una muestra aleatoria de menores de edad,
-por ejemplo, utilizando el registro en educación primaria de la SEP, y
-mediríamos la prevalencia de anemia en la muestra, usaríamos esta muestra para
-estimar la prevalencia en la población y tendríamos además las herramientas
-para medir la incertidumbre de nuestra estimación (reportar intervalos,
-o errores estándar).</p>
-</div>
-<div id="pero-si-no-podemos-hacer-muestreo-aleatorio" class="section level2 unnumbered">
-<h2>Pero si no podemos hacer muestreo aleatorio?</h2>
-<p>En el caso de prevalencia de anemia, discutiendo con médicos e investigadores
-nos informan que la anemia se presenta en tasas más altas en niños más chicos.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tipos-de-estudio-y-experimentos.html#cb54-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb54-2"><a href="tipos-de-estudio-y-experimentos.html#cb54-2"></a><span class="st">  </span><span class="kw">count</span>(edad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb54-3"><a href="tipos-de-estudio-y-experimentos.html#cb54-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
-<span id="cb54-4"><a href="tipos-de-estudio-y-experimentos.html#cb54-4"></a><span class="co">#&gt; # A tibble: 10 x 3</span></span>
-<span id="cb54-5"><a href="tipos-de-estudio-y-experimentos.html#cb54-5"></a><span class="co">#&gt;     edad     n  prop</span></span>
-<span id="cb54-6"><a href="tipos-de-estudio-y-experimentos.html#cb54-6"></a><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
-<span id="cb54-7"><a href="tipos-de-estudio-y-experimentos.html#cb54-7"></a><span class="co">#&gt;  1     6  1001    20</span></span>
-<span id="cb54-8"><a href="tipos-de-estudio-y-experimentos.html#cb54-8"></a><span class="co">#&gt;  2     7   931    19</span></span>
-<span id="cb54-9"><a href="tipos-de-estudio-y-experimentos.html#cb54-9"></a><span class="co">#&gt;  3     8   980    20</span></span>
-<span id="cb54-10"><a href="tipos-de-estudio-y-experimentos.html#cb54-10"></a><span class="co">#&gt;  4     9   445     9</span></span>
-<span id="cb54-11"><a href="tipos-de-estudio-y-experimentos.html#cb54-11"></a><span class="co">#&gt;  5    10   484    10</span></span>
-<span id="cb54-12"><a href="tipos-de-estudio-y-experimentos.html#cb54-12"></a><span class="co">#&gt;  6    11   489    10</span></span>
-<span id="cb54-13"><a href="tipos-de-estudio-y-experimentos.html#cb54-13"></a><span class="co">#&gt;  7    12   246     5</span></span>
-<span id="cb54-14"><a href="tipos-de-estudio-y-experimentos.html#cb54-14"></a><span class="co">#&gt;  8    13   239     5</span></span>
-<span id="cb54-15"><a href="tipos-de-estudio-y-experimentos.html#cb54-15"></a><span class="co">#&gt;  9    14    90     2</span></span>
-<span id="cb54-16"><a href="tipos-de-estudio-y-experimentos.html#cb54-16"></a><span class="co">#&gt; 10    15    95     2</span></span></code></pre></div>
-<p>Y consultando con las proyecciones de población notamos que los niños chicos
-están sobrerepresentados en la muestra. Lo que nos hace considerar que debemos
-buscar una manera de ponderar nuestras observaciones para que reflejen a la
-población.</p>
-<p>Más aún, investigamos que algunas enfermedades están asociadas a mayor
-prevalencia de anemia:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="tipos-de-estudio-y-experimentos.html#cb55-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-2"><a href="tipos-de-estudio-y-experimentos.html#cb55-2"></a><span class="st">  </span><span class="kw">count</span>(padecimiento) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-3"><a href="tipos-de-estudio-y-experimentos.html#cb55-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span>
-<span id="cb55-4"><a href="tipos-de-estudio-y-experimentos.html#cb55-4"></a><span class="co">#&gt; # A tibble: 7 x 2</span></span>
-<span id="cb55-5"><a href="tipos-de-estudio-y-experimentos.html#cb55-5"></a><span class="co">#&gt;   padecimiento               n</span></span>
-<span id="cb55-6"><a href="tipos-de-estudio-y-experimentos.html#cb55-6"></a><span class="co">#&gt;   &lt;chr&gt;                  &lt;int&gt;</span></span>
-<span id="cb55-7"><a href="tipos-de-estudio-y-experimentos.html#cb55-7"></a><span class="co">#&gt; 1 infección respiratoria   745</span></span>
-<span id="cb55-8"><a href="tipos-de-estudio-y-experimentos.html#cb55-8"></a><span class="co">#&gt; 2 mordedura de perro       723</span></span>
-<span id="cb55-9"><a href="tipos-de-estudio-y-experimentos.html#cb55-9"></a><span class="co">#&gt; 3 úlcera                   723</span></span>
-<span id="cb55-10"><a href="tipos-de-estudio-y-experimentos.html#cb55-10"></a><span class="co">#&gt; 4 asma                     713</span></span>
-<span id="cb55-11"><a href="tipos-de-estudio-y-experimentos.html#cb55-11"></a><span class="co">#&gt; 5 apendcitis               704</span></span>
-<span id="cb55-12"><a href="tipos-de-estudio-y-experimentos.html#cb55-12"></a><span class="co">#&gt; 6 picadura alacrán         701</span></span>
-<span id="cb55-13"><a href="tipos-de-estudio-y-experimentos.html#cb55-13"></a><span class="co">#&gt; 7 infección intestinal     691</span></span></code></pre></div>
-<p>Utilizamos esta información para modelar y <em>corregir</em> nuestra estimación
-original. Por ejemplo con modelos de regresión. Sin embargo,
-debemos preguntarnos:</p>
-<ul>
-<li>¿Hay más variables qué nos falta considerar?<br />
-</li>
-<li>Nuestras estimaciones están bien calibradas?</li>
-</ul>
-<div id="ejemplo-policías-y-tráfico" class="section level3 unnumbered">
-<h3>Ejemplo: Policías y tráfico</h3>
-<p>Supongamos que nos preguntan en cuánto reduce un policía el tráfico en
-un crucero grande de la ciudad. La cultura popular
-ha establecido que los policías en cruceros hacen más tráfico porque
-no saben mover los semáforos.</p>
-<p>Nosotros decidimos buscar unos datos para entender esto. Escogemos
-entonces un grupo de cruceros problemáticos, registramos el tráfico
-cuando visitamos, y si había un policía o no.</p>
-<p>Después de este esfuerzo, obtenemos los siguientes datos:</p>
-<pre><code>#&gt; # A tibble: 10 x 2
-#&gt; # Groups:   policia [2]
-#&gt;    policia tiempo_espera_min
-#&gt;      &lt;int&gt;             &lt;dbl&gt;
-#&gt;  1       0              2.27
-#&gt;  2       0              2.65
-#&gt;  3       0              3.4 
-#&gt;  4       0              0.39
-#&gt;  5       0              1.1 
-#&gt;  6       1             10.8 
-#&gt;  7       1              4.67
-#&gt;  8       1              7.77
-#&gt;  9       1              6.3 
-#&gt; 10       1              6.99</code></pre>
-<p>Lo que sabemos ahora es que la presencia de un policía es indicador
-de tráfico alto. El análisis prosiguiría calculando medias y medidas de error
-(escogimos una muestra aleatoria):</p>
-<p><img src="03-tipos-de-estudio_files/figure-html/unnamed-chunk-8-1.png" width="70%" style="display: block; margin: auto;" /></p>
-<p>Si somos ingenuos, entonces podríamos concluir que los policías efectivamente
-empeoran la situación cuando manipulan los semáforos, y confirmaríamos la
-sabiduría popular.</p>
-<p>Para juzgar este argumento desde el punto de vista causal, nos preguntamos primero:</p>
-<ul>
-<li>¿Cuáles son los contrafactuales (los contrafactuales explican que pasaría si hubiéramos
-hecho otra cosa que la que efectivamente hicimos) de las observaciones?</li>
-</ul>
-</div>
-</div>
-<div id="el-estimador-estándar" class="section level2 unnumbered">
-<h2>El estimador estándar</h2>
-<p>A la comparación anterior - la diferencia de medias de tratados y no tratados - le llamamos usualmente el <em>estimador estándar</em> del efecto causal. Muchas veces este es un estimador malo del efecto causal.</p>
-<p>En nuestro ejemplo, para llegar a la conclusión errónea que confirma la sabiduría popular, hicimos un supuesto importante:</p>
-<ul>
-<li>En nuestra muestra, los casos con policía actúan como contrafactuales de los casos sin policía.</li>
-<li>Asi que asumimos que los casos con policía y sin policía son similares, excepto por la existencia o no de policía.</li>
-</ul>
-<p>En nuestro ejemplo, quizá un analista más astuto nota que tienen
-categorías históricas de qué tan complicado es cada crucero. Junta a sus datos, y obtiene:</p>
-<pre><code>#&gt; # A tibble: 10 x 3
-#&gt; # Groups:   policia [2]
-#&gt;    policia tiempo_espera_min categoria 
-#&gt;      &lt;int&gt;             &lt;dbl&gt; &lt;fct&gt;     
-#&gt;  1       0              2.27 Fluido    
-#&gt;  2       0              2.65 Fluido    
-#&gt;  3       0              3.4  Típico    
-#&gt;  4       0              0.39 Fluido    
-#&gt;  5       0              1.1  Fluido    
-#&gt;  6       1             10.8  Complicado
-#&gt;  7       1              4.67 Típico    
-#&gt;  8       1              7.77 Complicado
-#&gt;  9       1              6.3  Complicado
-#&gt; 10       1              6.99 Típico</code></pre>
-<p>El analista argumenta entonces qu los policías se enviaron principalmente a cruceros que
-se consideran <em>Complicados</em> según datos históricos. Esto resta credibilidad a la
-comparación que hicimos inicialmente:</p>
-<ul>
-<li>La comparación del estimador estándar no es de peras con peras: estamos comparando qué efecto tienen los
-policías en cruceros difíciles con cruceros no difíciles donde no hay policía.</li>
-<li>La razón de esto es que el proceso generador de los datos incluye el hecho de que no
-se envían policías a lugares donde no hay tráfico.</li>
-<li>¿Cómo producir contrafactuales hacer la comparación correcta?</li>
-</ul>
-</div>
-<div id="experimentos-tradicionales" class="section level2 unnumbered">
-<h2>Experimentos tradicionales</h2>
-<p>Idealmente, quisiéramos observar un mismo crucero en las dos condiciones: con y sin policías. Esto no es posible.</p>
-<p>En un experimento “tradicional”, como nos lo explicaron en la escuela, nos
-aproximamos a esto preparando dos condiciones idénticas, y luego alteramos cada una de ellas
-con nuestra intervención. Si el experimento está bien hecho, esto nos da observaciones
-en pares, y cada quien tiene su contrafactual.</p>
-<p>La idea del experimiento tradicional es <em>controlar</em> todos los factores
-que intervienen en los resultados, y sólo mover el tratamiento para producir
-los contrafactuales. Más en general, esta estrategia consiste en hacer
-<em>bloques</em> de condiciones, donde las condiciones son prácticamente idénticas dentro e cada bloque. Comparamos entonces unidades tratadas y no tratadas
-dentro de cada bloque.</p>
-<p>Por ejemplo, si queremos saber si el tiempo de caída libre es diferente para un objeto
-más pesado que otro, prepararíamos dos pesos con el mismo tamaño pero de peso distinto. Soltaríamos los dos al mismo tiempo y compararíamos el tiempo de caída de cada uno.</p>
-<p>En nuestro caso, como es usual en problemas de negocio o sociales, hacer esto es considerablemente más difícil. No podemos “preparar” cruceros con condiciones idénticas. Sin embargo, podríamos intentar bloquear los cruceros
-según información que tenemos acerca de ellos, para hacer más comparaciones e peras con peras.</p>
-</div>
-<div id="bloqueo" class="section level2 unnumbered">
-<h2>Bloqueo</h2>
-<p>Podemos acercanos en lo posible a este ideal de experimentación usando
-información existente.</p>
-<p>En lugar de hacer comparaciones directas entre unidades que recibieron
-el tratamiento y las que no (que pueden ser diferentes en otros
-aspectos, como vimos arriba),
-podemos refinar nuestras comparaciones <em>bloquéandolas</em> con variables
-conocidas.</p>
-<p>En el ejemplo de los policías, podemos hacer lo siguiente: dentro de
-<em>cada categoría de cruceros</em> (fluido, típico o complicado), tomaremos una muestra de cruceros, algunos con
-policía y otros sin. Haremos comparaciones dentro de cada categoría.</p>
-<p>Obtenemos un muestra con estas características (6 casos en cada categoría
-de crucero, 3 con policía y 3 sin policía):</p>
-<table>
-<thead>
-<tr class="header">
-<th align="left">categoria</th>
-<th align="right">policia</th>
-<th align="right">n</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Fluido</td>
-<td align="right">0</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">Fluido</td>
-<td align="right">1</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">Típico</td>
-<td align="right">0</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">Típico</td>
-<td align="right">1</td>
-<td align="right">3</td>
-</tr>
-<tr class="odd">
-<td align="left">Complicado</td>
-<td align="right">0</td>
-<td align="right">3</td>
-</tr>
-<tr class="even">
-<td align="left">Complicado</td>
-<td align="right">1</td>
-<td align="right">3</td>
-</tr>
-</tbody>
-</table>
-<p>Y ahora hacemos comparaciones dentro de cada bloque creado por categoría:</p>
-<pre><code>#&gt; # A tibble: 3 x 3
-#&gt; # Groups:   categoria [3]
-#&gt;   categoria  `policia =0` `policia =1`
-#&gt;   &lt;fct&gt;             &lt;dbl&gt;        &lt;dbl&gt;
-#&gt; 1 Fluido              2.1          0.8
-#&gt; 2 Típico              5.6          4.2
-#&gt; 3 Complicado         10.4          8.6</code></pre>
-<p>Y empezamos a ver otra imagen en estos datos: comparando tipos
-e cruceros similares, los que tienen policía tienen tiempos de
-espera ligeramente más cortos.</p>
-<p>¿Hemos termniado? ¿Podemos concluir que el efecto de un policía
-es beneficiosos pero considerablemente chico? ¿Qué problemas
-puede haber con este análisis?</p>
-</div>
-<div id="variables-desconocidas" class="section level2 unnumbered">
-<h2>Variables desconocidas</h2>
-<p>El problema con el análisis anterior es que controlamos por una
-variable que conocemos, pero muchas otras variables pueden estar
-ligadas con el proceso de selección de cruceros para enviar policías.</p>
-<ul>
-<li>Por ejemplo, envían o policías a cruceros <em>Típicos</em> solo cuando
-reportan mucho tráfico.</li>
-<li>No envían a un polícia a un crucero <em>Complicado</em> si no presenta demasiado
-tráfico.</li>
-<li>Existen otras variables desconocidas que los tomadores de decisiones
-usan para enviar a los policías.</li>
-</ul>
-<p>En este caso, por ejemplo, los expertos hipotéticos
-nos señalan que hay algunos
-cruceros que aunque problemáticos a veces, su tráfico se resuelve
-rápidamente, mientras que otros tienen tráfico más persistente, y
-prefieren enviar policías a los de tráfico persistente. La lista
-de cruceros persistentes están en una hoja de excel que se comparte
-de manera informal.</p>
-<p>En resumen, no tenemos conocimiento detallado del <strong>proceso generador
-de datos</strong> en cuanto a cómo se asignan los policías a los cruceros.</p>
-<p>Igual que en la sección anterior, podemos cortar esta complejidad
-usando <strong>aleatorización</strong>.</p>
-<p>Nótese que los expertos no están haciendo nada malo: en su trabajo
-están haciendo el mejor uso de los recursos que tienen. El problema
-es que por esa misma razón no podemos saber el resultado de sus esfuerzos,
-y si hay maneras de optimizar la asignación que hacen actualmente.</p>
-</div>
-<div id="aleatorizando-el-tratamiento" class="section level2 unnumbered">
-<h2>Aleatorizando el tratamiento</h2>
-<p>Tomamos la decisión entonces de hacer un experimento que incluya
-aletorización.</p>
-<p>En un dia
-particular, escogeremos algunos cruceros.
-Dicidimos usar solamente cruceros de la categoría <em>Complicada</em> y
-<em>Típica</em>, pues
-esos son los más interesantes para hacer intervenciones.</p>
-<p>Usaremos un poco de código para entener el detalle: en estos datos,
-tenemos para cada caso los dos posibles resultados hipotéticos
-<span class="math inline">\(y_0\)</span> y <span class="math inline">\(y_1\)</span> (con
-policia y sin policia). En el experimento asignamos el
-tratamiento al azar:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="tipos-de-estudio-y-experimentos.html#cb59-1"></a>muestra_exp &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb59-2"><a href="tipos-de-estudio-y-experimentos.html#cb59-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb59-3"><a href="tipos-de-estudio-y-experimentos.html#cb59-3"></a><span class="st">  </span><span class="co"># asignar tratamiento al azar, esta es nuestra intervención:</span></span>
-<span id="cb59-4"><a href="tipos-de-estudio-y-experimentos.html#cb59-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tratamiento_policia =</span> <span class="kw">rbernoulli</span>(<span class="kw">length</span>(y_<span class="dv">0</span>), <span class="fl">0.5</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb59-5"><a href="tipos-de-estudio-y-experimentos.html#cb59-5"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
-<span id="cb59-6"><a href="tipos-de-estudio-y-experimentos.html#cb59-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_exp =</span> <span class="kw">ifelse</span>(tratamiento_policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
-<p>Nótese la diferencia si tomamos la asignación natural del tratamiento (policía o no):</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="tipos-de-estudio-y-experimentos.html#cb60-1"></a><span class="kw">set.seed</span>(<span class="dv">134</span>)</span>
-<span id="cb60-2"><a href="tipos-de-estudio-y-experimentos.html#cb60-2"></a>muestra_natural &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb60-3"><a href="tipos-de-estudio-y-experimentos.html#cb60-3"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb60-4"><a href="tipos-de-estudio-y-experimentos.html#cb60-4"></a><span class="st">  </span><span class="co"># usamos el tratamiento que se asignó</span></span>
-<span id="cb60-5"><a href="tipos-de-estudio-y-experimentos.html#cb60-5"></a><span class="st">  </span><span class="co"># policia indica si hubo o no policía en ese crucero</span></span>
-<span id="cb60-6"><a href="tipos-de-estudio-y-experimentos.html#cb60-6"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
-<span id="cb60-7"><a href="tipos-de-estudio-y-experimentos.html#cb60-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_obs =</span> <span class="kw">ifelse</span>(policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
-<p>Resumimos nuestros resultados del experimento son:</p>
-<pre><code>#&gt; # A tibble: 2 x 3
-#&gt; # Groups:   categoria [2]
-#&gt;   categoria  `policia=0` `policia=1`
-#&gt;   &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt;
-#&gt; 1 Típico            6.24        4.97
-#&gt; 2 Complicado       15.8         8.47</code></pre>
-<p>Sin embargo, la muestra natural da:</p>
-<pre><code>#&gt; # A tibble: 2 x 3
-#&gt; # Groups:   categoria [2]
-#&gt;   categoria  `policia=0` `policia=1`
-#&gt;   &lt;fct&gt;            &lt;dbl&gt;       &lt;dbl&gt;
-#&gt; 1 Típico            5.49        4.35
-#&gt; 2 Complicado       10.8         8.93</code></pre>
-<p><strong>¿Cuál de los dos análisis da la respuesta correcta a la pregunta:
-ayudan o no los policías a reducir el tráfico en los cruceros
-problemáticos?</strong> El experimento establece que un policía en promedio
-reduce a la mitad el tiempo de espera en un crucero complicado</p>
-</div>
-<div id="resumen-selección-de-unidades-y-tratamiento" class="section level2 unnumbered">
-<h2>Resumen: selección de unidades y tratamiento</h2>
-<p>Vimos dos tipos de inferencia que requieren distintos diseños de estudio,
-en particual debemos considerar el mecanismo de aleatorización para
-entender las inferencias que podemos hacer: casual o a poblaciones.</p>
-<p>El punto crucial para entender las medidas de incertidumbre estadística es
-visualizar de manera hipotética, replicaciones del estudio y las condiciones
-que llevaron a la selección de la muestra. Esto es, entender el proceso
-generador de datos e imaginar replicarlo.</p>
-<div class="figure">
-<img src="images/03_inferencia-muestra.png" alt="" />
-<p class="caption">Inferencia estadística de acuerdo al tipo del diseño <span class="citation">(Ramsey and Schafer <a href="#ref-ramsey" role="doc-biblioref">2012</a>)</span>.</p>
-</div>
-<ul>
-<li><p>El cuadro arriba a la izquierda es donde el análisis es más simple y los
-resultados son más fáciles de interpretar.</p></li>
-<li><p>Es posible hacer análisis fuera de este cuadro, pero el proceso es más
-complicado, requieren más supuestos, conocimiento del dominio y habilidades
-de análisis. En general resultan conclusiones menos sólidas. Muchas veces no
-nos queda otra más que trabajar fuera del cuadro ideal.</p></li>
-</ul>
+<div id="ejemplo-12" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>El concepto de equivarianza lo ilustraremos para nuestro ejemplo de esta sección. En
+particular la parametrización la realizamos por cuestiones de interpretación como un
+factor de riesgo.</p>
+<p>Como hemos visto estimador <span class="math inline">\(\hat p_n\)</span> es <strong>equivariante.</strong> Es importante
+mencionar que esta propiedad es general para cualquier tamaño de muestra. Es
+decir, no descansa en supuestos de muestras grandes. Supongamos que nos interesa estimar
+el momio de éxitos (bastante común en casas de apuestas). El momio está definido
+como
+<span class="math display">\[ \theta = \frac{p}{1-p},\]</span>
+y podemos rescribir la función de verosimilitud en términos de este parámetro.
+Sustituyendo <span class="math inline">\(p = \frac{\theta}{1+\theta}\)</span> en <span class="math inline">\(\mathcal{L}_n(p)\)</span>
+obtenemos
+<span class="math display">\[\begin{align}
+  \mathcal{L}_n(\theta) = \left( \frac{\theta}{1 + \theta} \right)^{S_n} \left(\frac{1}{1 + \theta} \right)^{n - S_n}, 
+\end{align}\]</span>
+cuya función encuentra su máximo en
+<span class="math display">\[\begin{align}
+ \hat \theta_n = \frac{\bar X_n}{ 1 - \bar X_n}.
+\end{align}\]</span></p>
 <div class="ejercicio">
 <p>
-Ubica los siguientes tipos de análisis:
+Comprueba que el estimador de arriba para <span class="math inline"><span class="math inline">\(\theta\)</span></span> es el MLE.
 </p>
-<ul>
-<li>
-Pruebas clínicas para medicinas
-</li>
-<li>
-Analizar cómo afecta tener seguro médico a los ingresos, usando datos del ENIGH.
-</li>
-<li>
-Estimación de retorno sobre inversión en modelos de marketing mix.
-</li>
-</ul>
 </div>
 </div>
-<div id="asignación-natural-del-tratamiento" class="section level2 unnumbered">
-<h2>Asignación natural del tratamiento</h2>
-<ul>
-<li><p>Cuando consideramos un sistema donde se “asignan” tratamientos,
-generalmente los tratamientos se asignan bajo un criterio de
-optimización o conveniencia.</p></li>
-<li><p>La cara buena de este hecho es que de alguna forma los resultados
-están intentando optimizarse, y la gente está haciendo su trabajo.</p></li>
-<li><p>La cara mala de este hecho es que no podemos evaluar de manera simple la
-efectividad de los tratamientos. Y esto hace difícil <strong>optimizar</strong> de forma
-cuantificable los procesos, o <strong>entender</strong> qué funciona y qué no.</p></li>
-</ul>
+</div>
+<div id="normalidad-asintótica" class="section level2 unnumbered">
+<h2>Normalidad asintótica</h2>
+<p>Está propiedad nos permite caracterizar la distribución asintótica del MLE. Es
+decir, nos permite caracterizar la incertidumbre asociada una muestra
+suficientemente grande por medio de una distribución Gaussiana. Esto es, bajo
+ciertas condiciones de regularidad,
+<span class="math display">\[\hat \theta_n \overset{.}{\sim} \mathsf{N}( \theta^*, \mathsf{ee}^2),\]</span></p>
+<p>donde <span class="math inline">\(\mathsf{ee}\)</span> denota el error estándar del <span class="math inline">\(\textsf{MLE},\)</span> <span class="math inline">\(\mathsf{ee} = \mathsf{ee}(\hat \theta_n) = \sqrt{\mathbb{V}(\hat \theta_n)}\)</span>.</p>
+<p>Esta distribución se puede caracterizar de manera aproximada por métodos analíticos.
+Para esto necesitamos las siguientes definiciones.</p>
+
+<div class="mathblock">
+<p><strong>Definición. </strong> La función de <em>score</em> está definida como
+<span class="math display">\[\begin{align}
+  s(X; \theta) = \frac{\partial \log f(X; \theta)}{\partial \theta}.
+\end{align}\]</span></p>
+<p>La <strong>información de Fisher</strong> está definida como
+<span class="math display">\[\begin{align}
+  I_n(\theta) &amp;= \mathbb{V}\left( \sum_{i = 1}^ns(X_i; \theta) \right) \\ 
+              &amp;= \sum_{i = 1}^n  \mathbb{V} \left(s(X_i; \theta) \right)
+\end{align}\]</span></p>
+</div>
+
+<p>Estas cantidades nos permiten evaluar qué tan fácil será identificar el mejor
+modelo dentro de la familia parámetrica <span class="math inline">\(f(X; \theta)\)</span>. La función de score nos
+dice qué tanto cambia locamente la distribución cuando cambiamos el valor del
+parámetro. Calcular la varianza, nos habla de la dispersión de dicho cambio a lo
+largo del soporte de la variable aleatoria <span class="math inline">\(X.\)</span> Si <span class="math inline">\(I_n(\theta)\)</span> es grande
+entonces el cambio de la distribución es muy importante. Esto quiere decir que
+la distribución es muy diferente de las <em>distribuciones cercanas</em> que se generen
+al evaluar en <span class="math inline">\(\theta\)</span>s diferentes. Por lo tanto, si <span class="math inline">\(I_n(\theta)\)</span> es grande, la
+distribución será fácil de identificar cuando hagamos observaciones.</p>
+<p>La información de Fisher también nos permite caracterizar de forma
+analítica la varianza asíntotica del <span class="math inline">\(\textsf{MLE}\)</span> pues la aproximación
+<span class="math inline">\(\mathsf{ee}^2 \approx \frac{1}{I_n(\theta^*)}\)</span> es válida.</p>
+<p>El siguiente resultado utiliza la propiedad de la función de score:
+<span class="math inline">\(\mathbb{E}[s(X; \theta)] = 0,\)</span> que implica que
+<span class="math inline">\(\mathbb{V} \left(s(X_i; \theta) \right) = \mathbb{E}[s^2(X; \theta)],\)</span> y
+permite a su vez un cómputo más sencillo de la información de Fisher.</p>
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> El cálculo de la información de Fisher para una muestra de tamaño <span class="math inline"><span class="math inline">\(n\)</span></span> se puede calcular de manera simplificada como <span class="math inline"><span class="math inline">\(I_n(\theta) = n \, I(\theta).\)</span></span> Por otro lado, tenemos la siguiente igualdad <span class="math display"><span class="math display">\[ I(\theta) = - \mathbb{E}\left( \frac{\partial^2 \log f(X; \theta)}{\partial \theta^2}  \right).\]</span></span>
+</p>
+</div>
+<p>Con estas herramientas podemos formular el teorema siguiente.</p>
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> Bajo ciertas condiciones de regularidad se satisface que <span class="math inline"><span class="math inline">\(\mathsf{ee} \approx \sqrt{1/I_n(\theta^*)}\)</span></span> y <span class="math display"><span class="math display">\[ \hat \theta_n \overset{d}{\rightarrow} \mathsf{N}( \theta^*, \mathsf{ee}^2).\]</span></span>
+</p>
+</div>
+<p>El resultado anterior es teóricamente interesante y nos asegura un
+comportamiento controlado conforme tengamos más observaciones disponibles. Sin
+embargo, no es práctico pues no conocemos <span class="math inline">\(\theta^*\)</span> en la práctica y por
+consiguiente no conoceríamos la varianza. Sin embargo, también podemos aplicar
+el principio de <em>plug-in</em> y caracterizar la varianza de la distribución
+asintótica por medio de
+<span class="math display">\[\hat{\mathsf{ee}} = \sqrt{1/I_n(\hat \theta_n)}.\]</span></p>
+<p>Esto último nos permite constuir intervalos de confianza, por ejemplo al 95%, a través de
+<span class="math display">\[ \hat \theta_n \pm 2 \, \hat{\mathsf{ee}}.\]</span>
+Asimismo, el teorema de Normalidad asintótica nos permite establecer que el <span class="math inline">\(\textsf{MLE}\)</span> es <strong>asíntoticamente insesgado</strong>. Es decir,
+<span class="math display">\[\lim_{n \rightarrow n}\mathbb{E}[\hat \theta_n] =  \theta^*.\]</span></p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> Sea una muestra <span class="math inline"><span class="math inline">\(X_1, \ldots, X_n \overset{iid}{\sim} f(X; \theta^*)\)</span></span>. Un estimador <span class="math inline"><span class="math inline">\(\tilde \theta_n\)</span></span> es insesgado si satisface que <span class="math display"><span class="math display">\[\mathbb{E}[\tilde \theta_n] =\theta^*.\]</span></span>
+</p>
+</div>
+<p>El sesgo del estimador es precisamente la diferencia: <span class="math inline">\(\textsf{Sesgo} = \mathbb{E}[\tilde \theta_n] - \theta^*.\)</span></p>
+<div id="ejemplo-13" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Regresando a nuestro ejemplo. Veremos empiricamente que el
+estimador <span class="math inline">\(\hat \theta_n\)</span> es <strong>asintóticamente normal.</strong> Esta propiedad la
+hemos visto anteriormente para un caso muy particular. Lo vimos en el TLC para
+el caso de promedios, <span class="math inline">\(\bar X_n,\)</span> que en nuestro ejemplo corresponde a <span class="math inline">\(\hat p_n\)</span>.
+Como hemos visto, esta propiedad la satisface cualquier otro estimador que sea máximo
+verosímil. Por ejemplo, podemos utilizar el <span class="math inline">\(\mathsf{MLE}\)</span> de los momios. La
+figura que sigue muestra la distribución de <span class="math inline">\(\hat \theta_n\)</span> para distintas
+remuestras <span class="math inline">\((B = 500)\)</span> con distintos valores de <span class="math inline">\(n.\)</span></p>
+<p><img src="11-propiedades-mle_files/figure-html/unnamed-chunk-15-1.png" width="95%" style="display: block; margin: auto;" /></p>
+<p>El gráfico anterior valida empíricamente la distribución asintótica para
+casos de muchas observaciones. A continuación ilustraremos cómo explotar
+este resultado para obtener intervalos de confianza.</p>
+<p>Para el caso de <span class="math inline">\(\hat p_n\)</span> hemos visto que el error estándar se calcula
+analíticamente como
+<span class="math display">\[\textsf{ee}_p^2 = \mathbb{V}(\hat p_n) = \mathbb{V}\left(\frac1n \sum_{i = 1}^n x_i\right)  = \frac{p^* (1 - p^*)}{n}.\]</span></p>
+<p>Éste empata con el valor del error estándar asintótico
+<span class="math display">\[\textsf{ee}_p^2 \approx \sqrt{\frac{1}{I_n(p^*)}},\]</span>
+pues la información de Fisher es igual a
+<span class="math display">\[I_n(p) = n \, I(p)  = \frac{n}{p (  1- p)}.\]</span>
+En este caso podemos utilizar el estimador <em>plug-in,</em>
+<span class="math inline">\(\hat{\textsf{ee}}_p = \textsf{ee}_p(\hat p_n).\)</span>
+Para estimar el momio, <span class="math inline">\(\theta,\)</span> el cálculo no es tan fácil pues tendríamos que calcular
+de manera analítica la varianza de un cociente
+<span class="math display">\[\textsf{ee}_\theta^2 = \mathbb{V}\left( \frac{\hat p_n}{1-\hat p_n}\right).\]</span>
+Utilizando la distirbución asintótica, el error estándar se puede calcular mediante
+<span class="math display">\[\textsf{ee}_\theta^2 \approx \sqrt{\frac{1}{I_n(\theta^*)}} = \sqrt{\frac{\theta (1 + \theta)^2 }{n}}.\]</span>
+A continuación mostramos los errores estándar para nuestro ejemplo utilizando
+la distribución asintótica y por medio de la distribución de <em>bootstrap.</em>
+Como es de esperarse, ambos coinciden para muestras relativamente grandes.</p>
+<pre><code>## # A tibble: 4 x 5
+## # Groups:   tamanos [4]
+##   tamanos momio_hat momio_boot momio_ee momio_ee_boot
+##     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;         &lt;dbl&gt;
+## 1      16     0.333      0.367   0.192         0.236 
+## 2      32     0.333      0.342   0.136         0.140 
+## 3      64     0.123      0.123   0.0492        0.0498
+## 4     128     0.407      0.417   0.0793        0.0800</code></pre>
+<div class="ejercicio">
+<p>
+Comprueba las fórmulas para los errores estándar tanto para la probabilidad de éxito como para los momios.
+</p>
+</div>
+</div>
+<div id="el-método-delta" class="section level3 unnumbered">
+<h3>El método delta</h3>
+<p>El ejercicio anterior nos sugiere una pregunta natural: Cómo establecer la
+distribución asintótica de un estimador cuando ya se conoce la de una pre-imagen
+de él? Es decir, si ya conocemos la distribución de <span class="math inline">\(\theta,\)</span> podemos establecer
+la distribución de <span class="math inline">\(\tau = g(\theta)?\)</span></p>
+<p>La respuesta es afirmativa y la enunciamos por medio de un teorema. El resultado se conoce como
+el <strong>método delta</strong>.</p>
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> Si <span class="math inline"><span class="math inline">\(\tau = g(\theta)\)</span></span> es una función diferenciable y <span class="math inline"><span class="math inline">\(g\&amp;#39;(\theta) \neq 0\)</span></span>, entonces
+</p>
+</div>
+<span class="math display">\[\hat \tau_n \overset{d}{\rightarrow} \mathsf{N}( \tau^*, \hat{\mathsf{ee}}^2_\tau),\]</span>
+<div class="mathblock">
+<p>
+donde <span class="math inline"><span class="math inline">\(\hat \tau_n = g(\hat \theta_n)\)</span></span> y
+</p>
+</div>
+<p><span class="math display">\[\hat{\mathsf{ee}}_\tau = \bigg| g&#39;(\hat \theta_n) \bigg| \times \hat{\mathsf{ee}}_\theta(\hat \theta_n).\]</span></p>
+<p>Por ejemplo, este resultado lo podemos utilizar para nuestro experimento de Bernoullis.
+Pues <span class="math inline">\(g(p) = \frac{p}{1-p}\)</span> es una función diferenciable y por lo tanto
+<span class="math display">\[\hat{\mathsf{ee}}_\theta = \sqrt{\frac1n} \times \left[ \hat p_n^{1/2} (1-\hat p_n)^{3/2}\right].\]</span></p>
+<div class="ejercicio">
+<p>
+Comprueba la fórmula del método delta para el momio en función de la fracción de éxitos, y también comprueba que de el mismo resultado analítico que habías calculado en el ejercicio anterior.
+</p>
+</div>
+</div>
+</div>
+<div id="optimalidad-del-textsfmle" class="section level2 unnumbered">
+<h2>Optimalidad del <span class="math inline">\(\textsf{MLE}\)</span></h2>
+<p>Consideremos el caso de una muestra iid <span class="math inline">\(X_1, \ldots, X_n \sim \mathsf{N}(\theta, \sigma^2).\)</span> Y consideremos dos estimadores para <span class="math inline">\(\theta.\)</span> El
+primero será la media muestral <span class="math inline">\(\bar X_n\)</span> y el segundo la mediana muestral, la
+cual denotaremos por <span class="math inline">\(\tilde \theta_n.\)</span> Sabemos que ambos son insesgados. Por lo
+tanto, en promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual
+utilizar?</p>
+<p>Un criterio para comparar estimadores es el <strong>error cuadrático medio</strong>
+(<span class="math inline">\(\textsf{ECM}\)</span>, por sus siglas en inglés).</p>
+<div class="mathblock">
+<p>
+<strong>Definición.</strong> El error cuadrático medio de un estimador <span class="math inline"><span class="math inline">\(\tilde \theta_n\)</span></span> se calcula como <span class="math display"><span class="math display">\[\textsf{ECM}[\tilde \theta_n] = \mathbb{E}[(\tilde \theta_n - \theta^*)^2].\]</span></span>
+</p>
+</div>
+<p>Por lo tanto, el <span class="math inline">\(\textsf{ECM}\)</span> mide la distancia promedio entre el estimador y
+el valor verdadero valor del parámetro. La siguiente igualdad es bastante útil
+para comparar dos estimadores.</p>
+<div class="mathblock">
+<p>
+<span class="math display"><span class="math display">\[\textsf{ECM}[\tilde \theta_n] = \mathbb{V}\left(\tilde \theta_n\right) + \textsf{Sesgo}\left[\tilde \theta_n\right]^2.\]</span></span>
+</p>
+</div>
+<p>Por lo tanto si dos estimadores son insesgados, uno es más eficiente que el otro si
+su varianza es menor.</p>
+<p>La media sabemos que es el <span class="math inline">\(\textsf{MLE}\)</span> y por el TCL tenemos que
+<span class="math display">\[\sqrt{n} \left( \bar X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}( 0, \sigma^2).\]</span></p>
+<p>La mediana, en contraste, tiene una distribución asintótica
+<span class="math display">\[\sqrt{n} \left( \tilde X_n - \theta \right) \overset{d}{\rightarrow} \mathsf{N}\left( 0, \sigma^2 \frac{\pi}{2}\right),\]</span></p>
+<p>es decir tiene una varianza ligeramente mayor. Por lo tanto, decimos que la
+mediana tiene una <em>eficiencia relativa</em> con respecto a la media del <span class="math inline">\(.63 \% (\approx \pi/2)\)</span>. Es decir, la mediana sólo utliza una fracción de los datos
+comparado con la media.</p>
+<p>El siguiente teorema, <strong>la desigualdad de Cramer-Rao</strong>, nos permite establecer
+esta resultado de manera mas general para cualquier estimador insesgado.</p>
+<div class="mathblock">
+<p>
+<strong>Teorema.</strong> Sea <span class="math inline"><span class="math inline">\(\tilde \theta_n\)</span></span> <em>cualquier</em> estimador insesgado de <span class="math inline"><span class="math inline">\(\theta\)</span></span> cuyo valor verdadero es <span class="math inline"><span class="math inline">\(\theta^*,\)</span></span> entonces <span class="math display"><span class="math display">\[\begin{align}
+  \mathbb{V}(\tilde \theta_n) \geq \frac{1}{n I(\theta^*)}.
+\end{align}\]</span></span>
+</p>
+</div>
+<p>Un estimador insesgado que satisfaga esta desigualdad se dice que es
+<em>eficiente.</em> Nota que el lado derecho de la desigualdad es precisamente la
+varianza asintótica del <span class="math inline">\(\textsf{MLE}.\)</span> Por lo tanto, éste es <em>asintóticamente
+eficiente.</em></p>
+<div class="comentario">
+<p>
+Es importante hacer enfásis en que la optimalidad del <span class="math inline"><span class="math inline">\(\textsf{MLE}\)</span></span> es un resultado asintótico. Es decir, sólo se satisface cuando tenemos un número <em>suficiente</em> de observaciones. Qué tan grande debe ser el tamaño de muestra varia de problema a problema. Es por esto que para muestras de tamaño finito se prefieren estimadores que minimicen el <span class="math inline"><span class="math inline">\(\textsf{ECM},\)</span></span> como cuando hacemos regresión ridge o utilizamos el estimador James–Stein para un vector de medias.
+</p>
+</div>
+<p>El siguiente diagrama muestra de manera gráfica la relación entre las distintas
+propiedades que hemos visto en esta sección.</p>
+<p><img src="images/mle-mapa-mental.jpg" width="95%" style="display: block; margin: auto;" /></p>
 
 </div>
 </div>
 <h3>Referencias</h3>
 <div id="refs" class="references">
-<div id="ref-Chihara">
-<p>Chihara, Laura M., and Tim C. Hesterberg. 2018. <em>Mathematical Statistics with Resampling and R</em>. 2nd ed. Hoboken, NJ: John Wiley &amp; Sons. <a href="https://sites.google.com/site/chiharahesterberg/home">https://sites.google.com/site/chiharahesterberg/home</a>.</p>
-</div>
-<div id="ref-ramsey">
-<p>Ramsey, Fred, and Daniel Schafer. 2012. <em>The Statistical Sleuth: A Course in Methods of Data Analysis</em>. Cengage Learning.</p>
+<div id="ref-Wasserman">
+<p>Wasserman, Larry. 2013. <em>All of Statistics: A Concise Course in Statistical Inference</em>. Springer Science &amp; Business Media.</p>
 </div>
 </div>
             </section>
@@ -790,8 +717,8 @@ cuantificable los procesos, o <strong>entender</strong> qué funciona y qué no.
           </div>
         </div>
       </div>
-<a href="análisis-exploratorio.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="pruebas-de-hipótesis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="bootstrap-paramétrico.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tareas.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -822,7 +749,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/tereom/fundamentos/edit/master/03-tipos-de-estudio.Rmd",
+"link": "https://github.com/tereom/fundamentos/edit/master/11-propiedades-mle.Rmd",
 "text": "Edit"
 },
 "history": {

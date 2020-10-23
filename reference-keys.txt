@@ -1,0 +1,15 @@
+fig:grafica-pcr
+fig:unnamed-chunk-2
+fig:mundo-real
+fig:mundo-bootstrap
+fig:unnamed-chunk-84
+principios-de-visualización
+análisis-exploratorio
+tipos-de-estudio-y-experimentos
+pruebas-de-hipótesis
+S:distribucion-muestreo
+intervalos-de-confianza-y-remuestreo
+S:max-verosimilitud
+bootstrap-paramétrico
+propiedades-teóricas-de-mle
+bootstrap-en-el-conteo-rápido
