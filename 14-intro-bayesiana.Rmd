@@ -42,7 +42,7 @@ cargada a sol o la moneda cargada a águila.
 En este caso, tenemos dos variables: $X$, que cuenta el número
 de soles obtenidos en el experimento aleatorio, y $\theta$, que da la probabilidad
 de que un volado resulte en sol (por ejemplo, si la moneda es justa
-entonces $\theta = 0.5.$) 
+entonces $\theta = 0.5$). 
 
 ¿Qué cantidades podríamos usar para evaluar 
 qué moneda es la que estamos usando? Si hacemos el experimento,
@@ -96,8 +96,7 @@ Hacemos **inferencia bayesiana cuando tomamos decisiones basadas
 en las probabilidades posteriores**.
 
 ```{block2, type='ejercicio'}
-¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿
-¿Cómo cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
+¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿Cómo cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
 ```
 
 Finalmente, podríamos hacer predicciones usando la **posterior predictiva**.
