@@ -209,7 +209,7 @@ la probabilidad inicial de la moneda 1 a 0.9)?
 Justifica las siguientes aseveraciones (para este ejemplo):
 
 1. Las probabilidades posteriores o finales
-son una especie de punto intermedio entre verosimilitud e probablidades iniciales. 
+son una especie de punto intermedio entre verosimilitud y probablidades iniciales. 
 2. Si tenemos pocas observaciones, las probabilidades posteriores son similares a las iniciales.
 3. Cuando tenemos muchos datos, las probabilidades posteriores están más concentradas, y no es tan importante la inicial.
 4. Si la inicial está muy concentrada en algún valor, la posterior requiere de
