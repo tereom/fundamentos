@@ -1,5 +1,5 @@
 ---
-title: "Ejemplos de inferencia bayesiana en Stan"
+title: "Ejemplos de inferencia bayesiana en Stan I"
 output: html_notebook
 ---
 
@@ -18,7 +18,7 @@ library(tidyverse)
 Escribimos el código para el modelo en un archivo *modelo-1.stan*, 
 y compilamos:
 
-```{r}
+```{r, message=FALSE}
 archivo_stan <- file.path("stan/modelo-1.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
@@ -77,7 +77,7 @@ muestra_loteria <- sample_n(loteria_tbl, 25) %>%
   mutate(numero = numero/1000)
 ```
 
-```{r}
+```{r, message=FALSE}
 archivo_stan <- file.path("stan/modelo-2.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
@@ -92,9 +92,10 @@ ajuste <- mod$sample(
   data = datos_lista,
   seed = 1234,
   chains = 4,
+  iter_warmup = 5000,
   iter_sampling = 20000,
   parallel_chains = 4,
-  refresh = 2000)
+  refresh = 5000)
 ```
 Checamos diagnósticos:
 
@@ -122,7 +123,7 @@ ajuste$draws("theta") %>% as_draws_df() %>%
 Podemos ahora intentar con la inicial gamma que nos pareció 
 más intuitiva, aún cuando el modelo no es conjugado:
 
-```{r}
+```{r, message=FALSE}
 archivo_stan <- file.path("stan/modelo-3.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
@@ -175,7 +176,7 @@ qplot(theta_post_sim)
 Haremos el ejemplo no conjugado de estaturas de cantantes, con 
 verificación predictiva posterior.
 
-```{r}
+```{r, message=FALSE}
 archivo_stan <- file.path("stan/modelo-cantantes.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
@@ -259,7 +260,7 @@ muestra <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
 
 
 
-```{r}
+```{r, message = FALSE}
 archivo_stan <- file.path("stan/modelo-examenes.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
