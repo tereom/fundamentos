@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Sección 10 Más de pruebas de hipótesis e intervalos | EST-46111: Fundamentos de Estadística con Remuestreo</title>
+  <meta name="description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Sección 10 Más de pruebas de hipótesis e intervalos | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="github-repo" content="tereom/fundamentos" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Sección 10 Más de pruebas de hipótesis e intervalos | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  
+  <meta name="twitter:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  
+
+<meta name="author" content="Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="propiedades-teóricas-de-mle.html"/>
+<link rel="next" href="introducción-a-inferencia-bayesiana-1.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/toc.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Fundamentos de Estadística con Remuestreo</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Información del curso</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#temario"><i class="fa fa-check"></i>Temario</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluación"><i class="fa fa-check"></i>Evaluación</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html"><i class="fa fa-check"></i><b>1</b> Principios de visualización</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#el-cuarteto-de-ascombe"><i class="fa fa-check"></i>El cuarteto de Ascombe</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#visualización-popular-de-datos"><i class="fa fa-check"></i>Visualización popular de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#teoría-de-visualización-de-datos"><i class="fa fa-check"></i>Teoría de visualización de datos</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#principios-generales-del-diseño-analítico"><i class="fa fa-check"></i>Principios generales del diseño analítico</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#técnicas-de-visualización"><i class="fa fa-check"></i>Técnicas de visualización</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#indicadores-de-calidad-gráfica"><i class="fa fa-check"></i>Indicadores de calidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#factor-de-engaño-y-chartjunk"><i class="fa fa-check"></i>Factor de engaño y Chartjunk</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#pequeños-múltiplos-y-densidad-gráfica"><i class="fa fa-check"></i>Pequeños múltiplos y densidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#tinta-de-datos"><i class="fa fa-check"></i>Tinta de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#decoración"><i class="fa fa-check"></i>Decoración</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#percepción-de-escala"><i class="fa fa-check"></i>Percepción de escala</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#ejemplo-gráfica-de-minard"><i class="fa fa-check"></i>Ejemplo: gráfica de Minard</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html"><i class="fa fa-check"></i><b>2</b> Análisis exploratorio</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#el-papel-de-la-exploración-en-el-análisis-de-datos"><i class="fa fa-check"></i>El papel de la exploración en el análisis de datos</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#algunos-conceptos-básicos"><i class="fa fa-check"></i>Algunos conceptos básicos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#media-y-desviación-estándar"><i class="fa fa-check"></i>Media y desviación estándar</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ejemplos"><i class="fa fa-check"></i>Ejemplos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#precios-de-casas"><i class="fa fa-check"></i>Precios de casas</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#prueba-enlace"><i class="fa fa-check"></i>Prueba Enlace</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#estados-y-calificaciones-en-sat"><i class="fa fa-check"></i>Estados y calificaciones en SAT</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#tablas-de-conteos"><i class="fa fa-check"></i>Tablas de conteos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>Loess</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ajustando-curvas-loess"><i class="fa fa-check"></i>Ajustando curvas loess</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#series-de-tiempo"><i class="fa fa-check"></i>Series de tiempo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html"><i class="fa fa-check"></i><b>3</b> Tipos de estudio y experimentos</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#motivación"><i class="fa fa-check"></i>Motivación</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#proceso-generador-de-datos"><i class="fa fa-check"></i>Proceso Generador de Datos</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-prevalencia-de-anemia"><i class="fa fa-check"></i>Ejemplo: Prevalencia de anemia</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#muestreo-aleatorio"><i class="fa fa-check"></i>Muestreo aleatorio</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#pero-si-no-podemos-hacer-muestreo-aleatorio"><i class="fa fa-check"></i>Pero si no podemos hacer muestreo aleatorio?</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-policías-y-tráfico"><i class="fa fa-check"></i>Ejemplo: Policías y tráfico</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#el-estimador-estándar"><i class="fa fa-check"></i>El estimador estándar</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#experimentos-tradicionales"><i class="fa fa-check"></i>Experimentos tradicionales</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#bloqueo"><i class="fa fa-check"></i>Bloqueo</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#variables-desconocidas"><i class="fa fa-check"></i>Variables desconocidas</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#aleatorizando-el-tratamiento"><i class="fa fa-check"></i>Aleatorizando el tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#resumen-selección-de-unidades-y-tratamiento"><i class="fa fa-check"></i>Resumen: selección de unidades y tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#asignación-natural-del-tratamiento"><i class="fa fa-check"></i>Asignación natural del tratamiento</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html"><i class="fa fa-check"></i><b>4</b> Pruebas de hipótesis</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparación-con-poblaciones-de-referencia"><i class="fa fa-check"></i>Comparación con poblaciones de referencia</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparando-distribuciones"><i class="fa fa-check"></i>Comparando distribuciones</a></li>
+<li><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-y-el-lineup">Prueba de permutaciones y el <em>lineup</em></a></li>
+<li><a href="pruebas-de-hipótesis.html#comparaciones-usando-lineup-continuación">Comparaciones usando <em>lineup</em> (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-hipótesis-tradicionales"><i class="fa fa-check"></i>Pruebas de hipótesis tradicionales</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-continuación"><i class="fa fa-check"></i>Tomadores de té (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación"><i class="fa fa-check"></i>Pruebas de permutación: Implementación</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-continuación"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#avispas-opcional"><i class="fa fa-check"></i>Avispas (opcional)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#la-crisis-de-replicabilidad"><i class="fa fa-check"></i>La “crisis de replicabilidad”</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#el-jardín-de-los-senderos-que-se-bifurcan"><i class="fa fa-check"></i>El jardín de los senderos que se bifurcan</a></li>
+<li><a href="pruebas-de-hipótesis.html#ejemplo-decisiones-de-análisis-y-valores-p">Ejemplo: decisiones de análisis y valores <em>p</em></a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#alternativas-o-soluciones"><i class="fa fa-check"></i>Alternativas o soluciones</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html"><i class="fa fa-check"></i><b>5</b> Estimación y distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-precios-de-casas"><i class="fa fa-check"></i>Ejemplo: precios de casas</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#distribución-de-muestreo"><i class="fa fa-check"></i>Distribución de muestreo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-ejemplos"><i class="fa fa-check"></i>Más ejemplos</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#el-error-estándar"><i class="fa fa-check"></i>El error estándar</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-valor-de-casas"><i class="fa fa-check"></i>Ejemplo: valor de casas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#calculando-la-distribución-de-muestreo"><i class="fa fa-check"></i>Calculando la distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-1"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-2"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#teorema-central-del-límite"><i class="fa fa-check"></i>Teorema central del límite</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#normalidad-y-gráficas-de-cuantiles-normales"><i class="fa fa-check"></i>Normalidad y gráficas de cuantiles normales</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#prueba-de-hipótesis-de-normalidad"><i class="fa fa-check"></i>Prueba de hipótesis de normalidad</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-3"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-4"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-5"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-del-teorema-central-del-límite"><i class="fa fa-check"></i>Más del Teorema central del límite</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html"><i class="fa fa-check"></i><b>6</b> Intervalos de confianza y remuestreo</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-introductorio"><i class="fa fa-check"></i>Ejemplo introductorio</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#la-idea-del-bootstrap"><i class="fa fa-check"></i>La idea del bootstrap</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#el-principio-de-plug-in"><i class="fa fa-check"></i>El principio de plug-in</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-6"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#discusión-propiedades-de-la-distribución-bootstrap"><i class="fa fa-check"></i>Discusión: propiedades de la distribución bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-7"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#variación-en-distribuciones-bootstrap"><i class="fa fa-check"></i>Variación en distribuciones bootstrap</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#error-estándar-bootstrap-e-intervalos-normales"><i class="fa fa-check"></i>Error estándar bootstrap e intervalos normales</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-tomadores-de-té-negro"><i class="fa fa-check"></i>Ejemplo: tomadores de té negro</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-inventario-de-casas-vendidas"><i class="fa fa-check"></i>Ejemplo: inventario de casas vendidas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#calibración-de-intervalos-de-confianza"><i class="fa fa-check"></i>Calibración de intervalos de confianza</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#interpretación-de-intervalos-de-confianza"><i class="fa fa-check"></i>Interpretación de intervalos de confianza</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#intervalos-bootstrap-de-percentiles"><i class="fa fa-check"></i>Intervalos bootstrap de percentiles</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-8"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-para-dos-muestras"><i class="fa fa-check"></i>Bootstrap para dos muestras</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-9"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#datos-pareados"><i class="fa fa-check"></i>Datos pareados</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-otras-estadísticas"><i class="fa fa-check"></i>Bootstrap y otras estadísticas</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-estimadores-de-razón"><i class="fa fa-check"></i>Ejemplo: estimadores de razón</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-suavizadores"><i class="fa fa-check"></i>Ejemplo: suavizadores</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-estimadores-complejos-tablas-de-perfiles"><i class="fa fa-check"></i>Bootstrap y estimadores complejos: tablas de perfiles</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#conclusiones-y-observaciones"><i class="fa fa-check"></i>Conclusiones y observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html"><i class="fa fa-check"></i><b>7</b> Estimación por máxima verosimilitud</a><ul>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#introducción-a-estimación-por-máxima-verosimilitud"><i class="fa fa-check"></i>Introducción a estimación por máxima verosimilitud</a></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#máxima-verosimilitud-para-observaciones-continuas"><i class="fa fa-check"></i>Máxima verosimilitud para observaciones continuas</a></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#aspectos-numéricos"><i class="fa fa-check"></i>Aspectos numéricos</a><ul>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#el-método-de-momentos"><i class="fa fa-check"></i>El método de momentos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#máxima-verosimilitud-para-más-de-un-parámetro"><i class="fa fa-check"></i>Máxima verosimilitud para más de un parámetro</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html"><i class="fa fa-check"></i><b>8</b> <em>Bootstrap</em> paramétrico</a><ul>
+<li><a href="bootstrap-paramétrico.html#ventajas-y-desventajas-de-bootstrap-paramétrico">Ventajas y desventajas de <em>bootstrap</em> paramétrico</a></li>
+<li class="chapter" data-level="" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html#verificando-los-supuestos-distribucionales"><i class="fa fa-check"></i>Verificando los supuestos distribucionales</a></li>
+<li class="chapter" data-level="" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html#modelos-mal-identificados"><i class="fa fa-check"></i>Modelos mal identificados</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html"><i class="fa fa-check"></i><b>9</b> Propiedades teóricas de MLE</a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#consistencia"><i class="fa fa-check"></i>Consistencia</a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-11"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li><a href="propiedades-teóricas-de-mle.html#equivarianza-del-textsfmle">Equivarianza del <span class="math inline">\(\textsf{MLE}\)</span></a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#normalidad-asintótica"><i class="fa fa-check"></i>Normalidad asintótica</a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-13"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#el-método-delta"><i class="fa fa-check"></i>El método delta</a></li>
+</ul></li>
+<li><a href="propiedades-teóricas-de-mle.html#optimalidad-del-textsfmle">Optimalidad del <span class="math inline">\(\textsf{MLE}\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html"><i class="fa fa-check"></i><b>10</b> Más de pruebas de hipótesis e intervalos</a><ul>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#prueba-de-wald"><i class="fa fa-check"></i>Prueba de Wald</a></li>
+<li><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#observación-pruebas-t-y-práctica-estadística">Observación: pruebas <span class="math inline">\(t\)</span> y práctica estadística</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#prueba-de-wald-para-dos-medias-o-proporciones"><i class="fa fa-check"></i>Prueba de Wald para dos medias o proporciones</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#datos-pareados-1"><i class="fa fa-check"></i>Datos pareados</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#pruebas-de-cociente-de-verosimilitud"><i class="fa fa-check"></i>Pruebas de cociente de verosimilitud</a><ul>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#distribución-de-referencia-para-pruebas-de-cocientes"><i class="fa fa-check"></i>Distribución de referencia para pruebas de cocientes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#otro-tipo-de-pruebas"><i class="fa fa-check"></i>Otro tipo de pruebas</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#errores-tipo-i-y-tipo-ii"><i class="fa fa-check"></i>Errores tipo I y tipo II</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#consideraciones-prácticas"><i class="fa fa-check"></i>Consideraciones prácticas</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#pruebas-múltiples"><i class="fa fa-check"></i>Pruebas múltiples</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html"><i class="fa fa-check"></i><b>11</b> Introducción a inferencia bayesiana</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#un-primer-ejemplo-completo-de-inferencia-bayesiana"><i class="fa fa-check"></i>Un primer ejemplo completo de inferencia bayesiana</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-estimando-una-proporción"><i class="fa fa-check"></i>Ejemplo: estimando una proporción</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-observaciones-uniformes"><i class="fa fa-check"></i>Ejemplo: observaciones uniformes</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#probabilidad-a-priori"><i class="fa fa-check"></i>Probabilidad a priori</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#análisis-conjugado"><i class="fa fa-check"></i>Análisis conjugado</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-14"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#pasos-de-un-análisis-de-datos-bayesiano"><i class="fa fa-check"></i>Pasos de un análisis de datos bayesiano</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#verificación-predictiva-posterior"><i class="fa fa-check"></i>Verificación predictiva posterior</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-estaturas-de-tenores"><i class="fa fa-check"></i>Ejemplo: estaturas de tenores</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-modelo-poisson"><i class="fa fa-check"></i>Ejemplo: modelo Poisson</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#predicción"><i class="fa fa-check"></i>Predicción</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-cantantes"><i class="fa fa-check"></i>Ejemplo: cantantes</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-posterior-predictiva-de-pareto-uniforme."><i class="fa fa-check"></i>Ejemplo: posterior predictiva de Pareto-Uniforme.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#loess-1"><i class="fa fa-check"></i>2. Loess</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-series-de-tiempo"><i class="fa fa-check"></i>Solución: Series de tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tipos-de-estudio-y-pgd"><i class="fa fa-check"></i>3. Tipos de estudio y PGD</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#pruebas-de-hipótesis-visuales-y-permutación"><i class="fa fa-check"></i>4. Pruebas de hipótesis visuales y permutación</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-pruebas-pareadas"><i class="fa fa-check"></i>Solución: Pruebas pareadas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#distribución-muestral-y-remuestreo"><i class="fa fa-check"></i>5. Distribución muestral y remuestreo</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-y-discusión-de-media"><i class="fa fa-check"></i>Solución y discusión de media</a></li>
+</ul></li>
+<li class="chapter" data-level="11.1" data-path="tareas.html"><a href="tareas.html#bootstrap-en-el-conteo-rápido"><i class="fa fa-check"></i><b>11.1</b> 7. Bootstrap en el conteo rápido</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap en muestras complejas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución"><i class="fa fa-check"></i>Solución</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#mapas"><i class="fa fa-check"></i>Mapas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#examen-parcial"><i class="fa fa-check"></i>Examen Parcial</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">EST-46111: Fundamentos de Estadística con Remuestreo</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="más-de-pruebas-de-hipótesis-e-intervalos" class="section level1">
+<h1><span class="header-section-number">Sección 10</span> Más de pruebas de hipótesis e intervalos</h1>
+<p>En esta sección veremos enfoques más clásicos para analizar una prueba de
+hipótesis. en particular veremos situaciones donde podemos hacer algunos
+supuestos teóricos acerca de la distribución de las poblaciones. Esta es una
+sección complementaria para entender prácticas estadísticas usuales: recuerda
+que discutimos antes que hacer estimación por intervalos generalmente es más
+útil que hacer pruebas de hipótesis, y adicionalmente, tenemos también la
+técnica de pruebas de permutaciones que podemos aplicar en muchos de los casos
+que discutiremos a continuación.</p>
+<p>El enfoque básico es el mismo que cuando vimos pruebas de permutaciones:
+calculamos una estadística de prueba de los datos y luego, con una distribución
+de referencia (asociada a la hipótesis nula), calculamos un valor-<span class="math inline">\(p\)</span>. Si el
+valor-<span class="math inline">\(p\)</span> es chico, entonces los resultados observados no pueden explicarse
+fácilmente por variación muestral, y rechazamos la hipótesis nula.</p>
+<p>Con esta idea básica, y <em>supuestos distribucionales acerca de las poblaciones</em>,
+podemos construir pruebas que requieren menos cómputo. La desventaja es que hay
+que checar con cuidado los supuestos distribucionales
+que hagamos. Si los supuestos son incorrectos, las valores-<span class="math inline">\(p\)</span> no tienen mucho
+sentido y son difíciles de interpretar.</p>
+<p>Para esta sección seguiremos más a <span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span> (capítulo 10), pero puedes
+revisar también <span class="citation">Chihara and Hesterberg (<a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span> (capítulo 8).</p>
+<div id="prueba-de-wald" class="section level2 unnumbered">
+<h2>Prueba de Wald</h2>
+<p>Como hemos visto, existe normalidad asintótica en varios estimadores que
+hemos considerado, como medias y proporciones muestrales.
+También vimos que estimadores de máxima verosimilitud cumplen muchas
+veces un teorema central del límite.</p>
+<p>Así que supongamos que tenemos una estadística <span class="math inline">\(\hat{\theta}_n\)</span> que estima
+<span class="math inline">\(\theta\)</span> y es asintóticamente insesgada y normal. Denotamos por
+<span class="math inline">\(\hat{\textsf{ee}}\)</span> una estimación de su error estándar —hay distintas maneras
+de hacerlo: por ejemplo, con simulación <em>(bootstrap)</em>, o por medios analíticos
+<em>(teoría)</em>. Recuerda que el error estándar de una estadística es <em>la desviación
+estándar de su distribución de muestreo</em>.</p>
+<p>Si nos interesa probar la hipótesis de que <span class="math inline">\(\theta = 125\)</span>, por ejemplo,
+y <span class="math inline">\(\hat{\theta}_n\)</span> es aproximadamente normal, entonces podemos construir una
+distribución de referencia aproximada como sigue:</p>
+<ul>
+<li>Si la nula es cierta, entonces la distribución de muestreo de <span class="math inline">\(\hat{\theta}\)</span>
+es aproximadamente <span class="math inline">\(\mathsf{N}(125, \hat{\textsf{ee}})\)</span>.</li>
+<li>Esto implica que la siguiente estadística <span class="math inline">\(W\)</span> es aproximadamente normal
+estándar bajo la nula:</li>
+</ul>
+<p><span class="math display">\[W = \frac{\hat{\theta} - 125}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1)\]</span>
+Por lo que valores lejanos de <span class="math inline">\([-2,2]\)</span>, por ejemplo, dan evidencia
+en contra de la hipótesis nula. Como <span class="math inline">\(W\)</span> <strong>no depende de ningún parámetro desconocido</strong>, podemos
+usarla como distribución de referencia para comparar el valor de <span class="math inline">\(W\)</span> que obtuvimos
+en la muestra.</p>
+<p>Si observamos para nuestra muestra un valor <span class="math inline">\(W=w\)</span> entonces, el
+valor-<span class="math inline">\(p\)</span> (dos colas) de esta prueba es, aproximadamente,</p>
+<p><span class="math display">\[\mathsf{valor-}p \approx P(|Z| &gt; |w|) = 2(1 - \Phi(|w|))\]</span>
+donde <span class="math inline">\(Z\sim \mathsf{N}(0,1)\)</span> y <span class="math inline">\(\Phi\)</span> es su función de distribución acumulada.</p>
+<p><strong>Ejemplo: media muestral</strong>. La media nacional de las escuelas de enlace está alrededor
+de 454 (matemáticas en 6o. grado). Tomamos una muestra de 180
+escuelas del Estado de México, y queremos saber si la media obtenida
+es consistente o no con la media nacional. Ya que estamos usando como
+estimador una media de una muestra iid, podemos estimar el error estándar
+de la media con</p>
+<p><span class="math display">\[\hat{\textsf{ee}} = s / \sqrt{n}\]</span>
+Obtenemos:</p>
+<div class="sourceCode" id="cb349"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb349-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-1"></a><span class="kw">set.seed</span>(<span class="dv">29</span>)</span>
+<span id="cb349-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-2"></a>muestra_edomex &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/enlace.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb349-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-3"></a><span class="st">  </span><span class="kw">filter</span>(estado <span class="op">==</span><span class="st"> &quot;ESTADO DE MEXICO&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb349-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-4"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">180</span>)</span>
+<span id="cb349-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-5"></a>resumen &lt;-<span class="st"> </span>muestra_edomex <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb349-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-6"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">media =</span> <span class="kw">mean</span>(mate_<span class="dv">6</span>), <span class="dt">s =</span> <span class="kw">sd</span>(mate_<span class="dv">6</span>), <span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb349-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">ee =</span> s <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n))</span>
+<span id="cb349-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb349-8"></a>resumen</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 4
+##   media     s     n    ee
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;
+## 1  454.  159.   180  11.9</code></pre>
+<p>La hipótesis nula es que la media poblacional del Estado de México
+es igual a 454. Calculamos el valor-<span class="math inline">\(p\)</span> usando la prueba de Wald:</p>
+<div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb351-1"></a>dif &lt;-<span class="st"> </span>(resumen <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(media)) <span class="op">-</span><span class="st"> </span><span class="dv">454</span></span>
+<span id="cb351-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb351-2"></a>ee &lt;-<span class="st"> </span>resumen <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(ee)</span>
+<span id="cb351-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb351-3"></a>w &lt;-<span class="st"> </span>dif <span class="op">/</span><span class="st"> </span>ee</span>
+<span id="cb351-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb351-4"></a>p &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(w)))</span>
+<span id="cb351-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb351-5"></a>p</span></code></pre></div>
+<pre><code>## [1] 0.980108</code></pre>
+<p>y vemos que esta muestra es consistente con la media nacional. No tenemos
+evidencia en contra de que la media del estado de México es muy similar
+a la nacional.</p>
+<div class="ejercicio">
+<ul>
+<li>
+Repite esta prueba con una muestra de Chiapas. ¿Qué resultado obtienes?
+</li>
+</ul>
+</div>
+<p>Tenemos entonces:</p>
+
+<div class="mathblock">
+<p><strong>Prueba de Wald.</strong> Consideramos probar la hipótesis nula <span class="math inline">\(H_0: \theta = \theta_0\)</span>
+contra la alternativa <span class="math inline">\(H_1: \theta \neq \theta_0\)</span>.</p>
+<p>Suponemos que <span class="math inline">\(\hat{\theta}_n\)</span> es asintóticamente normal e insesgada,
+de modo que bajo la hipótesis nula
+<span class="math display">\[\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1).\]</span>
+Entonces el valor-<span class="math inline">\(p\)</span> de la <strong>prueba de Wald</strong> para esta hipótesis nula es</p>
+<p><span class="math display">\[\mathsf{valor-}p \approx P(|Z| &gt; |w|) = 2(1 - \Phi(|w|)).\]</span></p>
+</div>
+
+<p><strong>Ejemplo.</strong> Podemos hacer la prueba de Wald para proporciones con el
+estimador usual <span class="math inline">\(\hat{p}_n\)</span> que estima una proporción poblacional <span class="math inline">\(p\)</span>.
+En este caso, utilizamos la estimación usual del error estándar de <span class="math inline">\(\hat{p}_n\)</span>,
+que está dada por
+<span class="math display">\[\hat{\textsf{ee}} = \sqrt{\frac{\hat{p}_n(1-\hat{p}_n)}{n}}.\]</span>
+Supongamos por ejemplo que en nuestros datos observamos que en <span class="math inline">\(n=80\)</span>
+muestras independientes, tenemos <span class="math inline">\(x=47\)</span> éxitos. ¿Es esto consistente
+con la hipótesis nula <span class="math inline">\(p = 0.5\)</span>?</p>
+<p>Calcuamos primero:</p>
+<div class="sourceCode" id="cb353"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb353-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb353-1"></a>p_hat &lt;-<span class="st"> </span><span class="dv">47</span> <span class="op">/</span><span class="st"> </span><span class="dv">80</span></span>
+<span id="cb353-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb353-2"></a>ee &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p_hat <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_hat) <span class="op">/</span><span class="st"> </span><span class="dv">80</span>)</span></code></pre></div>
+<p>y la estadística <span class="math inline">\(W\)</span> de prueba es:</p>
+<div class="sourceCode" id="cb354"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb354-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb354-1"></a>w &lt;-<span class="st"> </span>(p_hat <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">/</span><span class="st"> </span>ee</span>
+<span id="cb354-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb354-2"></a>w</span></code></pre></div>
+<pre><code>## [1] 1.58978</code></pre>
+<p>Calculamos su valor p:</p>
+<div class="sourceCode" id="cb356"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb356-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb356-1"></a>valor_p &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(w)))</span>
+<span id="cb356-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb356-2"></a>valor_p</span></code></pre></div>
+<pre><code>## [1] 0.1118843</code></pre>
+<p>Y vemos que en este caso tenemos evidencia baja de que la proporción poblacional
+es distinta de 0.5.</p>
+</div>
+<div id="observación-pruebas-t-y-práctica-estadística" class="section level2 unnumbered">
+<h2>Observación: pruebas <span class="math inline">\(t\)</span> y práctica estadística</h2>
+<p>Con más supuestos distribucionales podemos hacer otros tipos de pruebas donde
+no requerimos hacer supuestos asintóticos. Por ejemplo, si suponemos
+que la muestra obtenida <span class="math inline">\(X_1,\ldots, X_n\)</span> proviene de una distribución
+normal <span class="math inline">\(\mathsf{N}(\mu, \sigma)\)</span> (cosa que es <strong>necesario</strong> verificar), entonces
+es posible demostrar que la estadística</p>
+<p><span class="math display">\[T = \frac{\bar{X} - \mu}{S / \sqrt{n}}\]</span>
+tiene una distribución exacta que es <span class="math inline">\(t\)</span> de Student con <span class="math inline">\(n-1\)</span> grados de libertad,
+y no depende de otros parámetros, de manera que podemos usarla como distribución
+de referencia y podemos calcular valores <span class="math inline">\(p\)</span> exactos (revisa la sección 8.1 de <span class="citation">Chihara and Hesterberg (<a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span>).</p>
+<p>La diferencia con usar una prueba de Wald está en que aquí consideramos también
+la variablidad del error estándar estimado, lo que correctamente sugiere que
+esperamos variaciones proporcionalmente más grandes en <span class="math inline">\(T\)</span>
+comparado con lo que sucede si no consideramos esta variación (como en la prueba de Wald). Sin embargo:</p>
+<ul>
+<li>Si la muestra <span class="math inline">\(n\)</span> es grande, la distribución <span class="math inline">\(t\)</span> de Student con
+<span class="math inline">\(n-1\)</span> grados de libertad es muy similar a la normal estándar, de manera que la
+aproximación de Wald es apropiada.</li>
+<li>Cuando la muestra <span class="math inline">\(n\)</span> es chica, es difícil validar el supuesto de normalidad, a menos
+que tengamos alguna información adicional acerca de la distribución poblacional.</li>
+<li>La prueba tiene cierta robustez a desviaciones de normalidad de las observaciones,
+pero si el sesgo es muy grande, por ejemplo, el supuesto es incorrecto y da
+valores <span class="math inline">\(p\)</span> distorsionados.</li>
+</ul>
+<p>Puedes ver <a href="https://en.wikipedia.org/wiki/Student%27s_t-distribution">aquí</a>, o el apéndice
+B.11 de <span class="citation">Chihara and Hesterberg (<a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span> para ver descripciones de la distribución <span class="math inline">\(t\)</span> y cómo se compara
+con una normal estándar dependiendo de los grados de libertad.</p>
+<p>En muchas ocasiones, en la práctica es común no checar supuestos y saltar directamente
+a hacer pruebas <span class="math inline">\(t\)</span>, lo cual no es muy seguro.
+Si tenemos duda de esos supuestos, podemos hacer
+pruebas gráficas o de permutaciones, si son apropiadas.</p>
+</div>
+<div id="prueba-de-wald-para-dos-medias-o-proporciones" class="section level2 unnumbered">
+<h2>Prueba de Wald para dos medias o proporciones</h2>
+<p>Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
+distintas, y queremos ver si la hipótesis de medias poblacionales
+iguales es consistente con los datos, podemos usar también una prueba de Wald.</p>
+<p>Sea <span class="math inline">\(\bar{X}_1\)</span> y <span class="math inline">\(\bar{X}_2\)</span> las medias muestrales
+correspondientes. Si la hipótesis
+de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
+la variable
+<span class="math display">\[\hat{\delta} = \bar{X}_1 - \bar{X}_2\]</span>
+es aproximadamente normal con media <span class="math inline">\(\mathsf{N}(\mu_1 - \mu_2, \textsf{ee})\)</span>,
+donde <span class="math inline">\(\mu_1\)</span> y <span class="math inline">\(\mu_2\)</span> son las medias poblacionales correspondientes, y
+donde el
+error estándar de <span class="math inline">\(\hat{\delta}\)</span> es la raíz de la suma de los cuadrados de
+los errores estándar
+de <span class="math inline">\(\bar{X}\)</span> y <span class="math inline">\(\bar{Y}\)</span>:</p>
+<p><span class="math display">\[ \textsf{ee} = \sqrt{\textsf{ee}_1^2 + \textsf{ee}_{2}^2}.\]</span>
+Se sigue entonces que:
+<span class="math display">\[\textsf{ee} =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }\]</span>
+(Nota: usa probabilidad para explicar por qué es cierto esto). De esto
+se deduce que bajo la hipótesis nula de igualdad de medias <span class="math inline">\(\mu_1 = \mu_2\)</span>,
+tenemos que la estadística de Wald</p>
+<p><span class="math display">\[W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim \mathsf{N}(0,1)\]</span>
+es aproximamente normal estándar. Procedemos entonces a calcular el valor
+<span class="math inline">\(p\)</span> usando la función de distribución acumulada de la normal estándar.</p>
+<p>En el caso
+particular de proporciones, podemos simplificar, como hicimos arriba, a
+<span class="math display">\[W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim \mathsf{N}(0,1)\]</span></p>
+
+<div class="ejercicio">
+<ul>
+<li>Haz una prueba comparando las medias en enlace de la Ciudad de México vs
+Estado de México. ¿Hay evidencia de que tienen distintas medias?
+</div></li>
+</ul>
+<p><strong>Ejemplo (<span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span>).</strong> Supongamos tenemos dos conjuntos de prueba para
+evaluar algoritmos de predicción, de tamaños <span class="math inline">\(n_1=100\)</span> y <span class="math inline">\(n_2=250\)</span> respectivamente,
+tenemos dos algoritmos para generar predicciones de clase (digamos positivo y negativo).
+Usaremos el primer conjunto para evaluar el algoritmo 1 y el segundo para evaluar
+el algoritmo 2. El algoritmo 1 corre en 1 hora, y el algoritmo 2 tarda 24 horas.</p>
+<p>Supón que obtenemos que la tasa de clasificación correcta del primer algoritmo
+es <span class="math inline">\(\hat{p}_1 = 0.85\)</span>, y la tasa del segundo es de <span class="math inline">\(\hat{p}_2 = 0.91\)</span>. ¿Estos
+datos son consistentes con la hipótesis de que los algoritmos tienen desempeño
+muy similar? Es decir, queremos probar la hipótesis <span class="math inline">\(p_1 = p_2\)</span>.</p>
+<p>Calculamos la estidística de Wald:</p>
+<div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-1"></a>n_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb358-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-2"></a>n_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="dv">250</span></span>
+<span id="cb358-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-3"></a>p_hat_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="fl">0.86</span></span>
+<span id="cb358-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-4"></a>p_hat_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="fl">0.90</span></span>
+<span id="cb358-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-5"></a>ee &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p_hat_<span class="dv">1</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_hat_<span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>n_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>p_hat_<span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_hat_<span class="dv">2</span>) <span class="op">/</span><span class="st"> </span>n_<span class="dv">2</span>)</span>
+<span id="cb358-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-6"></a>delta =<span class="st"> </span>p_hat_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_hat_<span class="dv">2</span></span>
+<span id="cb358-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-7"></a>w  &lt;-<span class="st"> </span>delta <span class="op">/</span><span class="st"> </span>ee</span>
+<span id="cb358-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb358-8"></a>w</span></code></pre></div>
+<pre><code>## [1] -1.011443</code></pre>
+<p>que da un valor p de:</p>
+<div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb360-1"></a><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(w)))</span></code></pre></div>
+<pre><code>## [1] 0.3118042</code></pre>
+<p>Y vemos que valor-<span class="math inline">\(p\)</span> es grande, de forma que los datos son consistentes
+con la hipótesis de que los algoritmos tienen desempeño similar. ¿Cómo tomaríamos
+nuestra decisión final? Si la diferencia entre 1 hora y 24 horas no es muy
+importante, entonces preferíamos usar el algoritmo 2. Sin embargo, si el costo
+de 24 horas es más alto que 1 hora de corrida, los datos no tienen indicios fuertes
+de que vayamos a perder en desempeño, y podriamos seleccionar el algoritmo 1.</p>
+</div>
+<div id="datos-pareados-1" class="section level2 unnumbered">
+<h2>Datos pareados</h2>
+<p>Las pruebas que acabamos de ver para comparar medias requieren
+poblaciones independientes. Si las dos muestras están pareadas (es decir,
+son dos mediciones en una misma muestra), podemos
+tomar considerar las diferencias <span class="math inline">\(D_i = X_i - Y_i\)</span> y utilizar la prueba para una
+sola muestra con la media <span class="math inline">\(\bar{D}\)</span>. Esta es una prueba de Wald pareada.</p>
+<p><strong>Ejemplo (<span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span>).</strong> Ahora supongamos que utilizamos la misma
+muestra de tamaño <span class="math inline">\(n=300\)</span> para probar los dos algoritmos. En este caso,
+no debemos hacer la prueba para medias de muestras independientes. Sin embargo,
+esto podemos ponerlo en términos de una prueba para una sola muestra.</p>
+<p>Tenemos las observaciones <span class="math inline">\(X_1,\ldots, X_n\)</span> y <span class="math inline">\(Y_1,\dots, Y_n\)</span>, donde
+<span class="math inline">\(X_i=1\)</span> si el algoritmo 1 clasifica correctamente, y 0 en otro caso. Igualmente,
+<span class="math inline">\(Y_i=1\)</span> si el algoritmo 2 clasifica correctamente, y 0 en otro caso. Definimos</p>
+<p><span class="math display">\[D_i= X_i - Y_i\]</span>
+Y <span class="math inline">\(D_1,\ldots, D_n\)</span> es una muestra iid. Ahora observemos que la media <span class="math inline">\(\bar{D}\)</span>
+tiene valor esperado <span class="math inline">\(p_1 - p_2\)</span>, donde <span class="math inline">\(p_1\)</span> y <span class="math inline">\(p_2\)</span> son las tasas de correctos
+del algoritmo 1 y del algoritmo 2 respectivamente. Podemos hacer una prueba
+de Wald como al principio de la sección:</p>
+<p><span class="math display">\[W = \frac{\bar{D} - 0}{{\textsf{ee}}}\]</span>
+Y notemos que el error estándar <strong>no</strong> se calcula como en el ejemplo anterior. Podríamos
+usar bootstrap para estimarlo, pero en este caso podemos usar el estimador usual</p>
+<p><span class="math display">\[\hat{\textsf{ee}} = S / \sqrt{n}\]</span>
+donde
+<span class="math display">\[S = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D})^2\]</span>
+y nótese que necesitamos las decisiones indiviudales de cada algoritmo para
+cada caso, en contraste al ejemplo anterior de muestras independientes donde
+los errores estándar se calculaban de manera independiente. Esto tiene sentido,
+pues la variablidad de <span class="math inline">\(\bar{D}\)</span> depende de cómo están correlacionados
+los aciertos de los dos algoritmos.</p>
+<p>Supongamos por ejemplo que los datos que obtenemos son:</p>
+<div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb362-1"></a>datos_clasif <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 3
+##   caso      x     y
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1         1     1
+## 2 2         0     1
+## 3 3         0     1
+## 4 4         0     1
+## 5 5         0     1
+## 6 6         1     0</code></pre>
+<p>Como explicamos arriba, nos interesa la diferencia. Calculamos <span class="math inline">\(d\)</span>:</p>
+<div class="sourceCode" id="cb364"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb364-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb364-1"></a>datos_clasif &lt;-<span class="st"> </span>datos_clasif <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb364-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb364-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">d =</span> x <span class="op">-</span><span class="st"> </span>y)</span>
+<span id="cb364-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb364-3"></a>datos_clasif <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 4
+##   caso      x     y     d
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1         1     1     0
+## 2 2         0     1    -1
+## 3 3         0     1    -1
+## 4 4         0     1    -1
+## 5 5         0     1    -1
+## 6 6         1     0     1</code></pre>
+<p>Y ahora calculamos la media de <span class="math inline">\(d\)</span> (y tasa de correctos de cada clasificador:)</p>
+<div class="sourceCode" id="cb366"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb366-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb366-1"></a>medias_tbl &lt;-<span class="st"> </span></span>
+<span id="cb366-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb366-2"></a><span class="st">  </span>datos_clasif <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarise</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), mean, <span class="dt">.names =</span> <span class="st">&quot;{col}_hat&quot;</span>))</span>
+<span id="cb366-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb366-3"></a>d_hat &lt;-<span class="st"> </span><span class="kw">pull</span>(medias_tbl, d_hat)</span>
+<span id="cb366-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb366-4"></a>medias_tbl</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##   x_hat y_hat   d_hat
+##   &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1  0.81 0.893 -0.0833</code></pre>
+<p>Ahora necesitamos calcular el error estándar. Como explicamos arriba, hacemos</p>
+<div class="sourceCode" id="cb368"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb368-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb368-1"></a>ee &lt;-<span class="st"> </span>datos_clasif <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb368-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb368-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">d_hat =</span> <span class="kw">mean</span>(d)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb368-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb368-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dif_2 =</span> (d <span class="op">-</span><span class="st"> </span>d_hat)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb368-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb368-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">ee =</span> <span class="kw">sd</span>(dif_<span class="dv">2</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">n</span>())) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb368-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb368-5"></a><span class="st">  </span><span class="kw">pull</span>(ee)</span>
+<span id="cb368-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb368-6"></a>ee  </span></code></pre></div>
+<pre><code>## [1] 0.03112829</code></pre>
+<p>Y ahora podemos calcular la estadística <span class="math inline">\(W\)</span> y el valor p correspondiente:</p>
+<div class="sourceCode" id="cb370"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb370-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb370-1"></a>w &lt;-<span class="st"> </span>d_hat <span class="op">/</span><span class="st"> </span>ee</span>
+<span id="cb370-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb370-2"></a>valor_p &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="kw">abs</span>(w)))</span>
+<span id="cb370-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb370-3"></a><span class="kw">c</span>(<span class="dt">w =</span> w, <span class="dt">valor_p =</span> valor_p) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##       w valor_p 
+##  -2.677   0.007</code></pre>
+<p>Y vemos que tenemos evidencia considerable de que el desempeño no es el mismo:
+el algoritmo 2 parece ser mejor.</p>
+
+<div class="ejercicio">
+<ul>
+<li>¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este
+ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
+</div></li>
+</ul>
+</div>
+<div id="pruebas-de-cociente-de-verosimilitud" class="section level2 unnumbered">
+<h2>Pruebas de cociente de verosimilitud</h2>
+<p>Otra técnica clásica para hacer pruebas de hipótesis es el de cociente
+de verosimilitudes. Con esta técnica podemos hacer pruebas que involucren
+varios parámetros, y podemos contrastar hipótesis nulas contra alternativas
+especificas.</p>
+<p>Para aplicar este tipo de pruebas es necesario hacer
+supuestos distribucionales (modelos probabilísticos), pues
+estas pruebas se basan en la función de verosimilitud <span class="math inline">\(\mathcal{L}(\theta; x_1,\ldots, x_n)\)</span>.</p>
+<p><strong>Ejemplo</strong>. Supongamos que tenemos la hipótesis nula de que una moneda
+es justa (<span class="math inline">\(p =0.05\)</span> de sol). En 120 tiros de la moneda (que suponemos
+independientes), observamos 75 soles.
+Recordemos la función de log-verosimilitud para el modelo binomial
+(ignorando constantes que no dependen de <span class="math inline">\(p\)</span>) es
+<span class="math display">\[\ell(p) = 75 \log(p) + (120 - 75)\log(1-p) \]</span></p>
+<ul>
+<li>Primero calculamos el estimador de máxima verosimilitud de <span class="math inline">\(p\)</span>, que
+es <span class="math inline">\(\hat{p} = 75/120 = 0.625\)</span>. Evaluamos la verosimilitud</li>
+</ul>
+<p><span class="math display">\[\ell(\hat{p}) = \ell(0.625) = 75\log(0.625) + 45\log(0.375) = -79.388\]</span>
+- Ahora evaluamos la verosimlitud según la hipótesis nula, donde asumimos
+que <span class="math inline">\(p = 0.5\)</span>:</p>
+<p><span class="math display">\[\ell(p_0) = \ell(0.5) = 75\log(0.5) + 45\log(0.5) = -83.177\]</span>
+- Finalmente, contrastamos estos dos números con una estadística que denotamos
+con <span class="math inline">\(\lambda\)</span>:</p>
+<p><span class="math display">\[\lambda = 2\left[\ell(\hat{p}) - \ell(p_0)\right] = 2[\ell(0.625)- \ell(0.5)] = 2(3.79)=7.58\]</span></p>
+<ul>
+<li><p>A <span class="math inline">\(\lambda\)</span> se le llama la <strong>estadística de cociente de verosimilitud</strong>.
+Tomamos la diferencia de log verosimilitudes, que es los mismo que tomar el
+logaritmo del <strong>cociente</strong> de verosimilitudes, y de ahí el nombre de la prueba.</p></li>
+<li><p>Nótese que cuando este número <span class="math inline">\(\lambda\)</span> es muy grande, esto implica que la hipótesis
+nula es menos creíble, o menos consistente con los datos, pues la nula tiene mucho
+menos verosimilitud de lo que los datos indican. Por otro lado, cuando este valor
+es cercano a 0, entonces tenemos menos evidencia en contra de la
+hipótesis nula. Esto se explica en la siguiente gráfica:</p></li>
+</ul>
+<div class="sourceCode" id="cb372"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb372-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-1"></a>log_verosim &lt;-<span class="st"> </span><span class="cf">function</span>(p){</span>
+<span id="cb372-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-2"></a>  <span class="dv">75</span> <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(p) <span class="op">+</span><span class="st"> </span>(<span class="dv">120</span> <span class="op">-</span><span class="st"> </span><span class="dv">75</span>) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p)</span>
+<span id="cb372-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-3"></a>}</span>
+<span id="cb372-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-4"></a>verosim_tbl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">p =</span> <span class="kw">seq</span>(<span class="fl">0.4</span>, <span class="fl">0.7</span>, <span class="fl">0.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb372-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">log_verosim =</span> <span class="kw">log_verosim</span>(p))</span>
+<span id="cb372-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-6"></a><span class="kw">ggplot</span>(verosim_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> p, <span class="dt">y =</span> log_verosim)) <span class="op">+</span></span>
+<span id="cb372-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-7"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span></span>
+<span id="cb372-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-8"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">x =</span> <span class="dv">75</span><span class="op">/</span><span class="dv">120</span>, <span class="dt">xend =</span> <span class="dv">75</span><span class="op">/</span><span class="dv">120</span>, <span class="dt">y =</span> <span class="dv">-130</span>, <span class="dt">yend =</span> <span class="kw">log_verosim</span>(<span class="dv">75</span><span class="op">/</span><span class="dv">120</span>), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb372-9"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-9"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="dt">x =</span> <span class="fl">0.5</span>, <span class="dt">xend =</span> <span class="fl">0.5</span>, <span class="dt">y =</span> <span class="dv">-130</span>, <span class="dt">yend =</span> <span class="kw">log_verosim</span>(<span class="fl">0.5</span>), <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
+<span id="cb372-10"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-10"></a><span class="st">  </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">0.5</span>,  <span class="dt">ymin =</span> <span class="kw">log_verosim</span>(<span class="fl">0.5</span>), <span class="dt">ymax =</span> <span class="kw">log_verosim</span>(<span class="dv">75</span><span class="op">/</span><span class="dv">120</span>)), </span>
+<span id="cb372-11"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-11"></a>               <span class="dt">colour =</span> <span class="st">&quot;orange&quot;</span>, <span class="dt">width =</span> <span class="fl">0.05</span>) <span class="op">+</span></span>
+<span id="cb372-12"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-12"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.48</span>, <span class="dt">y =</span> <span class="fl">-81.5</span>, <span class="dt">label =</span> <span class="st">&quot;3.79&quot;</span>) <span class="op">+</span></span>
+<span id="cb372-13"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-13"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.515</span>, <span class="dt">y =</span> <span class="dv">-91</span>, <span class="dt">label =</span><span class="st">&quot;nula&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;gray20&quot;</span>) <span class="op">+</span></span>
+<span id="cb372-14"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-14"></a><span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">0.665</span>, <span class="dt">y =</span> <span class="dv">-91</span>, <span class="dt">label =</span><span class="st">&quot;max verosímil&quot;</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb372-15"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb372-15"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(lambda, <span class="st">&quot;=2(3.79)=7.58&quot;</span>))) </span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Este método puede generalizarse para que no solo aplique a hipótesis
+nulas donde <span class="math inline">\(\theta = \theta_0\)</span>, sino en general, <span class="math inline">\(\theta \in \Theta_0\)</span>.
+Por ejemplo, podemos construir pruebas para <span class="math inline">\(\theta &lt; 0.4\)</span>.</p>
+
+<div class="mathblock">
+<p><strong>Definición</strong>. Consideramos la hipótesis nula <span class="math inline">\(\theta= \theta_0\)</span>.
+La <strong>estadística del cociente de verosimilitudes</strong> está dada por:</p>
+<p><span class="math display">\[\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta=\theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta})}{\mathcal{L}(\theta_0)}  \right)\]</span></p>
+donde <span class="math inline">\(\hat{\theta}\)</span> es el estimador de máxima verosimilitud.
+</div>
+
+<p>Para construir una prueba asociada, como siempre, necesitamos una distribución de
+referencia. Esto podemos hacerlo con simulación, o usando resultados asintóticos.</p>
+<div id="distribución-de-referencia-para-pruebas-de-cocientes" class="section level3 unnumbered">
+<h3>Distribución de referencia para pruebas de cocientes</h3>
+<p>Para nuestro ejemplo anterior, podemos simular datos bajo la hipótesis nula,
+y ver cómo se distribuye la estadística <span class="math inline">\(\lambda\)</span>:</p>
+<p><strong>Ejemplo.</strong> Simulamos bajo la hipótesis nula como sigue:</p>
+<div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-1"></a>n_volados &lt;-<span class="st"> </span><span class="dv">120</span> <span class="co"># número de volados</span></span>
+<span id="cb373-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-2"></a>simulados_nula &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">4000</span>, n_volados, <span class="dt">p =</span> <span class="fl">0.5</span>)</span>
+<span id="cb373-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-3"></a>lambda &lt;-<span class="st"> </span><span class="cf">function</span>(n, x, <span class="dt">p_0 =</span> <span class="fl">0.5</span>){</span>
+<span id="cb373-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-4"></a>  <span class="co"># estimador de max verosim</span></span>
+<span id="cb373-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-5"></a>  p_mv &lt;-<span class="st"> </span>x <span class="op">/</span><span class="st"> </span>n </span>
+<span id="cb373-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-6"></a>  <span class="co"># log verosimilitud bajo mv</span></span>
+<span id="cb373-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-7"></a>  log_p_mv &lt;-<span class="st"> </span>x <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(p_mv) <span class="op">+</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span>x) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_mv)</span>
+<span id="cb373-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-8"></a>  <span class="co"># log verosimllitud bajo nula</span></span>
+<span id="cb373-9"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-9"></a>  log_p_nula &lt;-<span class="st"> </span>x <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(p_<span class="dv">0</span>) <span class="op">+</span><span class="st"> </span>(n <span class="op">-</span><span class="st"> </span>x) <span class="op">*</span><span class="st"> </span><span class="kw">log</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_<span class="dv">0</span>)</span>
+<span id="cb373-10"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-10"></a>  lambda &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span>(log_p_mv <span class="op">-</span><span class="st"> </span>log_p_nula)</span>
+<span id="cb373-11"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-11"></a>  lambda</span>
+<span id="cb373-12"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-12"></a>}</span>
+<span id="cb373-13"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-13"></a>lambda_obs &lt;-<span class="st"> </span><span class="kw">lambda</span>(n_volados, <span class="dv">75</span>, <span class="fl">0.5</span>)</span>
+<span id="cb373-14"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-14"></a>sims_tbl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">sim_x =</span> simulados_nula) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb373-15"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-15"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">lambda =</span> <span class="kw">map_dbl</span>(sim_x, <span class="op">~</span><span class="st"> </span><span class="kw">lambda</span>(n_volados, .x, <span class="dt">p_0 =</span> <span class="fl">0.5</span>)))</span>
+<span id="cb373-16"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-16"></a><span class="kw">ggplot</span>(sims_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> lambda)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb373-17"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-17"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">0.7</span>) <span class="op">+</span></span>
+<span id="cb373-18"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb373-18"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="fl">2.92</span>, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;" />
+Con esta aproximación a la distribución de referencia podemos calcular
+el valor p en nuestro ejemplo anterior:</p>
+<div class="sourceCode" id="cb374"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb374-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb374-1"></a>valor_p &lt;-<span class="st"> </span><span class="kw">mean</span>(sims_tbl<span class="op">$</span>lambda <span class="op">&gt;=</span><span class="st"> </span>lambda_obs)</span>
+<span id="cb374-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb374-2"></a>valor_p</span></code></pre></div>
+<pre><code>## [1] 0.00675</code></pre>
+<p>y observamos que tenemos evidencia fuerte en contra de la hipótesis nula:
+la moneda no está balanceada.</p>
+<p><strong>Ejemplo</strong>. Este ejemplo es un poco artificial, pero lo usamos
+para entender mejor las pruebas de cocientes
+de verosimlitud. Supongamos que tenemos una muestra de <span class="math inline">\(\mathsf{N}(\mu, 1)\)</span>, y queremos
+probar si <span class="math inline">\(\mu = 8\)</span>. Asumimos que el supuesto de normalidad y desviación
+estándar iugal a 1 se cumplen.</p>
+<div class="sourceCode" id="cb376"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb376-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb376-1"></a><span class="kw">set.seed</span>(<span class="dv">3341</span>)</span>
+<span id="cb376-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb376-2"></a>n_muestra &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb376-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb376-3"></a>muestra_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n_muestra, <span class="fl">7.9</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-1"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb377-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-2"></a>  <span class="co"># crear log verosim para dos muestras normales independientes.</span></span>
+<span id="cb377-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-3"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(params){</span>
+<span id="cb377-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-4"></a>    mu &lt;-<span class="st"> </span>params[<span class="dv">1</span>]</span>
+<span id="cb377-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-5"></a>    log_vero &lt;-<span class="st"> </span><span class="kw">dnorm</span>(x, <span class="dt">mean =</span> mu, <span class="dt">sd =</span> <span class="dv">1</span>, <span class="dt">log =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>sum</span>
+<span id="cb377-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-6"></a>    log_vero</span>
+<span id="cb377-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-7"></a>  }</span>
+<span id="cb377-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-8"></a>}</span>
+<span id="cb377-9"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-9"></a>lambda_calc &lt;-<span class="st"> </span><span class="cf">function</span>(muestra, crear_log_p){</span>
+<span id="cb377-10"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-10"></a>  log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
+<span id="cb377-11"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-11"></a>  res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb377-12"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-12"></a>  lambda_mv &lt;-<span class="st"> </span><span class="kw">log_p</span>(res<span class="op">$</span>par)</span>
+<span id="cb377-13"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-13"></a>  lambda_nula &lt;-<span class="st"> </span><span class="kw">log_p</span>(<span class="fl">8.0</span>)</span>
+<span id="cb377-14"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-14"></a>  lambda &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(lambda_mv <span class="op">-</span><span class="st"> </span>lambda_nula)</span>
+<span id="cb377-15"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-15"></a>  lambda</span>
+<span id="cb377-16"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-16"></a>}</span>
+<span id="cb377-17"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-17"></a>lambda &lt;-<span class="st"> </span><span class="kw">lambda_calc</span>(muestra_<span class="dv">1</span>, crear_log_p)</span>
+<span id="cb377-18"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb377-18"></a>lambda</span></code></pre></div>
+<pre><code>## [1] 2.101775</code></pre>
+<p>Ahora construimos con simulación la distribución de referencia usando simulaciones
+bajo la nula</p>
+<div class="sourceCode" id="cb379"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb379-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb379-1"></a>sims_nula &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rnorm</span>(n_muestra, <span class="dv">8</span>, <span class="dv">1</span>))</span>
+<span id="cb379-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb379-2"></a>lambda_nula_sim &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(sims_nula, <span class="op">~</span><span class="st"> </span><span class="kw">lambda_calc</span>(.x, crear_log_p))</span>
+<span id="cb379-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb379-3"></a><span class="kw">tibble</span>(<span class="dt">lambda =</span> lambda_nula_sim) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb379-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb379-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
+<span id="cb379-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb379-5"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> lambda, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) </span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb380"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb380-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb380-1"></a>valor_p &lt;-<span class="st"> </span><span class="kw">mean</span>(lambda_nula_sim <span class="op">&gt;=</span><span class="st"> </span>lambda)</span>
+<span id="cb380-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb380-2"></a>valor_p</span></code></pre></div>
+<pre><code>## [1] 0.1537</code></pre>
+<p>Estos datos muestran consistencia con la hipótesis <span class="math inline">\(\mu = 8\)</span>.</p>
+<p><strong>Discusión</strong>: Nota en los dos ejemplos anteriores la similitud entre
+las distribuciones de referencia. En ambos casos, estas distribuciones
+resultan ser aproximadamente <strong><span class="math inline">\(\chi\)</span>-cuadrada con 1 grado de libertad</strong> (ji-cuadrada). Podemos
+checar para el último ejemplo:</p>
+<div class="sourceCode" id="cb382"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb382-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb382-1"></a>teorica &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="fl">0.1</span>, <span class="dv">10</span>, <span class="fl">0.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb382-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb382-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">f_chi_1 =</span> <span class="kw">dchisq</span>(x, <span class="dt">df =</span> <span class="dv">1</span>))</span>
+<span id="cb382-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb382-3"></a><span class="kw">tibble</span>(<span class="dt">lambda =</span> lambda_nula_sim) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb382-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb382-4"></a><span class="st">  </span><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> ..density..), <span class="dt">binwidth =</span> <span class="fl">0.1</span>) <span class="op">+</span></span>
+<span id="cb382-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb382-5"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> teorica, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> f_chi_<span class="dv">1</span>), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) </span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>O mejor, con una gráfica de cuantiles de las simulaciones vs
+la téorica:</p>
+<div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb383-1"></a><span class="kw">tibble</span>(<span class="dt">lambda =</span> lambda_nula_sim) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb383-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb383-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> lambda)) <span class="op">+</span></span>
+<span id="cb383-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb383-3"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qchisq, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb383-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb383-4"></a><span class="st">  </span><span class="kw">geom_qq_line</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qchisq, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">df =</span> <span class="dv">1</span>)) </span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-27-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Este resultado asintótico no es trivial, y se usa comúnmente para calcular
+valores <span class="math inline">\(p\)</span>. Discutiremos más este punto más adelante.</p>
+</div>
+</div>
+<div id="otro-tipo-de-pruebas" class="section level2 unnumbered">
+<h2>Otro tipo de pruebas</h2>
+<p>Con cocientes de verosimlitud podemos diseñar pruebas para contrastar
+condiciones que sólo un subconjunto de parámetros cumple.</p>
+<p><strong>Ejemplo.</strong> Supongamos que queremos hacer una prueba de
+igualdad de medias <span class="math inline">\(\mu_1 = \mu_2\)</span> para dos poblaciones normales
+<span class="math inline">\(\mathsf{N}(\mu_1, \sigma_1)\)</span> y <span class="math inline">\(\mathsf{N}(\mu_2, \sigma_2)\)</span>, donde extraemos las
+muestras de manera independiente, y no conocemos
+las desviaciones estándar. Obtenemos dos muestras (que supondremos
+provienen de distribuciones normales, pues ese es nuestro supuesto)</p>
+<div class="sourceCode" id="cb384"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb384-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb384-1"></a><span class="kw">set.seed</span>(<span class="dv">223</span>)</span>
+<span id="cb384-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb384-2"></a>muestra_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">80</span>, <span class="fl">0.8</span>, <span class="fl">0.2</span>)</span>
+<span id="cb384-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb384-3"></a>muestra_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">120</span>, <span class="fl">0.8</span>, <span class="fl">0.4</span>)</span></code></pre></div>
+<p>Necesitamos: 1) calcular el valor de la estadística <span class="math inline">\(\lambda\)</span> de cociente
+de verosimilitudes, 2) Calcular la distribución de referencia para <span class="math inline">\(\lambda\)</span> bajo la
+hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de <span class="math inline">\(\lambda\)</span> en relación a la distribución de referencia.</p>
+<div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-1"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x, y){</span>
+<span id="cb385-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-2"></a>  <span class="co"># crear log verosim para dos muestras normales independientes.</span></span>
+<span id="cb385-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-3"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(params){</span>
+<span id="cb385-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-4"></a>    mu_<span class="dv">1</span> &lt;-<span class="st"> </span>params[<span class="dv">1</span>]</span>
+<span id="cb385-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-5"></a>    mu_<span class="dv">2</span> &lt;-<span class="st"> </span>params[<span class="dv">2</span>]</span>
+<span id="cb385-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-6"></a>    sigma_<span class="dv">1</span> &lt;-<span class="st"> </span>params[<span class="dv">3</span>]</span>
+<span id="cb385-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-7"></a>    sigma_<span class="dv">2</span> &lt;-<span class="st"> </span>params[<span class="dv">4</span>]</span>
+<span id="cb385-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-8"></a>    log_vero_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">dnorm</span>(x, <span class="dt">mean =</span> mu_<span class="dv">1</span>, <span class="dt">sd =</span> sigma_<span class="dv">1</span>, <span class="dt">log =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>sum</span>
+<span id="cb385-9"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-9"></a>    log_vero_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">dnorm</span>(y, <span class="dt">mean =</span> mu_<span class="dv">2</span>, <span class="dt">sd =</span> sigma_<span class="dv">2</span>, <span class="dt">log =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>sum</span>
+<span id="cb385-10"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-10"></a>    log_vero &lt;-<span class="st"> </span>log_vero_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>log_vero_<span class="dv">2</span> <span class="co">#se suman por independiencia</span></span>
+<span id="cb385-11"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-11"></a>    log_vero</span>
+<span id="cb385-12"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-12"></a>  }</span>
+<span id="cb385-13"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-13"></a>}</span>
+<span id="cb385-14"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb385-14"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_<span class="dv">1</span>, muestra_<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb386"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb386-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-1"></a>crear_log_p_nula &lt;-<span class="st"> </span><span class="cf">function</span>(x, y){</span>
+<span id="cb386-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-2"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(params){</span>
+<span id="cb386-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-3"></a>    <span class="co"># misma media</span></span>
+<span id="cb386-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-4"></a>    mu &lt;-<span class="st"> </span>params[<span class="dv">1</span>]</span>
+<span id="cb386-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-5"></a>    sigma_<span class="dv">1</span> &lt;-<span class="st"> </span>params[<span class="dv">2</span>]</span>
+<span id="cb386-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-6"></a>    sigma_<span class="dv">2</span> &lt;-<span class="st"> </span>params[<span class="dv">3</span>]</span>
+<span id="cb386-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-7"></a>    log_vero_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">dnorm</span>(x, <span class="dt">mean =</span> mu, <span class="dt">sd =</span> sigma_<span class="dv">1</span>, <span class="dt">log =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>sum</span>
+<span id="cb386-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-8"></a>    log_vero_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">dnorm</span>(y, <span class="dt">mean =</span> mu, <span class="dt">sd =</span> sigma_<span class="dv">2</span>, <span class="dt">log =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>sum</span>
+<span id="cb386-9"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-9"></a>    log_vero &lt;-<span class="st"> </span>log_vero_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>log_vero_<span class="dv">2</span> <span class="co">#se suman por independiencia</span></span>
+<span id="cb386-10"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-10"></a>    log_vero</span>
+<span id="cb386-11"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-11"></a>  }</span>
+<span id="cb386-12"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-12"></a>}</span>
+<span id="cb386-13"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb386-13"></a>log_p_nula &lt;-<span class="st"> </span><span class="kw">crear_log_p_nula</span>(muestra_<span class="dv">1</span>, muestra_<span class="dv">2</span>)</span></code></pre></div>
+<p>Ahora tenemos el problema de que no conocemos las sigma. Estas deben ser
+estimadas para después calcular el cociente de verosimilitud:</p>
+<div class="sourceCode" id="cb387"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb387-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb387-1"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), log_p, <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>, </span>
+<span id="cb387-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb387-2"></a>             <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb387-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb387-3"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb389"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb389-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb389-1"></a>est_mv &lt;-<span class="st"> </span>res<span class="op">$</span>par</span>
+<span id="cb389-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb389-2"></a><span class="kw">names</span>(est_mv) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mu_1&quot;</span>, <span class="st">&quot;mu_2&quot;</span>, <span class="st">&quot;sigma_1&quot;</span>, <span class="st">&quot;sigma_2&quot;</span>)</span>
+<span id="cb389-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb389-3"></a>est_mv</span></code></pre></div>
+<pre><code>##      mu_1      mu_2   sigma_1   sigma_2 
+## 0.8153471 0.7819913 0.1987545 0.3940484</code></pre>
+<p>Y tenemos</p>
+<div class="sourceCode" id="cb391"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb391-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb391-1"></a>lambda_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">log_p</span>(est_mv)</span>
+<span id="cb391-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb391-2"></a>lambda_<span class="dv">1</span></span></code></pre></div>
+<pre><code>## [1] -42.76723</code></pre>
+<p>Ahora calculamos el máximo bajo el supuesto de la hipótesis nula:</p>
+<div class="sourceCode" id="cb393"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb393-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb393-1"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>), log_p_nula, <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>, </span>
+<span id="cb393-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb393-2"></a>             <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb393-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb393-3"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<pre><code>## [1] 0</code></pre>
+<div class="sourceCode" id="cb395"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb395-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb395-1"></a>est_mv_nula &lt;-<span class="st"> </span>res<span class="op">$</span>par</span>
+<span id="cb395-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb395-2"></a><span class="kw">names</span>(est_mv) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mu&quot;</span>, <span class="st">&quot;sigma_1&quot;</span>, <span class="st">&quot;sigma_2&quot;</span>)</span>
+<span id="cb395-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb395-3"></a>est_mv_nula</span></code></pre></div>
+<pre><code>## [1] 0.8062091 0.1989438 0.3948603</code></pre>
+<p>y evaluamos</p>
+<div class="sourceCode" id="cb397"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb397-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb397-1"></a>lambda_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">log_p_nula</span>(est_mv_nula)</span>
+<span id="cb397-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb397-2"></a>lambda_<span class="dv">2</span></span></code></pre></div>
+<pre><code>## [1] -43.07902</code></pre>
+<p>Finalmente, nuestra estadística <span class="math inline">\(\lambda\)</span> es</p>
+<div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb399-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(lambda_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>lambda_<span class="dv">2</span>)</span>
+<span id="cb399-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb399-2"></a>lambda</span></code></pre></div>
+<pre><code>## [1] 0.6235661</code></pre>
+<p>Y ahora necesitamos calcular un valor-<span class="math inline">\(p\)</span>. El problema que tenemos en este
+punto es que bajo la hipótesis nula no están determinados todos los parámetros,
+así que no podemos simular de manera simple muestras para obtener la
+distribución de referencia. Podemos sin embargo usar bootstrap paramétrico
+usando los estimadores de máxima verosimilitud bajo la nula</p>
+<div class="sourceCode" id="cb401"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb401-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-1"></a>simular_boot &lt;-<span class="st"> </span><span class="cf">function</span>(n_<span class="dv">1</span>, n_<span class="dv">2</span>, est_mv_nula){</span>
+<span id="cb401-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-2"></a>  x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n_<span class="dv">1</span>, est_mv_nula[<span class="dv">1</span>], est_mv_nula[<span class="dv">2</span>])</span>
+<span id="cb401-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-3"></a>  y &lt;-<span class="st"> </span><span class="kw">rnorm</span>(n_<span class="dv">2</span>, est_mv_nula[<span class="dv">1</span>], est_mv_nula[<span class="dv">3</span>])</span>
+<span id="cb401-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-4"></a>  <span class="kw">list</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> y)</span>
+<span id="cb401-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-5"></a>}</span>
+<span id="cb401-6"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-6"></a>lambda_nula_sim &lt;-<span class="st"> </span><span class="cf">function</span>(est_mv_nula){</span>
+<span id="cb401-7"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-7"></a>  muestras &lt;-<span class="st"> </span><span class="kw">simular_boot</span>(<span class="dv">80</span>, <span class="dv">120</span>, est_mv_nula)</span>
+<span id="cb401-8"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-8"></a>  x &lt;-<span class="st"> </span>muestras<span class="op">$</span>x</span>
+<span id="cb401-9"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-9"></a>  y &lt;-<span class="st"> </span>muestras<span class="op">$</span>y</span>
+<span id="cb401-10"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-10"></a>  log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(x, y)</span>
+<span id="cb401-11"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-11"></a>  log_p_nula &lt;-<span class="st"> </span><span class="kw">crear_log_p_nula</span>(x, y)</span>
+<span id="cb401-12"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-12"></a>  est_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb401-13"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-13"></a>  est_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>), log_p_nula, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb401-14"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-14"></a>  lambda &lt;-<span class="st"> </span><span class="dv">2</span><span class="op">*</span>(<span class="kw">log_p</span>(est_<span class="dv">1</span><span class="op">$</span>par) <span class="op">-</span><span class="st"> </span><span class="kw">log_p_nula</span>(est_<span class="dv">2</span><span class="op">$</span>par))</span>
+<span id="cb401-15"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-15"></a>  lambda</span>
+<span id="cb401-16"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-16"></a>}</span>
+<span id="cb401-17"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb401-17"></a>lambda_sim &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">lambda_nula_sim</span>(<span class="dt">est_mv_nula =</span> est_mv_nula))</span></code></pre></div>
+<p>Y graficamos la distribución de referencia junto con el valor de <span class="math inline">\(\lambda\)</span>
+que obtuvimos:</p>
+<div class="sourceCode" id="cb402"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb402-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb402-1"></a><span class="kw">tibble</span>(<span class="dt">lambda =</span> lambda_sim) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb402-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb402-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda)) <span class="op">+</span></span>
+<span id="cb402-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb402-3"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
+<span id="cb402-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb402-4"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> lambda, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-37-1.png" width="480" style="display: block; margin: auto;" />
+Y claramente los datos son consistentes con medias iguales. El valor-<span class="math inline">\(p\)</span> es</p>
+<div class="sourceCode" id="cb403"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb403-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb403-1"></a><span class="kw">mean</span>(lambda_sim <span class="op">&gt;</span><span class="st"> </span>lambda)</span></code></pre></div>
+<pre><code>## [1] 0.4275</code></pre>
+<p>Verificamos
+una vez más que la distribución de referencia es cercana a una <span class="math inline">\(\chi\)</span>-cuadrada
+con un grado de libertad.</p>
+<div class="sourceCode" id="cb405"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb405-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb405-1"></a><span class="kw">tibble</span>(<span class="dt">lambda =</span> lambda_sim) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb405-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb405-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">sample =</span> lambda)) <span class="op">+</span></span>
+<span id="cb405-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb405-3"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qchisq, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">df =</span> <span class="dv">1</span>)) <span class="op">+</span></span>
+<span id="cb405-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb405-4"></a><span class="st">  </span><span class="kw">geom_qq_line</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qchisq, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">df =</span> <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-39-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Esta es la definición generalizada de las pruebas de cociente de verosimilitudes</p>
+
+<div class="mathblock">
+<p><strong>Definición</strong>. Consideramos la hipótesis nula <span class="math inline">\(\theta \in \Theta_0\)</span>.
+La <strong>estadística del cociente de verosimilitudes</strong> está dada por:</p>
+<p><span class="math display">\[\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\Theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta})}{\mathcal{L}(\hat{\theta}_0)}  \right)\]</span></p>
+donde <span class="math inline">\(\hat{\theta}\)</span> es el estimador de máxima verosimilitud de <span class="math inline">\(\theta\)</span>
+y <span class="math inline">\(\hat{\theta}_0\)</span> es el estimador de máxima verosimilitud de <span class="math inline">\(\theta\)</span> cuando
+restringimos a que <span class="math inline">\(\theta \in \Theta_0\)</span>.
+</div>
+
+<p>En nuestro ejemplo anterior, el espacio <span class="math inline">\(\Theta_0\)</span> era
+<span class="math inline">\(\{ (\mu,\mu,\sigma_1, \sigma_2)\}\)</span>, que es un subconjunto de
+<span class="math inline">\(\{ (\mu_1,\mu_2,\sigma_1, \sigma_2)\}\)</span>. Nótese que el espacio <span class="math inline">\(\Theta_0\)</span>
+tiene tres parámetros libres, mientras que el espacio total tiene 4.</p>
+<p>Aunque podemos usar el bootstrap paramétrico para construir distribuciones
+de referencia para estas pruebas y calcular un valor-<span class="math inline">\(p\)</span>, el siguiente
+teorema, cuya demostración no es trivial, explica las observaciones que
+hicimos arriba. Este teorema enuncia la estrategia del enfoque clásico,
+que utiliza una aproximación asintótica.</p>
+
+<div class="mathblock">
+<p><strong>Valores p para pruebas de cocientes de verosimilitud</strong>. Supongamos
+que <span class="math inline">\(\theta = (\theta_1,\theta_2, \ldots, \theta_p)\)</span>. Sea
+<span class="math display">\[\Theta_0 = \{\theta : \theta_1 = a_1, \theta_2 = a_2, \dots, \theta_q = a_q \},\]</span>
+es decir la hipótesis <span class="math inline">\(\theta \in \Theta_0\)</span> es que los primeros <span class="math inline">\(q\)</span> parámetros
+de <span class="math inline">\(\theta\)</span> estan fijos en algún valor. Los otros parámetros no se consideran en esta
+prueba.</p>
+<p>Si <span class="math inline">\(\lambda\)</span> es la estadística de cociente de verosimilitudes de esta prueba, entonces,
+bajo la nula <span class="math inline">\(\theta \in \Theta_0\)</span> tenemos que la distribución
+de <span class="math inline">\(\lambda\)</span> es asintóticamente <span class="math inline">\(\chi\)</span>-cuadrada con <span class="math inline">\(q\)</span> grados de libertad, denotada por <span class="math inline">\(\chi^2_q\)</span>.</p>
+El valor-<span class="math inline">\(p\)</span> para esta prueba es
+<span class="math display">\[P(\chi^2_{q} &gt; \lambda)\]</span>
+</div>
+
+<p><strong>Observaciones</strong>:</p>
+<ul>
+<li><p>Para hacer cálculos con la distribución <span class="math inline">\(\chi\)</span>-cuadrada usamos rutinas numéricas
+(por ejemplo la función <code>pchisq</code> en R).</p></li>
+<li><p>Nótese que <span class="math inline">\(p\)</span> es la dimensión del espacio <span class="math inline">\(\Theta\)</span> (<span class="math inline">\(p\)</span> parámetros),
+y que <span class="math inline">\(p-q\)</span> es la dimensión del espacio <span class="math inline">\(\Theta_0\)</span> (pues <span class="math inline">\(q\)</span> parámetros están fijos),
+de modo que los grados de libertad son la dimensión de <span class="math inline">\(\Theta\)</span> menos la
+dimensión de <span class="math inline">\(\Theta_0\)</span>.</p></li>
+<li><p>En nuestro primer ejemplo (proporción de éxitos) solo teníamos un parámetro. El espacio
+<span class="math inline">\(\Theta_0\)</span> es de dimensión 0, así que los grados de libertad son <span class="math inline">\(1 = 1 - 0\)</span></p></li>
+<li><p>En este último ejemplo donde probamos igualdad de medias, el espacio <span class="math inline">\(\Theta\)</span> tiene
+dimensión 4, y el espacio <span class="math inline">\(\Theta_0\)</span> es de dimensión 3 (tres parámetros libres), por
+lo tanto los grados de libertad son <span class="math inline">\(1 = 4 -3\)</span>.</p></li>
+</ul>
+<p><strong>Ejemplo</strong> En nuestro ejemplo de prueba de igualdad de medias,
+usaríamos</p>
+<div class="sourceCode" id="cb406"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb406-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb406-1"></a><span class="kw">pchisq</span>(lambda, <span class="dt">df =</span><span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<pre><code>## [1] 0.4297252</code></pre>
+<p>que es similar al que obtuvimos con la estrategia del bootstrap paramétrico.</p>
+</div>
+<div id="errores-tipo-i-y-tipo-ii" class="section level2 unnumbered">
+<h2>Errores tipo I y tipo II</h2>
+<p>En algunas ocasiones, en lugar de solamente calcular un valor-<span class="math inline">\(p\)</span> queremos
+tomar una decisión asociada a distintas hipótesis que consideramos posibles. Por
+ejemplo, nuestra hipótesis nula podría ser</p>
+<ul>
+<li>Hipótesis nula <span class="math inline">\(H_0\)</span>: Una medicina nueva que estamos probando no es efectiva
+en reducir el colesterol en pacientes.</li>
+</ul>
+<p>Y queremos contrastar con una alternativa:</p>
+<ul>
+<li>Hipótesis alternativa <span class="math inline">\(H_A\)</span>: la medicina nueva reduce los niveles de colesterol
+en los pacientes.</li>
+</ul>
+<p>La decisión que está detrás de estas pruebas es: si no podemos rechazar la nula,
+la medicina no sale al mercado. Si rechazamos la nula, entonces la medicina es
+aprobada para salir al mercado.</p>
+<p>Para diseñar esta prueba, procedemos como sigue:</p>
+<ol style="list-style-type: decimal">
+<li>Definimos cómo recolectar datos <span class="math inline">\(X\)</span> de interés</li>
+<li>Definimos una estádistica <span class="math inline">\(T(X)\)</span> de los datos.</li>
+<li>Definimos una <strong>región de rechazo</strong> <span class="math inline">\(R\)</span> de valores tales
+que si <span class="math inline">\(T(X)\in R\)</span>, entonces rechazaremos la hipótesis nula (e implícitamente tomaríamos
+la decisión asociada a la alternativa).</li>
+</ol>
+<p>Ejecutamos la prueba observando datos <span class="math inline">\(X=x\)</span>, calculando <span class="math inline">\(T(x)\)</span>, y checando
+si <span class="math inline">\(T(x) \in R\)</span>. Si esto sucede entonces decimos que rechazamos la hipótesis nula,
+y tomamos la decisión asociada a la alternativa.</p>
+<p><strong>Ejemplo</strong>. Si tenemos la hipótesis nula <span class="math inline">\(p_1=0.5\)</span> para una proporción,
+y al alternativa es <span class="math inline">\(p_1\neq 0.5\)</span>, podemos usar la estadística de Wald
+<span class="math inline">\(T(x) = \frac{\hat{p_1} - 0.5}{\hat{\textsf{ee}}}\)</span>. Podríamos definir la región
+de rechazo como <span class="math inline">\(R = \{T(x) : |T(x)| &gt; 3 \}\)</span> (rechazamos si en valor absoluto
+la estadística de Wald es mayor que 3).</p>
+<p>Cuando diseñamos una prueba de este tipo, quisiéramos minimizar dos tipos de errores:</p>
+<ul>
+<li>Rechazar la hipótesis nula <span class="math inline">\(H_0\)</span> cuando es cierta: <strong>Error tipo I</strong></li>
+<li>No rechazar la hipótesis nula <span class="math inline">\(H_0\)</span> cuando <span class="math inline">\(H_0\)</span> es falsa: <strong>Error tipo II</strong></li>
+</ul>
+<p>La gravedad de cada error depende del problema. En nuestro ejemplo de la medicina, por
+ejemplo:</p>
+<ul>
+<li>Un error tipo II resultaría en una medicina efectiva que no sale al mercado, lo
+que tiene consecuencias financieras (para la farmaceútica) y costos de oportunidad
+en salud (para la población). Por otra parte,</li>
+<li>Un error tipo I resultaría en salir al mercado con una medicina que no es efectiva. Esto tiene
+costos de oportunidad financieros que pueden ser grandes para la sociedad.
+Todos estos costos dependen, por
+ejempĺo, de qué tan grave es la enfermedad, qué tan costosa es la medicina, y así sucesivamente.</li>
+<li>En el enfoque más clásico, los errores tipo I y tipo II generalmente no se balancean
+según su severidad o probabilidad. En lugar de eso, generalmente se establece
+un límite para la probabilidad de cometer un error del tipo I (usualmente 5%, por una
+tradición que no tiene mucho fundamento)</li>
+</ul>
+<p>En vista de este ejemplo simple, y las observaciones de arriba:</p>
+<ul>
+<li><strong>Reducir una decisión compleja</strong> a una prueba de hipótesis con resultados
+binarios (rechazar o no) es generalmente <strong>erróneo</strong>.</li>
+<li><strong>Las pruebas de hipótesis se usan muchas veces incorrectamente cuando lo más apropiado es usar estimación</strong> por intervalos o algo similar que cuantifique la incertidumbre
+de las estimaciones.</li>
+</ul>
+<p>Consulta por ejemplo <a href="https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108">el comunicado de la ASA acerca de p-values y pruebas de hipótesis</a></p>
+<p>En el caso de la medicina, por ejemplo, realmente no nos interesa que
+la medicina sea mejor que un placebo. Nos importa que tenga un efecto considerable en los pacientes.
+Si estimamos este efecto, incluyendo incertidumbre, tenemos una mejor herramienta
+para hacer análisis costo-beneficio y tomar la decisión más apropiada.</p>
+<p>Como dijimos, típicamente se selecciona la región de rechazo de forma
+que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada.</p>
+
+<div class="mathblock">
+<p><strong>Definición</strong>. Supongamos que los datos <span class="math inline">\(X_1,X_2,\ldots, X_n\)</span> provienen de una distribución <span class="math inline">\(F_\theta\)</span>, donde
+no conocemos <span class="math inline">\(\theta\)</span>. Supongamos que la hipótesis nula es que <span class="math inline">\(\theta = \theta_0\)</span> (que llamamos
+una hipótesis simple).</p>
+<p>La <strong>función de potencia</strong> de una prueba con región de rechazo <span class="math inline">\(R\)</span>
+se define como la probabilidad de rechazar para cada posible valor del parámetro <span class="math inline">\(\theta\)</span>
+<span class="math display">\[\beta(\theta) = P_\theta (X\in R).\]</span></p>
+<p>El <strong>tamaño</strong> de una prueba se define como el valor</p>
+<p><span class="math display">\[\alpha = \beta(\theta_0),\]</span></p>
+es decir, la probabilidad de rechazar la nula (<span class="math inline">\(\theta = \theta_0\)</span>) erróneamente.
+</div>
+
+<p><strong>Observación</strong>. Esto se generaliza para hipótesis compuestas, donde la nula
+es que el parámetro <span class="math inline">\(\theta\)</span> está en un cierto conjunto <span class="math inline">\(\Theta_0\)</span>. Por ejemplo,
+una hipótesis nula puede ser <span class="math inline">\(\theta &lt; 0.5\)</span>. En este caso, <span class="math inline">\(\alpha\)</span> se define
+como el valor más grande que <span class="math inline">\(\beta(\theta)\)</span> toma cuando <span class="math inline">\(\theta\)</span> está en <span class="math inline">\(\Theta_0\)</span>,
+es decir, la probabilidad de rechazo más grande cuando la hipótesis nula se cumple.</p>
+<p>Decimos que una prueba tiene <strong>nivel de significancia</strong> de <span class="math inline">\(\alpha\)</span> si su tamaño
+es menor o igual a <span class="math inline">\(\alpha\)</span>.</p>
+<p>Decimos que la <strong>potencia de una prueba</strong> es la probabilidad de, correctamente, rechazar la hipótesis nula cuando la alterna es verdadera:</p>
+<p><span class="math display">\[\beta(\theta_a) = P_{\theta_a} (X \in R).\]</span></p>
+<p><strong>Observación:</strong> Sería deseable encontrar la prueba con mayor potencia bajo <span class="math inline">\(H_a\)</span>, entre todas las pruebas con tamaño <span class="math inline">\(\alpha\)</span>. Esto no es trivial y no
+siempre existe.</p>
+<p><strong>Observación:</strong> El valor <span class="math inline">\(p\)</span> es el menor tamaño con el que podemos rechazar <span class="math inline">\(H_0\)</span>.</p>
+<p><strong>Ejemplo</strong> (<span class="citation">Chihara and Hesterberg (<a href="#ref-Chihara" role="doc-biblioref">2018</a>)</span>) Supongamos que las calificaciones de Enlace de alumnos en México
+se distribuye aproximadamente como una normal con media 515 y desviación estándar
+de 120. En una ciudad particular, se quiere decidir
+si es neceario pedir fondos porque la media de la ciudad es más baja
+que la nacional. Nuestra hipótesis nula es <span class="math inline">\(H_0: \mu \geq 515\)</span> y la
+alternativa es <span class="math inline">\(\mu &lt; 515\)</span>, así que si rechazamos la nula se pedirían los fondos.</p>
+<p>Supondremos que la distribución de calificaciones
+en la ciudad es también aproximadamente normal con desviación estándar de 130. Se
+plantea tomar una muestra de 100 alumnos, y rechazar si la media muestral <span class="math inline">\(\bar{X}\)</span> es
+menor que 505. ¿Cuál es la probabilidad <span class="math inline">\(\alpha\)</span> de tener un error de tipo I?</p>
+<p>La función de potencia es
+<span class="math display">\[\beta(\mu) = P_\mu(\bar{X} &lt; 505)\]</span>
+Restando la media <span class="math inline">\(\mu\)</span> y estandarizando obtenemos
+<span class="math display">\[\beta(\mu) = P \left (\frac{\bar{X} - \mu}{130/\sqrt{100}} &lt; \frac{505 -\mu}{130/\sqrt{100}} \right )\]</span>
+así que
+<span class="math display">\[\beta(\mu) = \Phi \left (\frac{505 -\mu}{130/\sqrt{100}}\right ),\]</span>
+donde <span class="math inline">\(\Phi\)</span> es la función acumulada de la normal estándar. La gráfica
+de la función potencia es entonces</p>
+<div class="sourceCode" id="cb408"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb408-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb408-1"></a>potencia_tbl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">mu =</span> <span class="kw">seq</span>(<span class="dv">450</span>, <span class="dv">550</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb408-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb408-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">beta =</span> <span class="kw">pnorm</span>((<span class="dv">505</span> <span class="op">-</span><span class="st"> </span>mu)<span class="op">/</span><span class="dv">13</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># probabilidad de rechazar</span></span>
+<span id="cb408-3"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb408-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">nula_verdadera =</span> <span class="kw">factor</span>(mu <span class="op">&gt;=</span><span class="st"> </span><span class="dv">515</span>)) <span class="co"># nula verdadera</span></span>
+<span id="cb408-4"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb408-4"></a><span class="kw">ggplot</span>(potencia_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> mu, <span class="dt">y =</span> beta, <span class="dt">colour =</span> nula_verdadera)) <span class="op">+</span></span>
+<span id="cb408-5"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb408-5"></a><span class="st">  </span><span class="kw">geom_line</span>() </span></code></pre></div>
+<p><img src="12-mas-hipotesis_files/figure-html/unnamed-chunk-44-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p>Es decir, si la media <span class="math inline">\(\mu\)</span> de la ciudad es muy baja, con mucha seguridad rechazamos. Si
+es relativamente alta entonces no rechazamos. El tamaño de la prueba es el mayor
+valor de probabilidad de rechazo que se obtiene sobre los valores <span class="math inline">\(\mu\geq 515\)</span> (la nula).
+Podemos calcularlo analíticamente como sigue:</p>
+<p>Si <span class="math inline">\(\mu \geq 515\)</span>, entonces
+<span class="math display">\[\beta(\mu) \leq \beta(515) = \Phi\left (\frac{505 -515}{130/\sqrt{100}}\right ) = \Phi( - 10 / 13) = \Phi(-0.7692)\]</span>
+que es igual a</p>
+<div class="sourceCode" id="cb409"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb409-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb409-1"></a><span class="kw">pnorm</span>(<span class="op">-</span><span class="fl">0.7692</span>)</span></code></pre></div>
+<pre><code>## [1] 0.2208873</code></pre>
+<p>Y este es el tamaño de la prueba. En otras palabras: si la ciudad no está
+por debajo de la media nacional, hay una probabilidad de 22% de que erróneamente
+se pidan fondos (al rechazar <span class="math inline">\(H_0\)</span>).</p>
+<p><strong>Ejemplo</strong> Supongamos que los que programan el presupuesto deciden que se requiere
+tener una probabilidad de a lo más 5% de rechazar erróneamente la hipótesis nula (es decir,
+pedir fondos cuando en realidad su media no está debajo de la nacional) para
+poder recibir fondos. ¿Cuál es la región de rechazo que podríamos escoger?</p>
+<p>En el caso anterior usamos la región <span class="math inline">\(\bar{X}&lt;505\)</span>. Si el tamaño de muestra
+está fijo en <span class="math inline">\(n=100\)</span> (por presupuesto), entonces tenemos que escoger un punto
+de corte más extremo. Si la región de rechazo es <span class="math inline">\(\bar{X} &lt; C)\)</span> entonces
+tenemos, siguiendo los cálculos anteriores, que
+<span class="math display">\[0.05 = \alpha = \Phi \left ( \frac{C -515}{130/\sqrt{100}}\right) = \Phi \left( \frac{C- 515}{13}   \right)\]</span>
+Buscamos el cuantil 0.05 de la normal estándar, que es</p>
+<div class="sourceCode" id="cb411"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb411-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb411-1"></a>z_alpha &lt;-<span class="st"> </span><span class="kw">qnorm</span>(<span class="fl">0.05</span>)</span>
+<span id="cb411-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb411-2"></a>z_alpha</span></code></pre></div>
+<pre><code>## [1] -1.644854</code></pre>
+<p>Y entonces requerimos que</p>
+<p><span class="math display">\[\frac{C- 515}{13} = -1.6448.\]</span>
+Despejando obtenemos</p>
+<div class="sourceCode" id="cb413"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb413-1"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb413-1"></a>C &lt;-<span class="st"> </span><span class="dv">13</span><span class="op">*</span>z_alpha <span class="op">+</span><span class="st"> </span><span class="dv">515</span></span>
+<span id="cb413-2"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#cb413-2"></a>C</span></code></pre></div>
+<pre><code>## [1] 493.6169</code></pre>
+<p>Así que podemos usar la región <span class="math inline">\(\bar{X} &lt; 493.5\)</span>, que es más <em>estricta</em>
+que la anterior de <span class="math inline">\(\bar{X} &lt; 505\)</span>.</p>
+
+<div class="ejercicio">
+<p>Considera la potencia de la prueba <span class="math inline">\(\beta(\mu)\)</span> que vimos arriba. Discute y
+corre algunos ejemplos para contestar las siguientes preguntas:</p>
+<ul>
+<li>Recuerda la definición: ¿qué significa <span class="math inline">\(\beta(\mu)\)</span>?</li>
+<li>¿Qué pasa con la potencia cuando <span class="math inline">\(\mu\)</span> está más lejos de los valores de la hipótesis nula?</li>
+<li>¿Qué pasa con la potencia cuando hay menos variabilidad en la población? ¿Y cuando
+la muestra es más grande?</li>
+<li>¿Qué pasa si hacemos más chico el nivel de significancia?
+</div></li>
+</ul>
+</div>
+<div id="consideraciones-prácticas" class="section level2 unnumbered">
+<h2>Consideraciones prácticas</h2>
+<p>Algunos recordatorios de lo que hemos visto:</p>
+<ul>
+<li><p>Rechazar la nula <strong>no quiere decir que la nula es falsa</strong>, ni que <strong>encotramos un
+“efecto”</strong>. Un valor-<span class="math inline">\(p\)</span> chico tampoco
+quiere decir que la nula es falsa. Lo que quiere decir es que la nula es poco consistente
+con los datos que observamos, o que es muy poco probable que la nula produzca los datos
+que observamos.</p></li>
+<li><p>Rechazar la nula (encontrar un efecto “significativo”) <strong>no quiere decir que el efecto tiene importancia práctica</strong>. Si la potencia es alta (por ejemplo cuando el tamaño de
+muestra es grande), puede ser que la discrepancia de los datos con la nula es
+despreciable, entonces para fines prácticos podríamos trabajar bajo el supuesto de la nula.
+Por eso en general preferimos hacer estimación que pruebas de hipótesis para entender
+o resumir los datos y tamaños de las discrepancias.</p></li>
+<li><p>Adicionalmente, muchas de las hipótesis nulas que generalmente se utilizan se
+pueden rechazar sin datos (por ejemplo, igualdad de proporciones en dos poblaciones
+reales). Lo que importa es qué tan diferentes son, y qué tan bien podemos estimar
+sus diferencias.</p></li>
+<li><p>En la literatura, muchas veces parece que “encontrar una cosa interesante” es
+rechazar una hipótesis nulas con nivel 5% de significancia. Es <strong>más importante entender
+cómo se diseñó el estudio, cómo se recogieron los datos, cuáles fueron las decisiones
+de análisis</strong> que pasar el mítico nivel de 5%</p></li>
+<li><p>Cuando la potencia es baja (por ejemplo porque el tamaño de muestra es muy chico),
+tenemos que observar diferencias muy grandes para rechazar. Si probamos algo <strong>poco
+factible</strong> (por ejemplo, que la vitamina <span class="math inline">\(C\)</span> aumenta la estatura a los adultos),
+entonces <strong>los rechazos generalmente se deben a variabilidad en la muestra</strong> (error tipo II).</p></li>
+<li><p>Cuando diseñamos y presentamos resultados de un estudio o análisis, es mejor
+pensar en describir los datos y su variabilidad, y mostrar estimaciones incluyendo fuentes
+de incertidumbre, en lugar de intentar resumir con un valor-<span class="math inline">\(p\)</span> o con el resultado
+de una prueba de hipótesis.</p></li>
+</ul>
+</div>
+<div id="pruebas-múltiples" class="section level2 unnumbered">
+<h2>Pruebas múltiples</h2>
+<p>En algunas ocasiones se hacen muchas pruebas para “filtrar” las cosas que son
+interesantes y las que no. Por ejemplo, cuando comparamos miles de genes entre dos
+muestras (la nula es que son similares). Si cada prueba se conduce a un nivel <span class="math inline">\(\alpha\)</span>,
+la probablilidad de tener al menos un rechazo falso (un error tipo I) es considerablemente
+más alta que <span class="math inline">\(\alpha\)</span>.</p>
+<p>Por ejemplo, si repetimos una prueba de hipótesis con nivel <span class="math inline">\(\alpha\)</span> con muestras
+independientes, la probabilidad de tener al menos un rechazo falso es <span class="math inline">\(1-(1-\alpha)^n\)</span>,
+que es muy cercano a uno si <span class="math inline">\(n\)</span> es grande (¿cómo derivas esta fórmula?). Por ejemplo,
+si <span class="math inline">\(\alpha = 0.05\)</span> y <span class="math inline">\(n = 100\)</span>, con más de 99% probabilidad tendremos al menos un
+rechazo falso, o un “hallazgo” falso. Sin <span class="math inline">\(n\)</span> es muy grande,
+varios de los hallazgos que encontremos serán
+debidos a variabilidad muestral.</p>
+<p>Puedes ver en <span class="citation">(Wasserman <a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span>, sección 10.7 métodos conservadores
+como corrección de Bonferroni (sólo rechazar cuando el valor-<span class="math inline">\(p\)</span> es
+menor a <span class="math inline">\(0.05/n\)</span>),
+o la técnica más moderna de
+control de tasa de descubrimientos falsos (FDR).</p>
+<p>Cuando estamos en una situación como esta (que es más retadora en cuanto a análisis),
+sin embargo, sugerimos usar estimaciones
+que tomen cuenta todos los datos con regularización apropiada: por ejemplo,
+en lugar de trabajar con cada muestra por separado, intentamos construir un modelo
+para el proceso completo de muestreo. Una posibilidad son
+modelos jerárquicos bayesianos. Ver por ejemplo <span class="citation">(Gelman, Hill, and Yajima <a href="#ref-gelmansignif" role="doc-biblioref">2012</a>)</span>.</p>
+
+</div>
+</div>
+<h3>Referencias</h3>
+<div id="refs" class="references">
+<div id="ref-Chihara">
+<p>Chihara, Laura M., and Tim C. Hesterberg. 2018. <em>Mathematical Statistics with Resampling and R</em>. 2nd ed. Hoboken, NJ: John Wiley &amp; Sons. <a href="https://sites.google.com/site/chiharahesterberg/home">https://sites.google.com/site/chiharahesterberg/home</a>.</p>
+</div>
+<div id="ref-gelmansignif">
+<p>Gelman, Andrew, Jennifer Hill, and Masanao Yajima. 2012. “Why We (Usually) Don’t Have to Worry About Multiple Comparisons.” <em>Journal of Research on Educational Effectiveness</em> 5 (2): 189–211. <a href="https://doi.org/10.1080/19345747.2011.618213">https://doi.org/10.1080/19345747.2011.618213</a>.</p>
+</div>
+<div id="ref-Wasserman">
+<p>Wasserman, Larry. 2013. <em>All of Statistics: A Concise Course in Statistical Inference</em>. Springer Science &amp; Business Media.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="propiedades-teóricas-de-mle.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="introducción-a-inferencia-bayesiana-1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/tereom/fundamentos/edit/master/12-mas-hipotesis.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["fundamentos-estadistica.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
