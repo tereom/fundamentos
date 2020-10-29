@@ -271,7 +271,7 @@ sim_formas <- function(p_azar, p_corr){
   x
 }
 set.seed(12)
-muestra <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
+muestra_1 <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
 ```
 
 
@@ -279,20 +279,20 @@ muestra <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
 ```{r, message = FALSE, include=FALSE}
 archivo_stan <- file.path("stan/modelo-examenes.stan")
 # compilar
-mod <- cmdstan_model(archivo_stan)
+mod_informado <- cmdstan_model(archivo_stan)
 ```
 
 
 ```{r, message = FALSE}
-mod
+mod_informado
 ```
 
 Pasamos datos y muestreamos
 
 ```{r}
 set.seed(3413)
-datos_lista <- list(n = length(muestra), y = muestra)
-ajuste <- mod$sample(
+datos_lista <- list(n = length(muestra_1), y = muestra_1)
+ajuste <- mod_informado$sample(
   data = datos_lista,
   seed = 1234,
   chains = 4,
@@ -321,3 +321,95 @@ ggplot(sims_theta_tbl, aes(x = theta_azar, y = theta_corr)) +
   geom_point(alpha = 0.1)
 ```
 
+
+
+## Ejemplo: exámenes, mal identificado
+
+En este ejemplo cambiamos los parámetros de la simulación
+y ponemos iniciales poco informativas.
+
+```{r}
+set.seed(12)
+muestra_2 <- map_dbl(1:200, ~ sim_formas(0.35, 0.21))
+```
+
+
+
+```{r, message = FALSE, include=FALSE}
+archivo_stan <- file.path("stan/modelo-examenes-no-inf.stan")
+# compilar
+mod_no_inf <- cmdstan_model(archivo_stan)
+```
+
+
+```{r, message = FALSE}
+mod_no_inf
+```
+
+Pasamos datos y muestreamos
+
+```{r}
+set.seed(3413)
+datos_lista <- list(n = length(muestra_2), y = muestra_2)
+ajuste <- mod_no_inf$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  iter_warmup = 4000,
+  iter_sampling = 4000,
+  refresh = 2000)
+```
+Y obtenemos mensajes de advertencia (divergencias), lo que implica que
+los diagnósticos indican que es posible que las cadenas no hayan explorado
+suficientemente la posterior
+
+```{r}
+ajuste$cmdstan_diagnose()
+```
+
+
+```{r}
+sims_theta_tbl <- 
+  ajuste$draws(c("theta_azar", "theta_corr")) %>% 
+  as_draws_df()  
+ggplot(sims_theta_tbl, aes(x = theta_azar, y = theta_corr)) +
+  geom_point(alpha = 0.1)
+```
+Donde vemos que el problema es serio: cuando $\theta_{azar}$ es chico, los
+datos son consistentes con valores de $\theta_{corr}$ cercanos a 0.2. Pero
+también es posible que  $\theta_{azar}$ sea grande, y en ese caso tenemos
+poca información acerca de $\theta_corr$. 
+
+- La geometría de esta posterior
+hace difícil para el algoritmo establecer el tamaño de paso correcto para explorar
+adecuadamente esta posterior (con un tamaño de paso chico, explora lentamente, pero
+si se hace más grande, entonces aparecen problemas numéricos y rechazos en los
+"embudos" de esta posterior).
+- Sin embargo, este resultado generalmente lo rechazaríamos, pues sabemos que
+una proporción considerable de estudiantes **no** contesta al azar.
+
+Si corremos el modelo informado con la muestra de esta población, obtenemos:
+
+
+
+```{r}
+set.seed(3413)
+datos_lista <- list(n = length(muestra_2), y = muestra_2)
+ajuste <- mod_informado$sample(
+  data = datos_lista,
+  seed = 1234,
+  chains = 4,
+  iter_warmup = 4000,
+  iter_sampling = 4000,
+  refresh = 2000)
+```
+
+No tenemos problemas numéricos, y la posterior se ve como sigue:
+
+```{r}
+sims_theta_tbl <- 
+  ajuste$draws(c("theta_azar", "theta_corr")) %>% 
+  as_draws_df()  
+ggplot(sims_theta_tbl, aes(x = theta_azar, y = theta_corr)) +
+  geom_point(alpha = 0.1)
+```
