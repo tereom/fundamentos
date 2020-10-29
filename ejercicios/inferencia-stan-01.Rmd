@@ -18,10 +18,14 @@ library(tidyverse)
 Escribimos el código para el modelo en un archivo *modelo-1.stan*, 
 y compilamos:
 
-```{r, message=FALSE}
+```{r, message=FALSE, include=FALSE}
 archivo_stan <- file.path("stan/modelo-1.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
+```
+
+
+```{r, message=FALSE}
 mod
 ```
 
@@ -77,10 +81,14 @@ muestra_loteria <- sample_n(loteria_tbl, 25) %>%
   mutate(numero = numero/1000)
 ```
 
-```{r, message=FALSE}
+```{r, message=FALSE, include=FALSE}
 archivo_stan <- file.path("stan/modelo-2.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
+```
+
+
+```{r, message=FALSE}
 mod
 ```
 
@@ -127,6 +135,10 @@ más intuitiva, aún cuando el modelo no es conjugado:
 archivo_stan <- file.path("stan/modelo-3.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
+```
+
+
+```{r, message=FALSE}
 mod
 ```
 
@@ -176,10 +188,14 @@ qplot(theta_post_sim)
 Haremos el ejemplo no conjugado de estaturas de cantantes, con 
 verificación predictiva posterior.
 
-```{r, message=FALSE}
+```{r, message=FALSE, include=FALSE}
 archivo_stan <- file.path("stan/modelo-cantantes.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
+```
+
+
+```{r, message=FALSE}
 mod
 ```
 
@@ -260,10 +276,14 @@ muestra <- map_dbl(1:200, ~ sim_formas(0.35, 0.5))
 
 
 
-```{r, message = FALSE}
+```{r, message = FALSE, include=FALSE}
 archivo_stan <- file.path("stan/modelo-examenes.stan")
 # compilar
 mod <- cmdstan_model(archivo_stan)
+```
+
+
+```{r, message = FALSE}
 mod
 ```
 
