@@ -1000,7 +1000,7 @@ la entrega. Todas las preguntas del examen parcial se deberán hacer en Slack us
 
 2. Examen en clase, durará una hora, se puede ver las notas pero es individual (no comunicación).
 
-## 8. Más pruebas de hipótesis {-}
+## 10. Más pruebas de hipótesis {-}
 
 1. (Chihara) Los niveles de calcio en adultos saludables se distribuyen de acuerdo
 a una Normal con media 9.5 mg/dl y desviación estándar desconocida. Un médico 
@@ -1009,7 +1009,7 @@ distinta. Colecta mediciones de 20 mujeres saludables y encuentra que la media
 es de 9.2 y la desviación estándar muestral de 1.1. Escribe la hipótesis nula, 
 realiza una prueba de hipótesis e interpreta los resultados.
 
-2. (Chihara) Los datos Alelager contienen unformación de calorías y alcohol 
+2. (Chihara) Los datos [Alelager](https://raw.githubusercontent.com/tereom/fundamentos/render-html/data/Alelager.csv) contienen unformación de calorías y alcohol 
 (por volumen) para una muestra de cervezas ale y lager (por 12 oz). Investiga la 
 hipótesis que las ales tienen más calorías que las lager.
 
