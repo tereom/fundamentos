@@ -52,20 +52,20 @@ distribución de referencia aproximada como sigue:
 
 - Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta}_n$
 es aproximadamente $\mathsf{N}(125, \hat{\textsf{ee}}_n)$.
-- Esto implica que la siguiente estadística $W$ es aproximadamente normal
+- Esto implica que la siguiente estadística $\hat W_n$ es aproximadamente normal
 estándar bajo la nula:
 
-$$W = \frac{\hat{\theta}_n - 125}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1)$$
-Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
-en contra de la hipótesis nula. Como $W$ **no depende de ningún parámetro desconocido**, podemos
-usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
-en la muestra.
+$$\hat W_n = \frac{\hat{\theta}_n - 125}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1)$$
+Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia en contra
+de la hipótesis nula. Como $\hat W_n$ **no depende de ningún parámetro
+desconocido**, podemos usarla como distribución de referencia para comparar el
+valor de $W$ que obtuvimos en la muestra.
 
-Si observamos para nuestra muestra un valor $W=w$ entonces, el
+Si observamos para nuestra muestra un valor $\hat W_n = \hat w_n$ entonces, el
 valor-$p$ (dos colas) de esta prueba es, aproximadamente,
 
 
-$$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
+$$\mathsf{valor-}p \approx P(|Z| > |\hat w_n|) = 2(1 - \Phi(|\hat w_n|))$$
 donde $Z\sim \mathsf{N}(0,1)$ y $\Phi$ es su función de distribución acumulada.
 
 
@@ -76,7 +76,7 @@ es consistente o no con la media nacional. Ya que estamos usando como
 estimador una media de una muestra iid, podemos estimar el error estándar
 de la media con
 
-$$\hat{\textsf{ee}}_n = s / \sqrt{n}$$
+$$\hat{\textsf{ee}}_n = \frac{s}{\sqrt{n}}$$
 Obtenemos:
 
 ```{r}
@@ -111,17 +111,15 @@ Repite esta prueba con una muestra de Chiapas. ¿Qué resultado obtienes?
 
 Tenemos entonces:
 
-```{block2, type='mathblock'}
-**Prueba de Wald.** Consideramos probar la hipótesis nula $H_0: \theta = \theta_0$
-contra la alternativa $H_1: \theta \neq \theta_0$.
+```{block, type='mathblock'}
 
-Suponemos que $\hat{\theta}_n$ es asintóticamente normal e insesgada,
-de modo que bajo la hipótesis nula
-$$\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1).$$
+**Prueba de Wald.** Consideramos probar la hipótesis nula $H_0: \theta =
+\theta_0$ contra la alternativa $H_1: \theta \neq \theta_0$. Suponemos que
+$\hat{\theta}_n$ es asintóticamente normal e insesgada, de modo que bajo la
+hipótesis nula
+$$\hat W_n = \frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}_n} \overset{.}{\sim} \mathsf{N}(0,1).$$
 Entonces el valor-$p$ de la **prueba de Wald** para esta hipótesis nula es
-
-$$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|)).$$
-
+$$\mathsf{valor-}p \approx P(|Z| > |\hat w_n|) = 2(1 - \Phi(|\hat w_n|)).$$
 
 ```
 
@@ -142,7 +140,7 @@ p_hat <- 47 / 80
 ee <- sqrt(p_hat * (1 - p_hat) / 80)
 ```
 
-y la estadística $W$ de prueba es:
+y la estadística $\hat W_n$ de prueba es:
 
 ```{r}
 w <- (p_hat - 0.5) / ee
@@ -169,15 +167,17 @@ que la muestra obtenida $X_1,\ldots, X_n$ proviene de una distribución
 normal $\mathsf{N}(\mu, \sigma)$ (cosa que es **necesario** verificar), entonces
 es posible demostrar que la estadística
 
-$$T = \frac{\bar{X} - \mu}{S / \sqrt{n}}$$
-tiene una distribución exacta que es $t$ de Student con $n-1$ grados de libertad,
-y no depende de otros parámetros, de manera que podemos usarla como distribución
-de referencia y podemos calcular valores $p$ exactos (revisa la sección 8.1 de @Chihara).
+$$T_n = \frac{\bar{X}_n - \mu}{S_n / \sqrt{n}}$$
+tiene una distribución exacta que es $t$ de Student con $n-1$ grados de
+libertad, y no depende de otros parámetros, de manera que podemos usarla como
+distribución de referencia y podemos calcular valores-$p$ exactos (revisa la
+sección 8.1 de @Chihara).
 
 La diferencia con usar una prueba de Wald está en que aquí consideramos también
 la variablidad del error estándar estimado, lo que correctamente sugiere que
-esperamos variaciones proporcionalmente más grandes en $T$
-comparado con lo que sucede si no consideramos esta variación (como en la prueba de Wald). Sin embargo:
+esperamos variaciones proporcionalmente más grandes en $T_n$ comparado con lo que
+sucede si no consideramos esta variación (como en la prueba de Wald). Sin
+embargo:
 
 - Si la muestra $n$ es grande, la distribución $t$ de Student con
 $n-1$ grados de libertad es muy similar a la normal estándar, de manera que la
@@ -204,17 +204,14 @@ Cuando tenemos dos muestras extraidas de manera independiente de dos poblaciones
 distintas, y queremos ver si la hipótesis de medias poblacionales
 iguales es consistente con los datos, podemos usar también una prueba de Wald.
 
-Sea $\bar{X}_1$ y $\bar{X}_2$ las medias muestrales
-correspondientes. Si la hipótesis
-de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
-la variable
-$$\hat{\delta} = \bar{X}_1 - \bar{X}_2$$
-es aproximadamente normal con media $\mathsf{N}(\mu_1 - \mu_2, \textsf{ee})$,
-donde $\mu_1$ y $\mu_2$ son las medias poblacionales correspondientes, y
-donde el
-error estándar de $\hat{\delta}$ es la raíz de la suma de los cuadrados de
-los errores estándar
-de $\bar{X}$ y $\bar{Y}$:
+Sea $\bar{X}_{n_1}$ y $\bar{X}_{n_2}$ las medias muestrales correspondientes. Si
+la hipótesis de normalidad aplica para ambas distribuciones muestrales
+(normalidad asintótica), el estimador
+$$\hat{\delta}_n = \bar{X}_{n_1} - \bar{X}_{n_2}$$
+es aproximadamente normal con media $\mathsf{N}(\mu_1 - \mu_2, \textsf{ee}),$
+donde $\mu_1$ y $\mu_2$ son las medias poblacionales correspondientes; $n = n_1
++ n_2;$ y el error estándar de $\hat{\delta}$ es la raíz de la suma de los
+cuadrados de los errores estándar de $\bar{X}$ y $\bar{Y}$:
 
 $$ \textsf{ee} = \sqrt{\textsf{ee}_1^2 + \textsf{ee}_{2}^2}.$$
 Se sigue entonces que:
@@ -223,33 +220,34 @@ $$\textsf{ee} =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
 se deduce que bajo la hipótesis nula de igualdad de medias $\mu_1 = \mu_2$,
 tenemos que la estadística de Wald
 
-$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim \mathsf{N}(0,1)$$
+$$\hat W_n = \frac{\hat{\delta}_n - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim \mathsf{N}(0,1)$$
 es aproximamente normal estándar. Procedemos entonces a calcular el valor
 $p$ usando la función de distribución acumulada de la normal estándar.
 
 
-En el caso
-particular de proporciones, podemos simplificar, como hicimos arriba, a
-$$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim \mathsf{N}(0,1)$$
+En el caso particular de proporciones, podemos simplificar, como hicimos arriba,
+a
+$$W = \frac{\hat{p}_1 - \hat{p}_{n_2}}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim \mathsf{N}(0,1)$$
 
-```{block2, type = 'ejercicio'}
+```{block, type = 'ejercicio'}
 Haz una prueba comparando las medias en enlace de la Ciudad de México vs
 Estado de México. ¿Hay evidencia de que tienen distintas medias?
 ```
 
 
 **Ejemplo (@Wasserman).** Supongamos tenemos dos conjuntos de prueba para
-evaluar algoritmos de predicción, de tamaños $n_1=100$ y $n_2=250$ respectivamente,
-tenemos dos algoritmos para generar predicciones de clase (digamos positivo y negativo).
-Usaremos el primer conjunto para evaluar el algoritmo 1 y el segundo para evaluar
-el algoritmo 2. El algoritmo 1 corre en 1 hora, y el algoritmo 2 tarda 24 horas.
+evaluar algoritmos de predicción, de tamaños $n_1=100$ y $n_2=250$
+respectivamente, tenemos dos algoritmos para generar predicciones de clase
+(digamos positivo y negativo). Usaremos el primer conjunto para evaluar el
+algoritmo 1 y el segundo para evaluar el algoritmo 2. El algoritmo 1 corre en 1
+hora, y el algoritmo 2 tarda 24 horas.
 
 Supón que obtenemos que la tasa de clasificación correcta del primer algoritmo
-es $\hat{p}_1 = 0.85$, y la tasa del segundo es de $\hat{p}_2 = 0.91$. ¿Estos
-datos son consistentes con la hipótesis de que los algoritmos tienen desempeño
-muy similar? Es decir, queremos probar la hipótesis $p_1 = p_2$.
+es $\hat{p}_{n_1} = 0.85$, y la tasa del segundo es de $\hat{p}_{n_2} = 0.91$.
+¿Estos datos son consistentes con la hipótesis de que los algoritmos tienen
+desempeño muy similar? Es decir, queremos probar la hipótesis $p_1 = p_2$.
 
-Calculamos la estidística de Wald:
+Calculamos la estadística de Wald:
 
 ```{r}
 n_1 <- 100
@@ -282,7 +280,7 @@ Las pruebas que acabamos de ver para comparar medias requieren
 poblaciones independientes. Si las dos muestras están pareadas (es decir,
 son dos mediciones en una misma muestra), podemos
 tomar considerar las diferencias $D_i = X_i - Y_i$ y utilizar la prueba para una
-sola muestra con la media $\bar{D}$. Esta es una prueba de Wald pareada.
+sola muestra con la media $\bar{D}_n$. Esta es una prueba de Wald pareada.
 
 
 **Ejemplo (@Wasserman).** Ahora supongamos que utilizamos la misma
@@ -300,13 +298,13 @@ tiene valor esperado $p_1 - p_2$, donde $p_1$ y $p_2$ son las tasas de correctos
 del algoritmo 1 y del algoritmo 2 respectivamente. Podemos hacer una prueba
 de Wald como al principio de la sección:
 
-$$W = \frac{\bar{D}_n - 0}{{\textsf{ee}}}$$
+$$\hat W_n = \frac{\bar{D}_n - 0}{{\textsf{ee}}}$$
 Y notemos que el error estándar **no** se calcula como en el ejemplo anterior. Podríamos
 usar bootstrap para estimarlo, pero en este caso podemos usar el estimador usual
 
-$$\hat{\textsf{ee}}_n = s_n / \sqrt{n}$$
+$$\hat{\textsf{ee}}_n = \frac{s_n}{\sqrt{n}}$$
 donde
-$$s_n = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D})^2$$
+$$s_n = \frac{1}{n}\sum_{i=1}^n (D_i - \bar{D}_n)^2$$
 y nótese que necesitamos las decisiones indiviudales de cada algoritmo para
 cada caso, en contraste al ejemplo anterior de muestras independientes donde
 los errores estándar se calculaban de manera independiente. Esto tiene sentido,
@@ -367,7 +365,7 @@ c(w = w, valor_p = valor_p) %>% round(3)
 Y vemos que tenemos evidencia considerable de que el desempeño no es el mismo:
 el algoritmo 2 parece ser mejor.
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 ¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este
 ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
 ```
@@ -379,9 +377,9 @@ de verosimilitudes. Con esta técnica podemos hacer pruebas que involucren
 varios parámetros, y podemos contrastar hipótesis nulas contra alternativas
 especificas.
 
-Para aplicar este tipo de pruebas es necesario hacer
-supuestos distribucionales (modelos probabilísticos), pues
-estas pruebas se basan en la función de verosimilitud $\mathcal{L}(\theta; x_1,\ldots, x_n)$.
+Para aplicar este tipo de pruebas es necesario hacer supuestos distribucionales
+(modelos probabilísticos), pues estas pruebas se basan en la función de
+verosimilitud $\mathcal{L}(\theta; x_1,\ldots, x_n)$.
 
 **Ejemplo**. Supongamos que tenemos la hipótesis nula de que una moneda
 es justa ($p =0.05$ de sol). En 120 tiros de la moneda (que suponemos
@@ -399,15 +397,15 @@ que $p = 0.5$:
 
 $$\ell(p_0) = \ell(0.5) = 75\log(0.5) + 45\log(0.5) = -83.177$$
 - Finalmente, contrastamos estos dos números con una estadística que denotamos
-con $\lambda$:
+con $\lambda_n$:
 
-$$\lambda = 2\left[\ell(\hat{p}_n) - \ell(p_0)\right] = 2[\ell(0.625)- \ell(0.5)] = 2(3.79)=7.58$$
+$$\lambda_n = 2\left[\ell(\hat{p}_n) - \ell(p_0)\right] = 2[\ell(0.625)- \ell(0.5)] = 2(3.79)=7.58$$
 
-- A $\lambda$ se le llama la **estadística de cociente de verosimilitud**.
+- A $\lambda_n$ se le llama la **estadística de cociente de verosimilitud**.
 Tomamos la diferencia de log verosimilitudes, que es los mismo que tomar el
 logaritmo del **cociente** de verosimilitudes, y de ahí el nombre de la prueba.
 
-- Nótese que cuando este número $\lambda$ es muy grande, esto implica que la hipótesis
+- Nótese que cuando este número $\lambda_n$ es muy grande, esto implica que la hipótesis
 nula es menos creíble, o menos consistente con los datos, pues la nula tiene mucho
 menos verosimilitud de lo que los datos indican. Por otro lado, cuando este valor
 es cercano a 0, entonces tenemos menos evidencia en contra de la
@@ -434,20 +432,17 @@ ggplot(verosim_tbl, aes(x = p, y = log_verosim)) +
 ```
 
 
-
-
-
 Este método puede generalizarse para que no solo aplique a hipótesis
 nulas donde $\theta = \theta_0$, sino en general, $\theta \in \Theta_0$.
 Por ejemplo, podemos construir pruebas para $\theta < 0.4$.
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 **Definición**. Consideramos la hipótesis nula $\theta= \theta_0$.
 La **estadística del cociente de verosimilitudes** está dada por:
 
-$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\mathcal{L}(\theta_0)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\theta_0)}  \right)$$
+$$\lambda_n = 2\log\left( \frac{\max_{\theta \in \Theta}\, \mathcal{L}(\theta)}{\mathcal{L}(\theta_0)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\theta_0)}  \right)$$
 
-  donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud.
+donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud.
 ```
 
 Para construir una prueba asociada, como siempre, necesitamos una distribución de
@@ -457,7 +452,7 @@ referencia. Esto podemos hacerlo con simulación, o usando resultados asintótic
 ### Distribución de referencia para pruebas de cocientes {-}
 
 Para nuestro ejemplo anterior, podemos simular datos bajo la hipótesis nula,
-y ver cómo se distribuye la estadística $\lambda$:
+y ver cómo se distribuye la estadística $\lambda_n$:
 
 **Ejemplo.** Simulamos bajo la hipótesis nula como sigue:
 
@@ -589,9 +584,10 @@ muestra_1 <- rnorm(80, 0.8, 0.2)
 muestra_2 <- rnorm(120, 0.8, 0.4)
 ```
 
-Necesitamos: 1) calcular el valor de la estadística $\lambda$ de cociente
-de verosimilitudes, 2) Calcular la distribución de referencia para $\lambda$ bajo la
-hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de $\lambda$ en relación a la distribución de referencia.
+Necesitamos: 1) calcular el valor de la estadística $\lambda_n$ de cociente de
+verosimilitudes, 2) Calcular la distribución de referencia para $\lambda_n$ bajo
+la hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de
+$\lambda_n$ en relación a la distribución de referencia.
 
 
 ```{r}
@@ -661,7 +657,7 @@ lambda_2 <- log_p_nula(est_mv_nula)
 lambda_2
 ```
 
-Finalmente, nuestra estadística $\lambda$ es
+Finalmente, nuestra estadística $\lambda_n$ es
 ```{r}
 lambda <- 2 * (lambda_1 - lambda_2)
 lambda
@@ -694,7 +690,7 @@ lambda_sim <- map_dbl(1:2000, ~ lambda_nula_sim(est_mv_nula = est_mv_nula))
 ```
 
 
-Y graficamos la distribución de referencia junto con el valor de $\lambda$
+Y graficamos la distribución de referencia junto con el valor de $\lambda_n$
 que obtuvimos:
 
 ```{r}
@@ -723,14 +719,14 @@ tibble(lambda = lambda_sim) %>%
 
 Esta es la definición generalizada de las pruebas de cociente de verosimilitudes
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 **Definición**. Consideramos la hipótesis nula $\theta \in \Theta_0$.
 La **estadística del cociente de verosimilitudes** está dada por:
 
-$$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\Theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\hat{\theta}_0)}  \right)$$
+$$\lambda_n = 2\log\left( \frac{{\max}_{\theta \in \Theta} \,\, \mathcal{L}(\theta)}{\max_{\theta \in \Theta_0} \, \mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\hat{\theta}_0)}  \right)$$
 
-  donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud de $\theta$
-  y $\hat{\theta}_0$ es el estimador de máxima verosimilitud de $\theta$ cuando
+donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud de $\theta$ y
+$\hat{\theta}_0$ es el estimador de máxima verosimilitud de $\theta$ cuando
 restringimos a que $\theta \in \Theta_0$.
 ```
 
@@ -745,17 +741,17 @@ teorema, cuya demostración no es trivial, explica las observaciones que
 hicimos arriba. Este teorema enuncia la estrategia del enfoque clásico,
 que utiliza una aproximación asintótica.
 
-```{block2, type='mathblock'}
-**Valores p para pruebas de cocientes de verosimilitud**. Supongamos
+```{block, type='mathblock'}
+**Valores-p para pruebas de cocientes de verosimilitud**. Supongamos
 que $\theta = (\theta_1,\theta_2, \ldots, \theta_p)$.  Sea
 $$\Theta_0 = \{\theta : \theta_1 = a_1, \theta_2 = a_2, \dots, \theta_q = a_q \},$$
   es decir la hipótesis $\theta \in \Theta_0$ es que los primeros $q$ parámetros
 de $\theta$ estan fijos en algún valor. Los otros parámetros no se consideran en esta
 prueba.
 
-Si $\lambda$ es la estadística de cociente de verosimilitudes de esta prueba, entonces,
+Si $\lambda_n$ es la estadística de cociente de verosimilitudes de esta prueba, entonces,
 bajo la nula $\theta \in \Theta_0$ tenemos que la distribución
-de $\lambda$ es asintóticamente $\chi$-cuadrada con $q$ grados de libertad, denotada por $\chi^2_q$.
+de $\lambda_n$ es asintóticamente $\chi$-cuadrada con $q$ grados de libertad, denotada por $\chi^2_q$.
 
 El valor-$p$ para esta prueba es
 $$P(\chi^2_{q} > \lambda)$$
@@ -991,11 +987,13 @@ quiere decir que la nula es falsa. Lo que quiere decir es que la nula es poco co
 con los datos que observamos, o que es muy poco probable que la nula produzca los datos
 que observamos.
 
-- Rechazar la nula (encontrar un efecto "significativo") **no quiere decir que el efecto tiene importancia práctica**. Si la potencia es alta (por ejemplo cuando el tamaño de
-muestra es grande), puede ser que la discrepancia de los datos con la nula es
-despreciable, entonces para fines prácticos podríamos trabajar bajo el supuesto de la nula.
-Por eso en general preferimos hacer estimación que pruebas de hipótesis para entender
-o resumir los datos y tamaños de las discrepancias.
+- Rechazar la nula (encontrar un efecto "significativo") **no quiere decir que
+el efecto tiene importancia práctica**. Si la potencia es alta (por ejemplo
+cuando el tamaño de muestra es grande), puede ser que la discrepancia de los
+datos con la nula es despreciable, entonces para fines prácticos podríamos
+trabajar bajo el supuesto de la nula. Por eso en general preferimos hacer
+estimación que pruebas de hipótesis para entender o resumir los datos y tamaños
+de las discrepancias.
 
 - Adicionalmente, muchas de las hipótesis nulas que generalmente se utilizan se
 pueden rechazar sin datos (por ejemplo, igualdad de proporciones en dos poblaciones
