@@ -296,10 +296,10 @@ Está propiedad nos permite caracterizar la distribución asintótica del MLE . 
 decir, nos permite caracterizar la incertidumbre asociada una  nuestra
 suficientemente grande por medio de una distribución Gaussiana. Esto es, bajo
 ciertas condiciones de regularidad, 
-$$\hat \theta_n \overset{.}{\sim} \mathsf{N}( \theta^*, \mathsf{se}^2),$$
+$$\hat \theta_n \overset{.}{\sim} \mathsf{N}( \theta^*, \mathsf{ee}^2),$$
 
-donde $\mathsf{se}$ denota el error estándar del $\textsf{MLE},$ $\mathsf{se} =
-\mathsf{se}(\hat \theta_n) = \sqrt{\mathbb{V}(\hat \theta_n)}$.
+donde $\mathsf{ee}$ denota el error estándar del $\textsf{MLE},$ $\mathsf{ee} =
+\mathsf{ee}(\hat \theta_n) = \sqrt{\mathbb{V}(\hat \theta_n)}$.
 
 Esta distribución se puede caracterizar de manera aproximada por métodos analíticos. 
 Para esto necesitamos las siguientes definiciones. 
@@ -331,7 +331,7 @@ distribución será fácil de identificar cuando hagamos observaciones.
 
 La información de Fisher también nos permite caracterizar de forma 
 analítica la varianza asíntotica del $\textsf{MLE}$ pues la aproximación 
-$\mathsf{se}^2 \approx \frac{1}{I_n(\theta^*)}$ es válida.
+$\mathsf{ee}^2 \approx \frac{1}{I_n(\theta^*)}$ es válida.
 
 El siguiente resultado utiliza la propiedad de la función de score: 
 $\mathbb{E}[s(X; \theta)] = 0,$ que implica que 
@@ -352,8 +352,8 @@ Con estas herramientas podemos formular el teorema siguiente.
 ```{block, type = 'mathblock'}
 
 **Teorema.** Bajo ciertas condiciones de regularidad se satisface que 
-$\mathsf{se} \approx \sqrt{1/I_n(\theta^*)}$ y 
-$$ \hat \theta_n \overset{d}{\rightarrow} \mathsf{N}( \theta^*, \mathsf{se}^2).$$
+$\mathsf{ee} \approx \sqrt{1/I_n(\theta^*)}$ y 
+$$ \hat \theta_n \overset{d}{\rightarrow} \mathsf{N}( \theta^*, \mathsf{ee}^2).$$
 
 ```
 
@@ -363,10 +363,10 @@ embargo, no es práctico pues no conocemos $\theta^*$ en la práctica y por
 consiguiente no conoceríamos la varianza. Sin embargo, también podemos aplicar
 el principio de *plug-in* y caracterizar la varianza de la distribución
 asintótica por medio de
-$$\hat{\mathsf{se}} = \sqrt{1/I_n(\hat \theta_n)}.$$
+$$\hat{\mathsf{ee}} = \sqrt{1/I_n(\hat \theta_n)}.$$
 
 Esto último nos permite constuir intervalos de confianza, por ejemplo al 95\%, a través de 
-$$ \hat \theta_n \pm 2 \, \hat{\mathsf{se}}.$$
+$$ \hat \theta_n \pm 2 \, \hat{\mathsf{ee}}.$$
 Asimismo, el teorema de Normalidad asintótica nos permite establecer que el $\textsf{MLE}$ es **asíntoticamente insesgado**. Es decir, 
 $$\lim_{n \rightarrow n}\mathbb{E}[\hat \theta_n] =  \theta^*.$$
 
@@ -392,14 +392,14 @@ remuestras $(B = 500)$ con distintos valores de $n.$
 
 ```{r, echo = FALSE, fig.height = 5, out.width = "99%", fig.asp = .6}
 
-theta_true      <- p_true/(1 - p_true)
+theta_true <- p_true/(1 - p_true)
 fisher_true_inv <- ((1+theta_true)**2) * theta_true
-se_true         <- sqrt(fisher_true_inv)
+ee_true <- sqrt(fisher_true_inv)
 
 dt %>% 
   group_by(muestra) %>% 
   mutate(n = 1:n_muestra) %>% 
-  mutate(momios = sqrt(n) * (cummean(x)/(1-cummean(x)) - theta_true )/se_true) %>% 
+  mutate(momios = sqrt(n) * (cummean(x)/(1-cummean(x)) - theta_true )/ee_true) %>% 
   filter(floor(logb(n, 4)) - logb(n, 4) == 0) %>% 
   filter(n > 1) %>% 
   ggplot(aes(x = momios)) + 
@@ -415,19 +415,19 @@ este resultado para obtener intervalos de confianza.
 
 Para el caso de $\hat p_n$ hemos visto que el error estándar se calcula 
 analíticamente como
-$$\textsf{se}_p^2 = \mathbb{V}(\hat p_n) = \mathbb{V}\left(\frac1n \sum_{i = 1}^n x_i\right)  = \frac{p^* (1 - p^*)}{n}.$$
+$$\textsf{ee}_p^2 = \mathbb{V}(\hat p_n) = \mathbb{V}\left(\frac1n \sum_{i = 1}^n x_i\right)  = \frac{p^* (1 - p^*)}{n}.$$
 
 Éste empata con el valor del error estándar asintótico
-$$\textsf{se}_p^2 \approx \sqrt{\frac{1}{I_n(p^*)}},$$
+$$\textsf{ee}_p^2 \approx \sqrt{\frac{1}{I_n(p^*)}},$$
 pues la información de Fisher es igual a 
 $$I_n(p) = n \, I(p)  = \frac{n}{p (  1- p)}.$$
 En este caso podemos utilizar el estimador *plug-in,* 
-$\hat{\textsf{se}}_p = \textsf{se}_p(\hat p_n).$
+$\hat{\textsf{ee}}_p = \textsf{ee}_p(\hat p_n).$
 Para estimar el momio, $\theta,$ el cálculo no es tan fácil pues tendríamos que calcular 
 de manera analítica la varianza de un cociente 
-$$\textsf{se}_\theta^2 = \mathbb{V}\left( \frac{\hat p_n}{1-\hat p_n}\right).$$
+$$\textsf{ee}_\theta^2 = \mathbb{V}\left( \frac{\hat p_n}{1-\hat p_n}\right).$$
 Utilizando la distirbución asintótica, el error estándar se puede calcular mediante
-$$\textsf{se}_\theta^2 \approx \sqrt{\frac{1}{I_n(\theta^*)}} = \sqrt{\frac{\theta (1 + \theta)^2 }{n}}.$$
+$$\textsf{ee}_\theta^2 \approx \sqrt{\frac{1}{I_n(\theta^*)}} = \sqrt{\frac{\theta (1 + \theta)^2 }{n}}.$$
 A continuación mostramos los errores estándar para nuestro ejemplo utilizando 
 la distribución asintótica y por medio de la distribución de *bootstrap.*
 Como es de esperarse, ambos coinciden para muestras relativamente grandes. 
@@ -440,7 +440,7 @@ calcula_momio <- function(x){
   x / (1 - x)
 }
 
-calcula_se_momio <- function(x){
+calcula_ee_momio <- function(x){
   sqrt(((1+x)**2) * x)
 }
 
@@ -448,9 +448,9 @@ calcula_se_momio <- function(x){
 muestras_est <- muestras %>% 
   group_by(tamanos) %>% 
   mutate(media_hat = map_dbl(obs, mean), 
-         media_se  = sqrt(media_hat * (1 - media_hat)/tamanos),
+         media_ee  = sqrt(media_hat * (1 - media_hat)/tamanos),
          momio_hat = calcula_momio(media_hat), 
-         momio_se  = calcula_se_momio(momio_hat)/sqrt(tamanos))
+         momio_ee  = calcula_ee_momio(momio_hat)/sqrt(tamanos))
 
 
 # Calculo por bootstrap
@@ -462,8 +462,8 @@ muestras_boot <- muestras_est %>%
          sims_momios = map(sims_medias, ~map_dbl(., calcula_momio)),
          media_boot    = map_dbl(sims_medias, mean),
          momio_boot    = map_dbl(sims_momios, mean), 
-         media_se_boot = map_dbl(sims_medias, sd), 
-         momio_se_boot = map_dbl(sims_momios, sd)
+         media_ee_boot = map_dbl(sims_medias, sd), 
+         momio_ee_boot = map_dbl(sims_momios, sd)
          )
 
 ```
@@ -471,7 +471,7 @@ muestras_boot <- muestras_est %>%
 ```{r, cache = TRUE, echo = FALSE}
 
 muestras_boot %>% 
-  select(tamanos, momio_hat, momio_boot, momio_se, momio_se_boot)
+  select(tamanos, momio_hat, momio_boot, momio_ee, momio_ee_boot)
 
 ```
 
@@ -497,14 +497,14 @@ el **método delta**.
 ```{block, type = 'mathblock'}
 
 **Teorema.** Si $\tau = g(\theta)$ es una función diferenciable y $g'(\theta)\neq 0,$ entonces
-$$\hat \tau_n \overset{d}{\rightarrow} \mathsf{N}( \tau^*, \hat{\mathsf{se}}^2_\tau),$$
+$$\hat \tau_n \overset{d}{\rightarrow} \mathsf{N}( \tau^*, \hat{\mathsf{ee}}^2_\tau),$$
 donde $\hat \tau_n = g(\hat \theta_n)$ y 
-$$\hat{\mathsf{se}}_\tau = \bigg| g'(\hat \theta_n) \bigg| \times \hat{\mathsf{se}}_\theta(\hat \theta_n).$$
+$$\hat{\mathsf{ee}}_\tau = \bigg| g'(\hat \theta_n) \bigg| \times \hat{\mathsf{ee}}_\theta(\hat \theta_n).$$
 ```
 
 Por ejemplo, este resultado lo podemos utilizar para nuestro experimento de Bernoullis. 
 Pues $g(p) = \frac{p}{1-p}$ es una función diferenciable y por lo tanto 
-$$\hat{\mathsf{se}}_\theta = \sqrt{\frac1n} \times \left[ \hat p_n^{1/2} (1-\hat p_n)^{3/2}\right].$$
+$$\hat{\mathsf{ee}}_\theta = \sqrt{\frac1n} \times \left[ \hat p_n^{1/2} (1-\hat p_n)^{3/2}\right].$$
 
 ```{block, type = 'ejercicio'}
 
@@ -525,23 +525,23 @@ tanto, en promedio emiten estimaciones correctas. Pero ¿cómo escogemos cual
 utilizar?
 
 Un criterio para comparar estimadores es el **error cuadrático medio**
-($\textsf{MSE}$, por sus siglas en inglés).
+($\textsf{ECM}$.
 
 ```{block, type = 'mathblock'}
 
 **Definición.** El error cuadrático medio de un estimador $\tilde \theta_n$ se
 calcula como
-$$\textsf{MSE}[\tilde \theta_n] = \mathbb{E}[(\tilde \theta_n - \theta^*)^2].$$
+$$\textsf{ECM}[\tilde \theta_n] = \mathbb{E}[(\tilde \theta_n - \theta^*)^2].$$
 
 ```
 
-Por lo tanto, el $\textsf{MSE}$ mide la distancia promedio entre el estimador y 
+Por lo tanto, el $\textsf{ECM}$ mide la distancia promedio entre el estimador y 
 el valor verdadero valor del parámetro. La siguiente igualdad es bastante útil 
 para comparar dos estimadores. 
 
 ```{block, type = 'mathblock'}
 
-$$\textsf{MSE}[\tilde \theta_n] = \mathbb{V}\left(\tilde \theta_n\right) + \textsf{Sesgo}\left[\tilde \theta_n\right]^2.$$
+$$\textsf{ECM}[\tilde \theta_n] = \mathbb{V}\left(\tilde \theta_n\right) + \textsf{Sesgo}\left[\tilde \theta_n\right]^2.$$
 
 ```
 
@@ -583,7 +583,7 @@ Es importante hacer enfásis en que la optimalidad del $\textsf{MLE}$ es un
 resultado asintótico. Es decir, sólo se satisface cuando tenemos un número
 *suficiente* de observaciones. Qué tan grande debe ser el tamaño de muestra
 varia de problema a problema. Es por esto que para muestras de tamaño finito se
-prefieren estimadores que minimicen el $\textsf{MSE},$ como cuando hacemos
+prefieren estimadores que minimicen el $\textsf{ECM},$ como cuando hacemos
 regresión ridge o utilizamos el estimador James--Stein para un vector de medias. 
 
 ```

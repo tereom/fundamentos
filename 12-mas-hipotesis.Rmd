@@ -24,7 +24,7 @@ valor-$p$ es chico, entonces los resultados observados no pueden explicarse
 fácilmente por variación muestral, y rechazamos la hipótesis nula.
 
 Con esta idea básica, y *supuestos distribucionales acerca de las poblaciones*,
-podemos construir pruebas que requieren menos cómputo. La desventaja es que hay 
+podemos construir pruebas que requieren menos cómputo. La desventaja es que hay
 que checar con cuidado los supuestos distribucionales
 que hagamos. Si los supuestos son incorrectos, las valores-$p$ no tienen mucho
 sentido y son difíciles de interpretar.
@@ -36,7 +36,7 @@ revisar también @Chihara (capítulo 8).
 
 Como hemos visto, existe normalidad asintótica en varios estimadores que
 hemos considerado, como medias y proporciones muestrales.
-También vimos que estimadores de máxima verosimilitud cumplen muchas 
+También vimos que estimadores de máxima verosimilitud cumplen muchas
 veces un teorema central del límite.
 
 Así que supongamos que tenemos una estadística $\hat{\theta}_n$ que estima
@@ -50,7 +50,7 @@ Si nos interesa probar la hipótesis de que $\theta = 125$, por ejemplo,
 y $\hat{\theta}_n$ es aproximadamente normal, entonces podemos construir una
 distribución de referencia aproximada como sigue:
 
-- Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta}_n$ 
+- Si la nula es cierta, entonces la distribución de muestreo de $\hat{\theta}_n$
 es aproximadamente $\mathsf{N}(125, \hat{\textsf{ee}}_n)$.
 - Esto implica que la siguiente estadística $W$ es aproximadamente normal
 estándar bajo la nula:
@@ -59,10 +59,10 @@ $$W = \frac{\hat{\theta}_n - 125}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1)$$
 Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
 en contra de la hipótesis nula. Como $W$ **no depende de ningún parámetro desconocido**, podemos
 usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
-en la muestra. 
+en la muestra.
 
 Si observamos para nuestra muestra un valor $W=w$ entonces, el
-valor-$p$ de esta prueba es, aproximadamente,
+valor-$p$ (dos colas) de esta prueba es, aproximadamente,
 
 
 $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
@@ -70,9 +70,9 @@ donde $Z\sim \mathsf{N}(0,1)$ y $\Phi$ es su función de distribución acumulada
 
 
 **Ejemplo: media muestral**.  La media nacional de las escuelas de enlace está alrededor
-de 454 (matemáticas en 6o. grado). Tomamos una muestra de 200
-escuelas del Estado de México, y queremos saber si la media obtenida 
-es consistente o no con la media nacional. Como estamos usando como
+de 454 (matemáticas en 6o. grado). Tomamos una muestra de 180
+escuelas del Estado de México, y queremos saber si la media obtenida
+es consistente o no con la media nacional. Ya que estamos usando como
 estimador una media de una muestra iid, podemos estimar el error estándar
 de la media con
 
@@ -81,11 +81,11 @@ Obtenemos:
 
 ```{r}
 set.seed(29)
-muestra_edomex <- read_csv("data/enlace.csv") %>% 
-  filter(estado == "ESTADO DE MEXICO") %>% 
+muestra_edomex <- read_csv("data/enlace.csv") %>%
+  filter(estado == "ESTADO DE MEXICO") %>%
   sample_n(180)
-resumen <- muestra_edomex %>% 
-  summarise(media = mean(mate_6), s = sd(mate_6), n = n()) %>% 
+resumen <- muestra_edomex %>%
+  summarise(media = mean(mate_6), s = sd(mate_6), n = n()) %>%
   mutate(ee = s / sqrt(n))
 resumen
 ```
@@ -101,7 +101,7 @@ p <- 2 * (1 - pnorm(abs(w)))
 p
 ```
 y vemos que esta muestra es consistente con la media nacional. No tenemos
-evidencia en contra de que la media del estado de méxico es muy similar 
+evidencia en contra de que la media del estado de México es muy similar
 a la nacional.
 
 ```{block, type="ejercicio"}
@@ -115,9 +115,9 @@ Tenemos entonces:
 **Prueba de Wald.** Consideramos probar la hipótesis nula $H_0: \theta = \theta_0$
 contra la alternativa $H_1: \theta \neq \theta_0$.
 
-Suponemos que $\hat{\theta}_n$ es asintóticamente normal e insesgada, 
+Suponemos que $\hat{\theta}_n$ es asintóticamente normal e insesgada,
 de modo que bajo la hipótesis nula
-$$\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1).$$ 
+$$\frac{\hat{\theta}_n - \theta_0}{\hat{\textsf{ee}}_n} \sim \mathsf{N}(0,1).$$
 Entonces el valor-$p$ de la **prueba de Wald** para esta hipótesis nula es
 
 $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|)).$$
@@ -126,8 +126,8 @@ $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|)).$$
 ```
 
 
-**Ejemplo.** Podemos hacer la prueba de Wald para proporciones con el 
-estimador usual $\hat{p}_n$ que estima una proporción poblacional $p$. 
+**Ejemplo.** Podemos hacer la prueba de Wald para proporciones con el
+estimador usual $\hat{p}_n$ que estima una proporción poblacional $p$.
 En este caso, utilizamos la estimación usual del error estándar de $\hat{p}_n$,
 que está dada por
 $$\hat{\textsf{ee}}_n = \sqrt{\frac{\hat{p}_n(1-\hat{p}_n)}{n}}.$$
@@ -156,8 +156,8 @@ valor_p <- 2 * (1 - pnorm(abs(w)))
 valor_p
 ```
 
-Y vemos que en este caso tenemos evidencia baja de que la proporción poblacional 
-es distinta de 0.5. 
+Y vemos que en este caso tenemos evidencia baja de que la proporción poblacional
+es distinta de 0.5.
 
 
 
@@ -176,11 +176,11 @@ de referencia y podemos calcular valores $p$ exactos (revisa la sección 8.1 de 
 
 La diferencia con usar una prueba de Wald está en que aquí consideramos también
 la variablidad del error estándar estimado, lo que correctamente sugiere que
-esperamos variaciones proporcionalmente más grandes en $T$ 
+esperamos variaciones proporcionalmente más grandes en $T$
 comparado con lo que sucede si no consideramos esta variación (como en la prueba de Wald). Sin embargo:
 
 - Si la muestra $n$ es grande, la distribución $t$ de Student con
-$n-1$ grados de libertad es muy similar a la normal estándar, de manera que la 
+$n-1$ grados de libertad es muy similar a la normal estándar, de manera que la
 aproximación de Wald es apropiada.
 - Cuando la muestra $n$ es chica, es difícil validar el supuesto de normalidad, a menos
 que tengamos alguna información adicional acerca de la distribución poblacional.
@@ -193,7 +193,7 @@ B.11 de @Chihara para ver descripciones de la distribución $t$ y cómo se compa
 con una normal estándar dependiendo de los grados de libertad.
 
 En muchas ocasiones, en la práctica es común no checar supuestos y saltar directamente
-a hacer pruebas $t$, lo cual no es muy seguro. 
+a hacer pruebas $t$, lo cual no es muy seguro.
 Si tenemos duda de esos supuestos, podemos hacer
 pruebas gráficas o de permutaciones, si son apropiadas.
 
@@ -209,8 +209,8 @@ correspondientes. Si la hipótesis
 de normalidad aplica para ambas distribuciones muestrales (normalidad asintótica),
 la variable
 $$\hat{\delta} = \bar{X}_1 - \bar{X}_2$$
-es aproximadamente normal con media $\mathsf{N}(\mu_1 - \mu_2, \textsf{ee})$, 
-donde $\mu_1$ y $\mu_2$ son las medias poblacionales correspondientes, y 
+es aproximadamente normal con media $\mathsf{N}(\mu_1 - \mu_2, \textsf{ee})$,
+donde $\mu_1$ y $\mu_2$ son las medias poblacionales correspondientes, y
 donde el
 error estándar de $\hat{\delta}$ es la raíz de la suma de los cuadrados de
 los errores estándar
@@ -223,14 +223,14 @@ $$\textsf{ee} =\sqrt{\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}     }$$
 se deduce que bajo la hipótesis nula de igualdad de medias $\mu_1 = \mu_2$,
 tenemos que la estadística de Wald
 
-$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim \mathsf{N}(0,1)$$ 
+$$W = \frac{\hat{\delta} - 0}{\sqrt{\frac{s_1^2}{n_1}+\frac{s_2^2}{n_2}} } \sim \mathsf{N}(0,1)$$
 es aproximamente normal estándar. Procedemos entonces a calcular el valor
 $p$ usando la función de distribución acumulada de la normal estándar.
 
 
 En el caso
 particular de proporciones, podemos simplificar, como hicimos arriba, a
-$$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim \mathsf{N}(0,1)$$ 
+$$W = \frac{\hat{p}_1 - \hat{p}_2}{\sqrt{\frac{\hat{p}_1(1-\hat{p}_1)}{n_1}+\frac{\hat{p}_2(1-\hat{p}_2)}{n_2}} } \sim \mathsf{N}(0,1)$$
 
 ```{block2, type = 'ejercicio'}
 Haz una prueba comparando las medias en enlace de la Ciudad de México vs
@@ -238,7 +238,7 @@ Estado de México. ¿Hay evidencia de que tienen distintas medias?
 ```
 
 
-**Ejemplo (@Wasserman).** Supongamos tenemos dos conjuntos de prueba para 
+**Ejemplo (@Wasserman).** Supongamos tenemos dos conjuntos de prueba para
 evaluar algoritmos de predicción, de tamaños $n_1=100$ y $n_2=250$ respectivamente,
 tenemos dos algoritmos para generar predicciones de clase (digamos positivo y negativo).
 Usaremos el primer conjunto para evaluar el algoritmo 1 y el segundo para evaluar
@@ -246,7 +246,7 @@ el algoritmo 2. El algoritmo 1 corre en 1 hora, y el algoritmo 2 tarda 24 horas.
 
 Supón que obtenemos que la tasa de clasificación correcta del primer algoritmo
 es $\hat{p}_1 = 0.85$, y la tasa del segundo es de $\hat{p}_2 = 0.91$. ¿Estos
-datos son consistentes con la hipótesis de que los algoritmos tienen desempeño 
+datos son consistentes con la hipótesis de que los algoritmos tienen desempeño
 muy similar? Es decir, queremos probar la hipótesis $p_1 = p_2$.
 
 Calculamos la estidística de Wald:
@@ -278,7 +278,7 @@ de que vayamos a perder en desempeño, y podriamos seleccionar el algoritmo 1.
 
 ## Datos pareados {-}
 
-Las pruebas que acabamos de para comparar medias requieren
+Las pruebas que acabamos de ver para comparar medias requieren
 poblaciones independientes. Si las dos muestras están pareadas (es decir,
 son dos mediciones en una misma muestra), podemos
 tomar considerar las diferencias $D_i = X_i - Y_i$ y utilizar la prueba para una
@@ -317,12 +317,12 @@ Supongamos por ejemplo que los datos que obtenemos son:
 
 ```{r, echo = FALSE, include = FALSE}
 set.seed(31521)
-datos_clasif <- tibble(x = rep(1, 135), y = rep(1, 135)) %>% 
-  bind_rows(tibble(x = rep(0, 65), y = rep(1, 65))) %>% 
-  bind_rows(tibble(x = rep(1, 40), y = rep(0, 40))) %>% 
+datos_clasif <- tibble(x = rep(1, 135), y = rep(1, 135)) %>%
+  bind_rows(tibble(x = rep(0, 65), y = rep(1, 65))) %>%
+  bind_rows(tibble(x = rep(1, 40), y = rep(0, 40))) %>%
   bind_rows(tibble(x = rep(1 ,100), y = rep(1, 100))) %>%
-  sample_n(300) %>% 
-  mutate(caso = as.character(1: 300)) %>% 
+  sample_n(300) %>%
+  mutate(caso = as.character(1: 300)) %>%
   select(caso, x, y)
 ```
 
@@ -333,14 +333,14 @@ datos_clasif %>% head
 Como explicamos arriba, nos interesa la diferencia. Calculamos $d$:
 
 ```{r}
-datos_clasif <- datos_clasif %>% 
+datos_clasif <- datos_clasif %>%
   mutate(d = x - y)
 datos_clasif %>% head
 ```
 Y ahora calculamos la media de $d$ (y tasa de correctos de cada clasificador:)
 
 ```{r}
-medias_tbl <- 
+medias_tbl <-
   datos_clasif %>% summarise(across(where(is.numeric), mean, .names = "{col}_hat"))
 d_hat <- pull(medias_tbl, d_hat)
 medias_tbl
@@ -348,12 +348,12 @@ medias_tbl
 Ahora necesitamos calcular el error estándar. Como explicamos arriba, hacemos
 
 ```{r}
-ee <- datos_clasif %>% 
-  mutate(d_hat = mean(d)) %>% 
-  mutate(dif_2 = (d - d_hat)) %>% 
-  summarise(ee = sd(dif_2) / sqrt(n())) %>% 
+ee <- datos_clasif %>%
+  mutate(d_hat = mean(d)) %>%
+  mutate(dif_2 = (d - d_hat)) %>%
+  summarise(ee = sd(dif_2) / sqrt(n())) %>%
   pull(ee)
-ee  
+ee
 ```
 
 Y ahora podemos calcular la estadística $W$ y el valor-$p$ correspondiente:
@@ -368,7 +368,7 @@ Y vemos que tenemos evidencia considerable de que el desempeño no es el mismo:
 el algoritmo 2 parece ser mejor.
 
 ```{block2, type='ejercicio'}
-¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este 
+¿Qué pasaría si incorrectamente usaras la prueba de dos muestras para este
 ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
 ```
 
@@ -377,7 +377,7 @@ ejemplo? ¿Qué cosa cambia en la fórmula de la estadística de Wald?
 Otra técnica clásica para hacer pruebas de hipótesis es el de cociente
 de verosimilitudes. Con esta técnica podemos hacer pruebas que involucren
 varios parámetros, y podemos contrastar hipótesis nulas contra alternativas
-especificas. 
+especificas.
 
 Para aplicar este tipo de pruebas es necesario hacer
 supuestos distribucionales (modelos probabilísticos), pues
@@ -386,12 +386,12 @@ estas pruebas se basan en la función de verosimilitud $\mathcal{L}(\theta; x_1,
 **Ejemplo**. Supongamos que tenemos la hipótesis nula de que una moneda
 es justa ($p =0.05$ de sol). En 120 tiros de la moneda (que suponemos
 independientes), observamos 75 soles.
-Recordemos la función de log-verosimilitud para el modelo binomial 
+Recordemos la función de log-verosimilitud para el modelo binomial
 (ignorando constantes que no dependen de $p$) es
 $$\ell(p) = 75 \log(p) + (120 - 75)\log(1-p) $$
 
 - Primero calculamos el estimador de máxima verosimilitud de $p$, que
-es $\hat{p}_n = 75/120 = 0.625$. Evaluamos la verosimilitud 
+es $\hat{p}_n = 75/120 = 0.625$. Evaluamos la verosimilitud
 
 $$\ell(\hat{p}_n) = \ell(0.625) = 75\log(0.625) + 45\log(0.375) = -79.388$$
 - Ahora evaluamos la verosimlitud según la hipótesis nula, donde asumimos
@@ -410,27 +410,27 @@ logaritmo del **cociente** de verosimilitudes, y de ahí el nombre de la prueba.
 - Nótese que cuando este número $\lambda$ es muy grande, esto implica que la hipótesis
 nula es menos creíble, o menos consistente con los datos, pues la nula tiene mucho
 menos verosimilitud de lo que los datos indican. Por otro lado, cuando este valor
-es cercano a 0, entonces tenemos menos evidencia en contra de la 
+es cercano a 0, entonces tenemos menos evidencia en contra de la
 hipótesis nula. Esto se explica en la siguiente gráfica:
 
 ```{r}
 log_verosim <- function(p){
   75 * log(p) + (120 - 75) * log(1 - p)
 }
-verosim_tbl <- tibble(p = seq(0.4, 0.7, 0.01)) %>% 
+verosim_tbl <- tibble(p = seq(0.4, 0.7, 0.01)) %>%
   mutate(log_verosim = log_verosim(p))
 ggplot(verosim_tbl, aes(x = p, y = log_verosim)) +
   geom_line() +
   geom_segment(x = 75/120, xend = 75/120, y = -130, yend = log_verosim(75/120), colour = "red") +
   geom_segment(x = 0.5, xend = 0.5, y = -130, yend = log_verosim(0.5), colour = "gray") +
-  geom_errorbar(aes(x = 0.5,  ymin = log_verosim(0.5), ymax = log_verosim(75/120)), 
+  geom_errorbar(aes(x = 0.5,  ymin = log_verosim(0.5), ymax = log_verosim(75/120)),
                colour = "orange", width = 0.05) +
   annotate("text", x = 0.48, y = -81.5, label = "3.79") +
   annotate("text", x = 0.515, y = -91, label ="nula", colour = "gray20") +
   annotate("text", x = 0.665, y = -91, label ="max verosímil", colour = "red") +
-  labs(subtitle = expression(paste(lambda, "=2(3.79)=7.58"))) 
-  
-  
+  labs(subtitle = expression(paste(lambda, "=2(3.79)=7.58")))
+
+
 ```
 
 
@@ -438,13 +438,13 @@ ggplot(verosim_tbl, aes(x = p, y = log_verosim)) +
 
 
 Este método puede generalizarse para que no solo aplique a hipótesis
-nulas donde $\theta = \theta_0$, sino en general, $\theta \in \Theta_0$. 
+nulas donde $\theta = \theta_0$, sino en general, $\theta \in \Theta_0$.
 Por ejemplo, podemos construir pruebas para $\theta < 0.4$.
 
 ```{block2, type='mathblock'}
-**Definición**. Consideramos la hipótesis nula $\theta= \theta_0$. 
+**Definición**. Consideramos la hipótesis nula $\theta= \theta_0$.
 La **estadística del cociente de verosimilitudes** está dada por:
-  
+
 $$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\mathcal{L}(\theta_0)}        \right ) = 2\log\left(  \frac{\mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\theta_0)}  \right)$$
 
   donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud.
@@ -466,7 +466,7 @@ n_volados <- 120 # número de volados
 simulados_nula <- rbinom(4000, n_volados, p = 0.5)
 lambda <- function(n, x, p_0 = 0.5){
   # estimador de max verosim
-  p_mv <- x / n 
+  p_mv <- x / n
   # log verosimilitud bajo mv
   log_p_mv <- x * log(p_mv) + (n - x) * log(1 - p_mv)
   # log verosimllitud bajo nula
@@ -475,9 +475,9 @@ lambda <- function(n, x, p_0 = 0.5){
   lambda
 }
 lambda_obs <- lambda(n_volados, 75, 0.5)
-sims_tbl <- tibble(sim_x = simulados_nula) %>% 
+sims_tbl <- tibble(sim_x = simulados_nula) %>%
   mutate(lambda = map_dbl(sim_x, ~ lambda(n_volados, .x, p_0 = 0.5)))
-ggplot(sims_tbl, aes(x = lambda)) + 
+ggplot(sims_tbl, aes(x = lambda)) +
   geom_histogram(binwidth = 0.7) +
   geom_vline(xintercept = 2.92, colour = "red")
 ```
@@ -532,9 +532,9 @@ bajo la nula
 ```{r, cache = TRUE}
 sims_nula <- map(1:10000, ~ rnorm(n_muestra, 8, 1))
 lambda_nula_sim <- map_dbl(sims_nula, ~ lambda_calc(.x, crear_log_p))
-tibble(lambda = lambda_nula_sim) %>% 
+tibble(lambda = lambda_nula_sim) %>%
   ggplot(aes(x = lambda)) + geom_histogram() +
-  geom_vline(xintercept = lambda, colour = "red") 
+  geom_vline(xintercept = lambda, colour = "red")
 ```
 ```{r}
 valor_p <- mean(lambda_nula_sim >= lambda)
@@ -549,21 +549,21 @@ resultan ser aproximadamente **$\chi$-cuadrada con 1 grado de libertad** (ji-cua
 checar para el último ejemplo:
 
 ```{r}
-teorica <- tibble(x = seq(0.1, 10, 0.01)) %>% 
+teorica <- tibble(x = seq(0.1, 10, 0.01)) %>%
   mutate(f_chi_1 = dchisq(x, df = 1))
-tibble(lambda = lambda_nula_sim) %>% 
+tibble(lambda = lambda_nula_sim) %>%
   ggplot() + geom_histogram(aes(x = lambda, y = ..density..), binwidth = 0.1) +
-  geom_line(data = teorica, aes(x = x, y = f_chi_1), colour = "red") 
+  geom_line(data = teorica, aes(x = x, y = f_chi_1), colour = "red")
 ```
 
 O mejor, con una gráfica de cuantiles de las simulaciones vs
 la téorica:
 
 ```{r}
-tibble(lambda = lambda_nula_sim) %>% 
+tibble(lambda = lambda_nula_sim) %>%
   ggplot(aes(sample = lambda)) +
   geom_qq(distribution = stats::qchisq, dparams = list(df = 1)) +
-  geom_qq_line(distribution = stats::qchisq, dparams = list(df = 1)) 
+  geom_qq_line(distribution = stats::qchisq, dparams = list(df = 1))
 ```
 
 Este resultado asintótico no es trivial, y se usa comúnmente para calcular
@@ -573,7 +573,7 @@ valores $p$. Discutiremos más este punto más adelante.
 ## Otro tipo de pruebas {-}
 
 Con cocientes de verosimlitud podemos diseñar pruebas para contrastar
-condiciones que sólo un subconjunto de parámetros cumple. 
+condiciones que sólo un subconjunto de parámetros cumple.
 
 
 **Ejemplo.** Supongamos que queremos hacer una prueba de
@@ -591,8 +591,7 @@ muestra_2 <- rnorm(120, 0.8, 0.4)
 
 Necesitamos: 1) calcular el valor de la estadística $\lambda$ de cociente
 de verosimilitudes, 2) Calcular la distribución de referencia para $\lambda$ bajo la
-hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de $\lambda$  
-en relación a la distribución de referencia.
+hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de $\lambda$ en relación a la distribución de referencia.
 
 
 ```{r}
@@ -632,7 +631,7 @@ Ahora tenemos el problema de que no conocemos las sigma. Estas deben ser
 estimadas para después calcular el cociente de verosimilitud:
 
 ```{r}
-res <- optim(c(0, 0, 1, 1), log_p, method = "Nelder-Mead", 
+res <- optim(c(0, 0, 1, 1), log_p, method = "Nelder-Mead",
              control = list(fnscale = -1))
 res$convergence
 est_mv <- res$par
@@ -647,7 +646,7 @@ lambda_1
 Ahora calculamos el máximo bajo el supuesto de la hipótesis nula:
 
 ```{r}
-res <- optim(c(0, 1, 1), log_p_nula, method = "Nelder-Mead", 
+res <- optim(c(0, 1, 1), log_p_nula, method = "Nelder-Mead",
              control = list(fnscale = -1))
 res$convergence
 est_mv_nula <- res$par
@@ -699,7 +698,7 @@ Y graficamos la distribución de referencia junto con el valor de $\lambda$
 que obtuvimos:
 
 ```{r}
-tibble(lambda = lambda_sim) %>% 
+tibble(lambda = lambda_sim) %>%
   ggplot(aes(x = lambda)) +
   geom_histogram() +
   geom_vline(xintercept = lambda, colour = "red")
@@ -715,7 +714,7 @@ una vez más que la distribución de referencia es cercana a una $\chi$-cuadrada
 con un grado de libertad.
 
 ```{r}
-tibble(lambda = lambda_sim) %>% 
+tibble(lambda = lambda_sim) %>%
   ggplot(aes(sample = lambda)) +
   geom_qq(distribution = stats::qchisq, dparams = list(df = 1)) +
   geom_qq_line(distribution = stats::qchisq, dparams = list(df = 1))
@@ -725,9 +724,9 @@ tibble(lambda = lambda_sim) %>%
 Esta es la definición generalizada de las pruebas de cociente de verosimilitudes
 
 ```{block2, type='mathblock'}
-**Definición**. Consideramos la hipótesis nula $\theta \in \Theta_0$. 
+**Definición**. Consideramos la hipótesis nula $\theta \in \Theta_0$.
 La **estadística del cociente de verosimilitudes** está dada por:
-  
+
 $$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\Theta_0}\mathcal{L}(\theta)}        \right ) = 2\log\left(  \frac{ \mathcal{L}(\hat{\theta}_n)}{\mathcal{L}(\hat{\theta}_0)}  \right)$$
 
   donde $\hat{\theta}_n$ es el estimador de máxima verosimilitud de $\theta$
@@ -735,10 +734,10 @@ $$\lambda = 2\log\left( \frac{\max_{\theta}\mathcal{L}(\theta)}{\max_{\theta\in\
 restringimos a que $\theta \in \Theta_0$.
 ```
 
-En nuestro ejemplo anterior, el espacio $\Theta_0$ era 
-$\{ (\mu,\mu,\sigma_1, \sigma_2)\}$, que es un subconjunto de 
+En nuestro ejemplo anterior, el espacio $\Theta_0$ era
+$\{ (\mu,\mu,\sigma_1, \sigma_2)\}$, que es un subconjunto de
 $\{ (\mu_1,\mu_2,\sigma_1, \sigma_2)\}$. Nótese que el espacio $\Theta_0$
-tiene tres parámetros libres, mientras que el espacio total tiene 4. 
+tiene tres parámetros libres, mientras que el espacio total tiene 4.
 
 Aunque podemos usar el bootstrap paramétrico para construir distribuciones
 de referencia para estas pruebas y calcular un valor-$p$, el siguiente
@@ -755,21 +754,21 @@ de $\theta$ estan fijos en algún valor. Los otros parámetros no se consideran 
 prueba.
 
 Si $\lambda$ es la estadística de cociente de verosimilitudes de esta prueba, entonces,
-bajo la nula $\theta \in \Theta_0$ tenemos que la distribución 
+bajo la nula $\theta \in \Theta_0$ tenemos que la distribución
 de $\lambda$ es asintóticamente $\chi$-cuadrada con $q$ grados de libertad, denotada por $\chi^2_q$.
 
 El valor-$p$ para esta prueba es
 $$P(\chi^2_{q} > \lambda)$$
 ```
 
-**Observaciones**: 
+**Observaciones**:
 
 - Para hacer cálculos con la distribución $\chi$-cuadrada usamos rutinas numéricas
-(pro ejemplo la función `pchisq` en R).
+(por ejemplo la función `pchisq` en R).
 
 - Nótese que $p$ es la dimensión del espacio $\Theta$ ($p$ parámetros),
 y que $p-q$ es la dimensión del espacio $\Theta_0$ (pues $q$ parámetros están fijos),
-de  modo que los grados de libertad son la dimensión de $\Theta$ menos la 
+de  modo que los grados de libertad son la dimensión de $\Theta$ menos la
 dimensión de $\Theta_0$.
 
 - En nuestro primer ejemplo (proporción de éxitos) solo teníamos un parámetro. El espacio
@@ -803,14 +802,14 @@ Y queremos contrastar con una alternativa:
 en los pacientes.
 
 La decisión que está detrás de estas pruebas es: si no podemos rechazar la nula,
-la medicina no sale al mercado. Si rechazamos la nula, entonces la medicina es 
-aprobada para salir al mercado. 
+la medicina no sale al mercado. Si rechazamos la nula, entonces la medicina es
+aprobada para salir al mercado.
 
 Para diseñar esta prueba, procedemos como sigue:
 
 1. Definimos cómo recolectar datos $X$ de interés
 2. Definimos una estádistica $T(X)$ de los datos.
-3. Definimos una **región de rechazo** $R$ de valores tales 
+3. Definimos una **región de rechazo** $R$ de valores tales
 que si $T(X)\in R$, entonces rechazaremos la hipótesis nula (e implícitamente tomaríamos
 la decisión asociada a la alternativa).
 
@@ -830,13 +829,13 @@ Cuando diseñamos una prueba de este tipo, quisiéramos minimizar dos tipos de e
 - No rechazar la hipótesis nula $H_0$ cuando $H_0$ es falsa: **Error tipo II**
 
 La gravedad de cada error depende del problema. En nuestro ejemplo de la medicina, por
-ejemplo: 
+ejemplo:
 
 - Un error tipo II resultaría en una medicina efectiva que no sale al mercado, lo
 que tiene consecuencias financieras (para la farmaceútica) y costos de oportunidad
-en salud (para la población). Por otra parte, 
+en salud (para la población). Por otra parte,
 - Un error tipo I resultaría en salir al mercado con una medicina que no es efectiva. Esto tiene
-costos de oportunidad financieros que pueden ser grandes para la sociedad. 
+costos de oportunidad financieros que pueden ser grandes para la sociedad.
 Todos estos costos dependen, por
 ejempĺo, de qué tan grave es la enfermedad, qué tan costosa es la medicina, y así sucesivamente.
 - En el enfoque más clásico, los errores tipo I y tipo II generalmente no se balancean
@@ -859,21 +858,21 @@ Si estimamos este efecto, incluyendo incertidumbre, tenemos una mejor herramient
 para hacer análisis costo-beneficio y tomar la decisión más apropiada.
 
 Como dijimos, típicamente se selecciona la región de rechazo de forma
-que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada. 
+que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada.
 
 ```{block2, type='mathblock'}
 **Definición**. Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
 no conocemos $\theta$. Supongamos que la hipótesis nula es que $\theta = \theta_0$ (que llamamos
 una hipótesis simple).
 
-La **potencia** de una prueba con estadística $T$ y región de rechazo $R$
-se define como la probabilidad de rechazar para cada posible valor del parámetro $\theta$ 
+La **función de potencia** de una prueba con región de rechazo $R$
+se define como la probabilidad de rechazar para cada posible valor del parámetro $\theta$
 $$\beta(\theta) = P_\theta (X\in R).$$
-  
-El **tamaño** de una prueba se define como el valor 
+
+El **tamaño** de una prueba se define como el valor
 
 $$\alpha = \beta(\theta_0),$$
-  
+
 es decir, la probabilidad de rechazar la nula ($\theta = \theta_0$) erróneamente.
 ```
 
@@ -885,6 +884,15 @@ es decir, la probabilidad de rechazo más grande cuando la hipótesis nula se cu
 
 Decimos que una prueba tiene **nivel de significancia** de $\alpha$ si su tamaño
 es menor o igual a $\alpha$.
+
+Decimos que la **potencia de una prueba** es la probabilidad de, correctamente, rechazar la hipótesis nula cuando la alterna es verdadera:
+
+$$\beta(\theta_a) = P_{\theta_a} (X \in R).$$
+
+**Observación:** Sería deseable encontrar la prueba con mayor potencia bajo $H_a$, entre todas las pruebas con tamaño $\alpha$. Esto no es trivial y no
+siempre existe.
+
+**Observación:** El valor $p$ es el menor tamaño con el que podemos rechazar $H_0$.
 
 **Ejemplo** (@Chihara) Supongamos que las calificaciones de Enlace de alumnos en México
 se distribuye aproximadamente como una normal con media 515 y desviación estándar
@@ -903,17 +911,17 @@ La función de potencia es
 $$\beta(\mu) = P_\mu(\bar{X} < 505)$$
 Restando la media $\mu$ y estandarizando obtenemos
 $$\beta(\mu) = P \left (\frac{\bar{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{130/\sqrt{100}} \right )$$
-así que 
+así que
 $$\beta(\mu) = \Phi \left (\frac{505 -\mu}{130/\sqrt{100}}\right ),$$
 donde $\Phi$ es la función acumulada de la normal estándar. La gráfica
-de la potencia es entonces
+de la función potencia es entonces
 
 ```{r}
-potencia_tbl <- tibble(mu = seq(450, 550, 1)) %>% 
+potencia_tbl <- tibble(mu = seq(450, 550, 1)) %>%
   mutate(beta = pnorm((505 - mu)/13)) %>% # probabilidad de rechazar
   mutate(nula_verdadera = factor(mu >= 515)) # nula verdadera
 ggplot(potencia_tbl, aes(x = mu, y = beta, colour = nula_verdadera)) +
-  geom_line() 
+  geom_line()
 ```
 
 Es decir, si la media $\mu$ de la ciudad es muy baja, con mucha seguridad rechazamos. Si
@@ -933,7 +941,7 @@ se pidan fondos (al rechazar $H_0$).
 
 **Ejemplo** Supongamos que los que programan el presupuesto deciden que se requiere
 tener una probabilidad de a lo más 5% de rechazar erróneamente la hipótesis nula (es decir,
-pedir fondos cuando en realidad su media no está debajo de la nacional) para 
+pedir fondos cuando en realidad su media no está debajo de la nacional) para
 poder recibir fondos. ¿Cuál es la región de rechazo que podríamos escoger?
 
 En el caso anterior usamos la región $\bar{X}<505$. Si el tamaño de muestra
@@ -947,7 +955,7 @@ Buscamos el cuantil 0.05 de la normal estándar, que es
 z_alpha <- qnorm(0.05)
 z_alpha
 ```
-Y entonces requerimos que 
+Y entonces requerimos que
 
 $$\frac{C- 515}{13} = -1.6448.$$
 Despejando obtenemos
@@ -983,8 +991,8 @@ quiere decir que la nula es falsa. Lo que quiere decir es que la nula es poco co
 con los datos que observamos, o que es muy poco probable que la nula produzca los datos
 que observamos.
 
-- Rechazar la nula (encontrar un efecto "significativo") **no quiere decir que el efecto tiene importancia práctica**. Si la potencia es alta (por ejemplo cuando el tamaño de 
-muestra es grande), puede ser que la discrepancia de los datos con la nula es 
+- Rechazar la nula (encontrar un efecto "significativo") **no quiere decir que el efecto tiene importancia práctica**. Si la potencia es alta (por ejemplo cuando el tamaño de
+muestra es grande), puede ser que la discrepancia de los datos con la nula es
 despreciable, entonces para fines prácticos podríamos trabajar bajo el supuesto de la nula.
 Por eso en general preferimos hacer estimación que pruebas de hipótesis para entender
 o resumir los datos y tamaños de las discrepancias.
@@ -999,9 +1007,9 @@ rechazar una hipótesis nulas con nivel 5% de significancia. Es **más important
 cómo se diseñó el estudio, cómo se recogieron los datos, cuáles fueron las decisiones
 de análisis** que pasar el mítico nivel de 5%
 
-- Cuando la potencia es baja (por ejemplo porque el tamaño de muestra es muy chico), 
+- Cuando la potencia es baja (por ejemplo porque el tamaño de muestra es muy chico),
 tenemos que observar diferencias muy grandes para rechazar. Si probamos algo **poco
-factible** (por ejemplo, que la vitamina $C$ aumenta la estatura a los adultos), 
+factible** (por ejemplo, que la vitamina $C$ aumenta la estatura a los adultos),
 entonces **los rechazos generalmente se deben a variabilidad en la muestra** (error tipo II).
 
 - Cuando diseñamos y presentamos resultados de un estudio o análisis, es mejor
@@ -1015,28 +1023,25 @@ En algunas ocasiones se hacen muchas pruebas para "filtrar" las cosas que son
 interesantes y las que no. Por ejemplo, cuando comparamos miles de genes entre dos
 muestras (la nula es que son similares). Si cada prueba se conduce a un nivel $\alpha$,
 la probablilidad de tener al menos un rechazo falso (un error tipo I) es considerablemente
-más alta que $\alpha$. 
+más alta que $\alpha$.
 
 Por ejemplo, si repetimos una prueba de hipótesis con nivel $\alpha$ con muestras
 independientes, la probabilidad de tener al menos un rechazo falso es $1-(1-\alpha)^n$,
 que es muy cercano a uno si $n$ es grande (¿cómo derivas esta fórmula?). Por ejemplo,
 si $\alpha = 0.05$ y $n = 100$, con más de 99% probabilidad tendremos al menos un
-rechazo falso, o un "hallazgo" falso. Sin $n$ es muy grande, 
+rechazo falso, o un "hallazgo" falso. Sin $n$ es muy grande,
 varios de los hallazgos que encontremos serán
 debidos a variabilidad muestral.
 
 Puedes ver en [@Wasserman], sección 10.7 métodos conservadores
 como corrección de Bonferroni (sólo rechazar cuando el valor-$p$ es
-menor a $0.05/n$), 
-o la técnica más moderna de 
-control de tasa de descubrimientos falsos (FDR). 
+menor a $0.05/n$),
+o la técnica más moderna de
+control de tasa de descubrimientos falsos (FDR).
 
-Cuando estamos en una situación como esta (que es más retadora en cuanto a análisis), 
+Cuando estamos en una situación como esta (que es más retadora en cuanto a análisis),
 sin embargo, sugerimos usar estimaciones
 que tomen cuenta todos los datos con regularización apropiada: por ejemplo,
 en lugar de trabajar con cada muestra por separado, intentamos construir un modelo
 para el proceso completo de muestreo. Una posibilidad son
 modelos jerárquicos bayesianos. Ver por ejemplo [@gelmansignif].
-
-
-
