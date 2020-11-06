@@ -862,7 +862,7 @@ Como dijimos, típicamente se selecciona la región de rechazo de forma
 que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada. 
 
 ```{block2, type='mathblock'}
-**Definición.$$ Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
+**Definición**. Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
 no conocemos $\theta$. Supongamos que la hipótesis nula es que $\theta = \theta_0$ (que llamamos
 una hipótesis simple).
 
