@@ -95,14 +95,15 @@ Este es un ejemplo completo, aunque muy simple, de inferencia bayesiana.
 Hacemos **inferencia bayesiana cuando tomamos decisiones basadas
 en las probabilidades posteriores**.
 
-```{block2, type='ejercicio'}
-¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿Cómo cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
+```{block, type='ejercicio'}
+¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿Cómo
+cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
 ```
 
 Finalmente, podríamos hacer predicciones usando la **posterior predictiva**.
 Si ${X}_{nv}$ es una nueva tirada adicional de la moneda que estamos usando, nos
 interesaría saber:
-$$P({X}_{nv}=\mathsf{sol}|X=2)$$
+$$P({X}_{nv}=\mathsf{sol}\, | \, X=2)$$
 Que podemos calcular observando que $P({X}_{nv}|X=2, \theta)$ es una variable
 Bernoulli con probabilidad $\theta$, que puede valer 0.4 o 0.6. Como tenemos las
 probabilidades posteriores $P(\theta|X=2)$ podemos usar probabilidad total, todo
@@ -197,30 +198,37 @@ tabla_inferencia %>%
   select(moneda_obs, theta, prob_inicial, verosimilitud, prob_posterior) 
 ```
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 
-1. ¿Qué pasa cuando el número de soles es 0? ¿Cómo cambian las probabilidades
+- ¿Qué pasa cuando el número de soles es 0? ¿Cómo cambian las probabilidades
 posteriores de cada moneda?
-2. Incrementa el número de volados, por ejemplo a 10. ¿Qué pasa si observaste
+- Incrementa el número de volados, por ejemplo a 10. ¿Qué pasa si observaste
 8 soles, por ejemplo? ¿Y si observaste 0?
-3. ¿Qué pasa si cambias las probabilidades iniciales (por ejemplo incrementas
-la probabilidad inicial de la moneda 1 a 0.9)?
+- ¿Qué pasa si cambias las probabilidades iniciales (por ejemplo incrementas
+la probabilidad inicial de la moneda 1 a 0.9)? 
 
-Justifica las siguientes aseveraciones (para este ejemplo):
+```
 
-1. Las probabilidades posteriores o finales
-son una especie de punto intermedio entre verosimilitud y probablidades iniciales. 
-2. Si tenemos pocas observaciones, las probabilidades posteriores son similares a las iniciales.
-3. Cuando tenemos muchos datos, las probabilidades posteriores están más concentradas, y no es tan importante la inicial.
-4. Si la inicial está muy concentrada en algún valor, la posterior requiere de
-muchas observaciones para que se pueda concentrar en otros valores diferentes a los de la inicial.
+Justifica las siguientes aseveraciones (para este ejemplo):  
+
+```{block, type='ejercicio'}
+
+- Las probabilidades posteriores o finales son una especie de punto intermedio
+entre verosimilitud y probablidades iniciales.
+- Si tenemos pocas observaciones, las probabilidades posteriores son similares
+a las iniciales.
+- Cuando tenemos muchos datos, las probabilidades posteriores están más
+concentradas, y no es tan importante la inicial.
+- Si la inicial está muy concentrada en algún valor, la posterior requiere de
+muchas observaciones para que se pueda concentrar en otros valores diferentes a
+los de la inicial.
 
 ```
 
 Ahora resumimos los elementos básicos de la inferencia bayesiana, que son 
 relativamente simples:
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 **Inferencia bayesiana.** Con la notación de arriba:
 
 - Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimitud*, 
@@ -236,8 +244,9 @@ $$P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}$$
 que también escribimos:
 
 $$P(\theta | X) \propto P(X | \theta) P(\theta)$$
-donde $\propto$ significa "proporcional a". No ponemos 
-$P(X)$ pues como vimos arriba, es una constante de normalización.
+donde $\propto$ significa "proporcional a". No ponemos $P(X)$ pues como vimos
+arriba, es una constante de normalización.
+
 ```
 
 
@@ -366,7 +375,7 @@ $n$ pruebas iniciales agregamos
 4 pruebas adicionales fijas, con 2 éxitos y 2 fracasos, y calculamos la proporción 
 usual de éxitos.
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 Repite el análisis considerando en general $n$ pruebas, con $k$ éxitos. Utiliza la
 misma distribución inicial.
 ```
@@ -561,7 +570,7 @@ la *precisión* $\tau$ como el inverso de la varianza $\sigma^2$, entonces la po
 de $mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
 y precisión $\tau_0 + n\tau$, donde $\lambda = \frac{n\tau}{\tau_0 + n\tau}$
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 Completa cuadrados para mostrar las fórmulas del modelo normal-normal con
 varianza conocida.
 ```
@@ -884,7 +893,7 @@ modelo, y se llama **verificación predictiva posterior**.
 Supongamos que tenemos la posterior $p(\theta | x)$. Podemos generar una nueva
 *replicación* de los datos como sigue:
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 La distribución **predictiva posterior** genera nuevas observaciones a partir de
 la información observada. La denotamos como $p(\tilde{x}|x)$. Para simular de ella:
 
@@ -1050,8 +1059,10 @@ qt(c(0.025, 0.5, 0.975), 2 * alpha_post) * s + mu_post
 
 
 ```{block2, type='ejercicio'}
+
 - Calcula la posterior predictiva del modelo Beta-Bernoulli y Beta-Binomial.
 - (Más difícil) Calcula la posterior predictiva del modelo Poisson-Gamma.
+
 ```
 
 
