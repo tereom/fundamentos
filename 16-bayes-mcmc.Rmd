@@ -4,19 +4,19 @@
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 library(patchwork)
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning=FALSE, fig.align = 'center', fig.width = 5, fig.height=3, cache = TRUE)
 comma <- function(x) format(x, digits = 2, big.mark = ",")
 theme_set(theme_minimal())
 ```
 
 Hasta ahora, hemos considerado modelos bayesianos *conjugados*, donde la
 posterior tiene una forma conocida. Esto nos permitió simular directamente
-de la posterior usando las rutinas estándar de R, o utilizar cálculos teóricos
-o funciones estándar de R para calcular resúmenes de interés, como medias o 
+de la posterior usando las rutinas estándar de `R`, o utilizar cálculos teóricos
+o funciones estándar de `R` para calcular resúmenes de interés, como medias o 
 medianas posteriores o intervalos de credibilidad.
 
-Sin embargo, en las aplicaciones rara vez es factible este tipo de análisis conjugado
-tan simple, pues:
+Sin embargo, en aplicaciones rara vez es factible este tipo de análisis tan
+simple, pues:
 
 1. Los modelos que estamos considerando son más complejos y la distribución posterior
 conjunta de los parámetros no tiene una forma simple conocida.
@@ -24,18 +24,18 @@ conjunta de los parámetros no tiene una forma simple conocida.
 nuestra información inicial.
 
 Recordamos que tenemos expresiones explícitas para la inicial $p(\theta)$ y la verosimilitud
-$p(x|\theta)$, así que conocemos explícitamente la posterior módulo la constante de
-normalización
+$p(x|\theta)$, así que conocemos explícitamente la posterior, módulo la constante de
+normalización,
 
-$$p(\theta|x) \propto p(x|\theta) p(\theta).$$
+$$p(\theta|x) \propto p(x|\theta) \,  p(\theta).$$
 
 
 Supongamos por ejemplo que quisiéramos calcular las medias posteriores de los
 parámetros $\theta$. En teoría, tendríamos que calcular
 
-$$\hat{\theta} = \int \theta p(\theta|x)\, d\theta$$
+$$\hat \theta = \mathbb{E}[{\theta}\, |\, x] = \int \theta \, p(\theta|x) \, d\theta$$
 Entonces es necesario calcular también $p(x)$, que resulta de la integral
-$$p(x) = \int p(x|\theta)p(\theta)\, d\theta$$
+$$p(x) = \int p(x|\theta) \, p(\theta)\, d\theta$$
 
 Si no tenemos expresiones analíticas simples, tendremos que aproximar numéricamente
 estas integrales de alguna forma. 
@@ -106,7 +106,7 @@ integral_media <- integrate(media_funcion, lower = 0, upper = 1, subdivisions = 
 media_post <- integral_media$value 
 media_post
 ```
-Podemos verificar nuestro trabajo pues sabemos que la posterior es $Beta(5, 2)$
+Podemos verificar nuestro trabajo pues sabemos que la posterior es $\mathsf{Beta}(5, 2)$
 cuya media es
 ```{r}
 5/(2+5)
@@ -122,7 +122,7 @@ Ahora supongamos que tenemos $2$ parámetros. Dividiríamos cada parámetro
 en 100 intervalos, y luego tendríamos que calcular
 
 $$p(x) \approx \sum_{i=1}^M \sum_{j=1}^M p(x|\theta_1^i, \theta_2^j)p(\theta_1^i, \theta_2^j) \Delta\theta_1\Delta\theta_2$$
-Y esto requeriría $M^2 = 10000$ evaluaciones de $p(x|\theta)p(\theta)$. 
+Y esto requeriría $M^2 = 10,000$ evaluaciones de $p(x|\theta)p(\theta)$. 
 
 Si tenemos $p$ parámetros, entonces tendríamos que hacer $M^p$ evaluaciones de la
 posterior. Incluso cuando $p=10$, **esta estrategia es infactible**, pues tendríamos
@@ -142,29 +142,31 @@ Supongamos que tenemos una densidad $p(\theta)$.
 
 ```{block2, type='mathblock'}
 **Integración Monte Carlo**. Supongamos que queremos calcular el valor esperado de
-$g(X)$, donde $X\sim p(\theta)$
+$g(X)$, donde $X\sim p(X\,|\,\theta).$ Es decir, la variable aleatoria $X$ se
+distribuye de acuerdo al modelo probabilistico $p(X \, | \, \theta),$ de tal forma que 
+lo que nos interesa calcular es
 
-$$E =  \int g(\theta) p(\theta)\, d\theta$$
+$$\mathbb{E}[g(X)] =  \int g(x) p(x|\theta)\, dx.$$
 
 Si tomamos una muestra 
-$\theta^{(1)},\theta^{(2)}, \ldots \theta^{(N)} \sim p(\theta)$, entonces
+$x^{(1)},x^{(2)}, \ldots x^{(N)} \overset{iid}{\sim} p(x|\theta)$, entonces
 
-$$\frac{g(\theta^{(1)})+g(\theta^{(2)})+ \cdots +g(\theta^{(N)})}{N}\approx E$$
+$$\mathbb{E}[g(X)] \approx  \,  \frac1N \,  \sum_{n = 1}^N g(x^{(n)})$$
 
 cuando $N$ es grande.
 ```
 
 Esto es simplemente una manera de escribir la ley de los grandes números, y hemos
 aplicado este teorema en varias ocasiones. Nos ha sido útil cuando 
-**sabemos cómo simular de distribución** $p(\theta | x)$ (usando alguna rutina de R, por
+**sabemos cómo simular de distribución** $p(\theta | x)$ (usando alguna rutina de `R`, por
 ejemplo, o usando un método estándar como inversión de la función de distribución acumulada).
 
 ### Ejemplo {-}
 En este ejemplo repetimos cosas que ya hemos visto. En el caso de estimación
 de una proporción $\theta, tenemos como inicial
-$p(\theta) \propto \theta$, que es $Beta(2,1)$. Si observamos 3 éxitos en 4 pruebas,
+$p(\theta) \propto \theta$, que es $\mathsf{Beta}(2,1)$. Si observamos 3 éxitos en 4 pruebas,
 entonces sabemos que la posterior es $p(\theta|x)\propto \theta^4(1-\theta)$, que 
-es $Beta(5, 2)$. Si queremos calcular media y segundo momento posterior para $\theta$,
+es $\mathsf{Beta}(5, 2)$. Si queremos calcular media y segundo momento posterior para $\theta$,
 en teoría necesitamos calcular
 
 $$\mu = \int_0^1 \theta p(\theta|X = 3)\, d\theta,\,\, \mu_2=\int_0^1 \theta^2 p(\theta|X = 3)\, d\theta$$
@@ -180,14 +182,14 @@ c(media_post, momento_2_post)
 
 Y podemos aproximar de esta manera cualquier cantidad de interés que esté basada
 en integrales, como probabilidades asociadas a $\theta$ o cuantiles asociados.
-Por ejemplo, podemos aprxoimar fácilmente $P(e^{\theta}> 2|x)$ haciendo
+Por ejemplo, podemos aproximar fácilmente $P(e^{\theta}> 2|x)$ haciendo
 
 ```{r}
 mean(exp(theta) > 2)
 ```
 y así sucesivamente. 
 
-Este enfoque, sin embargo, es mucho más flexible y poderoso:
+Este enfoque, sin embargo, es mucho más flexible y poderoso.
 
 ### Ejemplo: varias pruebas independientes {-}
 
@@ -204,16 +206,17 @@ datos <- tibble(
 datos
 ```
 
-Usaremos como inicial $Beta(2, 1)$ (pues hemos obervado cierto sesgo de cortesía
-en la calificación de sabores, y no es tan probable tener valores muy bajos) para todos los sabores,
-es decir $p(\theta_i)$ es $Beta(2, 1)$. La inicial conjunta la definimos entonces,
-usando idependiencia inicial, como
+Usaremos como inicial $\mathsf{Beta}(2, 1)$ (pues hemos obervado cierto sesgo de
+cortesía en la calificación de sabores, y no es tan probable tener valores muy
+bajos) para todos los sabores, es decir $p(\theta_i)$ es la funcion de densidad
+de una $\mathsf{Beta}(2, 1)$. La inicial conjunta la definimos entonces, usando
+idependiencia inicial, como
 
-$$p(\theta_1,\theta_2, \theta_3,\theta_4) = p(\theta_1)p(\theta_2)p(\theta_3)p(\theta_4)$$
-Pues inicialmente establecemos que ningún parámetro da información sobre otro: saber que
-mango es muy gustado no nos dice nada acerca del gusto por fresa. Bajo este supuesto,
-y el supuesto adicional de que las muestras de cada sabor son independientes, podemos mostrar que
-las posteriores son independientes:
+$$p(\theta_1,\theta_2, \theta_3,\theta_4) = p(\theta_1)p(\theta_2)p(\theta_3)p(\theta_4).$$
+Pues inicialmente establecemos que ningún parámetro da información sobre otro:
+saber que mango es muy gustado no nos dice nada acerca del gusto por fresa. Bajo
+este supuesto, y el supuesto adicional de que las muestras de cada sabor son
+independientes, podemos mostrar que las posteriores son independientes:
 
 $$p(\theta_1,\theta_2,\theta_3, \theta_4|k_1,k_2,k_3,k_4) = p(\theta_4|k_1)p(\theta_4|k_2)p(\theta_4|k_3)p(\theta_4|k_4)$$
 
@@ -296,25 +299,24 @@ la función $f(\theta)$.
 
 En el método de Metropolis, uno de los más antiguos, comenzamos
 con un valor inicial de los parámetros $\theta^{(0)}$ en el soporte de $p(\theta)$,
-es decir $p(\theta^{(0)})>0$.
+es decir $p(\theta^{(0)})>0.$
 
 Para $i=1, \ldots, M$, hacemos:
 
 1. Partiendo de $\theta^{(i)}$, hacemos un salto
-corto en una dirección al azar para obtener una propuesta $\theta_{prop}$.
+corto en una dirección al azar para obtener una propuesta $\theta^* \sim q(\theta \, |\, \theta^{(i)}).$
 2. Aceptamos or rechazamos el salto:
-  - Si $\frac{f(\theta_{prop})}{f(\theta_{i})} >= 1$, aceptamos el salto y ponemos $\theta^{(i+1)}=\theta_{prop}$. Regresamos a 1 para la siguiente $i$
-  - Si $p = \frac{f(\theta_{prop})}{f(\theta_{i})} < 1$, entonces aceptamos con probabilidad
-  $p$ el salto, ponemos $\theta^{(i+1)}=\theta_{prop}$ y regresamos a 1 para la siguiente $i$. Si rechazamos el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ 
-  regresamos a 1 para la siguiente $i$.
+  - Si $\alpha = \frac{f(\theta^*)}{f(\theta^{(i)})} \geq 1$, aceptamos el salto y ponemos $\theta^{(i+1)}=\theta^*$. Regresamos a 1 para la siguiente iteración $i\leftarrow i + 1.$
+  - Si $\alpha = \frac{f(\theta^*)}{f(\theta^{(i)})} < 1$, entonces aceptamos con probabilidad
+  $\alpha$ el salto, ponemos $\theta^{(i+1)}=\theta^*$ y regresamos a 1 para la siguiente iteración $i \leftarrow i + 1$. Si rechazamos el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ y regresamos a 1 para la siguiente iteración $i\leftarrow i + 1.$
 
 Requerimos también que la función que propone los saltos sea simétrica: es decir,
-$p_{propuesta}(\theta_{prop}|\theta_{actual})$ debe ser igual a 
-$p_{propuesta}(\theta_{actual}|\theta_{prop})$. Se puede modificar el algoritmo
+$q(\theta^*|\theta^{(i)})$ debe ser igual a 
+$q(\theta^{(i)}|\theta^*)$. Se puede modificar el algoritmo
 para tratar con una propuesta que no sea simétrica.
 
-Una elección común es escoger $p_{propuesta}(\theta_{prop} |\theta_{actual})$ como
-una $N(\theta_{actual}, \sigma_{salto})$.
+Una elección común es escoger $q(\theta^* |\theta^{(i)})$ como
+una $\mathsf{N}(\theta^{(i)}, \sigma_{salto})$.
 
 ```{block,type="comentario"}
 En este curso, escribiremos varios métodos Markov Chain Monte Carlo
@@ -601,10 +603,10 @@ del lado izquierdo de su ubicación actual y si es sol a la del lado derecho.
     2) Si la isla propuesta en el paso anterior tiene población mayor a la 
 población de la isla actual, el vendedor decide viajar a ella. Si la isla vecina 
 tiene población menor, entonces visita la isla propuesta con una probabilidad que 
-depende de la población de las islas. Sea $P_{prop}$ la población de la isla 
+depende de la población de las islas. Sea $P^*$ la población de la isla 
 propuesta y $P_{actual}$ la población de la isla actual. Entonces el vendedor
 cambia de isla con probabilidad 
-$$p_{mover}=P_{prop}/P_{actual}$$
+$$p_{mover}=P^*/P_{actual}$$
 
 A la larga, si el vendedor sigue la heurística anterior la probabilidad de que
 el vendedor este en alguna de las islas coincide con la población relativa de
@@ -682,7 +684,7 @@ Escribamos el algoritmo, para esto indexamos las islas por el valor
 $\theta$, es así que la isla del extremo oeste corresponde a $\theta=1$ y la 
 población relativa de cada isla es $P(\theta)$:
 
-1. El vendedor se ubica en $\theta_{actual}$ y propone moverse a la izquierda
+1. El vendedor se ubica en $\theta^{(i)}$ y propone moverse a la izquierda
 o derecha con probabilidad $0.5$.  
 El rango de los posibles valores para moverse, y la probabilidad de proponer 
 cada uno se conoce como **distribución propuesta**, en nuestro ejemplo sólo 
@@ -691,9 +693,9 @@ toma dos valores cada uno con probabilidad $0.5$.
 2. Una vez que se propone un movimiento, decidimos si aceptarlo. La decisión de
 aceptar se basa en el valor de la distribución **objetivo** en la posición
 propuesta, relativo al valor de la distribución objetivo en la posición actual:
-$$p_{mover}=min\bigg\{\frac{P(\theta_{propuesta})}{P(\theta_{actual})},1\bigg\}$$
+$$p_{mover}=\min\bigg\{\frac{P(\theta_{propuesta})}{P(\theta^{(i)})},1\bigg\}$$
 Notemos que la distribución objetivo $P(\theta)$ no necesita estar normalizada, 
-esto es porque lo que nos interesa es el cociente $P(\theta_{propuesta})/P(\theta_{actual})$.
+esto es porque lo que nos interesa es el cociente $P(\theta_{propuesta})/P(\theta^{(i)})$.
 
 3. Una vez que propusimos un movimiento y calculamos la probabilidad de aceptar 
 el movimiento aceptamos o rechazamos el movimiento generando un valor de una
@@ -705,7 +707,7 @@ Entonces, para utilizar el algoritmo necesitamos ser capaces de:
 * Generar un valor de la distribución propuesta (para crear $\theta_{propuesta}$).
 
 * Evaluar la distribución objetivo en cualquier valor propuesto (para calcular
-$P(\theta_{propuesta})/P(\theta_{actual})$).
+$P(\theta_{propuesta})/P(\theta^{(i)})$).
 
 * Generar un valor uniforme (para movernos con probabilidad $p_{mover}$)
 
@@ -1379,13 +1381,13 @@ Y obtenemos un resultado similar a los anteriores.
     1. Generamos un punto inicial tal que $p(\theta)>0$.
     2. Para $t = 1,2,...$
         + Se propone un nuevo valor $\theta_{propuesto}$ con una distribución
-        propuesta $g(\theta_{propuesta}|\theta_{actual})$ es común  que $g(\theta_{propuesta}|\theta_{actual})$ sea una normal centrada en 
-        $\theta_{actual}$.
+        propuesta $g(\theta_{propuesta}|\theta^{(i)})$ es común  que $g(\theta_{propuesta}|\theta^{(i)})$ sea una normal centrada en 
+        $\theta^{(i)}$.
     3. Calculamos 
-    $$p_{mover}=min\bigg( \frac{p(\theta_{propuesta})}{p(\theta_{actual})},1\bigg)$$
+    $$p_{mover}=min\bigg( \frac{p(\theta_{propuesta})}{p(\theta^{(i)})},1\bigg)$$
     y aceptamos $$\theta_{propuesta}$$ con probabilidad $p_{mover}$. Es así que el algorito requiere que podamos calcular el cociente en $p_{mover}$
-    para todo $\theta_{actual}$ y $\theta_{propuesta}$, así como simular de la 
-    distribución propuesta $g(\theta_{propuesta}|\theta_{actual})$, adicionalmente
+    para todo $\theta^{(i)}$ y $\theta_{propuesta}$, así como simular de la 
+    distribución propuesta $g(\theta_{propuesta}|\theta^{(i)})$, adicionalmente
     debemos poder generar valores uniformes para decidir si aceptar/rechazar.
     En el caso de **Metropolis** un requerimiento adicional es que la distribución
     propuesta $g(\theta_{a}|\theta_b)$ debe ser simétrica, es decir 
@@ -1395,7 +1397,7 @@ Y obtenemos un resultado similar a los anteriores.
     **Metropolis-Hastings** generaliza Metropolis, eliminando la restricción de 
 simetría en la distribución propuesta $g(\theta_{a}|\theta_b)$, sin embargo para corregir por
 esta asimetría debemos calcular $p_{mover}$ como sigue:
-$$p_{mover}=min\bigg\{ \frac{p(\theta_{propuesta})/g(\theta_{propuesta}|\theta_{actual})}{p(\theta_{actual})/g(\theta_{actual}|\theta_{propuesta})},1\bigg\}$$
+$$p_{mover}=min\bigg\{ \frac{p(\theta_{propuesta})/g(\theta_{propuesta}|\theta^{(i)})}{p(\theta^{(i)})/g(\theta^{(i)}|\theta_{propuesta})},1\bigg\}$$
 La generalización de Metrópolis-Hastings puede resultar en algoritmos más 
 veloces.
 
