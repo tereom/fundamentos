@@ -1527,10 +1527,11 @@ todas + sin_burnin
 
 
 
-**Convergencia a estado límite**. Para determinar la convergencia  
-es conveniente realizar **más de una cadena**:  buscamos ver si 
-realmente se ha olvidado 
-el estado inicial, si las distribuciones de cada cadena son consistentes unas con otras, y revisar  que algunas cadenas no hayan quedado *atoradas* en regiones inusuales del espacio de parámetros.
+**Convergencia a estado límite**. Para determinar la convergencia es conveniente
+realizar **más de una cadena**:  buscamos ver si realmente se ha olvidado el
+estado inicial, si las distribuciones de cada cadena son consistentes unas con
+otras, y revisar  que algunas cadenas no hayan quedado *atoradas* en regiones
+inusuales del espacio de parámetros.
 
 Inicializamos las cadenas con valores al azar en rangos
 razonables (por ejemplo simulando de la inicial):
@@ -1550,7 +1551,7 @@ ggplot(sims_tbl, aes(x = iter_num, y = sigma, colour = factor(cadena))) +
 ```
 
 Y este es un ejemplo donde claramente las cadenas **no** han alcanzado
-un estado estable: tienen muy distintas medias y varianzas, por ejemplo.
+un estado estable: tienen muy distintas medias y varianzas. Por ejemplo:
 
 
 ```{r}
@@ -1564,7 +1565,7 @@ ggplot(sims_tbl, aes(x = iter_num, y = sigma, colour = factor(cadena))) +
   geom_line()
 ```
 
-Y este resultado se ve mejor. La parte *transiente* hacia las zonas
+Y este resultado se ve mejor. La parte *transición* hacia las zonas
 de alta probabilidad pasa antes de unas 1000 iteraciones. Podemos
 hacer más simulaciones, o eliminar como *burn-in* las primiras iteraciones:
 
@@ -1609,14 +1610,12 @@ $$\hat{R} \approx \sqrt{\frac{\hat{V}}{W}}$$
 
 donde $B$ es la varianza entre las cadenas, $W$ es la varianza dentro de las cadenas 
 
-$$B = \frac{N}{M-1}\sum_m (\hat{\theta_m} - \hat{\theta})^2$$
-$$W = \frac{1}{M}\sum_m \hat{\sigma_m}^2$$
+$$B = \frac{N}{M-1}\sum_m (\hat{\theta}_m - \hat{\theta})^2$$
+$$W = \frac{1}{M}\sum_m \hat{\sigma}_m^2$$
 
 Y $\hat{V}$ es una estimación del varianza de posterior de $\theta$:
 
 $$\hat{V} = \frac{N-1}{N}W + \frac{M+1}{MN}B$$
-
-
 #### Ejemplo {-}
 En nuestro ejemplo anterior, tenemos
 ```{r}
