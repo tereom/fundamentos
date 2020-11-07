@@ -9,7 +9,7 @@ theme_set(theme_minimal())
 ```
 
 Para esta sección seguiremos principalmente @Kruschke. Adicionalmente
-puedes ver la sección correspondiente de @Chihara. 
+puedes ver la sección correspondiente de @Chihara.
 
 En las secciones anteriores estudiamos el método de máxima verosimilitud y
 métodos de remuestreo. Esto lo hemos hecho para estimar parámetros, y
@@ -17,7 +17,7 @@ cuantificar la incertidumbre qué tenemos acerca de valores poblacionales. La
 inferencia bayesiana tiene objetivos similares.
 
 - Igual que en máxima verosimilitud, la inferencia bayesiana comienza con
-modelos probabilísticos y observaciones. 
+modelos probabilísticos y observaciones.
 - En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada
 para incorporar información previa o de expertos que tengamos acerca de los
 parámetros de interés.
@@ -41,13 +41,13 @@ cargada a sol o la moneda cargada a águila.
 En este caso, tenemos dos variables: $X$, que cuenta el número
 de soles obtenidos en el experimento aleatorio, y $\theta$, que da la probabilidad
 de que un volado resulte en sol (por ejemplo, si la moneda es justa
-entonces $\theta = 0.5$). 
+entonces $\theta = 0.5$).
 
-¿Qué cantidades podríamos usar para evaluar 
+¿Qué cantidades podríamos usar para evaluar
 qué moneda es la que estamos usando? Si hacemos el experimento,
 y tiramos la moneda 2 veces, podríamos considerar la probabilidad
 $$P(\theta = 0.4 | X = x)$$
-donde $x$ es el número de soles que obtuvimos en el experimento. Esta es la probabilidad 
+donde $x$ es el número de soles que obtuvimos en el experimento. Esta es la probabilidad
 condicional de que estemos tirando la moneda con probabilidad de sol 2/5 dado
 que observamos $x$ soles. Por ejemplo, si tiramos 2 soles, deberíamos calcular
 $$P(\theta=0.4|X=2).$$
@@ -71,31 +71,31 @@ se escogió la moneda, o qué sabemos acerca de las monedas que se usan para est
 experimento. Supongamos que en este caso, nos dicen que la moneda se escoge al
 azar de una bolsa donde hay una proporción similar de los dos tipos de moneda
 (0.4 ó 0.6). Es decir el espacio parametral es $\Theta = \{0.4, 0.6\},$  y las
-probabilidades asociadas a cada posibilidad son las mismas. Es decir, tenemos 
+probabilidades asociadas a cada posibilidad son las mismas. Es decir, tenemos
 $$P(\theta = 0.4) = P(\theta = 0.6) =0.5,$$
 que representa la probabilidad de escoger de manera aleatoria la moneda con
-una carga en particular. 
+una carga en particular.
 
 Ahora queremos calcular $P(X=2)$, pero con el trabajo que hicimos esto es fácil.
 Pues requiere usar reglas de probabilidad usuales para hacerlo. Podemos utilizar
 probabilidad total
-\begin{align} 
+\begin{align}
 P(X) &= \sum_{\theta \in \Theta} P(X, \theta)\\
 &= \sum_{\theta \in \Theta} P(X\, |\, \theta) P(\theta),
 \end{align}
 lo cual en nuestro ejemplo se traduce en escribir
 
 $$ P(X=2) = P(X=2|\theta = 0.4)P(\theta = 0.4) + P(X=2|\theta=0.6)P(\theta =0.6),$$
-por lo que obtenemos 
+por lo que obtenemos
 $$P(X=2) = 0.16(0.5) + 0.36(0.5) = 0.26.$$
 
-Finalmente la probabilidad de haber escogido la moneda con carga $2/5$ dado que 
+Finalmente la probabilidad de haber escogido la moneda con carga $2/5$ dado que
 observamos dos soles en el lanzamiento es
 
 $$P(\theta=0.4|X=2) = \frac{0.16(0.5)}{0.26} \approx  0.31.$$
 
 Es decir, la **probabilidad posterior** de que estemos tirando la moneda $2/5$
-baja de 0.5 (nuestra información inicial) a 0.31. 
+baja de 0.5 (nuestra información inicial) a 0.31.
 
 Este es un ejemplo completo, aunque muy simple, de inferencia bayesiana. La
 estrategia de **inferencia bayesiana implica tomar decisiones basadas en las
@@ -137,7 +137,7 @@ pues nunca consideramos el parámetro desconocido como una cantidad aleatoria.
 #### Observación 1 {-}
 
 Nótese el factor $P(X=2)$ en la probabilidad posterior puede entenderse como un
-factor de normalización. Notemos que los denominadores en la distribución 
+factor de normalización. Notemos que los denominadores en la distribución
 posterior son
 $$P(X=2 | \theta = 0.4) P(\theta =0.4) = 0.16(0.5) = 0.08,$$
 y
@@ -151,9 +151,9 @@ entre su suma) obtenemos las probabilidades.
 La nomenclatura que usamos es la siguiente:
 
 - Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimilitud*,
-o modelo de los datos. 
+o modelo de los datos.
 - A $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
-- La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
+- La distribución que usamos para hacer inferencia $P(\theta|X)$ es la
 distribución *final* o *posterior.*
 
 Para utilizar inferencia bayesiana, hay que hacer supuestos para definir las
@@ -162,7 +162,7 @@ enfoques como máxima verosimlitud usual.
 
 #### Observación 3 {-}
 
-¿Cómo decidimos las probabilidades iniciales, por ejemplo $P(\theta=0.4)$ ? 
+¿Cómo decidimos las probabilidades iniciales, por ejemplo $P(\theta=0.4)$ ?
 
 Quizá es un supuesto y no tenemos razón para pensar que se hace de otra manera.
 O quizá conocemos el mecanismo concreto con el que se selecciona la moneda.
@@ -179,7 +179,7 @@ es necesario checar que nuestro modelo ajusta razonablemente a los datos.
 
 Cambia distintos parámetros del número de soles observados, las probabilidades
 de sol de las monedas, y las probabilidades iniciales de selección de las
-monedas. 
+monedas.
 
 ```{r}
 n_volados <- 2
@@ -187,7 +187,7 @@ n_volados <- 2
 theta = c(0.4, 0.6)
 # probabilidades iniciales
 probs_inicial <- tibble(moneda = c(1, 2),
-                        theta = theta, 
+                        theta = theta,
                         prob_inicial = c(0.5, 0.5))
 probs_inicial
 # verosimilitud
@@ -201,15 +201,15 @@ crear_verosim <- function(no_soles){
 # evaluar verosimilitud
 verosim <- crear_verosim(2)
 # ahora usamos regla de bayes para hacer tabla de probabilidades
-tabla_inferencia <- probs_inicial %>% 
-  mutate(verosimilitud = map_dbl(theta, verosim)) %>% 
-  mutate(inicial_x_verosim = prob_inicial * verosimilitud) %>% 
+tabla_inferencia <- probs_inicial %>%
+  mutate(verosimilitud = map_dbl(theta, verosim)) %>%
+  mutate(inicial_x_verosim = prob_inicial * verosimilitud) %>%
   # normalizar
   mutate(prob_posterior = inicial_x_verosim / sum(inicial_x_verosim))
 
-tabla_inferencia %>% 
-  mutate(moneda_obs = moneda) %>% 
-  select(moneda_obs, theta, prob_inicial, verosimilitud, prob_posterior) 
+tabla_inferencia %>%
+  mutate(moneda_obs = moneda) %>%
+  select(moneda_obs, theta, prob_inicial, verosimilitud, prob_posterior)
 ```
 
 ```{block, type='ejercicio'}
@@ -219,11 +219,11 @@ posteriores de cada moneda?
 - Incrementa el número de volados, por ejemplo a 10. ¿Qué pasa si observaste
 8 soles, por ejemplo? ¿Y si observaste 0?
 - ¿Qué pasa si cambias las probabilidades iniciales (por ejemplo incrementas
-la probabilidad inicial de la moneda 1 a 0.9)? 
+la probabilidad inicial de la moneda 1 a 0.9)?
 
 ```
 
-Justifica las siguientes aseveraciones (para este ejemplo):  
+Justifica las siguientes aseveraciones (para este ejemplo):
 
 ```{block, type='ejercicio'}
 
@@ -239,17 +239,17 @@ los de la inicial.
 
 ```
 
-Ahora resumimos los elementos básicos de la inferencia bayesiana, que son 
+Ahora resumimos los elementos básicos de la inferencia bayesiana, que son
 relativamente simples:
 
 ```{block, type='mathblock'}
 **Inferencia bayesiana.** Con la notación de arriba:
 
-- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimilitud*, 
+- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimilitud*,
 proceso generador de datos o modelo de los datos.
 - El factor $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
-- La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
-distribución *final* o *posterior* 
+- La distribución que usamos para hacer inferencia $P(\theta|X)$ es la
+distribución *final* o *posterior*
 
 Hacemos inferencia usando la ecuación
 
@@ -280,8 +280,8 @@ knitr::include_graphics('images/perros.png')
 ## Ejemplo: estimando una proporción {-}
 
 Regresamos ahora a nuestro problema de estimar una proporción $\theta$ de una
-población dada usando una muestra iid $X_1,X_2,\ldots, X_n$ de variables 
-Bernoulli.  Ya sabemos calcular la 
+población dada usando una muestra iid $X_1,X_2,\ldots, X_n$ de variables
+Bernoulli.  Ya sabemos calcular la
 verosimilitud (el modelo de los datos):
 
 $$P(X_1=x_1,X_2 =x_2,\ldots, X_n=x_n|\theta) = \theta^k(1-\theta)^{n-k},$$
@@ -296,7 +296,7 @@ $$P(\theta) \propto \theta^2(1-\theta)^2.$$
 La constante de normalización es 1/30, pero no la requerimos. Podemos simular para examinar su forma:
 
 ```{r}
-sim_inicial <- tibble(theta = rbeta(10000, 3, 3))  
+sim_inicial <- tibble(theta = rbeta(10000, 3, 3))
 ggplot(sim_inicial) + geom_histogram(aes(x = theta, y = ..density..), bins = 15)
 ```
 De modo que nuestra información inicial es que la proporción puede tomar
@@ -321,7 +321,7 @@ Supongamos entonces que hicimos la prueba con $n = 30$ (número de prueba) y obs
 19 éxitos. Tendríamos entonces
 
 $$P(\theta | S_n = 19) \propto \theta^{19 + 2} (1-\theta)^{30 - 19 +2} = \theta^{21}(1-\theta)^{13}$$
- 
+
 La cantidad de la derecha, una vez que normalizemos por el número $P(X=19)$, nos
 dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos
 obtenerla usando cálculo, pero recordamos que una distribución
@@ -334,7 +334,7 @@ Concluimos entonces que la posterior tiene una distribución $\mathsf{Beta}(22,
 sim_inicial <- sim_inicial %>% mutate(dist = "inicial")
 sim_posterior <- tibble(theta = rbeta(10000, 22, 14)) %>% mutate(dist = "posterior")
 sims <- bind_rows(sim_inicial, sim_posterior)
-ggplot(sims, aes(x = theta, fill = dist)) + 
+ggplot(sims, aes(x = theta, fill = dist)) +
   geom_histogram(aes(x = theta), bins = 30, alpha = 0.5, position = "identity")
 ```
 La posterior nos dice cuáles son las *posibilidades* de dónde puede estar
@@ -346,7 +346,7 @@ Podemos resumir de varias maneras. Por ejemplo, si queremos un estimador puntual
 usamos la media posterior:
 
 ```{r}
-sims %>% group_by(dist) %>% 
+sims %>% group_by(dist) %>%
   summarise(theta_hat = mean(theta) %>% round(3))
 ```
 Nota que el estimador de máxima verosimilitud es $\hat{p} = 19/30 = 0.63$, que
@@ -357,8 +357,8 @@ suelen llamarse *intervalos de credibilidad*, por ejemplo:
 
 ```{r}
 f <- c(0.025, 0.975)
-sims %>% group_by(dist) %>% 
-  summarise(cuantiles = quantile(theta, f) %>% round(2), f = f) %>% 
+sims %>% group_by(dist) %>%
+  summarise(cuantiles = quantile(theta, f) %>% round(2), f = f) %>%
   pivot_wider(names_from = f, values_from = cuantiles)
 ```
 El segundo renglón nos da un intervalo posterior para $\theta$ de *credibilidad*
@@ -385,7 +385,7 @@ $a/(a+b)$, de modo que nuestra media posterior es
 $$\hat{\mu} = (19 + 2)/(30 + 4) = 21/34 = 0.617 $$
 que podemos interpretar como sigue: para calcular la media posterior, a nuestras
 $n$ pruebas iniciales agregamos
-4 pruebas adicionales fijas, con 2 éxitos y 2 fracasos, y calculamos la proporción 
+4 pruebas adicionales fijas, con 2 éxitos y 2 fracasos, y calculamos la proporción
 usual de éxitos.
 
 ```{block, type='ejercicio'}
@@ -422,7 +422,7 @@ Por la forma que tiene la verosimilitud, podemos intentar una distribución Pare
 que tiene la forma
 
 $$P(\theta) = \frac{\alpha \theta_0^\alpha}{\theta^{\alpha + 1}}$$
-con soporte en $[\theta_0,\infty]$. Tenemos que escoger entonces el mínimo $\theta_0$ y 
+con soporte en $[\theta_0,\infty]$. Tenemos que escoger entonces el mínimo $\theta_0$ y
 el parámetro $\alpha$. En primer lugar, como sabemos que es una lotería nacional,
 creemos que no puede haber menos de unos 300 mil números, así que $\theta_0 = 300$.
 La función acumulada de la pareto es $1- (300/\theta)^\alpha$, así que el cuantil 99% es
@@ -445,10 +445,10 @@ muestra de números:
 
 
 ```{r}
-loteria_tbl <- read_csv("data/nums_loteria_avion.csv", col_names = c("id", "numero")) %>% 
+loteria_tbl <- read_csv("data/nums_loteria_avion.csv", col_names = c("id", "numero")) %>%
   mutate(numero = as.integer(numero))
 set.seed(334)
-muestra_loteria <- sample_n(loteria_tbl, 25) %>% 
+muestra_loteria <- sample_n(loteria_tbl, 25) %>%
   mutate(numero = numero/1000)
 muestra_loteria %>% as.data.frame %>% head
 ```
@@ -475,20 +475,20 @@ Y con los datos de la muestra, simulamos de la posterior:
 
 ```{r}
 sims_pareto_posterior <- tibble(
-  theta = rpareto(20000, 
-                  max(c(300, muestra_loteria$numero)), 
+  theta = rpareto(20000,
+                  max(c(300, muestra_loteria$numero)),
                   nrow(muestra_loteria) + 1.1),
   dist = "posterior")
 sims_theta <- bind_rows(sims_pareto_inicial, sims_pareto_posterior)
-ggplot(sims_theta) + 
-  geom_histogram(aes(x = theta, fill = dist), 
-                 bins = 70, alpha = 0.5, position = "identity", 
+ggplot(sims_theta) +
+  geom_histogram(aes(x = theta, fill = dist),
+                 bins = 70, alpha = 0.5, position = "identity",
                  boundary = max(muestra_loteria$numero))  +
   xlim(0, 15000) + scale_y_sqrt() +
   geom_rug(data = muestra_loteria, aes(x = numero))
 ```
 Nótese que cortamos algunos valores de la inicial en la cola derecha: un defecto
-de esta distribución inicial, con una cola tan larga a la derecha, es que 
+de esta distribución inicial, con una cola tan larga a la derecha, es que
 pone cierto peso en valores que son poco creíbles y la vuelve poco apropiada para
 este problema. Regresamos más adelante a este problema.
 
@@ -497,8 +497,8 @@ obtenemos el intervalo
 
 ```{r}
 f <- c(0.025, 0.5, 0.975)
-sims_theta %>% group_by(dist) %>% 
-  summarise(cuantiles = quantile(theta, f) %>% round(2), f = f) %>% 
+sims_theta %>% group_by(dist) %>%
+  summarise(cuantiles = quantile(theta, f) %>% round(2), f = f) %>%
   pivot_wider(names_from = f, values_from = cuantiles)
 ```
 Estimamos entre 5.8 millones y 6.7 millones de boletos. El máximo en la muestra
@@ -509,7 +509,7 @@ max(muestra_loteria$numero)
 
 Escoger la distribución pareto como inicial es conveniente y nos permitió
 resolver el problema sin dificultad, pero por su forma vemos que no
-necesariamente es apropiada para el problema por lo que señalamos arriba. 
+necesariamente es apropiada para el problema por lo que señalamos arriba.
 Nos gustaría, por ejemplo, poner una inicial como
 la siguiente
 
@@ -535,16 +535,16 @@ y los problemas que queremos resolver no viven en un vacío donde podemos creer
 que la estatura de las personas, por ejemplo, puede variar de 0 a mil kilómetros,
 el número de boletos de una lotería puede ir de 2 o 3 boletos o también quizá 500 millones
 de boletos, o la proporción de personas infectadas de una enfermedad puede ser de unos cuantos
-hasta miles de millones. 
+hasta miles de millones.
 
 - En todos estos casos tenemos cierta información
 inicial que podemos usar para informar nuestras estimaciones. Esta información debe
 usarse.
 - Antes de tener datos, las probabilidades iniciales deben ser examinadas
 en términos del conocimiento de expertos.
-- Las probabilidades iniciales son supuestos que hacemos acerca del problema de 
-interés, y también están sujetas a críticas y confrontación con datos. 
- 
+- Las probabilidades iniciales son supuestos que hacemos acerca del problema de
+interés, y también están sujetas a críticas y confrontación con datos.
+
 ## Análisis conjugado {-}
 
 Los dos ejemplos que hemos visto arriba son ejemplos de análisis conjugado:
@@ -557,10 +557,10 @@ donde $S_n = X_1 + X_2 +\cdots +X_n$.
 
 Y más en general:
 
-- (Beta-binomial) Si las observaciones $X_i, i=1,2,\ldots, m$ 
+- (Beta-binomial) Si las observaciones $X_i, i=1,2,\ldots, m$
 son $\mathsf{Binomial}(n_i, p)$ ($n_i$'s fijas) independientes,
  queremos estimar $p$, y tomamos como distribución inicial para $p$ una $\mathsf{Beta}(a,b)$,
-entonces la posterior para $p$ cuando $S_m=k$ es $\mathsf{Beta}(k + a, n - k + b)$, 
+entonces la posterior para $p$ cuando $S_m=k$ es $\mathsf{Beta}(k + a, n - k + b)$,
 donde $S_m = X_1 + X_2 +\cdots +X_m$ y $n= n_1+n_2+\cdots+n_m$
 
 También aplicamos:
@@ -580,7 +580,7 @@ Otro ejemplo típico es el modelo normal-normal:
 - (Normal-normal) Si $X_i\sim \mathsf{N}(\mu,\sigma)$, con $\sigma$ conocida, y tomamos
 como distribución inicial para $\mu \sim \mathsf{N}(\mu_0,\sigma_0)$, y definimos
 la *precisión* $\tau$ como el inverso de la varianza $\sigma^2$, entonces la posterior
-de $\mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
+de $\mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$,
 y precisión $\tau_0 + n\tau$, donde $\lambda = \frac{n\tau}{\tau_0 + n\tau}$
 
 ```{block, type='ejercicio'}
@@ -598,14 +598,14 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
   - $p(\mu, \sigma) = p(\mu|\sigma)p(\sigma)$
 
 - Entonces la posterior es:
-  - $\tau|x$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$, 
+  - $\tau|x$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$,
   $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$
   - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $ \sigma^2/({n_0 +n})$.
-  
+
   - $p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)$
 
 
-**Observaciones** 
+**Observaciones**
 
 1. Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
 el objeto de interés es la **posterior conjunta** de los parámetros $p(\theta_1,\theta_2,\cdots, \theta_p|x)$.
@@ -618,11 +618,11 @@ de la conjunta.
 un valor "típico" a priori para la varianza poblacional, y $a$ indica qué tan seguros estamos de
 este valor típico.
 
-3. Nótese que para que funcionen las fórmulas de la manera más simple, 
+3. Nótese que para que funcionen las fórmulas de la manera más simple,
 escogimos una dependencia a priori
 entre la media y la precisión: $\tau = \sigma^{-2}$ indica la escala de variabilidad que hay en la
 población, la incial de la media tiene varianza $\sigma^2/n_0$. Si la escala
-de variabilidad de la población es más grande, tenemos más incertidumbre acerca de la localización 
+de variabilidad de la población es más grande, tenemos más incertidumbre acerca de la localización
 de la media.
 
 4. Aunque esto tiene sentido en algunas aplicaciones, y por convenviencia usamos esta familia
@@ -633,11 +633,11 @@ no son tratables con análisis conjugado (veremos más adelante cómo tratarlos 
 
 
 ### Ejemplo {-}
-Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor con 
+Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor con
 una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de forma que $X_i\sim \mathsf{N}(\mu, \sigma^2)$.
 
 Una vez decidido el modelo, tenemos que poner distribución inicial para los parámetros
-$(\mu, \sigma^2)$. 
+$(\mu, \sigma^2)$.
 
 Comenzamos con $\sigma^2$. Como está el modelo,
 esta inicial debe estar dada para la precisión $\tau$, pero podemos simular para ver cómo
@@ -669,13 +669,13 @@ es menor a 4 centímetros, y también creemos que es poco creíble la desviació
 estándar sea de más de 13 centímetros.
 
 
-Comenzamos con $\mu$. Sabemos, por ejemplo, que 
+Comenzamos con $\mu$. Sabemos, por ejemplo, que
 con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Podemos investigar: la media
-nacional en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82. 
-Esto es *variabilidad en la población*: debe ser muy poco probable, por ejemplo, que la 
+nacional en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82.
+Esto es *variabilidad en la población*: debe ser muy poco probable, por ejemplo, que la
 media de tenores sea 1.82
 Quizá los
-cantantes tienden a ser un poco más altos o bajos que la población general, así que 
+cantantes tienden a ser un poco más altos o bajos que la población general, así que
 podríamos agregar algo de dispersión.
 
 Podemos establecer parámetros y simular de la marginal a partir
@@ -711,8 +711,8 @@ simular_normal_invgamma <- function(n, pars){
   rnorm(n, mu, sigma)
 }
 set.seed(3461)
-sims_tbl <- tibble(rep = 1:20) %>% 
-  mutate(estatura = map(rep, ~ simular_normal_invgamma(500, c(mu_0, n_0, a, b)))) %>% 
+sims_tbl <- tibble(rep = 1:20) %>%
+  mutate(estatura = map(rep, ~ simular_normal_invgamma(500, c(mu_0, n_0, a, b)))) %>%
   unnest(cols = c(estatura))
 ggplot(sims_tbl, aes(x = estatura)) + geom_histogram() +
   facet_wrap(~ rep) +
@@ -720,7 +720,7 @@ ggplot(sims_tbl, aes(x = estatura)) + geom_histogram() +
 ```
 
 Pusimos líneas de referencia en 150 y 180. Vemos que nuestras iniciales no producen
-simulaciones totalmente fuera del contexto, y parecen cubrir apropiadamente el 
+simulaciones totalmente fuera del contexto, y parecen cubrir apropiadamente el
 espacio de posiblidades para estaturas de los tenores. Quizá hay algunas realizaciones
 poco creíbles, pero no extremadamente. En este punto, podemos regresar y ajustar
 la inicial para $\sigma$, que parece tomar valores demasiado grandes (produciendo
@@ -731,11 +731,11 @@ Ahora podemos usar los datos para calcular nuestras posteriores.
 
 ```{r}
 set.seed(3413)
-cantantes <- lattice::singer %>% 
-  mutate(estatura_cm = round(2.54 * height)) %>% 
-  filter(str_detect(voice.part, "Tenor")) %>% 
+cantantes <- lattice::singer %>%
+  mutate(estatura_cm = round(2.54 * height)) %>%
+  filter(str_detect(voice.part, "Tenor")) %>%
   sample_n(20)
-cantantes 
+cantantes
 ```
 
 Los cálculos son un poco tediosos, pero podemos construir una función apropiada:
@@ -772,32 +772,32 @@ sim_params <- function(m, pars){
   a <- pars[3]
   b <- pars[4]
   # simular sigmas
-  sims <- tibble(tau = rgamma(m, a, b)) %>% 
+  sims <- tibble(tau = rgamma(m, a, b)) %>%
     mutate(sigma = 1 / sqrt(tau))
   # simular mu
   sims <- sims %>% mutate(mu = rnorm(m, mu_0, sigma / sqrt(n_0)))
   sims
 }
-sims_inicial <- sim_params(5000, c(mu_0, n_0, a, b)) %>% 
+sims_inicial <- sim_params(5000, c(mu_0, n_0, a, b)) %>%
   mutate(dist = "inicial")
-sims_posterior <- sim_params(5000, pars_posterior) %>% 
+sims_posterior <- sim_params(5000, pars_posterior) %>%
   mutate(dist = "posterior")
 sims <- bind_rows(sims_inicial, sims_posterior)
 ggplot(sims, aes(x = mu, y = sigma, colour = dist)) +
-  geom_point() 
+  geom_point()
 ```
 
 Y vemos que nuestra posterior es consistente con la información inicial
 que usamos, hemos aprendido considerablemente de la muestra. La posterior se
-ve como sigue. Hemos marcado también las medias posteriores de cada parámetro: 
+ve como sigue. Hemos marcado también las medias posteriores de cada parámetro:
 media y desviación estándar.
 
 ```{r}
 medias_post <- sims %>% filter(dist == "posterior") %>%
-  select(-dist) %>% 
+  select(-dist) %>%
   summarise(across(everything(), mean))
-ggplot(sims %>% filter(dist == "posterior"), 
-    aes(x = mu, y = sigma)) + 
+ggplot(sims %>% filter(dist == "posterior"),
+    aes(x = mu, y = sigma)) +
   geom_point(colour = "#00BFC4") +
   geom_point(data = medias_post, size = 5, colour = "black") +
   coord_equal()
@@ -807,10 +807,10 @@ haciendo intervalos de percentiles:
 
 ```{r}
 f <- c(0.05, 0.5, 0.95)
-sims %>%  
-  pivot_longer(cols = mu:sigma, names_to = "parametro") %>% 
-  group_by(dist, parametro) %>% 
-  summarise(cuantil = quantile(value, f) %>% round(1), f= f) %>% 
+sims %>%
+  pivot_longer(cols = mu:sigma, names_to = "parametro") %>%
+  group_by(dist, parametro) %>%
+  summarise(cuantil = quantile(value, f) %>% round(1), f= f) %>%
   pivot_wider(names_from = f, values_from = cuantil)
 ```
 
@@ -833,18 +833,18 @@ usando la distribución predictiva posterior.
 Como vimos en los ejemplos, en general un análisis de datos bayesiano sigue los
 siguientes pasos:
 
-- Identificar los datos releventes a nuestra pregunta de investigación, el tipo 
+- Identificar los datos releventes a nuestra pregunta de investigación, el tipo
 de datos que vamos a describir, que variables queremos estimar.
 
-- Definir el modelo descriptivo para los datos. La forma matemática y los 
+- Definir el modelo descriptivo para los datos. La forma matemática y los
 parámetros deben ser apropiados para los objetivos del análisis.
 
 - Especificar la distribución inicial de los parámetros.
 
-- Utilizar inferencia bayesiana para reubicar la credibilidad a lo largo de 
+- Utilizar inferencia bayesiana para reubicar la credibilidad a lo largo de
 los posibles valores de los parámetros.
 
-- Verificar que la distribución posterior replique los datos de manera 
+- Verificar que la distribución posterior replique los datos de manera
 razonable, de no ser el caso considerar otros modelos descriptivos para los datos.
 ```
 
@@ -856,11 +856,11 @@ No siempre es fácil elicitar probabilidades subjetivas de manera que capturemos
 el verdadero conocimiento de dominio que tenemos. Una manera clásica de hacerlo
 es con apuestas
 
-Considera una pregunta sencilla que puede afectar a un viajero: ¿Qué tanto 
+Considera una pregunta sencilla que puede afectar a un viajero: ¿Qué tanto
 crees que habrá una tormenta que ocasionará el cierre de la autopista
 México-Acapulco en el puente del $20$ de noviembre? Como respuesta debes dar
-un número entre $0$ y $1$ que refleje tus creencias. Una manera de seleccionar 
-dicho número es calibrar las creencias en relación a otros eventos cuyas 
+un número entre $0$ y $1$ que refleje tus creencias. Una manera de seleccionar
+dicho número es calibrar las creencias en relación a otros eventos cuyas
 probabilidades son claras.
 
 Como evento de comparación considera una experimento donde hay canicas en una
@@ -871,22 +871,22 @@ el siguiente par de apuestas de las cuales puedes elegir una:
 * A. Obtienes $\$1000$ si hay una tormenta que ocasiona el cierre de la autopista
 el próximo $20$ de noviembre.
 
-* B. Obtienes $\$1000$ si seleccionas una canica roja de la urna que contiene 
+* B. Obtienes $\$1000$ si seleccionas una canica roja de la urna que contiene
 $5$ canicas rojas y $5$ blancas.
 
-Si prefieres la apuesta B, quiere decir que consideras que la probabilidad de 
-tormenta es menor a $0.5$, por lo que al menos sabes que tu creencia subjetiva de 
+Si prefieres la apuesta B, quiere decir que consideras que la probabilidad de
+tormenta es menor a $0.5$, por lo que al menos sabes que tu creencia subjetiva de
 una la probabilidad de tormenta es menor a $0.5$. Podemos continuar con el proceso
 para tener una mejor estimación de la creencia subjetiva.
 
 * A. Obtienes $\$1000$ si hay una tormenta que ocasiona el cierre de la autopista
 el próximo $20$ de noviembre.
 
-* C. Obtienes $\$1000$ si seleccionas una canica roja de la urna que contiene 
+* C. Obtienes $\$1000$ si seleccionas una canica roja de la urna que contiene
 $1$ canica roja y $9$ blancas.
 
-Si ahora seleccionas la apuesta $A$, esto querría decir que consideras que la 
-probabilidad de que ocurra una tormenta es mayor a $0.10$. Si consideramos ambas 
+Si ahora seleccionas la apuesta $A$, esto querría decir que consideras que la
+probabilidad de que ocurra una tormenta es mayor a $0.10$. Si consideramos ambas
 comparaciones tenemos que tu probabilidad subjetiva se ubica entre $0.1$ y $0.5$.
 
 ## Verificación predictiva posterior {-}
@@ -904,15 +904,15 @@ Supongamos que tenemos la posterior $p(\theta | x)$. Podemos generar una nueva
 
 ```{block, type='mathblock'}
 La distribución **predictiva posterior** genera nuevas observaciones a partir de
-la información observada. La denotamos como $p(\tilde{x}|x)$. 
+la información observada. La denotamos como $p(\tilde{x}|x)$.
 
 Para simular de ella:
 
 - Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
 - Simulamos del modelo de las observaciones $\tilde{x} \sim p(\tilde{x}|\tilde{\theta})$.
 - Repetimos el proceso hasta obtener una muestra grande.
-- Usamos este método para producir, por ejemplo, **intervalos de predicción** para nuevos datos. 
-  
+- Usamos este método para producir, por ejemplo, **intervalos de predicción** para nuevos datos.
+
 Si queremos una replicación de las observaciones de la predictiva posterior,
 
 - Muestreamos un valor $\tilde{\theta}$ de la posterior $p(\theta|x)$.
@@ -931,7 +931,7 @@ Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra
 Y ahora simulamos otra muestra
 
 ```{r}
-muestra_sim <- simular_normal_invgamma(20, pars_posterior) 
+muestra_sim <- simular_normal_invgamma(20, pars_posterior)
 muestra_sim %>% round(0)
 ```
 
@@ -939,12 +939,12 @@ Podemos simular varias muestras y hacer una prueba de lineup:
 
 ```{r}
 library(nullabor)
-sims_obs <- tibble(.n = 1:19) %>% 
-  mutate(estatura_cm = map(.n, ~ simular_normal_invgamma(20, pars_posterior))) %>% 
+sims_obs <- tibble(.n = 1:19) %>%
+  mutate(estatura_cm = map(.n, ~ simular_normal_invgamma(20, pars_posterior))) %>%
   unnest(estatura_cm)
 set.seed(9921)
 pos <- sample(1:20, 1)
-lineup_tbl <- lineup(true = cantantes %>% select(estatura_cm), 
+lineup_tbl <- lineup(true = cantantes %>% select(estatura_cm),
                      samples = sims_obs, pos = pos)
 ggplot(lineup_tbl, aes(x = estatura_cm)) + geom_histogram(binwidth = 2.5) +
   facet_wrap(~.sample)
@@ -954,7 +954,7 @@ Con este tipo de gráficas podemos checar desajustes potenciales de nuestro mode
 ```{block, type="ejercicio"}
 
 - ¿Puedes encontrar los datos verdaderos? ¿Cuántos seleccionaron los
-datos correctos? 
+datos correctos?
 - Prueba hacer pruebas con una gráfica de cuantiles. ¿Qué problema
 ves y cómo lo resolverías?
 
@@ -983,12 +983,12 @@ crear_sim_rep <- function(x){
   sim_rep <- function(rep){
     lambda <- rgamma(1, sum(x) + 1, n + 0.1)
     x_rep <- rpois(n, lambda)
-    tibble(rep = rep, x_rep = x_rep)  
+    tibble(rep = rep, x_rep = x_rep)
   }
 }
 sim_rep <- crear_sim_rep(x)
-lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>% 
-  bind_rows() %>% 
+lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>%
+  bind_rows() %>%
   bind_rows(tibble(rep = 6, x_rep = x))
 ggplot(lineup_tbl, aes(x = x_rep)) +
   geom_histogram(bins = 15) +
@@ -1006,12 +1006,12 @@ crear_sim_rep <- function(x){
   sim_rep <- function(rep){
     lambda <- rgamma(1, sum(x) + 1, n + 0.1)
     x_rep <- rpois(n, lambda)
-    tibble(rep = rep, x_rep = x_rep)  
+    tibble(rep = rep, x_rep = x_rep)
   }
 }
 sim_rep <- crear_sim_rep(x)
-lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>% 
-  bind_rows() %>% 
+lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>%
+  bind_rows() %>%
   bind_rows(tibble(rep = 6, x_rep = x))
 ggplot(lineup_tbl, aes(x = x_rep)) +
   geom_histogram(bins = 15) +
@@ -1041,8 +1041,8 @@ siempre, quisiéramos obtener un intervalo que exprese nuestra incertidumbre ace
 del valor que vamos a observar. Entonces haríamos:
 
 ```{r}
-sims_posterior <- sim_params(50000, pars_posterior) %>% 
-  mutate(y_pred = rnorm(n(), mu, sigma)) 
+sims_posterior <- sim_params(50000, pars_posterior) %>%
+  mutate(y_pred = rnorm(n(), mu, sigma))
 sims_posterior %>% head
 ```
 ```{r}
@@ -1097,7 +1097,7 @@ k_posterior <- nrow(muestra_loteria) + 1.1
 sims_pareto_posterior <- tibble(
   theta = rpareto(100000, lim_inf_post, k_posterior))
 # Simulamos una observación para cada una de las anteriores:
-sims_post_pred <- sims_pareto_posterior %>% 
+sims_post_pred <- sims_pareto_posterior %>%
   mutate(x_pred = map_dbl(theta, ~ runif(1, 0, .x)))
 # Graficamos
 ggplot(sims_post_pred, aes(x = x_pred)) +

@@ -57,13 +57,13 @@ es aproximadamente $\mathsf{N}(125, \hat{\textsf{ee}})$.
 estándar bajo la nula:
 
 $$W = \frac{\hat{\theta} - 125}{\hat{\textsf{ee}}} \sim \mathsf{N}(0,1)$$
-Por lo que valores muy fuera de $[-2,2]$, por ejemplo, dan evidencia
+Por lo que valores lejanos de $[-2,2]$, por ejemplo, dan evidencia
 en contra de la hipótesis nula. Como $W$ **no depende de ningún parámetro desconocido**, podemos
 usarla como distribución de referencia para comparar el valor de $W$ que obtuvimos
 en la muestra. 
 
 Si observamos para nuestra muestra un valor $W=w$ entonces, el
-valor-$p$ de esta prueba es, aproximadamente,
+valor-$p$ (dos colas) de esta prueba es, aproximadamente,
 
 
 $$\mathsf{valor-}p \approx P(|Z| > |w|) = 2(1 - \Phi(|w|))$$
@@ -71,9 +71,9 @@ donde $Z\sim \mathsf{N}(0,1)$ y $\Phi$ es su función de distribución acumulada
 
 
 **Ejemplo: media muestral**.  La media nacional de las escuelas de enlace está alrededor
-de 454 (matemáticas en 6o. grado). Tomamos una muestra de 200
+de 454 (matemáticas en 6o. grado). Tomamos una muestra de 180
 escuelas del Estado de México, y queremos saber si la media obtenida 
-es consistente o no con la media nacional. Como estamos usando como
+es consistente o no con la media nacional. Ya que estamos usando como
 estimador una media de una muestra iid, podemos estimar el error estándar
 de la media con
 
@@ -102,7 +102,7 @@ p <- 2 * (1 - pnorm(abs(w)))
 p
 ```
 y vemos que esta muestra es consistente con la media nacional. No tenemos
-evidencia en contra de que la media del estado de méxico es muy similar 
+evidencia en contra de que la media del estado de México es muy similar 
 a la nacional.
 
 ```{block, type="ejercicio"}
@@ -279,7 +279,7 @@ de que vayamos a perder en desempeño, y podriamos seleccionar el algoritmo 1.
 
 ## Datos pareados {-}
 
-Las pruebas que acabamos de para comparar medias requieren
+Las pruebas que acabamos de ver para comparar medias requieren
 poblaciones independientes. Si las dos muestras están pareadas (es decir,
 son dos mediciones en una misma muestra), podemos
 tomar considerar las diferencias $D_i = X_i - Y_i$ y utilizar la prueba para una
@@ -592,8 +592,7 @@ muestra_2 <- rnorm(120, 0.8, 0.4)
 
 Necesitamos: 1) calcular el valor de la estadística $\lambda$ de cociente
 de verosimilitudes, 2) Calcular la distribución de referencia para $\lambda$ bajo la
-hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de $\lambda$  
-en relación a la distribución de referencia.
+hipótesis nula y finalmente 3) Ver qué tan extremo es el valor obtenido de $\lambda$ en relación a la distribución de referencia.
 
 
 ```{r}
@@ -766,7 +765,7 @@ $$P(\chi^2_{q} > \lambda)$$
 **Observaciones**: 
 
 - Para hacer cálculos con la distribución $\chi$-cuadrada usamos rutinas numéricas
-(pro ejemplo la función `pchisq` en R).
+(por ejemplo la función `pchisq` en R).
 
 - Nótese que $p$ es la dimensión del espacio $\Theta$ ($p$ parámetros),
 y que $p-q$ es la dimensión del espacio $\Theta_0$ (pues $q$ parámetros están fijos),
@@ -863,11 +862,11 @@ Como dijimos, típicamente se selecciona la región de rechazo de forma
 que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada. 
 
 ```{block2, type='mathblock'}
-**Definición.$$ Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
+**Definición**. Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
 no conocemos $\theta$. Supongamos que la hipótesis nula es que $\theta = \theta_0$ (que llamamos
 una hipótesis simple).
 
-La **potencia** de una prueba con estadística $T$ y región de rechazo $R$
+La **función de potencia** de una prueba con región de rechazo $R$
 se define como la probabilidad de rechazar para cada posible valor del parámetro $\theta$ 
 $$\beta(\theta) = P_\theta (X\in R).$$
   
@@ -886,6 +885,15 @@ es decir, la probabilidad de rechazo más grande cuando la hipótesis nula se cu
 
 Decimos que una prueba tiene **nivel de significancia** de $\alpha$ si su tamaño
 es menor o igual a $\alpha$.
+
+Decimos que la **potencia de una prueba** es la probabilidad de, correctamente, rechazar la hipótesis nula cuando la alterna es verdadera:
+
+$$\beta(\theta_a) = P_{\theta_a} (X \in R).$$
+
+**Observación:** Sería deseable encontrar la prueba con mayor potencia bajo $H_a$, entre todas las pruebas con tamaño $\alpha$. Esto no es trivial y no 
+siempre existe.
+
+**Observación:** El valor $p$ es el menor tamaño con el que podemos rechazar $H_0$.
 
 **Ejemplo** (@Chihara) Supongamos que las calificaciones de Enlace de alumnos en México
 se distribuye aproximadamente como una normal con media 515 y desviación estándar
@@ -907,7 +915,7 @@ $$\beta(\mu) = P \left (\frac{\bar{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{1
 así que 
 $$\beta(\mu) = \Phi \left (\frac{505 -\mu}{130/\sqrt{100}}\right ),$$
 donde $\Phi$ es la función acumulada de la normal estándar. La gráfica
-de la potencia es entonces
+de la función potencia es entonces
 
 ```{r}
 potencia_tbl <- tibble(mu = seq(450, 550, 1)) %>% 
