@@ -16,7 +16,7 @@ métodos de remuestreo. Esto lo hemos hecho para estimar parámetros, y
 cuantificar la incertidumbre qué tenemos acerca de valores poblacionales. La
 inferencia bayesiana tiene objetivos similares.
 
-- Igual que en máxima verosimilitud, al inferencia bayesiana comienza con
+- Igual que en máxima verosimilitud, la inferencia bayesiana comienza con
 modelos probabilísticos y observaciones. 
 - En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada
 para incorporar información previa o de expertos que tengamos acerca de los
@@ -26,8 +26,7 @@ verosimilitud.
 
 El concepto probabilístico básico que utilizamos para construir estos modelos y
 la inferencia es el de probabilidad condicional: la probabilidad de que ocurran
-ciertos eventos, o de que cantidades tomen ciertos valores, dada información
-acerca del fenómeno que nos interesa.
+ciertos eventos dada la información disponible del fenómeno que nos interesa.
 
 ## Un primer ejemplo completo de inferencia bayesiana {-}
 
@@ -58,42 +57,49 @@ $$P(\theta=0.4|X=2).$$
 Usando reglas de probabildad (regla de Bayes en particular), podríamos calcular
 $$P(\theta=0.4|X=2) = \frac{P(X=2 | \theta = 0.4) P(\theta =0.4)}{P(X=2)}$$
 
-Nota que en el numerador uno de los factores ($P(X=2 | \theta = 0.4)$) es la
-verosimilitud. Así que primero necesitamos la verosimlitud:
+Nota que en el numerador uno de los factores, $P(X=2 | \theta = 0.4),$ es la
+verosimilitud. Así que primero necesitamos la verosimilitud:
 $$P(X=2|\theta = 0.4) = (0.4)^2 = 0.16.$$
 
 La novedad es que ahora tenemos que considerar la probabilidad $P(\theta =
 0.4)$. Esta cantidad no la habíamos encontrado antes. Tenemos que pensar
 entonces que este parámetro es una *cantidad aleatoria*, y puede tomar dos
-valores $\theta=0.4$ o $\theta = 0.6$.
+valores $\theta=0.4$ ó $\theta = 0.6$.
 
-Considerar esta cantidad como aleatoria requiere pensar, en este caso,
-en cómo se escogió la moneda, o qué sabemos acerca de las monedas que se
-usan para este experimento. Supongamos que en este caso, nos dicen adicionalmente
-que la moneda se escoge al azar de una bolsa donde hay una proporción similar
-de los dos tipos de moneda (0.4 o 0.6).
-
-En este caso podemos poner
-$$P(\theta = 0.4)=0.5$$ 
+Considerar esta cantidad como aleatoria requiere pensar, en este caso, en cómo
+se escogió la moneda, o qué sabemos acerca de las monedas que se usan para este
+experimento. Supongamos que en este caso, nos dicen que la moneda se escoge al
+azar de una bolsa donde hay una proporción similar de los dos tipos de moneda
+(0.4 ó 0.6). Es decir el espacio parametral es $\Theta = \{0.4, 0.6\},$  y las
+probabilidades asociadas a cada posibilidad son las mismas. Es decir, tenemos 
+$$P(\theta = 0.4) = P(\theta = 0.6) =0.5,$$
+que representa la probabilidad de escoger de manera aleatoria la moneda con
+una carga en particular. 
 
 Ahora queremos calcular $P(X=2)$, pero con el trabajo que hicimos esto es fácil.
-Pues requiere usar reglas de probabilidad usuales para hacerlo. Si usamos
+Pues requiere usar reglas de probabilidad usuales para hacerlo. Podemos utilizar
 probabilidad total
-$$ P(X=2) = P(X=2|\theta = 0.4)P(\theta = 0.4) +
-P(X=2|\theta=0.6)P(\theta =0.6),$$
-así que
+\begin{align} 
+P(X) &= \sum_{\theta \in \Theta} P(X, \theta)\\
+&= \sum_{\theta \in \Theta} P(X\, |\, \theta) P(\theta),
+\end{align}
+lo cual en nuestro ejemplo se traduce en escribir
+
+$$ P(X=2) = P(X=2|\theta = 0.4)P(\theta = 0.4) + P(X=2|\theta=0.6)P(\theta =0.6),$$
+por lo que obtenemos 
 $$P(X=2) = 0.16(0.5) + 0.36(0.5) = 0.26.$$
 
-y finalmente obtenemos:
+Finalmente la probabilidad de haber escogido la moneda con carga $2/5$ dado que 
+observamos dos soles en el lanzamiento es
 
-$$P(\theta=0.4|X=2) = \frac{0.16(0.5)}{0.26} \approx  0.31$$
+$$P(\theta=0.4|X=2) = \frac{0.16(0.5)}{0.26} \approx  0.31.$$
 
-Es decir, la **probabilidad posterior** de que estemos tirando la moneda 2/5
+Es decir, la **probabilidad posterior** de que estemos tirando la moneda $2/5$
 baja de 0.5 (nuestra información inicial) a 0.31. 
 
-Este es un ejemplo completo, aunque muy simple, de inferencia bayesiana.
-Hacemos **inferencia bayesiana cuando tomamos decisiones basadas
-en las probabilidades posteriores**.
+Este es un ejemplo completo, aunque muy simple, de inferencia bayesiana. La
+estrategia de **inferencia bayesiana implica tomar decisiones basadas en las
+probabilidades posteriores.**
 
 ```{block, type='ejercicio'}
 ¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿Cómo
@@ -104,30 +110,38 @@ Finalmente, podríamos hacer predicciones usando la **posterior predictiva**.
 Si ${X}_{nv}$ es una nueva tirada adicional de la moneda que estamos usando, nos
 interesaría saber:
 $$P({X}_{nv}=\mathsf{sol}\, | \, X=2)$$
-Que podemos calcular observando que $P({X}_{nv}|X=2, \theta)$ es una variable
-Bernoulli con probabilidad $\theta$, que puede valer 0.4 o 0.6. Como tenemos las
-probabilidades posteriores $P(\theta|X=2)$ podemos usar probabilidad total, todo
-condicionado a $X=2$:
+Notemos que un volado adicional es un resultado binario. Por lo que podemos
+calcular observando que $P({X}_{nv}|X=2, \theta)$ es una variable Bernoulli con
+probabilidad $\theta$, que puede valer 0.4 ó 0.6. Como tenemos las
+probabilidades posteriores $P(\theta|X=2)$ podemos usar probabilidad total,
+condicionado en $X=2$:
+\begin{align*}
+P({X}_{nv}=\mathsf{sol}\, | \, X=2) & = \sum_{\theta \in \Theta} P({X}_{nv}=\mathsf{sol}, \theta \, | \, X=2) & \text{(probabilidad total)}\\
+&= \sum_{\theta \in \Theta} P({X}_{nv}=\mathsf{sol}\, | \theta , X=2) P(\theta \, | \, X=2) & \text{(probabilidad condicional)}\\
+&= \sum_{\theta \in \Theta} P({X}_{nv}=\mathsf{sol}\, | \theta ) P(\theta \, | \, X=2), & \text{(independencia condicional)}
+\end{align*}
 
-$$P(X_{nv}=\mathsf{sol}|\theta=0.4, X=2)P(\theta=0.4|X=2) +P(X_{nv}=\mathsf{sol}|\theta = 0.6, X=2)P(\theta =0.6|X=2)$$
+lo que nos da el siguiente cálculo
+$$P(X_{nv}=\mathsf{sol}\, |\, \theta=0.4) \,  P(\theta=0.4|X=2) \,  +\, P(X_{nv}=\mathsf{sol}|\theta = 0.6) \, P(\theta =0.6|X=2)$$
 Es decir, promediamos ponderando con las probabilidades posteriores.
-Obtendríamos entonces
-$$P(X_{nv} = \mathsf{sol}|X=2) =  0.4 ( 0.31) + 0.6 (0.69) = 0.538$$
+Por lo tanto obtenemos
+$$P(X_{nv} = \mathsf{sol}|X=2) =  0.4 ( 0.31) + 0.6 (0.69) = 0.538.$$
 
 #### Observación 0 {-}
 
 Nótese que en contraste con máxima verosimilitud, en este ejemplo *cuantificamos
-con probabilidad los parámetros que no conocemos*. En máxima verosimilitud esta
-probabilidad no tiene mucho sentido, pues nunca consideramos el parámetro
-desconocido como una cantidad aleatoria.
+con probabilidad condicional la incertidumbre de los parámetros que no
+conocemos*. En máxima verosimilitud esta probabilidad no tiene mucho sentido,
+pues nunca consideramos el parámetro desconocido como una cantidad aleatoria.
 
 #### Observación 1 {-}
 
-Nótese $P(X=2)$ puede entenderse como un factor de normalización. La razón es
-que 
-$$P(X=2 | \theta = 0.4) P(\theta =0.4) = 0.16(0.5) = 0.08$$
+Nótese el factor $P(X=2)$ en la probabilidad posterior puede entenderse como un
+factor de normalización. Notemos que los denominadores en la distribución 
+posterior son
+$$P(X=2 | \theta = 0.4) P(\theta =0.4) = 0.16(0.5) = 0.08,$$
 y
-$$P(X=2 | \theta = 0.6) P(\theta =0.6) = 0.36(0.5) = 0.18$$
+$$P(X=2 | \theta = 0.6) P(\theta =0.6) = 0.36(0.5) = 0.18.$$
 Las probabilidades posteriores son proporcionales a estas dos cantidades,
 y como deben sumar uno, entonces normalizando estos dos números (dividiendo
 entre su suma) obtenemos las probabilidades.
@@ -136,11 +150,11 @@ entre su suma) obtenemos las probabilidades.
 
 La nomenclatura que usamos es la siguiente:
 
-- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimitud*,
-o modelo de los datos.
-- A los datos $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
+- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimilitud*,
+o modelo de los datos. 
+- A $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
 - La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
-distribución *final* o *posterior* .
+distribución *final* o *posterior.*
 
 Para utilizar inferencia bayesiana, hay que hacer supuestos para definir las
 primeras dos partes del modelo. La parte de iniciales o previas está ausente de
@@ -148,7 +162,7 @@ enfoques como máxima verosimlitud usual.
 
 #### Observación 3 {-}
 
-¿Cómo decidimos las probabilidades iniciales $P(\theta=0.4)$ ? 
+¿Cómo decidimos las probabilidades iniciales, por ejemplo $P(\theta=0.4)$ ? 
 
 Quizá es un supuesto y no tenemos razón para pensar que se hace de otra manera.
 O quizá conocemos el mecanismo concreto con el que se selecciona la moneda.
@@ -231,7 +245,7 @@ relativamente simples:
 ```{block, type='mathblock'}
 **Inferencia bayesiana.** Con la notación de arriba:
 
-- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimitud*, 
+- Como $X$ son los datos observados, llamamos a $P(X|\theta)$ la *verosimilitud*, 
 proceso generador de datos o modelo de los datos.
 - El factor $P(\theta)$ le llamamos la distribución *inicial* o *previa*.
 - La distribución que usamos para hacer inferencia $P(\theta|X)$ es la 
@@ -258,7 +272,7 @@ información inicial que tenemos acerca de los parámetros con la información e
 la muestra acerca de los parámetros (verosimilitud). Podemos ilustrar como
 sigue:
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, out.width= "70%"}
 knitr::include_graphics('images/perros.png')
 ```
 
@@ -821,23 +835,20 @@ usando la distribución predictiva posterior.
 Como vimos en los ejemplos, en general un análisis de datos bayesiano sigue los
 siguientes pasos:
 
-1. Identificar los datos releventes a nuestra pregunta de investigación, el tipo 
+- Identificar los datos releventes a nuestra pregunta de investigación, el tipo 
 de datos que vamos a describir, que variables queremos estimar.
 
-2. Definir el modelo descriptivo para los datos. La forma matemática y los 
+- Definir el modelo descriptivo para los datos. La forma matemática y los 
 parámetros deben ser apropiados para los objetivos del análisis.
 
-3. Especificar la distribución inicial de los parámetros.
+- Especificar la distribución inicial de los parámetros.
 
-4. Utilizar inferencia bayesiana para reubicar la credibilidad a lo largo de 
+- Utilizar inferencia bayesiana para reubicar la credibilidad a lo largo de 
 los posibles valores de los parámetros.
 
-5. Verificar que la distribución posterior replique los datos de manera 
+- Verificar que la distribución posterior replique los datos de manera 
 razonable, de no ser el caso considerar otros modelos descriptivos para los datos.
 ```
-
-
-
 
 
 
@@ -938,7 +949,7 @@ ggplot(lineup_tbl, aes(x = estatura_cm)) + geom_histogram(binwidth = 2.5) +
 ```
 Con este tipo de gráficas podemos checar desajustes potenciales de nuestro modelo.
 
-```{block2, type="ejercicio"}
+```{block, type="ejercicio"}
 
 - ¿Puedes encontrar los datos verdaderos? ¿Cuántos seleccionaron los
 datos correctos? 
@@ -1058,7 +1069,7 @@ qt(c(0.025, 0.5, 0.975), 2 * alpha_post) * s + mu_post
 
 
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 
 - Calcula la posterior predictiva del modelo Beta-Bernoulli y Beta-Binomial.
 - (Más difícil) Calcula la posterior predictiva del modelo Poisson-Gamma.
