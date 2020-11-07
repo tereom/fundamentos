@@ -303,30 +303,36 @@ es decir $p(\theta^{(0)})>0.$
 
 Para $i=1, \ldots, M$, hacemos:
 
-1. Partiendo de $\theta^{(i)}$, hacemos un salto
+1. Partiendo de $\theta^{(i)}$, hacemos un saltogit 
 corto en una dirección al azar para obtener una propuesta $\theta^* \sim q(\theta \, |\, \theta^{(i)}).$
 2. Aceptamos or rechazamos el salto:
-  - Si $\alpha = \frac{f(\theta^*)}{f(\theta^{(i)})} \geq 1$, aceptamos el salto y ponemos $\theta^{(i+1)}=\theta^*$. Regresamos a 1 para la siguiente iteración $i\leftarrow i + 1.$
-  - Si $\alpha = \frac{f(\theta^*)}{f(\theta^{(i)})} < 1$, entonces aceptamos con probabilidad
-  $\alpha$ el salto, ponemos $\theta^{(i+1)}=\theta^*$ y regresamos a 1 para la siguiente iteración $i \leftarrow i + 1$. Si rechazamos el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ y regresamos a 1 para la siguiente iteración $i\leftarrow i + 1.$
+  - Si $\alpha = \frac{f(\theta^*)}{f(\theta^{(i)})} \geq 1$, aceptamos el salto
+  y ponemos $\theta^{(i+1)}=\theta^*$. Regresamos a 1 para la siguiente
+  iteración $i\leftarrow i + 1.$
+  - Si $\alpha = \frac{f(\theta^*)}{f(\theta^{(i)})} < 1$, entonces aceptamos
+  con probabilidad $\alpha$ el salto, ponemos $\theta^{(i+1)}=\theta^*$ y
+  regresamos a 1 para la siguiente iteración $i \leftarrow i + 1$. Si rechazamos
+  el salto, ponemos entonces $\theta^{(i+1)}=\theta^{(i)}$ y regresamos a 1 para
+  la siguiente iteración $i\leftarrow i + 1.$
 
-Requerimos también que la función que propone los saltos sea simétrica: es decir,
-$q(\theta^*|\theta^{(i)})$ debe ser igual a 
-$q(\theta^{(i)}|\theta^*)$. Se puede modificar el algoritmo
-para tratar con una propuesta que no sea simétrica.
+Requerimos también que la función que propone los saltos sea simétrica: es
+decir, $q(\theta^*|\theta^{(i)})$ debe ser igual a $q(\theta^{(i)}|\theta^*)$.
+Se puede modificar el algoritmo para tratar con una propuesta que no sea
+simétrica.
 
 Una elección común es escoger $q(\theta^* |\theta^{(i)})$ como
 una $\mathsf{N}(\theta^{(i)}, \sigma_{salto})$.
 
 ```{block,type="comentario"}
-En este curso, escribiremos varios métodos Markov Chain Monte Carlo
-desde cero para entender los básicos de cómo funciona.
-Sin embargo, **en la práctica no hacemos esto**, sino que usamos
-software estándar (Stan, JAGS, BUGS, etc.) para hacer este trabajo.
+En este curso, escribiremos varios métodos de cadenas de Markov para estimación
+Monte Carlo (*Markov Chain Monte Carlo*, MCMC) desde cero para entender los
+básicos de cómo funciona. Sin embargo, **en la práctica no hacemos esto**, sino
+que usamos software estándar (Stan, JAGS, BUGS, etc.) para hacer este trabajo.
 
-**Expertos** en MCMC, métodos numéricos, y estadística a veces escriben partes de sus rutinas de simulación, y pueden lograr mejoras de 
-desempeño considerables. Excepto para modelos simples, esto no
-es trivial de hacer garantizando resultados correctos.
+**Expertos** en MCMC, métodos numéricos, y estadística a veces escriben partes
+de sus rutinas de simulación, y pueden lograr mejoras de desempeño
+considerables. Excepto para modelos simples, esto no es trivial de hacer
+garantizando resultados correctos.
 ```
 
 En resumen, todo el código de esta sección es de carácter ilustrativo.
@@ -377,7 +383,7 @@ sims_tbl <- iterador_metro(c(theta = 0.5), 50000)
 ggplot(sims_tbl, aes(x = theta)) + geom_histogram()
 ```
 
-Ahora probemos con una beta(3, 2):
+Ahora probemos con una $\mathsf{Beta}(3, 2):$
 
 ```{r}
 beta_no_norm <- function(x) {
@@ -436,30 +442,36 @@ tibble(metodo = c("sim Metropolis", "sim Independiente", "exacto"),
 
 
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 Supongamos que queremos simular de una distribución $p(\theta)$, 
 pero sólo conocemos $p(\theta)$ módulo una constante. Bajo ciertas condiciones de regularidad:
 
-El **algoritmo Metrópolis** para la distribución $p(\theta)$ define una **cadena de Markov** cuya distribución a largo plazo es $p(\theta)$. Esto implica que si 
-$\theta^{(1)},\theta^{(2)}, \ldots, \theta^{(M)}$ es una simulación de esta cadena,  
-y $M$ es suficientemente grande
+El **algoritmo Metrópolis** para la distribución $p(\theta)$ define una **cadena
+de Markov** cuya distribución a largo plazo es $p(\theta)$. Esto implica que si
+$\theta^{(1)},\theta^{(2)}, \ldots, \theta^{(M)}$ es una simulación de esta
+cadena, y $M$ es suficientemente grande
 
 1. La distribución de las $\theta^{(i)}$ es aproximadamente $p(\theta)$,
 2. Tenemos que
-$$\frac{h(\theta^{(1)}) + h(\theta^{(2)})+ \ldots + h(\theta^{(M)})}{M} \to \int h(\theta)p(\theta)\, d\theta$$
+$$ \frac1M \sum_{m = 1}^M h(\theta^{(m)}) \to \int h(\theta)p(\theta)\, d\theta$$
 cuando $M\to \infty$
 ```
 
 **Observaciones**: 
 
-1. Aunque hay distintas *condiciones de regularidad* que
-pueden funcionar, generalmente el supuesto es que la cadena de Markov construída
-es [ergódica](https://en.wikipedia.org/wiki/Ergodic_theory), y hay varias condiciones que garantizan esta propiedad. Una condición simple, por ejemplo, es que el soporte
-de la distribución $p(\theta)$ es un conjunto conexo del espacio de parámetros.
+1. Aunque hay distintas *condiciones de regularidad* que pueden funcionar,
+generalmente el supuesto es que la cadena de Markov construída es
+[ergódica](https://en.wikipedia.org/wiki/Ergodic_theory), y hay varias
+condiciones que garantizan esta propiedad. Una condición simple, por ejemplo, es
+que el soporte de la distribución $p(\theta)$ es un conjunto conexo del espacio
+de parámetros.
 
-2. Más crucialmente, este resultado no dice qué tan grande debe ser $M$ para que la aproximación sea buena. Esto depende de cómo es $p(\theta)$, y de la distribución que se utiliza para obtener los saltos propuestos. Dependiendo de estos dos factores,
-la convergencia puede ser rápida (exponencial) o tan lenta que es infactible usarla. 
-Más adelante veremos diagnósticos para descartar los peores casos de no-convergencia.
+2. Más crucialmente, este resultado no dice qué tan grande debe ser $M$ para que
+la aproximación sea buena. Esto depende de cómo es $p(\theta)$, y de la
+distribución que se utiliza para obtener los saltos propuestos. Dependiendo de
+estos dos factores, la convergencia puede ser rápida (exponencial) o tan lenta
+que es infactible usarla. Más adelante veremos diagnósticos para descartar los
+peores casos de falta de convergencia.
 
 ## Ajustando el tamaño de salto {-}
 
@@ -474,7 +486,7 @@ en explorar las distintas partes de la distribución objetivo.
 ### Ejemplo {-}
 
 Supongamos que queremos simular usando metróplis de una distribución 
-$\textsf{Gamma(20, 100)$. Abajo vemos la forma de esta distribución:
+$\textsf{Gamma}(20, 100)$. Abajo vemos la forma de esta distribución:
 
 ```{r}
 sim_indep <- tibble(theta = rgamma(10000, 20, 100))
@@ -493,10 +505,11 @@ g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
 
 Nótese que después de 5 mil iteraciones estamos muy lejos de tener una muestra
-que se aproxime a la distribución objetivo. Empezamos en un lugar bajo, y
-la cadena sólo ha ido lentamente hacia las zonas de alta densidad. *Cualquier
-resumen con esta cadena estaría fuertemente sesgado* al valor donde iniciamos
-la iteración. Decimos que la cadena todavía no *mezcla* en las primeras 5 mil iteraciones.
+que se aproxime a la distribución objetivo. Empezamos en un lugar bajo, y la
+cadena sólo ha ido lentamente hacia las zonas de alta densidad. *Cualquier
+resumen con esta cadena estaría fuertemente sesgado* al valor donde iniciamos la
+iteración. Decimos que la cadena todavía no *mezcla* en las primeras 5 mil
+iteraciones.
 
 Ahora vemos qué pasa si ponemos el tamaño de salto demasiado grande:
 
@@ -509,15 +522,16 @@ g_sim + dist_bplot + plot_layout(widths = c(5, 1))
 ```
 
 En este caso, la cadena se *atora* muchas veces, pues las propuestas tienen
-probabilidad muy baja, y tendemos a tener una tasa de rechazos muy alta. Esto 
-quiere decir que la información que tenemos acerca de la posterior
-es relativamente poca, pues muchos datos son repeticiones del mismo valor. 
-*Cualquier resumen con esta cadena podría estar muy lejos del verdadero valor**, pues
-su varianza es alta - otra corrida se "atoraría" en otros valores distintos.
+probabilidad muy baja, y tendemos a tener una tasa de rechazos muy alta. Esto
+quiere decir que la información que tenemos acerca de la posterior es
+relativamente poca, pues muchos datos son repeticiones del mismo valor.
+*Cualquier resumen con esta cadena podría estar muy lejos del verdadero valor,*
+pues su varianza es alta - otra corrida se "atoraría" en otros valores
+distintos.
 
-Nótese que cualquiera de estas cadenas, si la corremos suficientemente
-tiempo, nos daría resultados buenos. Sin embargo, el número de simulaciones
-puede ser infactible.
+Nótese que cualquiera de estas cadenas, si la corremos suficientemente tiempo,
+nos daría resultados buenos. Sin embargo, el número de simulaciones puede ser
+infactible.
 
 Un valor intermedio nos dará mucho mejores resultados:
 
@@ -560,21 +574,17 @@ estimaciones_media %>% bind_rows(tibble(tipo = "exacta", media = 20/100)) %>%
   select(tipo, media)
 ```
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 Repite este proceso varias veces. Verifica que:
 
-  - Si el tamaño de paso es muy chico, las estimaciones de la media tienen sesgo alto
-  - Si el tamaño de paso es muy grande, las estimaciones tienen varianza alta
-  - Si el tamaño de paso es adecuado, obtenemos buena precisión en la estimación de la media posterior
-
-  - Explica estos tres casos en términos de la convergencia de las realizaciones de la
-cadena de Markov. Explica cómo afecta a cada caso el valor inicial
-de las simulaciones de Metropolis.
+  - Si el tamaño de paso es muy chico, las estimaciones de la media tienen sesgo alto.
+  - Si el tamaño de paso es muy grande, las estimaciones tienen varianza alta.
+  - Si el tamaño de paso es adecuado, obtenemos buena precisión en la estimación de la media posterior.
+  - Explica estos tres casos en términos de la convergencia de las realizaciones
+    de la cadena de Markov. Explica cómo afecta a cada caso el valor inicial de las
+    simulaciones de Metropolis.
   - Repite para otra estadística, como la desviación estándar o el rangon intercuartil.
 ```
-
-
-
 
 
 ## ¿Por qué funciona Metropolis? {-}
@@ -582,18 +592,18 @@ de las simulaciones de Metropolis.
 Veremos un ejemplo relativemente simple que nos puede ayudar
 a mejorar nuestra intuición acerca de este algoritmo.
 
-Supongamos que un vendedor de 
-*yakult* trabaja a lo largo de una cadena de islas:
+Supongamos que un vendedor de *Yakult* trabaja a lo largo de una cadena de
+islas:
 
-* constantemente viaja entre las islas ofreciendo sus productos,
+* Constantemente viaja entre las islas ofreciendo sus productos;
 
-* al final de un día de trabajo decide si permanece en la misma isla o se 
-transporta a una de las $2$ islas vecinas.
+* Al final de un día de trabajo decide si permanece en la misma isla o se 
+transporta a una de las $2$ islas vecinas;
 
-* El vendedor ignora la distribución de la población en las islas y el número 
-total de islas; sin embargo, 
-una vez que se encuentra en una isla puede investigar la población de la misma y 
-también  de la isla a la que se propone viajar después. 
+* El vendedor ignora la distribución de la población en las islas y el número
+total de islas; sin embargo, una vez que se encuentra en una isla puede
+investigar la población de la misma y también  de la isla a la que se propone
+viajar después.
 
 * El objetivo del vendedor es visitar las islas de manera proporcional a la 
 población de cada una. Con esto en mente el vendedor utiliza el siguiente 
@@ -606,7 +616,7 @@ tiene población menor, entonces visita la isla propuesta con una probabilidad q
 depende de la población de las islas. Sea $P^*$ la población de la isla 
 propuesta y $P_{actual}$ la población de la isla actual. Entonces el vendedor
 cambia de isla con probabilidad 
-$$p_{mover}=P^*/P_{actual}$$
+$$q_{mover}=P^*/P_{actual}$$
 
 A la larga, si el vendedor sigue la heurística anterior la probabilidad de que
 el vendedor este en alguna de las islas coincide con la población relativa de
