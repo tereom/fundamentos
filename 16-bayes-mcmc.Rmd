@@ -614,9 +614,9 @@ del lado izquierdo de su ubicación actual y si es sol a la del lado derecho.
 población de la isla actual, el vendedor decide viajar a ella. Si la isla vecina 
 tiene población menor, entonces visita la isla propuesta con una probabilidad que 
 depende de la población de las islas. Sea $P^*$ la población de la isla 
-propuesta y $P_{actual}$ la población de la isla actual. Entonces el vendedor
+propuesta y $P_{t}$ la población de la isla actual. Entonces el vendedor
 cambia de isla con probabilidad 
-$$q_{mover}=P^*/P_{actual}$$
+$$q_{mover}=P^*/P_{t}$$
 
 A la larga, si el vendedor sigue la heurística anterior la probabilidad de que
 el vendedor este en alguna de las islas coincide con la población relativa de
@@ -703,23 +703,26 @@ toma dos valores cada uno con probabilidad $0.5$.
 2. Una vez que se propone un movimiento, decidimos si aceptarlo. La decisión de
 aceptar se basa en el valor de la distribución **objetivo** en la posición
 propuesta, relativo al valor de la distribución objetivo en la posición actual:
-$$p_{mover}=\min\bigg\{\frac{P(\theta_{propuesta})}{P(\theta^{(i)})},1\bigg\}$$
-Notemos que la distribución objetivo $P(\theta)$ no necesita estar normalizada, 
-esto es porque lo que nos interesa es el cociente $P(\theta_{propuesta})/P(\theta^{(i)})$.
+$$\alpha=\min\bigg\{\frac{P(\theta^*)}{P(\theta^{(i)})},1\bigg\},$$
+donde $\alpha$ denota la probabilidad de hacer el cambio de isla. 
 
-3. Una vez que propusimos un movimiento y calculamos la probabilidad de aceptar 
+Notemos que la distribución objetivo $P(\theta)$ no necesita estar normalizada, 
+esto es porque lo que nos interesa es el cociente $P(\theta^*)/P(\theta^{(i)})$.
+
+3. Una vez que propusimos un movimiento y calculamos la probabilidad de aceptar
 el movimiento aceptamos o rechazamos el movimiento generando un valor de una
-distribución uniforme, si dicho valor es menor a $p_{mover}$ entonces hacemos
-el movimiento.
+distribución uniforme, si dicho valor es menor a la probabilidad de cambio,
+$\alpha,$ entonces hacemos el movimiento.
 
 Entonces, para utilizar el algoritmo necesitamos ser capaces de:
 
-* Generar un valor de la distribución propuesta (para crear $\theta_{propuesta}$).
+* Generar un valor de la distribución propuesta, que hemos denotado por $q,$
+(para crear $\theta^*$).
 
 * Evaluar la distribución objetivo en cualquier valor propuesto (para calcular
-$P(\theta_{propuesta})/P(\theta^{(i)})$).
+$P(\theta^*)/P(\theta^{(i)})$).
 
-* Generar un valor uniforme (para movernos con probabilidad $p_{mover}$)
+* Generar un valor uniforme (para movernos con probabilidad $\alpha$).
 
 Las $3$ puntos anteriores nos permiten generar muestras aleatorias de la
 distribución objetivo, sin importar si esta está normalizada. Esta técnica es
