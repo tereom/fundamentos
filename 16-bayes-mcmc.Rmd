@@ -295,9 +295,9 @@ de una distribución cualquiera $p(\theta) = K f(\theta)$, donde sólo conocemos
 la función $f(\theta)$.
 
 
-## Método de Metropolis {-}
+## Método de Metrópolis {-}
 
-En el método de Metropolis, uno de los más antiguos, comenzamos
+En el método de Metrópolis, uno de los más antiguos, comenzamos
 con un valor inicial de los parámetros $\theta^{(0)}$ en el soporte de $p(\theta)$,
 es decir $p(\theta^{(0)})>0.$
 
@@ -395,7 +395,7 @@ iterador_metro <- crear_metropolis(beta_no_norm, sigma_salto = 0.04)
 sims_metro_tbl <- iterador_metro(c(theta = 0.5), 50000)
 sims_indep_tbl <- tibble(iter_num = 1:30000, theta = rbeta(30000, 3, 2))
 g_1 <- ggplot(sims_metro_tbl, aes(x = theta)) + geom_histogram() +
-  labs(subtitle = "Metropolis")
+  labs(subtitle = "Metrópolis")
 g_2 <- ggplot(sims_indep_tbl, aes(x = theta)) + 
   geom_histogram() +
   labs(subtitle = "rbeta")
@@ -416,7 +416,7 @@ simulaciones:
 g_metropolis <- sims_metro_tbl %>% 
   filter(iter_num < 500) %>% 
   ggplot(aes(x = iter_num, y = theta)) +
-  geom_line() + labs(subtitle = "Metropolis")
+  geom_line() + labs(subtitle = "Metrópolis")
 g_indep <- sims_indep_tbl %>% 
   filter(iter_num < 500) %>% 
   ggplot(aes(x = iter_num, y = theta)) +
@@ -436,7 +436,7 @@ o cantidad que nos interesa. Por ejemplo, la media posterior es:
 media_1 <- sims_metro_tbl %>% summarise(media_post = mean(theta)) %>% pull(media_post)
 media_2 <- sims_indep_tbl %>% summarise(media_post = mean(theta)) %>% pull(media_post)
 media_exacta <- 3/(3 + 2)
-tibble(metodo = c("sim Metropolis", "sim Independiente", "exacto"),
+tibble(metodo = c("sim Metrópolis", "sim Independiente", "exacto"),
        media_post = c(media_1, media_2, media_exacta))
 ```
 
@@ -475,7 +475,7 @@ peores casos de falta de convergencia.
 
 ## Ajustando el tamaño de salto {-}
 
-En el algoritmo Metropolis, generalmente es importante escoger la 
+En el algoritmo Metrópolis, generalmente es importante escoger la 
 dispersión de la distribución que genera propuestas con cuidado. 
 
 - Si la dispersión de la propuesta es demasiado grande, tenderemos a rechazar mucho,
@@ -582,12 +582,12 @@ Repite este proceso varias veces. Verifica que:
   - Si el tamaño de paso es adecuado, obtenemos buena precisión en la estimación de la media posterior.
   - Explica estos tres casos en términos de la convergencia de las realizaciones
     de la cadena de Markov. Explica cómo afecta a cada caso el valor inicial de las
-    simulaciones de Metropolis.
+    simulaciones de Metrópolis.
   - Repite para otra estadística, como la desviación estándar o el rangon intercuartil.
 ```
 
 
-## ¿Por qué funciona Metropolis? {-}
+## ¿Por qué funciona Metrópolis? {-}
 
 Veremos un ejemplo relativemente simple que nos puede ayudar
 a mejorar nuestra intuición acerca de este algoritmo.
@@ -787,7 +787,7 @@ ggplot(exp_t, aes(x = as.numeric(theta), y = P)) +
     scale_x_continuous(expression(theta), breaks = 1:10, limits = c(0, 11))
 ```
 
-## Metropolis con varios parámetros {-}
+## Metrópolis con varios parámetros {-}
 
 Ahora aplicaremos el algoritmo Metrópolis cuando tenemos varios parámetros. La idea
 es la misma, pero nuestra distribución de salto debe ser multivariada. Una selección
@@ -796,7 +796,7 @@ usual es usando saltos normales independientes para cada parámetro, es decir, l
 
 ### Ejemplo: el modelo normal {-}
 
-Veremos cómo simular con Metropolis para el problema de los cantantes. 
+Veremos cómo simular con Metrópolis para el problema de los cantantes. 
 Sabemos como calcular la posterior:
 
 ```{r}
@@ -859,15 +859,15 @@ sim_tbl %>% summarise(across(is_double, mean))
 
 ### Ejemplo: observaciones normales, no conjugado {-}
 
-Arriba repetimos el análisis conjugado usando Metropolis. Aunque 
+Arriba repetimos el análisis conjugado usando Metrópolis. Aunque 
 ya no es necesario usar el modelo conjugado, y podemos poner
 iniciales que sean más intuitivas y acorde con nuestro conocimiento
 existente.
 
-Por ejemplo, podemos poner $p(\mu, \sigma) = p(\mu)p(\sigma)$, donde
-la densidad de $\mu \sim N(175, 2)$ y $\sigma \sim U[2, 20]$. Igual
-que antes, la verosimilitud $p(x|\mu, \sigma)$ es normal con media $\mu$
-y desviación estándar $\sigma$
+Por ejemplo, podemos poner $p(\mu, \sigma) = p(\mu)p(\sigma)$, donde la densidad
+de $\mu \sim \mathsf{N}(175, 2)$ y $\sigma \sim \mathsf{U}[2, 20].$ Igual que
+antes, la verosimilitud $p(x|\mu, \sigma)$ es normal con media $\mu$ y
+desviación estándar $\sigma.$
 
 Escribimos la posterior:
 
@@ -901,15 +901,15 @@ g_normal_2 <- ggplot(sim_tbl, aes(x = mu, y = sigma))  +
 g_normal + g_normal_2
 ```
 Los resultados son similares, pero en 
-nuestras estimaciones bajo el segundo modelo, la $\sigma$ es está
-concentrada en valores un poco más bajos que el modelo normal - inverso gamma.
+nuestras estimaciones bajo el segundo modelo, la $\sigma$ está
+concentrada en valores un poco más bajos que el modelo normal-gamma inversa.
 Las medias posteriores son:
 
 ```{r}
 sim_tbl %>% summarise(across(is.numeric, mean))
 ```
 
-Nótese que la inicial para el modelo normal-invgamma pone muy poca
+Nótese que la inicial para el modelo normal-gamma inversa pone muy poca
 probabilidad para valores bajos de $\sigma$, mientras que el segundo
 modelo hay un 10% de probabilidad de que la $\sigma$ sea menor que 4.
 
@@ -922,16 +922,15 @@ quantile(runif(5000, 2, 25), c(0.01,0.1, 0.9, 0.99))
 
 
 
-### Ejemplo: examenes {-}
+### Ejemplo: exámenes {-}
 
-Recordamos un ejemplo que vimos en máxima verosimilitud:
-
-Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron un
-examen de opción múltiple al azar (1 de 5), y otros contestaron las preguntas intentando
-sacar una buena calificación. Suponemos que una vez que conocemos el tipo de 
-estudiante, todas las preguntas tienen la misma probabilidad de ser contestadas
-correctamente, de manera independiente. El modelo
-teórico está representado por la siguiente simulación:
+Recordamos un ejemplo que vimos en la sección de máxima verosimilitud.
+Supongamos que en una población de estudiantes tenemos dos tipos: unos llenaron
+un examen de opción múltiple al azar (1 de 5), y otros contestaron las
+preguntas intentando sacar una buena calificación. Suponemos que una vez que
+conocemos el tipo de estudiante, todas las preguntas tienen la misma
+probabilidad de ser contestadas correctamente, de manera independiente. El
+modelo teórico está representado por la siguiente simulación:
 
 ```{r}
 sim_formas <- function(p_azar, p_corr){
@@ -1050,7 +1049,7 @@ muestras de la posterior:
 $$p(\theta_1,...,\theta_p|x)$$
 siempre y cuando podamos generar valores de todas las distribuciones 
 condicionales:
-$$p(\theta_k,|\theta_1,...,\theta_{k-1},\theta_{k+1},...,\theta_p,x)$$
+$$\theta_k \sim p(\theta_k|\theta_1,...,\theta_{k-1},\theta_{k+1},...,\theta_p,x).$$
 
 El proceso del muestreador de Gibbs es una caminata aleatoria a lo largo del 
 espacio de parámetros. La caminata inicia en un punto arbitrario y en cada 
@@ -1064,16 +1063,16 @@ diferencia entre Gibbs y Metrópolis radica en como se deciden los pasos.
 En cada punto de la caminata se selecciona uno de los
 componentes del vector de parámetros (típicamente se cicla en orden):
 
-1. Supongamos que se selecciona el parámetro $\theta_k$, entonces obtenemos un 
-nuevo valor para este parámetro generando una simulación de la distribución 
-condicional
-$$p(\theta_k,|\theta_1,...,\theta_{k-1},\theta_{k+1},...,\theta_p,x)$$
+1. Supongamos que se selecciona el parámetro $k$-ésimo después de haber
+modificado los $k-1$ anteriores, entonces obtenemos un nuevo valor para este
+parámetro generando una simulación de la distribución condicional
+$$\theta_k^{(i+1)} \sim p(\theta_k|\theta_1^{(i+1)},\ldots,\theta_{k-1}^{(i+1)},\theta_{k+1}^{(i)},\ldots,\theta_p^{(i)},x)$$
 
-2. El nuevo valor $\theta_k$ junto con los valores que aun no cambian 
-$\theta_1,...,\theta_{k-1},\theta_{k+1},...,\theta_p$ constituyen la nueva 
-posición en la caminata aleatoria. 
+2. El nuevo valor $\theta_k^{(i+1)}$ junto con los valores
+$\theta_1^{(i+1)},\ldots,\theta_{k-1}^{(i+1)},\theta_{k+1}^{(i)},\ldots,\theta_p^{(i)}$
+constituyen la nueva posición en la caminata aleatoria.
 
-3. Seleccionamos una nueva componente ($\theta_{k+1}$) y repetimos el proceso.
+3. Seleccionamos una nueva componente $\theta_{k+1}^{(i+1)}$ y repetimos el proceso.
 
 
 El muestreador de Gibbs es útil cuando no podemos determinar de manera analítica
@@ -1082,14 +1081,13 @@ podemos determinar todas las distribuciones condicionales y simular de ellas.
 
 ### Ejemplo: dos proporciones {-}
 
-Supongamos que queremos evaluar el balanceo de dos dados de 20 lados que produce una fábrica. En particular, evaluar la probabilidad de
-tirar un 20, y quizá escoger el dado que nos de mayor probabilidad de
-tirar un 20.
+Supongamos que queremos evaluar el balanceo de *dos dados* de 20 lados que
+produce una fábrica. En particular, evaluar la probabilidad de tirar un 20, y
+quizá escoger el dado que nos de mayor probabilidad de tirar un 20.
 
 Tiramos cada dado $n$ veces, y denotamos por $X_1$ y $X_2$ el número
-de 20s que tiramos en cada ocasion. El modelo de datos está dado por
-
-$$p(x_1, x_2|\theta_1, \theta_2)\propto \theta_1^{x_1}(1-\theta_1)^{n - x_1}\theta_2^{x_2}(1-\theta_2)^{n - x_2}$$
+de 20's que tiramos en cada ocasión. El modelo de datos está dado por
+$$p(x_1, x_2|\theta_1, \theta_2)\propto \theta_1^{x_1}(1-\theta_1)^{n - x_1}\theta_2^{x_2}(1-\theta_2)^{n - x_2},$$
 que es el producto de dos densidades binomiales, pues suponemos que
 las tiradas son independientes cuando conocemos los parámetros
 $\theta_1$ y $\theta_2$.
@@ -1255,26 +1253,24 @@ Un modelo apropiado es el Dirichlet-Multinomial.
 
 Retomemos el caso de observaciones normales, supongamos que tenemos una muestra 
 $X_1,...,X_n$ de observaciones independientes e identicamente distribuidas, 
-con $X_i \sim N(\mu, \sigma^2)$.
+con $X_i \sim \mathsf{N}(\mu, \sigma^2)$.
 
 Usaremos iniciales distintas al modelo anterior:
 
 $$p(\mu, \sigma^2) = p(\sigma^2)p(\mu)$$
-con $\mu$ $\mathsf{N}(\mu_0, \sigma_0)$ y $\tau = 1/\sigma^2$ con distribución $\mathsf{Gamma}(a,b)$. Esto no nos da el modelo conjugado que vimos antes (nota
+con $\mu$ $\mathsf{N}(\mu_0, \sigma_0)$ y $\tau = 1/\sigma^2$ con distribución
+$\mathsf{Gamma}(a,b)$. Esto no nos da el modelo conjugado que vimos antes (nota
 la diferencia de la especificación de la inicial conjunta).
 
 Comenzamos por escribir 
-
-
 $$p(\mu, \sigma^2|x) \propto \frac{1}{{\sigma^{n/2} }}  \exp\left(-\sum\frac{(x_i-\mu)²}{2\sigma^2}\right) \exp\left(- \frac{(\mu - \mu_0)^2}{2\sigma_0^2}\right )\frac{1}{(\sigma^2)^{a + 1}}\exp\left (-\beta/\sigma^2\right)$$
 
 Comenzamos analizando $p(\mu|\sigma^2, x)$. Por la ecuación de arriba, e ignorando
 los términos que **no** dependen de $\mu$:
-
-$$p(\mu|\sigma^2, x) \propto \exp( - \sum \left(\frac{(\mu - x_i)^2}{2\sigma^2} - \frac{(\mu - \mu_0)^2}{2n\sigma_0^2}\right  )$$
+$$p(\mu|\sigma^2, x) \propto \exp \left[ - \sum_i \left(\frac{(\mu - x_i)^2}{2\sigma^2} - \frac{(\mu - \mu_0)^2}{2n\sigma_0^2}\right)\right]$$
 que es una distribución normal (completa cuadrados):
 
-$$\mu|\sigma^2,x \sim N\bigg(\frac{\sigma^2}{\sigma^2 + n\sigma_0^2}\mu_0 + \frac{n\sigma_0^2}{\sigma^2 + n \sigma_0^2}\bar{x}, \frac{\sigma \sigma_0}{\sqrt{\sigma^2 + n\sigma_0^2}}\bigg)$$
+$$\mu|\sigma^2,x \sim \mathsf{N}\bigg(\frac{\sigma^2}{\sigma^2 + n\sigma_0^2}\mu_0 + \frac{n\sigma_0^2}{\sigma^2 + n \sigma_0^2}\bar{x}, \frac{\sigma \sigma_0}{\sqrt{\sigma^2 + n\sigma_0^2}}\bigg)$$
 
 Ahora consideramos $p(\sigma^2|mu,x)$. Ignoramos en $p(\mu,\sigma^2|x)$ los términos que *no** dependen de $\sigma^2$:
 
@@ -1291,9 +1287,9 @@ $$\sigma^2|\mu, x \sim \mathsf{GI}\left(a +n/2, b + \frac{1}{2}\sum(x_i -\mu)^2\
 Usaremos este muestreador para el problema de la estaturas de
 los tenores. Comenzamos definiendo las distribuciones iniciales:
 
-* $\mu \sim N(175, 3)$
+* $\mu \sim \mathsf{N}(175, 3)$
 
-* $\tau = 1/\sigma^2 \sim GI(3, 150)$, esto es $a = 3$ y $b = 150$.
+* $\tau = 1/\sigma^2 \sim \mathsf{GI}(3, 150)$, esto es $a = 3$ y $b = 150$.
 
 Escribimos el muestreador de Gibbs.
 
@@ -1339,7 +1335,7 @@ ggplot(filter(caminata, pasos > 1000, pasos< 1010),
 Donde vemos cómo en cada iteración se actualiza un solo parámetro.
 Una alternativa es conservar únicamente ciclos completos de la 
 caminata u esto es lo que hacen varios programas que implementan Gibbs, sin
-embargo ambas cadenas (cadanas completas y conservando únicamente ciclos 
+embargo ambas cadenas (cadenas completas y conservando únicamente ciclos 
 completos) convergen a la misma distribución posterior.
 
 Si tomamos iteraciones completas:
@@ -1390,45 +1386,49 @@ Y obtenemos un resultado similar a los anteriores.
 
 * Una generalización del algoritmo de Metrópolis es Metrópolis-Hastings. 
 
-    El algoritmo de Metropolis es como sigue:
+    El algoritmo de Metrópolis es como sigue:
     1. Generamos un punto inicial tal que $p(\theta)>0$.
-    2. Para $t = 1,2,...$
-        + Se propone un nuevo valor $\theta_{propuesto}$ con una distribución
-        propuesta $g(\theta_{propuesta}|\theta^{(i)})$ es común  que $g(\theta_{propuesta}|\theta^{(i)})$ sea una normal centrada en 
+    2. Para $i = 1,2,...$
+        + Se propone un nuevo valor $\theta^*$ con una distribución
+        propuesta $g(\theta^*|\theta^{(i)})$ es común  que $g(\theta^*|\theta^{(i)})$ sea una normal centrada en 
         $\theta^{(i)}$.
-    3. Calculamos 
-    $$p_{mover}=min\bigg( \frac{p(\theta_{propuesta})}{p(\theta^{(i)})},1\bigg)$$
-    y aceptamos $$\theta_{propuesta}$$ con probabilidad $p_{mover}$. Es así que el algorito requiere que podamos calcular el cociente en $p_{mover}$
-    para todo $\theta^{(i)}$ y $\theta_{propuesta}$, así como simular de la 
-    distribución propuesta $g(\theta_{propuesta}|\theta^{(i)})$, adicionalmente
-    debemos poder generar valores uniformes para decidir si aceptar/rechazar.
-    En el caso de **Metropolis** un requerimiento adicional es que la distribución
+    3. Calculamos la probabilidad de aceptación
+    
+    $$\alpha=\min\bigg\{\frac{p(\theta^*)}{p(\theta^{(i)})},1\bigg\},$$
+    y aceptamos $\theta^*$ con probabilidad $p_{mover}$. Es así que el
+    algorito requiere que podamos calcular el cociente en $p_{mover}$ para todo
+    $\theta^{(i)}$ y $\theta^*$, así como simular de la distribución propuesta
+    $g(\theta^*|\theta^{(i)})$, adicionalmente debemos poder generar valores
+    uniformes para decidir si aceptar/rechazar.
+    
+    En el caso de **Metrópolis** un requerimiento adicional es que la distribución
     propuesta $g(\theta_{a}|\theta_b)$ debe ser simétrica, es decir 
     $g(\theta_{a}|\theta_b) = g(\theta_{b}|\theta_a)$ para todo $\theta_{a}$, 
     $\theta_{b}$.
     
-    **Metropolis-Hastings** generaliza Metropolis, eliminando la restricción de 
-simetría en la distribución propuesta $g(\theta_{a}|\theta_b)$, sin embargo para corregir por
-esta asimetría debemos calcular $p_{mover}$ como sigue:
-$$p_{mover}=min\bigg\{ \frac{p(\theta_{propuesta})/g(\theta_{propuesta}|\theta^{(i)})}{p(\theta^{(i)})/g(\theta^{(i)}|\theta_{propuesta})},1\bigg\}$$
+    **Metrópolis-Hastings** generaliza Metrópolis, eliminando la restricción de
+    simetría en la distribución propuesta $g(\theta_{a}|\theta_b)$, sin embargo para
+    corregir por esta asimetría debemos calcular $\alpha$ como sigue:
+    
+    $$\alpha=\min\bigg\{ \frac{p(\theta^*)}{g(\theta^*|\theta^{(i)})} \cdot  \frac{g(\theta^{(i)}|\theta^*)}{p(\theta^{(i)})},1\bigg\}$$
 La generalización de Metrópolis-Hastings puede resultar en algoritmos más 
 veloces.
 
-* Se puede ver Gibbs como una generalización de Metropolis-Hastings, cuando 
+* Se puede ver Gibbs como una generalización de Metrópolis-Hastings, cuando 
 estamos actualizando un componente de los parámetros, la distribución propuesta 
 es la distribución posterior para ese parámetro, por tanto siempre es aceptado.
 
-* Comparado con Metrópolis Gibbs tiene la ventaja de que no se necesita afinar
+* Comparado con Metrópolis, Gibbs tiene la ventaja de que no se necesita afinar
 los parámetros de una distribución propuesta (o seleccionar siquiera una 
 distribución propuesta). Además que no hay pérdida de simulaciones debido a 
 rechazo. Por su parte, la desventaja debemos conocer las distribuciones 
 condicionales y poder simular de ellas.
 
 * En el caso de modelos complicados se utilizan combinaciones de Gibbs y 
-Metropolis. Cuando se consideran estos dos algoritmos Gibbs es un método más 
+Metrópolis. Cuando se consideran estos dos algoritmos Gibbs es un método más 
 simple y es la primera opción para modelos condicionalmente conjugados. Sí solo
 podemos simular de un subconjunto de las distribuciones condicionales 
-posteriores, entonces podemos usar Gibbs siempre que se pueda y Metropolis 
+posteriores, entonces podemos usar Gibbs siempre que se pueda y Metrópolis 
 unidimensional para el resto, o de manera más general separamos en bloques, un 
 bloque se actualiza con Gibbs y otro con Metrópolis.
 
@@ -1438,7 +1438,7 @@ parámetros, reparametrizar puede ayudar, o se pueden usar otros algoritmos.
 * [JAGS](http://mcmc-jags.sourceforge.net) (Just Another Gibbs Sampler), WinBUGS
 y OpenBUGS son programas que implementan métodos MCMC para generar simulaciones 
 de distribuciones posteriores. Los paquetes `rjags` y `R2jags` permiten ajustar 
-modelos en JAGS desde R. Es muy fácil utilizar estos programas pues uno 
+modelos en JAGS desde `R`. Es muy fácil utilizar estos programas pues uno 
 simplemente debe especificar las distribuciones iniciales, la verosimilitud y 
 los datos observados. Para aprender a usar JAGS se puede revisar la sección 
 correspondiente en las [notas de 2018](https://tereom.github.io/est-computacional-2018/jags.html),
@@ -1450,11 +1450,11 @@ ahora nos concentraremos en el uso de Stan.
 randomized way of doinf something, then there is a nonrandomized way that 
 delivers better performance but requires more thought. -E.T. Jaynes
 
-Stan es un programa para generar muestras de una distribución posterior de los 
+`Stan` es un programa para generar muestras de una distribución posterior de los 
 parámetros de un modelo, el nombre del programa hace referencia a [Stanislaw Ulam (1904-1984)](https://en.wikipedia.org/wiki/Stanislaw_Ulam) que fue pionero en 
 los métodos de Monte Carlo. A diferencia de JAGS y BUGS, los pasos de la cadena 
 de Markov se generan con un método llamado *Monte Carlo Hamiltoniano* (HMC). HMC 
-es computacionalmente más costoso que Metropolis o Gibbs, sin embargo, sus 
+es computacionalmente más costoso que Metrópolis o Gibbs, sin embargo, sus 
 propuestas suelen ser más eficientes, y por consiguiente no necesita muestras
 tan grandes. En particular cuando se ajustan modelos grandes y complejos (por 
 ejemplo, con variables con correlación alta) HMC supera a otros.
