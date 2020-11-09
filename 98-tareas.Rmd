@@ -634,7 +634,7 @@ el error estándar, esto es seleccionar muchas muestras y calcular la estadísti
 de interés en cada una, con la diferencia que las muestras se seleccionan de la
 distribución empírica a falta de la distribución poblacional.
 
-## 7. Bootstrap en el conteo rápido
+## 7. Bootstrap en el conteo rápido {-}
 
 
 **Conteo rápido**
