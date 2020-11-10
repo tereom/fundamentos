@@ -182,13 +182,13 @@ de sol de las monedas, y las probabilidades iniciales de selección de las
 monedas.
 
 ```{r}
-n_volados <- 10
+n_volados <- 2
 # posible valores del parámetro desconocido
 theta = c(0.4, 0.6)
 # probabilidades iniciales
 probs_inicial <- tibble(moneda = c(1, 2),
                         theta = theta,
-                        prob_inicial = c(0.9, 0.1))
+                        prob_inicial = c(0.5, 0.5))
 probs_inicial
 # verosimilitud
 crear_verosim <- function(no_soles){
