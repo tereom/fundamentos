@@ -24,7 +24,8 @@ La inferencia bayesiana tiene por objetivo incorporar incertidumbre en nuestras
 estimaciones. Sin embargo, la incertidumbre en el contexto bayesiano se deriva
 de principios diferentes. 
 
-En particular tenemos las siguientes propiedades en el contexto bayesiano: 
+En particular tenemos las siguientes propiedades en el contexto bayesiano:  
+
 - Igual que en máxima verosimilitud, la inferencia bayesiana comienza con
 modelos probabilísticos y observaciones.
 - En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada
@@ -281,7 +282,7 @@ información inicial que tenemos acerca de los parámetros con la información e
 la muestra acerca de los parámetros (verosimilitud). Podemos ilustrar como
 sigue:
 
-```{r, echo = FALSE, out.width= "70%"}
+```{r, echo = FALSE, out.width= "60%"}
 knitr::include_graphics('images/perros.png')
 ```
 
@@ -608,8 +609,8 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
 
 - Entonces la posterior es:
   - $\tau|x$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$,
-  $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$
-  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $ \sigma^2/({n_0 +n})$.
+  $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$.
+  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $\sigma^2/({n_0 +n})$.
 
   - $p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)$
 

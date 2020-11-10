@@ -803,21 +803,21 @@ aprobada para salir al mercado.
 
 Para diseñar esta prueba, procedemos como sigue:
 
-1. Definimos cómo recolectar datos $X$ de interés
-2. Definimos una estádistica $T(X)$ de los datos.
-3. Definimos una **región de rechazo** $R$ de valores tales
-que si $T(X)\in R$, entonces rechazaremos la hipótesis nula (e implícitamente tomaríamos
-la decisión asociada a la alternativa).
+1. Definimos cómo recolectar datos $X$ de interés. 
+2. Definimos una estadística $T(X)$ de los datos.
+3. Definimos una **región de rechazo** $R_0$ de valores tales que si $T(X)\in
+R_0$, entonces rechazaremos la hipótesis nula (e implícitamente tomaríamos la
+*decisión* asociada a la alternativa).
 
-Ejecutamos la prueba observando datos $X=x$, calculando $T(x)$, y checando
-si $T(x) \in R$. Si esto sucede entonces decimos que rechazamos la hipótesis nula,
-y tomamos la decisión asociada a la alternativa.
+Ejecutamos la prueba observando datos $X=x$, calculando $T(x)$, y checando si
+$T(x) \in R_0$. Si esto sucede entonces decimos que rechazamos la hipótesis
+nula, y tomamos la *decisión* asociada a la alternativa.
 
-**Ejemplo**. Si tenemos la hipótesis nula $p_1=0.5$ para una proporción,
-y al alternativa es $p_1\neq 0.5$, podemos usar la estadística de Wald
-$T(x) = \frac{\hat{p_1} - 0.5}{\hat{\textsf{ee}}_n}$. Podríamos definir la región
-de rechazo como $R = \{T(x) : |T(x)| > 3 \}$ (rechazamos si en valor absoluto
-la estadística de Wald es mayor que 3).
+**Ejemplo**. Si tenemos la hipótesis nula $p_1=0.5$ para una proporción, y al
+alternativa es $p_1\neq 0.5$, podemos usar la estadística de Wald $T(x) =
+\frac{\hat{p_1} - 0.5}{\hat{\textsf{ee}}_n}$. Podríamos definir la región de
+rechazo como $R_0 = \{T(x) : |T(x)| > 3 \}$ (rechazamos si en valor absoluto la
+estadística de Wald es mayor que 3).
 
 Cuando diseñamos una prueba de este tipo, quisiéramos minimizar dos tipos de errores:
 
@@ -843,8 +843,9 @@ En vista de este ejemplo simple, y las observaciones de arriba:
 
 - **Reducir una decisión compleja** a una prueba de hipótesis con resultados
 binarios (rechazar o no) es generalmente **erróneo**.
-- **Las pruebas de hipótesis se usan muchas veces incorrectamente cuando lo más apropiado es usar estimación** por intervalos o algo similar que cuantifique la incertidumbre
-de las estimaciones.
+- **Las pruebas de hipótesis se usan muchas veces incorrectamente cuando lo más
+apropiado es usar estimación** por intervalos o algo similar que cuantifique la
+incertidumbre de las estimaciones.
 
 Consulta por ejemplo [el comunicado de la ASA acerca de p-values y pruebas de hipótesis](https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108)
 
@@ -856,20 +857,19 @@ para hacer análisis costo-beneficio y tomar la decisión más apropiada.
 Como dijimos, típicamente se selecciona la región de rechazo de forma
 que bajo la hipótesis nula la probabilidad de cometer un error tipo I está acotada.
 
-```{block2, type='mathblock'}
-**Definición**. Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una distribución $F_\theta$, donde
-no conocemos $\theta$. Supongamos que la hipótesis nula es que $\theta = \theta_0$ (que llamamos
-una hipótesis simple).
+```{block, type='mathblock'}
+**Definición**. Supongamos que los datos $X_1,X_2,\ldots, X_n$ provienen de una
+distribución $F_\theta$, donde no conocemos $\theta$. Supongamos que la
+hipótesis nula es que $\theta = \theta_0$ (que llamamos una hipótesis simple).
 
-La **función de potencia** de una prueba con región de rechazo $R$
-se define como la probabilidad de rechazar para cada posible valor del parámetro $\theta$
-$$\beta(\theta) = P_\theta (X\in R).$$
+La **función de potencia** de una prueba con región de rechazo $R_0$ se define
+como la probabilidad de rechazar para cada posible valor del parámetro $\theta$
+$$\beta(\theta) = \mathbb{P}_\theta (T(X)\in R_0).$$
 
 El **tamaño** de una prueba se define como el valor
-
-$$\alpha = \beta(\theta_0),$$
-
-es decir, la probabilidad de rechazar la nula ($\theta = \theta_0$) erróneamente.
+$$\alpha := \beta(\theta_0),$$
+es decir, la probabilidad de rechazar la nula ($\theta = \theta_0$)
+erróneamente.
 ```
 
 **Observación**. Esto se generaliza para hipótesis compuestas, donde la nula
@@ -881,11 +881,11 @@ es decir, la probabilidad de rechazo más grande cuando la hipótesis nula se cu
 Decimos que una prueba tiene **nivel de significancia** de $\alpha$ si su tamaño
 es menor o igual a $\alpha$.
 
-Decimos que la **potencia de una prueba** es la probabilidad de, correctamente, rechazar la hipótesis nula cuando la alterna es verdadera:
-
-$$\beta(\theta_a) = P_{\theta_a} (X \in R).$$
-
-**Observación:** Sería deseable encontrar la prueba con mayor potencia bajo $H_a$, entre todas las pruebas con tamaño $\alpha$. Esto no es trivial y no
+Decimos que la **potencia de una prueba** es la probabilidad de, correctamente,
+rechazar la hipótesis nula cuando la alterna es verdadera:
+$$1-\beta := \beta(\theta_a) = \mathbb{P}_{\theta_a} (T(X) \in R_0).$$
+**Observación:** Sería deseable encontrar la prueba con mayor potencia bajo
+$H_a$, entre todas las pruebas con tamaño $\alpha$. Esto no es trivial y no
 siempre existe.
 
 **Observación:** El valor $p$ es el menor tamaño con el que podemos rechazar $H_0$.
@@ -904,9 +904,9 @@ menor que 505. ¿Cuál es la probabilidad $\alpha$ de tener un error de tipo I?
 
 
 La función de potencia es
-$$\beta(\mu) = P_\mu(\bar{X} < 505)$$
+$$\beta(\mu) = \mathbb{P}_\mu(\bar{X} < 505)$$
 Restando la media $\mu$ y estandarizando obtenemos
-$$\beta(\mu) = P \left (\frac{\bar{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{130/\sqrt{100}} \right )$$
+$$\beta(\mu) = \mathbb{P} \left (\frac{\bar{X} - \mu}{130/\sqrt{100}} < \frac{505 -\mu}{130/\sqrt{100}} \right )$$
 así que
 $$\beta(\mu) = \Phi \left (\frac{505 -\mu}{130/\sqrt{100}}\right ),$$
 donde $\Phi$ es la función acumulada de la normal estándar. La gráfica
@@ -964,7 +964,7 @@ C
 Así que podemos usar la región $\bar{X} < 493.5$, que es más *estricta*
 que la anterior de $\bar{X} < 505$.
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
 Considera la potencia de la prueba $\beta(\mu)$ que vimos arriba. Discute y
 corre algunos ejemplos para contestar las siguientes preguntas:
 
