@@ -13,9 +13,18 @@ puedes ver la sección correspondiente de @Chihara.
 
 En las secciones anteriores estudiamos el método de máxima verosimilitud y
 métodos de remuestreo. Esto lo hemos hecho para estimar parámetros, y
-cuantificar la incertidumbre qué tenemos acerca de valores poblacionales. La
-inferencia bayesiana tiene objetivos similares.
+cuantificar la incertidumbre qué tenemos acerca de valores poblacionales.
+Independiente del método utilizado, la incertidumbre que hemos aprendido a 
+incorporar en nuestros estimadores ha seguido el espirítu frecuentista. Es decir, 
+nuestra incertidumbre la hemos incorporado bajo distinats realizaciones
+hipotéticas de nuestro conjunto de datos. Estás realizaciones las hemos simulado 
+considerando el proceso generador de datos, o aproximaciones razonables a éste.  
 
+La inferencia bayesiana tiene por objetivo incorporar incertidumbre en nuestras
+estimaciones. Sin embargo, la incertidumbre en el contexto bayesiano se deriva
+de principios diferentes. 
+
+En particular tenemos las siguientes propiedades en el contexto bayesiano: 
 - Igual que en máxima verosimilitud, la inferencia bayesiana comienza con
 modelos probabilísticos y observaciones.
 - En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada
