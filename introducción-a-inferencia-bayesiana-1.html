@@ -340,7 +340,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-y-discusión-de-media"><i class="fa fa-check"></i>Solución y discusión de media</a></li>
 </ul></li>
-<li class="chapter" data-level="11.1" data-path="tareas.html"><a href="tareas.html#bootstrap-en-el-conteo-rápido"><i class="fa fa-check"></i><b>11.1</b> 7. Bootstrap en el conteo rápido</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-el-conteo-rápido"><i class="fa fa-check"></i>7. Bootstrap en el conteo rápido</a></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap en muestras complejas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución"><i class="fa fa-check"></i>Solución</a></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#mapas"><i class="fa fa-check"></i>Mapas</a></li>
@@ -378,7 +378,7 @@ métodos de remuestreo. Esto lo hemos hecho para estimar parámetros, y
 cuantificar la incertidumbre qué tenemos acerca de valores poblacionales. La
 inferencia bayesiana tiene objetivos similares.</p>
 <ul>
-<li>Igual que en máxima verosimilitud, al inferencia bayesiana comienza con
+<li>Igual que en máxima verosimilitud, la inferencia bayesiana comienza con
 modelos probabilísticos y observaciones.</li>
 <li>En contraste con máxima verosimilitud, la inferencia bayesiana está diseñada
 para incorporar información previa o de expertos que tengamos acerca de los
@@ -388,8 +388,7 @@ verosimilitud.</li>
 </ul>
 <p>El concepto probabilístico básico que utilizamos para construir estos modelos y
 la inferencia es el de probabilidad condicional: la probabilidad de que ocurran
-ciertos eventos, o de que cantidades tomen ciertos valores, dada información
-acerca del fenómeno que nos interesa.</p>
+ciertos eventos dada la información disponible del fenómeno que nos interesa.</p>
 <div id="un-primer-ejemplo-completo-de-inferencia-bayesiana" class="section level2 unnumbered">
 <h2>Un primer ejemplo completo de inferencia bayesiana</h2>
 <p>Consideremos el siguiente problema: Nos dan una moneda, y solo sabemos
@@ -413,64 +412,79 @@ que observamos <span class="math inline">\(x\)</span> soles. Por ejemplo, si tir
 <p>¿Cómo calculamos esta probabilidad? ¿Qué sentido tiene?</p>
 <p>Usando reglas de probabildad (regla de Bayes en particular), podríamos calcular
 <span class="math display">\[P(\theta=0.4|X=2) = \frac{P(X=2 | \theta = 0.4) P(\theta =0.4)}{P(X=2)}\]</span></p>
-<p>Nota que en el numerador uno de los factores (<span class="math inline">\(P(X=2 | \theta = 0.4)\)</span>) es la
-verosimilitud. Así que primero necesitamos la verosimlitud:
+<p>Nota que en el numerador uno de los factores, <span class="math inline">\(P(X=2 | \theta = 0.4),\)</span> es la
+verosimilitud. Así que primero necesitamos la verosimilitud:
 <span class="math display">\[P(X=2|\theta = 0.4) = (0.4)^2 = 0.16.\]</span></p>
 <p>La novedad es que ahora tenemos que considerar la probabilidad <span class="math inline">\(P(\theta = 0.4)\)</span>. Esta cantidad no la habíamos encontrado antes. Tenemos que pensar
 entonces que este parámetro es una <em>cantidad aleatoria</em>, y puede tomar dos
-valores <span class="math inline">\(\theta=0.4\)</span> o <span class="math inline">\(\theta = 0.6\)</span>.</p>
-<p>Considerar esta cantidad como aleatoria requiere pensar, en este caso,
-en cómo se escogió la moneda, o qué sabemos acerca de las monedas que se
-usan para este experimento. Supongamos que en este caso, nos dicen adicionalmente
-que la moneda se escoge al azar de una bolsa donde hay una proporción similar
-de los dos tipos de moneda (0.4 o 0.6).</p>
-<p>En este caso podemos poner
-<span class="math display">\[P(\theta = 0.4)=0.5\]</span></p>
+valores <span class="math inline">\(\theta=0.4\)</span> ó <span class="math inline">\(\theta = 0.6\)</span>.</p>
+<p>Considerar esta cantidad como aleatoria requiere pensar, en este caso, en cómo
+se escogió la moneda, o qué sabemos acerca de las monedas que se usan para este
+experimento. Supongamos que en este caso, nos dicen que la moneda se escoge al
+azar de una bolsa donde hay una proporción similar de los dos tipos de moneda
+(0.4 ó 0.6). Es decir el espacio parametral es <span class="math inline">\(\Theta = \{0.4, 0.6\},\)</span> y las
+probabilidades asociadas a cada posibilidad son las mismas. Es decir, tenemos
+<span class="math display">\[P(\theta = 0.4) = P(\theta = 0.6) =0.5,\]</span>
+que representa la probabilidad de escoger de manera aleatoria la moneda con
+una carga en particular.</p>
 <p>Ahora queremos calcular <span class="math inline">\(P(X=2)\)</span>, pero con el trabajo que hicimos esto es fácil.
-Pues requiere usar reglas de probabilidad usuales para hacerlo. Si usamos
+Pues requiere usar reglas de probabilidad usuales para hacerlo. Podemos utilizar
 probabilidad total
-<span class="math display">\[ P(X=2) = P(X=2|\theta = 0.4)P(\theta = 0.4) +
-P(X=2|\theta=0.6)P(\theta =0.6),\]</span>
-así que
+<span class="math display">\[\begin{align}
+P(X) &amp;= \sum_{\theta \in \Theta} P(X, \theta)\\
+&amp;= \sum_{\theta \in \Theta} P(X\, |\, \theta) P(\theta),
+\end{align}\]</span>
+lo cual en nuestro ejemplo se traduce en escribir</p>
+<p><span class="math display">\[ P(X=2) = P(X=2|\theta = 0.4)P(\theta = 0.4) + P(X=2|\theta=0.6)P(\theta =0.6),\]</span>
+por lo que obtenemos
 <span class="math display">\[P(X=2) = 0.16(0.5) + 0.36(0.5) = 0.26.\]</span></p>
-<p>y finalmente obtenemos:</p>
-<p><span class="math display">\[P(\theta=0.4|X=2) = \frac{0.16(0.5)}{0.26} \approx  0.31\]</span></p>
-<p>Es decir, la <strong>probabilidad posterior</strong> de que estemos tirando la moneda 2/5
+<p>Finalmente la probabilidad de haber escogido la moneda con carga <span class="math inline">\(2/5\)</span> dado que
+observamos dos soles en el lanzamiento es</p>
+<p><span class="math display">\[P(\theta=0.4|X=2) = \frac{0.16(0.5)}{0.26} \approx  0.31.\]</span></p>
+<p>Es decir, la <strong>probabilidad posterior</strong> de que estemos tirando la moneda <span class="math inline">\(2/5\)</span>
 baja de 0.5 (nuestra información inicial) a 0.31.</p>
-<p>Este es un ejemplo completo, aunque muy simple, de inferencia bayesiana.
-Hacemos <strong>inferencia bayesiana cuando tomamos decisiones basadas
-en las probabilidades posteriores</strong>.</p>
-
+<p>Este es un ejemplo completo, aunque muy simple, de inferencia bayesiana. La
+estrategia de <strong>inferencia bayesiana implica tomar decisiones basadas en las
+probabilidades posteriores.</strong></p>
 <div class="ejercicio">
+<p>
 ¿Cuál sería la estimación de máxima verosimilitud para este problema? ¿Cómo cuantificaríamos la incertidumbre en la estimación de máxima verosimilitud?
+</p>
 </div>
-
 <p>Finalmente, podríamos hacer predicciones usando la <strong>posterior predictiva</strong>.
 Si <span class="math inline">\({X}_{nv}\)</span> es una nueva tirada adicional de la moneda que estamos usando, nos
 interesaría saber:
-<span class="math display">\[P({X}_{nv}=\mathsf{sol}|X=2)\]</span>
-Que podemos calcular observando que <span class="math inline">\(P({X}_{nv}|X=2, \theta)\)</span> es una variable
-Bernoulli con probabilidad <span class="math inline">\(\theta\)</span>, que puede valer 0.4 o 0.6. Como tenemos las
-probabilidades posteriores <span class="math inline">\(P(\theta|X=2)\)</span> podemos usar probabilidad total, todo
-condicionado a <span class="math inline">\(X=2\)</span>:</p>
-<p><span class="math display">\[P(X_{nv}=\mathsf{sol}|\theta=0.4, X=2)P(\theta=0.4|X=2) +P(X_{nv}=\mathsf{sol}|\theta = 0.6, X=2)P(\theta =0.6|X=2)\]</span>
+<span class="math display">\[P({X}_{nv}=\mathsf{sol}\, | \, X=2)\]</span>
+Notemos que un volado adicional es un resultado binario. Por lo que podemos
+calcular observando que <span class="math inline">\(P({X}_{nv}|X=2, \theta)\)</span> es una variable Bernoulli con
+probabilidad <span class="math inline">\(\theta\)</span>, que puede valer 0.4 ó 0.6. Como tenemos las
+probabilidades posteriores <span class="math inline">\(P(\theta|X=2)\)</span> podemos usar probabilidad total,
+condicionado en <span class="math inline">\(X=2\)</span>:
+<span class="math display">\[\begin{align*}
+P({X}_{nv}=\mathsf{sol}\, | \, X=2) &amp; = \sum_{\theta \in \Theta} P({X}_{nv}=\mathsf{sol}, \theta \, | \, X=2) &amp; \text{(probabilidad total)}\\
+&amp;= \sum_{\theta \in \Theta} P({X}_{nv}=\mathsf{sol}\, | \theta , X=2) P(\theta \, | \, X=2) &amp; \text{(probabilidad condicional)}\\
+&amp;= \sum_{\theta \in \Theta} P({X}_{nv}=\mathsf{sol}\, | \theta ) P(\theta \, | \, X=2), &amp; \text{(independencia condicional)}
+\end{align*}\]</span></p>
+<p>lo que nos da el siguiente cálculo
+<span class="math display">\[P(X_{nv}=\mathsf{sol}\, |\, \theta=0.4) \,  P(\theta=0.4|X=2) \,  +\, P(X_{nv}=\mathsf{sol}|\theta = 0.6) \, P(\theta =0.6|X=2)\]</span>
 Es decir, promediamos ponderando con las probabilidades posteriores.
-Obtendríamos entonces
-<span class="math display">\[P(X_{nv} = \mathsf{sol}|X=2) =  0.4 ( 0.31) + 0.6 (0.69) = 0.538\]</span></p>
+Por lo tanto obtenemos
+<span class="math display">\[P(X_{nv} = \mathsf{sol}|X=2) =  0.4 ( 0.31) + 0.6 (0.69) = 0.538.\]</span></p>
 <div id="observación-0" class="section level4 unnumbered">
 <h4>Observación 0</h4>
 <p>Nótese que en contraste con máxima verosimilitud, en este ejemplo <em>cuantificamos
-con probabilidad los parámetros que no conocemos</em>. En máxima verosimilitud esta
-probabilidad no tiene mucho sentido, pues nunca consideramos el parámetro
-desconocido como una cantidad aleatoria.</p>
+con probabilidad condicional la incertidumbre de los parámetros que no
+conocemos</em>. En máxima verosimilitud esta probabilidad no tiene mucho sentido,
+pues nunca consideramos el parámetro desconocido como una cantidad aleatoria.</p>
 </div>
 <div id="observación-1" class="section level4 unnumbered">
 <h4>Observación 1</h4>
-<p>Nótese <span class="math inline">\(P(X=2)\)</span> puede entenderse como un factor de normalización. La razón es
-que
-<span class="math display">\[P(X=2 | \theta = 0.4) P(\theta =0.4) = 0.16(0.5) = 0.08\]</span>
+<p>Nótese el factor <span class="math inline">\(P(X=2)\)</span> en la probabilidad posterior puede entenderse como un
+factor de normalización. Notemos que los denominadores en la distribución
+posterior son
+<span class="math display">\[P(X=2 | \theta = 0.4) P(\theta =0.4) = 0.16(0.5) = 0.08,\]</span>
 y
-<span class="math display">\[P(X=2 | \theta = 0.6) P(\theta =0.6) = 0.36(0.5) = 0.18\]</span>
+<span class="math display">\[P(X=2 | \theta = 0.6) P(\theta =0.6) = 0.36(0.5) = 0.18.\]</span>
 Las probabilidades posteriores son proporcionales a estas dos cantidades,
 y como deben sumar uno, entonces normalizando estos dos números (dividiendo
 entre su suma) obtenemos las probabilidades.</p>
@@ -479,11 +493,11 @@ entre su suma) obtenemos las probabilidades.</p>
 <h4>Observación 2</h4>
 <p>La nomenclatura que usamos es la siguiente:</p>
 <ul>
-<li>Como <span class="math inline">\(X\)</span> son los datos observados, llamamos a <span class="math inline">\(P(X|\theta)\)</span> la <em>verosimitud</em>,
+<li>Como <span class="math inline">\(X\)</span> son los datos observados, llamamos a <span class="math inline">\(P(X|\theta)\)</span> la <em>verosimilitud</em>,
 o modelo de los datos.</li>
-<li>A los datos <span class="math inline">\(P(\theta)\)</span> le llamamos la distribución <em>inicial</em> o <em>previa</em>.</li>
+<li>A <span class="math inline">\(P(\theta)\)</span> le llamamos la distribución <em>inicial</em> o <em>previa</em>.</li>
 <li>La distribución que usamos para hacer inferencia <span class="math inline">\(P(\theta|X)\)</span> es la
-distribución <em>final</em> o <em>posterior</em> .</li>
+distribución <em>final</em> o <em>posterior.</em></li>
 </ul>
 <p>Para utilizar inferencia bayesiana, hay que hacer supuestos para definir las
 primeras dos partes del modelo. La parte de iniciales o previas está ausente de
@@ -491,7 +505,7 @@ enfoques como máxima verosimlitud usual.</p>
 </div>
 <div id="observación-3" class="section level4 unnumbered">
 <h4>Observación 3</h4>
-<p>¿Cómo decidimos las probabilidades iniciales <span class="math inline">\(P(\theta=0.4)\)</span> ?</p>
+<p>¿Cómo decidimos las probabilidades iniciales, por ejemplo <span class="math inline">\(P(\theta=0.4)\)</span> ?</p>
 <p>Quizá es un supuesto y no tenemos razón para pensar que se hace de otra manera.
 O quizá conocemos el mecanismo concreto con el que se selecciona la moneda.
 Discutiremos esto más adelante.</p>
@@ -508,85 +522,104 @@ es necesario checar que nuestro modelo ajusta razonablemente a los datos.</p>
 <p>Cambia distintos parámetros del número de soles observados, las probabilidades
 de sol de las monedas, y las probabilidades iniciales de selección de las
 monedas.</p>
-<div class="sourceCode" id="cb415"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb415-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-1"></a>n_volados &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<div class="sourceCode" id="cb415"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb415-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-1"></a>n_volados &lt;-<span class="st"> </span><span class="dv">10</span></span>
 <span id="cb415-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-2"></a><span class="co"># posible valores del parámetro desconocido</span></span>
 <span id="cb415-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-3"></a>theta =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.4</span>, <span class="fl">0.6</span>)</span>
 <span id="cb415-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-4"></a><span class="co"># probabilidades iniciales</span></span>
 <span id="cb415-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-5"></a>probs_inicial &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">moneda =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>),</span>
-<span id="cb415-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-6"></a>                        <span class="dt">theta =</span> theta, </span>
-<span id="cb415-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-7"></a>                        <span class="dt">prob_inicial =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
+<span id="cb415-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-6"></a>                        <span class="dt">theta =</span> theta,</span>
+<span id="cb415-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-7"></a>                        <span class="dt">prob_inicial =</span> <span class="kw">c</span>(<span class="fl">0.9</span>, <span class="fl">0.1</span>))</span>
 <span id="cb415-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb415-8"></a>probs_inicial</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   moneda theta prob_inicial
 ##    &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;
-## 1      1   0.4          0.5
-## 2      2   0.6          0.5</code></pre>
+## 1      1   0.4          0.9
+## 2      2   0.6          0.1</code></pre>
 <div class="sourceCode" id="cb417"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb417-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-1"></a><span class="co"># verosimilitud</span></span>
 <span id="cb417-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-2"></a>crear_verosim &lt;-<span class="st"> </span><span class="cf">function</span>(no_soles){</span>
 <span id="cb417-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-3"></a>    verosim &lt;-<span class="st"> </span><span class="cf">function</span>(theta){</span>
 <span id="cb417-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-4"></a>      <span class="co"># prob de observar no_soles en 2 volados con probabilidad de sol theta</span></span>
-<span id="cb417-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-5"></a>      <span class="kw">dbinom</span>(no_soles, <span class="dv">2</span>, theta)</span>
+<span id="cb417-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-5"></a>      <span class="kw">dbinom</span>(no_soles, n_volados, theta)</span>
 <span id="cb417-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-6"></a>    }</span>
 <span id="cb417-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-7"></a>    verosim</span>
 <span id="cb417-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-8"></a>}</span>
 <span id="cb417-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-9"></a><span class="co"># evaluar verosimilitud</span></span>
-<span id="cb417-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-10"></a>verosim &lt;-<span class="st"> </span><span class="kw">crear_verosim</span>(<span class="dv">2</span>)</span>
+<span id="cb417-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-10"></a>verosim &lt;-<span class="st"> </span><span class="kw">crear_verosim</span>(<span class="dv">6</span>)</span>
 <span id="cb417-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-11"></a><span class="co"># ahora usamos regla de bayes para hacer tabla de probabilidades</span></span>
-<span id="cb417-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-12"></a>tabla_inferencia &lt;-<span class="st"> </span>probs_inicial <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb417-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">verosimilitud =</span> <span class="kw">map_dbl</span>(theta, verosim)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb417-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">inicial_x_verosim =</span> prob_inicial <span class="op">*</span><span class="st"> </span>verosimilitud) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb417-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-12"></a>tabla_inferencia &lt;-<span class="st"> </span>probs_inicial <span class="op">%&gt;%</span></span>
+<span id="cb417-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">verosimilitud =</span> <span class="kw">map_dbl</span>(theta, verosim)) <span class="op">%&gt;%</span></span>
+<span id="cb417-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">inicial_x_verosim =</span> prob_inicial <span class="op">*</span><span class="st"> </span>verosimilitud) <span class="op">%&gt;%</span></span>
 <span id="cb417-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-15"></a><span class="st">  </span><span class="co"># normalizar</span></span>
 <span id="cb417-16"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prob_posterior =</span> inicial_x_verosim <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(inicial_x_verosim))</span>
 <span id="cb417-17"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-17"></a></span>
-<span id="cb417-18"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-18"></a>tabla_inferencia <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb417-19"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">moneda_obs =</span> moneda) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb417-20"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-20"></a><span class="st">  </span><span class="kw">select</span>(moneda_obs, theta, prob_inicial, verosimilitud, prob_posterior) </span></code></pre></div>
+<span id="cb417-18"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-18"></a>tabla_inferencia <span class="op">%&gt;%</span></span>
+<span id="cb417-19"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-19"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">moneda_obs =</span> moneda) <span class="op">%&gt;%</span></span>
+<span id="cb417-20"><a href="introducción-a-inferencia-bayesiana-1.html#cb417-20"></a><span class="st">  </span><span class="kw">select</span>(moneda_obs, theta, prob_inicial, verosimilitud, prob_posterior)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   moneda_obs theta prob_inicial verosimilitud prob_posterior
 ##        &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;
-## 1          1   0.4          0.5          0.16          0.308
-## 2          2   0.6          0.5          0.36          0.692</code></pre>
-
+## 1          1   0.4          0.9         0.111          0.80 
+## 2          2   0.6          0.1         0.251          0.200</code></pre>
 <div class="ejercicio">
-<ol style="list-style-type: decimal">
-<li>¿Qué pasa cuando el número de soles es 0? ¿Cómo cambian las probabilidades
-posteriores de cada moneda?</li>
-<li>Incrementa el número de volados, por ejemplo a 10. ¿Qué pasa si observaste
-8 soles, por ejemplo? ¿Y si observaste 0?</li>
-<li>¿Qué pasa si cambias las probabilidades iniciales (por ejemplo incrementas
-la probabilidad inicial de la moneda 1 a 0.9)?</li>
-</ol>
-<p>Justifica las siguientes aseveraciones (para este ejemplo):</p>
-<ol style="list-style-type: decimal">
-<li>Las probabilidades posteriores o finales
-son una especie de punto intermedio entre verosimilitud y probablidades iniciales.</li>
-<li>Si tenemos pocas observaciones, las probabilidades posteriores son similares a las iniciales.</li>
-<li>Cuando tenemos muchos datos, las probabilidades posteriores están más concentradas, y no es tan importante la inicial.</li>
-<li>Si la inicial está muy concentrada en algún valor, la posterior requiere de
-muchas observaciones para que se pueda concentrar en otros valores diferentes a los de la inicial.</li>
-</ol>
+<ul>
+<li>
+¿Qué pasa cuando el número de soles es 0? ¿Cómo cambian las probabilidades posteriores de cada moneda?
+</li>
+<li>
+Incrementa el número de volados, por ejemplo a 10. ¿Qué pasa si observaste 8 soles, por ejemplo? ¿Y si observaste 0?
+</li>
+<li>
+¿Qué pasa si cambias las probabilidades iniciales (por ejemplo incrementas la probabilidad inicial de la moneda 1 a 0.9)?
+</li>
+</ul>
 </div>
-
+<p>Justifica las siguientes aseveraciones (para este ejemplo):</p>
+<div class="ejercicio">
+<ul>
+<li>
+Las probabilidades posteriores o finales son una especie de punto intermedio entre verosimilitud y probablidades iniciales.
+</li>
+<li>
+Si tenemos pocas observaciones, las probabilidades posteriores son similares a las iniciales.
+</li>
+<li>
+Cuando tenemos muchos datos, las probabilidades posteriores están más concentradas, y no es tan importante la inicial.
+</li>
+<li>
+Si la inicial está muy concentrada en algún valor, la posterior requiere de muchas observaciones para que se pueda concentrar en otros valores diferentes a los de la inicial.
+</li>
+</ul>
+</div>
 <p>Ahora resumimos los elementos básicos de la inferencia bayesiana, que son
 relativamente simples:</p>
-
 <div class="mathblock">
-<p><strong>Inferencia bayesiana.</strong> Con la notación de arriba:</p>
+<p>
+<strong>Inferencia bayesiana.</strong> Con la notación de arriba:
+</p>
 <ul>
-<li>Como <span class="math inline">\(X\)</span> son los datos observados, llamamos a <span class="math inline">\(P(X|\theta)\)</span> la <em>verosimitud</em>,
-proceso generador de datos o modelo de los datos.</li>
-<li>El factor <span class="math inline">\(P(\theta)\)</span> le llamamos la distribución <em>inicial</em> o <em>previa</em>.</li>
-<li>La distribución que usamos para hacer inferencia <span class="math inline">\(P(\theta|X)\)</span> es la
-distribución <em>final</em> o <em>posterior</em></li>
+<li>
+Como <span class="math inline"><span class="math inline">\(X\)</span></span> son los datos observados, llamamos a <span class="math inline"><span class="math inline">\(P(X|\theta)\)</span></span> la <em>verosimilitud</em>, proceso generador de datos o modelo de los datos.
+</li>
+<li>
+El factor <span class="math inline"><span class="math inline">\(P(\theta)\)</span></span> le llamamos la distribución <em>inicial</em> o <em>previa</em>.
+</li>
+<li>
+La distribución que usamos para hacer inferencia <span class="math inline"><span class="math inline">\(P(\theta|X)\)</span></span> es la distribución <em>final</em> o <em>posterior</em>
+</li>
 </ul>
-<p>Hacemos inferencia usando la ecuación</p>
-<p><span class="math display">\[P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}\]</span></p>
-<p>que también escribimos:</p>
-<span class="math display">\[P(\theta | X) \propto P(X | \theta) P(\theta)\]</span>
-donde <span class="math inline">\(\propto\)</span> significa “proporcional a”. No ponemos
-<span class="math inline">\(P(X)\)</span> pues como vimos arriba, es una constante de normalización.
+<p>
+Hacemos inferencia usando la ecuación
+</p>
+<p>
+<span class="math display"><span class="math display">\[P(\theta | X) = \frac{P(X | \theta) P(\theta)}{P(X)}\]</span></span>
+</p>
+<p>
+que también escribimos:
+</p>
+<p>
+<span class="math display"><span class="math display">\[P(\theta | X) \propto P(X | \theta) P(\theta)\]</span></span> donde <span class="math inline"><span class="math inline">\(\propto\)</span></span> significa “proporcional a”. No ponemos <span class="math inline"><span class="math inline">\(P(X)\)</span></span> pues como vimos arriba, es una constante de normalización.
+</p>
 </div>
-
 <p>En estadística Bayesiana, las probablidades posteriores <span class="math inline">\(P(\theta|X)\)</span> dan toda
 la información que necesitamos para hacer inferencia. ¿Cuándo damos probablidad
 alta a un parámetro particular <span class="math inline">\(\theta\)</span>? Cuando su verosimilitud es alta y/o
@@ -610,20 +643,19 @@ distribución puede tener cualquier forma, supongamos que nuestro conocimiento
 actual podemos resumirlo con una distribución <span class="math inline">\(\mathsf{Beta}(3, 3)\)</span>:</p>
 <p><span class="math display">\[P(\theta) \propto \theta^2(1-\theta)^2.\]</span>
 La constante de normalización es 1/30, pero no la requerimos. Podemos simular para examinar su forma:</p>
-<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb419-1"></a>sim_inicial &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">theta =</span> <span class="kw">rbeta</span>(<span class="dv">10000</span>, <span class="dv">3</span>, <span class="dv">3</span>))  </span>
+<div class="sourceCode" id="cb419"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb419-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb419-1"></a>sim_inicial &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">theta =</span> <span class="kw">rbeta</span>(<span class="dv">10000</span>, <span class="dv">3</span>, <span class="dv">3</span>))</span>
 <span id="cb419-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb419-2"></a><span class="kw">ggplot</span>(sim_inicial) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> theta, <span class="dt">y =</span> ..density..), <span class="dt">bins =</span> <span class="dv">15</span>)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;" />
 De modo que nuestra información inicial es que la proporción puede tomar
 cualquier valor entre 0 y 1, pero es probable que tome un
 valor no tan lejano de 0.5. Por ejemplo, con probabilidad 0.95 creemos
 que <span class="math inline">\(\theta\)</span> está en el intervalo</p>
 <div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb420-1"></a><span class="kw">quantile</span>(sim_inicial<span class="op">$</span>theta, <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##  2.5% 97.5% 
-##  0.15  0.86</code></pre>
+##  0.14  0.85</code></pre>
 <p>Es difícil justificar en abstracto por qué escogeriamos una inicial con esta
 forma. <em>Aunque esto los detallaremos más adelante</em>, puedes pensar, por el
-momento, que alguien observó algunos casos de esta población, y quizá vio dos
-éxitos y dos fracasos. Esto sugeriría que es poco probable que la probablidad
+momento, que alguien observó algunos casos de esta población, y quizá vio tres éxitos y tres fracasos. Esto sugeriría que es poco probable que la probablidad
 <span class="math inline">\(\theta\)</span> sea muy cercana a 0 o muy cercana a 1.</p>
 <p>Ahora podemos construir nuestra posterior. Tenemos que</p>
 <p><span class="math display">\[P(\theta| X_1=x_1, \ldots, X_n=x_n) \propto P(X_1 = x_1,\ldots X_n=x_n | \theta)P(\theta) = \theta^{k+2}(1-\theta)^{n-k + 2}\]</span>
@@ -631,7 +663,7 @@ donde la constante de normalización no depende de <span class="math inline">\(\
 parámetro continuo, la expresión de la derecha nos debe dar una densidad posterior.</p>
 <p>Supongamos entonces que hicimos la prueba con <span class="math inline">\(n = 30\)</span> (número de prueba) y observamos
 19 éxitos. Tendríamos entonces</p>
-<p><span class="math display">\[P(\theta | S_n = 19) \propto \theta^{19 + 2} (1-\theta)^{30 - 19 +2} = \theta^{21}(1-\theta)^{13}\]</span></p>
+<p><span class="math display">\[P(\theta | S_n = 19) \propto \theta^{19 + 3} (1-\theta)^{30-19 +3} = \theta^{21}(1-\theta)^{13}\]</span></p>
 <p>La cantidad de la derecha, una vez que normalizemos por el número <span class="math inline">\(P(X=19)\)</span>, nos
 dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos
 obtenerla usando cálculo, pero recordamos que una distribución
@@ -641,36 +673,36 @@ Concluimos entonces que la posterior tiene una distribución <span class="math i
 <div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb422-1"></a>sim_inicial &lt;-<span class="st"> </span>sim_inicial <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dist =</span> <span class="st">&quot;inicial&quot;</span>)</span>
 <span id="cb422-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb422-2"></a>sim_posterior &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">theta =</span> <span class="kw">rbeta</span>(<span class="dv">10000</span>, <span class="dv">22</span>, <span class="dv">14</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">dist =</span> <span class="st">&quot;posterior&quot;</span>)</span>
 <span id="cb422-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb422-3"></a>sims &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(sim_inicial, sim_posterior)</span>
-<span id="cb422-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb422-4"></a><span class="kw">ggplot</span>(sims, <span class="kw">aes</span>(<span class="dt">x =</span> theta, <span class="dt">fill =</span> dist)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb422-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb422-4"></a><span class="kw">ggplot</span>(sims, <span class="kw">aes</span>(<span class="dt">x =</span> theta, <span class="dt">fill =</span> dist)) <span class="op">+</span></span>
 <span id="cb422-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb422-5"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> theta), <span class="dt">bins =</span> <span class="dv">30</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-9-1.png" width="480" style="display: block; margin: auto;" />
 La posterior nos dice cuáles son las <em>posibilidades</em> de dónde puede estar
 el parámetro <span class="math inline">\(\theta\)</span>. Nótese que ahora excluye prácticamente valores más chicos
 que 0.25 o mayores que 0.9. Esta distribución posterior es el objeto con el
 que hacemos inferencia: nos dice dónde es creíble que esté el parámetro <span class="math inline">\(\theta\)</span>.</p>
 <p>Podemos resumir de varias maneras. Por ejemplo, si queremos un estimador puntual
 usamos la media posterior:</p>
-<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb423-1"></a>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(dist) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<div class="sourceCode" id="cb423"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb423-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb423-1"></a>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(dist) <span class="op">%&gt;%</span></span>
 <span id="cb423-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb423-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">theta_hat =</span> <span class="kw">mean</span>(theta) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##   dist      theta_hat
 ##   &lt;chr&gt;         &lt;dbl&gt;
-## 1 inicial       0.499
-## 2 posterior     0.612</code></pre>
+## 1 inicial       0.497
+## 2 posterior     0.609</code></pre>
 <p>Nota que el estimador de máxima verosimilitud es <span class="math inline">\(\hat{p} = 19/30 = 0.63\)</span>, que
 es ligeramente diferente de la media posterior. ¿Por qué?</p>
 <p>Y podemos construir intervalos de percentiles, que en esta situación
 suelen llamarse <em>intervalos de credibilidad</em>, por ejemplo:</p>
 <div class="sourceCode" id="cb425"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb425-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb425-1"></a>f &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)</span>
-<span id="cb425-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb425-2"></a>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(dist) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb425-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb425-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cuantiles =</span> <span class="kw">quantile</span>(theta, f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>), <span class="dt">f =</span> f) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb425-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb425-2"></a>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(dist) <span class="op">%&gt;%</span></span>
+<span id="cb425-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb425-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cuantiles =</span> <span class="kw">quantile</span>(theta, f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>), <span class="dt">f =</span> f) <span class="op">%&gt;%</span></span>
 <span id="cb425-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb425-4"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> f, <span class="dt">values_from =</span> cuantiles)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ## # Groups:   dist [2]
 ##   dist      `0.025` `0.975`
 ##   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;
-## 1 inicial      0.15    0.86
-## 2 posterior    0.45    0.76</code></pre>
+## 1 inicial      0.14    0.85
+## 2 posterior    0.44    0.76</code></pre>
 <p>El segundo renglón nos da un intervalo posterior para <span class="math inline">\(\theta\)</span> de <em>credibilidad</em>
 95%. En inferencia bayesiana esto sustituye a los intervalos de confianza.</p>
 <ul>
@@ -696,12 +728,11 @@ que podemos interpretar como sigue: para calcular la media posterior, a nuestras
 <span class="math inline">\(n\)</span> pruebas iniciales agregamos
 4 pruebas adicionales fijas, con 2 éxitos y 2 fracasos, y calculamos la proporción
 usual de éxitos.</p>
-
 <div class="ejercicio">
-Repite el análisis considerando en general <span class="math inline">\(n\)</span> pruebas, con <span class="math inline">\(k\)</span> éxitos. Utiliza la
-misma distribución inicial.
+<p>
+Repite el análisis considerando en general <span class="math inline"><span class="math inline">\(n\)</span></span> pruebas, con <span class="math inline"><span class="math inline">\(k\)</span></span> éxitos. Utiliza la misma distribución inicial.
+</p>
 </div>
-
 <ul>
 <li>Lo mismo aplica para el intervalo de 95% (¿cómo se calcularía integrando?). También
 puedes usar la aproximación de R, por ejemplo:</li>
@@ -741,10 +772,10 @@ Nótese ahora que la posterior cumple (multiplicando verosimilitud por inicial):
 es pareto con <span class="math inline">\(\theta_0&#39; = \max\{300, X_1,\ldots, X_n\}\)</span> y <span class="math inline">\(\alpha = n + 1.1\)</span></p>
 <p>Una vez planteado nuestro modelo, veamos los datos. Obtuvimos la siguiente
 muestra de números:</p>
-<div class="sourceCode" id="cb433"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb433-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-1"></a>loteria_tbl &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/nums_loteria_avion.csv&quot;</span>, <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;numero&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<div class="sourceCode" id="cb433"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb433-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-1"></a>loteria_tbl &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/nums_loteria_avion.csv&quot;</span>, <span class="dt">col_names =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;numero&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb433-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">numero =</span> <span class="kw">as.integer</span>(numero))</span>
 <span id="cb433-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-3"></a><span class="kw">set.seed</span>(<span class="dv">334</span>)</span>
-<span id="cb433-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-4"></a>muestra_loteria &lt;-<span class="st"> </span><span class="kw">sample_n</span>(loteria_tbl, <span class="dv">25</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb433-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-4"></a>muestra_loteria &lt;-<span class="st"> </span><span class="kw">sample_n</span>(loteria_tbl, <span class="dv">25</span>) <span class="op">%&gt;%</span></span>
 <span id="cb433-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">numero =</span> numero<span class="op">/</span><span class="dv">1000</span>)</span>
 <span id="cb433-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb433-6"></a>muestra_loteria <span class="op">%&gt;%</span><span class="st"> </span>as.data.frame <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
 <pre><code>##   id   numero
@@ -766,18 +797,18 @@ muestra de números:</p>
 <span id="cb436-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb436-3"></a>  <span class="dt">dist =</span> <span class="st">&quot;inicial&quot;</span>)</span></code></pre></div>
 <p>Y con los datos de la muestra, simulamos de la posterior:</p>
 <div class="sourceCode" id="cb437"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb437-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-1"></a>sims_pareto_posterior &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
-<span id="cb437-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-2"></a>  <span class="dt">theta =</span> <span class="kw">rpareto</span>(<span class="dv">20000</span>, </span>
-<span id="cb437-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-3"></a>                  <span class="kw">max</span>(<span class="kw">c</span>(<span class="dv">300</span>, muestra_loteria<span class="op">$</span>numero)), </span>
+<span id="cb437-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-2"></a>  <span class="dt">theta =</span> <span class="kw">rpareto</span>(<span class="dv">20000</span>,</span>
+<span id="cb437-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-3"></a>                  <span class="kw">max</span>(<span class="kw">c</span>(<span class="dv">300</span>, muestra_loteria<span class="op">$</span>numero)),</span>
 <span id="cb437-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-4"></a>                  <span class="kw">nrow</span>(muestra_loteria) <span class="op">+</span><span class="st"> </span><span class="fl">1.1</span>),</span>
 <span id="cb437-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-5"></a>  <span class="dt">dist =</span> <span class="st">&quot;posterior&quot;</span>)</span>
 <span id="cb437-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-6"></a>sims_theta &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(sims_pareto_inicial, sims_pareto_posterior)</span>
-<span id="cb437-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-7"></a><span class="kw">ggplot</span>(sims_theta) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb437-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-8"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> theta, <span class="dt">fill =</span> dist), </span>
-<span id="cb437-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-9"></a>                 <span class="dt">bins =</span> <span class="dv">70</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>, </span>
+<span id="cb437-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-7"></a><span class="kw">ggplot</span>(sims_theta) <span class="op">+</span></span>
+<span id="cb437-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-8"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="kw">aes</span>(<span class="dt">x =</span> theta, <span class="dt">fill =</span> dist),</span>
+<span id="cb437-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-9"></a>                 <span class="dt">bins =</span> <span class="dv">70</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>,</span>
 <span id="cb437-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-10"></a>                 <span class="dt">boundary =</span> <span class="kw">max</span>(muestra_loteria<span class="op">$</span>numero))  <span class="op">+</span></span>
 <span id="cb437-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-11"></a><span class="st">  </span><span class="kw">xlim</span>(<span class="dv">0</span>, <span class="dv">15000</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_y_sqrt</span>() <span class="op">+</span></span>
 <span id="cb437-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb437-12"></a><span class="st">  </span><span class="kw">geom_rug</span>(<span class="dt">data =</span> muestra_loteria, <span class="kw">aes</span>(<span class="dt">x =</span> numero))</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;" />
 Nótese que cortamos algunos valores de la inicial en la cola derecha: un defecto
 de esta distribución inicial, con una cola tan larga a la derecha, es que
 pone cierto peso en valores que son poco creíbles y la vuelve poco apropiada para
@@ -785,8 +816,8 @@ este problema. Regresamos más adelante a este problema.</p>
 <p>Si obtenemos percentiles,
 obtenemos el intervalo</p>
 <div class="sourceCode" id="cb438"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb438-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb438-1"></a>f &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.5</span>, <span class="fl">0.975</span>)</span>
-<span id="cb438-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb438-2"></a>sims_theta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(dist) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb438-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb438-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cuantiles =</span> <span class="kw">quantile</span>(theta, f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>), <span class="dt">f =</span> f) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb438-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb438-2"></a>sims_theta <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(dist) <span class="op">%&gt;%</span></span>
+<span id="cb438-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb438-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cuantiles =</span> <span class="kw">quantile</span>(theta, f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>), <span class="dt">f =</span> f) <span class="op">%&gt;%</span></span>
 <span id="cb438-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb438-4"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> f, <span class="dt">values_from =</span> cuantiles)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 4
 ## # Groups:   dist [2]
@@ -805,7 +836,7 @@ Nos gustaría, por ejemplo, poner una inicial como
 la siguiente</p>
 <div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb442-1"></a><span class="kw">qplot</span>(<span class="kw">rgamma</span>(<span class="dv">2000</span>, <span class="dv">5</span>, <span class="fl">0.001</span>), <span class="dt">geom=</span><span class="st">&quot;histogram&quot;</span>, <span class="dt">bins =</span> <span class="dv">20</span>) <span class="op">+</span></span>
 <span id="cb442-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb442-2"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">1000</span>, <span class="dv">15000</span>, <span class="dt">by =</span> <span class="dv">2000</span>))</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-21-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Sin embargo, los cálculos no son tan simples en este caso, pues la posterior
 no tiene un forma reconocible. Tendremos que usar otras estrategias de simulación
 para ejemplos como este (Monte Carlo por medio de Cadenas de Markov, que veremos más adelante).</p>
@@ -842,12 +873,12 @@ queremos estimar <span class="math inline">\(p\)</span>, y tomamos como distribu
 entonces la posterior para <span class="math inline">\(p\)</span> cuando <span class="math inline">\(S_n=k\)</span> es <span class="math inline">\(\mathsf{Beta}(k + a, n - k + b)\)</span>,
 donde <span class="math inline">\(S_n = X_1 + X_2 +\cdots +X_n\)</span>.</li>
 </ul>
-<p>Y en más en general:</p>
+<p>Y más en general:</p>
 <ul>
 <li>(Beta-binomial) Si las observaciones <span class="math inline">\(X_i, i=1,2,\ldots, m\)</span>
 son <span class="math inline">\(\mathsf{Binomial}(n_i, p)\)</span> (<span class="math inline">\(n_i\)</span>’s fijas) independientes,
 queremos estimar <span class="math inline">\(p\)</span>, y tomamos como distribución inicial para <span class="math inline">\(p\)</span> una <span class="math inline">\(\mathsf{Beta}(a,b)\)</span>,
-entonces la posterior para <span class="math inline">\(p\)</span> cuando <span class="math inline">\(S_n=k\)</span> es <span class="math inline">\(\mathsf{Beta}(k + a, n - k + b)\)</span>,
+entonces la posterior para <span class="math inline">\(p\)</span> cuando <span class="math inline">\(S_m=k\)</span> es <span class="math inline">\(\mathsf{Beta}(k + a, n - k + b)\)</span>,
 donde <span class="math inline">\(S_m = X_1 + X_2 +\cdots +X_m\)</span> y <span class="math inline">\(n= n_1+n_2+\cdots+n_m\)</span></li>
 </ul>
 <p>También aplicamos:</p>
@@ -881,14 +912,14 @@ varianza conocida.
 como distribuciones iniciales (dadas por 4 parámetros: <span class="math inline">\(\mu_0, n_0, \alpha,\beta\)</span>):</p>
 <ul>
 <li><span class="math inline">\(\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta)\)</span></li>
-<li><span class="math inline">\(\mu|\sigma\)</span> es normal con media <span class="math inline">\(\mu_0\)</span> y varianza <span class="math inline">\(\sigma / \sqrt{n_0}\)</span> , y</li>
+<li><span class="math inline">\(\mu|\sigma\)</span> es normal con media <span class="math inline">\(\mu_0\)</span> y varianza <span class="math inline">\(\sigma^2 / {n_0}\)</span> , y</li>
 <li><span class="math inline">\(p(\mu, \sigma) = p(\mu|\sigma)p(\sigma)\)</span></li>
 </ul></li>
 <li><p>Entonces la posterior es:</p>
 <ul>
 <li><p><span class="math inline">\(\tau|x\)</span> es <span class="math inline">\(\mathsf{Gamma}(\alpha&#39;, \beta&#39;)\)</span>, con <span class="math inline">\(\alpha&#39; = \alpha + n/2\)</span>,
 <span class="math inline">\(\beta&#39; = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}\)</span></p></li>
-<li><p><span class="math inline">\(\mu|\sigma,x\)</span> es normal con media <span class="math inline">\(\mu&#39; = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}\)</span> y varianza <span class="math inline">\(\sigma&#39; = \sigma/\sqrt{n_0 +n}\)</span>.</p></li>
+<li><p><span class="math inline">\(\mu|\sigma,x\)</span> es normal con media <span class="math inline">\(\mu&#39; = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}\)</span> y varianza $ ^2/({n_0 +n})$.</p></li>
 <li><p><span class="math inline">\(p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)\)</span></p></li>
 </ul></li>
 </ul>
@@ -896,8 +927,8 @@ como distribuciones iniciales (dadas por 4 parámetros: <span class="math inline
 <ol style="list-style-type: decimal">
 <li><p>Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
 el objeto de interés es la <strong>posterior conjunta</strong> de los parámetros <span class="math inline">\(p(\theta_1,\theta_2,\cdots, \theta_p|x)\)</span>.
-Este útlimo ejemplo es relativamente simple pues por la selección de iniciales, pues
-para simular de la conjunta de <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\tau\)</span> podemos simular primero <span class="math inline">\(\tau\)</span>, y después
+Este último ejemplo es relativamente simple pues por la selección de iniciales,
+para simular de la conjunta de <span class="math inline">\(\mu\)</span> y <span class="math inline">\(\tau\)</span> podemos simular primero <span class="math inline">\(\tau\)</span> (o <span class="math inline">\(\sigma\)</span>), y después
 usar este valor para simular de <span class="math inline">\(\mu\)</span>: el par de valores resultantes son una simulación
 de la conjunta.</p></li>
 <li><p>Los parámetros <span class="math inline">\(a,b\)</span> para la inicial de <span class="math inline">\(\tau\)</span> pueden interpretarse como sigue: <span class="math inline">\(\sqrt{b/a}\)</span> es
@@ -950,8 +981,7 @@ estándar es alrededor de 7 centímetros</p>
 es menor a 4 centímetros, y también creemos que es poco creíble la desviación
 estándar sea de más de 13 centímetros.</p>
 <p>Comenzamos con <span class="math inline">\(\mu\)</span>. Sabemos, por ejemplo, que
-con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Esto es
-Podemos investigar: la media
+con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Podemos investigar: la media
 nacional en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82.
 Esto es <em>variabilidad en la población</em>: debe ser muy poco probable, por ejemplo, que la
 media de tenores sea 1.82
@@ -986,13 +1016,13 @@ sólo nuestra información previa:</p>
 <span id="cb453-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-11"></a>  <span class="kw">rnorm</span>(n, mu, sigma)</span>
 <span id="cb453-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-12"></a>}</span>
 <span id="cb453-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-13"></a><span class="kw">set.seed</span>(<span class="dv">3461</span>)</span>
-<span id="cb453-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-14"></a>sims_tbl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb453-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-15"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura =</span> <span class="kw">map</span>(rep, <span class="op">~</span><span class="st"> </span><span class="kw">simular_normal_invgamma</span>(<span class="dv">500</span>, <span class="kw">c</span>(mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a, b)))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb453-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-14"></a>sims_tbl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">rep =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>) <span class="op">%&gt;%</span></span>
+<span id="cb453-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-15"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura =</span> <span class="kw">map</span>(rep, <span class="op">~</span><span class="st"> </span><span class="kw">simular_normal_invgamma</span>(<span class="dv">500</span>, <span class="kw">c</span>(mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a, b)))) <span class="op">%&gt;%</span></span>
 <span id="cb453-16"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-16"></a><span class="st">  </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw">c</span>(estatura))</span>
 <span id="cb453-17"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-17"></a><span class="kw">ggplot</span>(sims_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> estatura)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>() <span class="op">+</span></span>
 <span id="cb453-18"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-18"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>rep) <span class="op">+</span></span>
 <span id="cb453-19"><a href="introducción-a-inferencia-bayesiana-1.html#cb453-19"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">c</span>(<span class="dv">150</span>, <span class="dv">180</span>), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-25-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-26-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Pusimos líneas de referencia en 150 y 180. Vemos que nuestras iniciales no producen
 simulaciones totalmente fuera del contexto, y parecen cubrir apropiadamente el
 espacio de posiblidades para estaturas de los tenores. Quizá hay algunas realizaciones
@@ -1001,11 +1031,11 @@ la inicial para <span class="math inline">\(\sigma\)</span>, que parece tomar va
 por ejemplo una simulación con estatura de 220 y 140, que deberían ser menos probables).</p>
 <p>Ahora podemos usar los datos para calcular nuestras posteriores.</p>
 <div class="sourceCode" id="cb454"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb454-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-1"></a><span class="kw">set.seed</span>(<span class="dv">3413</span>)</span>
-<span id="cb454-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-2"></a>cantantes &lt;-<span class="st"> </span>lattice<span class="op">::</span>singer <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb454-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura_cm =</span> <span class="kw">round</span>(<span class="fl">2.54</span> <span class="op">*</span><span class="st"> </span>height)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb454-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-4"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(voice.part, <span class="st">&quot;Tenor&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb454-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-2"></a>cantantes &lt;-<span class="st"> </span>lattice<span class="op">::</span>singer <span class="op">%&gt;%</span></span>
+<span id="cb454-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura_cm =</span> <span class="kw">round</span>(<span class="fl">2.54</span> <span class="op">*</span><span class="st"> </span>height)) <span class="op">%&gt;%</span></span>
+<span id="cb454-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-4"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(voice.part, <span class="st">&quot;Tenor&quot;</span>)) <span class="op">%&gt;%</span></span>
 <span id="cb454-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-5"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">20</span>)</span>
-<span id="cb454-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-6"></a>cantantes </span></code></pre></div>
+<span id="cb454-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb454-6"></a>cantantes</span></code></pre></div>
 <pre><code>##    height voice.part estatura_cm
 ## 1      70    Tenor 1         178
 ## 2      68    Tenor 2         173
@@ -1056,40 +1086,40 @@ por ejemplo una simulación con estatura de 220 y 140, que deberían ser menos p
 <span id="cb458-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-4"></a>  a &lt;-<span class="st"> </span>pars[<span class="dv">3</span>]</span>
 <span id="cb458-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-5"></a>  b &lt;-<span class="st"> </span>pars[<span class="dv">4</span>]</span>
 <span id="cb458-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-6"></a>  <span class="co"># simular sigmas</span></span>
-<span id="cb458-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-7"></a>  sims &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">tau =</span> <span class="kw">rgamma</span>(m, a, b)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb458-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-7"></a>  sims &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">tau =</span> <span class="kw">rgamma</span>(m, a, b)) <span class="op">%&gt;%</span></span>
 <span id="cb458-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">sigma =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(tau))</span>
 <span id="cb458-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-9"></a>  <span class="co"># simular mu</span></span>
 <span id="cb458-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-10"></a>  sims &lt;-<span class="st"> </span>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">mu =</span> <span class="kw">rnorm</span>(m, mu_<span class="dv">0</span>, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n_<span class="dv">0</span>)))</span>
 <span id="cb458-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-11"></a>  sims</span>
 <span id="cb458-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-12"></a>}</span>
-<span id="cb458-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-13"></a>sims_inicial &lt;-<span class="st"> </span><span class="kw">sim_params</span>(<span class="dv">5000</span>, <span class="kw">c</span>(mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a, b)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb458-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-13"></a>sims_inicial &lt;-<span class="st"> </span><span class="kw">sim_params</span>(<span class="dv">5000</span>, <span class="kw">c</span>(mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a, b)) <span class="op">%&gt;%</span></span>
 <span id="cb458-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dist =</span> <span class="st">&quot;inicial&quot;</span>)</span>
-<span id="cb458-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-15"></a>sims_posterior &lt;-<span class="st"> </span><span class="kw">sim_params</span>(<span class="dv">5000</span>, pars_posterior) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb458-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-15"></a>sims_posterior &lt;-<span class="st"> </span><span class="kw">sim_params</span>(<span class="dv">5000</span>, pars_posterior) <span class="op">%&gt;%</span></span>
 <span id="cb458-16"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-16"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dist =</span> <span class="st">&quot;posterior&quot;</span>)</span>
 <span id="cb458-17"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-17"></a>sims &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(sims_inicial, sims_posterior)</span>
 <span id="cb458-18"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-18"></a><span class="kw">ggplot</span>(sims, <span class="kw">aes</span>(<span class="dt">x =</span> mu, <span class="dt">y =</span> sigma, <span class="dt">colour =</span> dist)) <span class="op">+</span></span>
-<span id="cb458-19"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-19"></a><span class="st">  </span><span class="kw">geom_point</span>() </span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;" /></p>
+<span id="cb458-19"><a href="introducción-a-inferencia-bayesiana-1.html#cb458-19"></a><span class="st">  </span><span class="kw">geom_point</span>()</span></code></pre></div>
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-29-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Y vemos que nuestra posterior es consistente con la información inicial
 que usamos, hemos aprendido considerablemente de la muestra. La posterior se
 ve como sigue. Hemos marcado también las medias posteriores de cada parámetro:
 media y desviación estándar.</p>
 <div class="sourceCode" id="cb459"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb459-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-1"></a>medias_post &lt;-<span class="st"> </span>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dist <span class="op">==</span><span class="st"> &quot;posterior&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb459-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>dist) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb459-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>dist) <span class="op">%&gt;%</span></span>
 <span id="cb459-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), mean))</span>
-<span id="cb459-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-4"></a><span class="kw">ggplot</span>(sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dist <span class="op">==</span><span class="st"> &quot;posterior&quot;</span>), </span>
-<span id="cb459-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-5"></a>    <span class="kw">aes</span>(<span class="dt">x =</span> mu, <span class="dt">y =</span> sigma)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb459-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-4"></a><span class="kw">ggplot</span>(sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(dist <span class="op">==</span><span class="st"> &quot;posterior&quot;</span>),</span>
+<span id="cb459-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-5"></a>    <span class="kw">aes</span>(<span class="dt">x =</span> mu, <span class="dt">y =</span> sigma)) <span class="op">+</span></span>
 <span id="cb459-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;#00BFC4&quot;</span>) <span class="op">+</span></span>
 <span id="cb459-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-7"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> medias_post, <span class="dt">size =</span> <span class="dv">5</span>, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
 <span id="cb459-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb459-8"></a><span class="st">  </span><span class="kw">coord_equal</span>()</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-29-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-30-1.png" width="480" style="display: block; margin: auto;" />
 Podemos construir intervalos creíbles del 90% para estos dos parámetros, por ejemplo
 haciendo intervalos de percentiles:</p>
 <div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-1"></a>f &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.5</span>, <span class="fl">0.95</span>)</span>
-<span id="cb460-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-2"></a>sims <span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb460-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> mu<span class="op">:</span>sigma, <span class="dt">names_to =</span> <span class="st">&quot;parametro&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb460-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-4"></a><span class="st">  </span><span class="kw">group_by</span>(dist, parametro) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb460-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cuantil =</span> <span class="kw">quantile</span>(value, f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">1</span>), <span class="dt">f=</span> f) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb460-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-2"></a>sims <span class="op">%&gt;%</span></span>
+<span id="cb460-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-3"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> mu<span class="op">:</span>sigma, <span class="dt">names_to =</span> <span class="st">&quot;parametro&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb460-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-4"></a><span class="st">  </span><span class="kw">group_by</span>(dist, parametro) <span class="op">%&gt;%</span></span>
+<span id="cb460-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">cuantil =</span> <span class="kw">quantile</span>(value, f) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">1</span>), <span class="dt">f=</span> f) <span class="op">%&gt;%</span></span>
 <span id="cb460-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb460-6"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> f, <span class="dt">values_from =</span> cuantil)</span></code></pre></div>
 <pre><code>## # A tibble: 4 x 5
 ## # Groups:   dist, parametro [4]
@@ -1114,7 +1144,7 @@ usando la distribución predictiva posterior.</p>
 <p>
 Como vimos en los ejemplos, en general un análisis de datos bayesiano sigue los siguientes pasos:
 </p>
-<ol style="list-style-type: decimal">
+<ul>
 <li>
 <p>
 Identificar los datos releventes a nuestra pregunta de investigación, el tipo de datos que vamos a describir, que variables queremos estimar.
@@ -1140,7 +1170,7 @@ Utilizar inferencia bayesiana para reubicar la credibilidad a lo largo de los po
 Verificar que la distribución posterior replique los datos de manera razonable, de no ser el caso considerar otros modelos descriptivos para los datos.
 </p>
 </li>
-</ol>
+</ul>
 </div>
 <div id="elicitando-probablidades-subjetivas-opcional" class="section level4 unnumbered">
 <h4>Elicitando probablidades subjetivas (opcional)</h4>
@@ -1190,55 +1220,74 @@ modelo, y se llama <strong>verificación predictiva posterior</strong>.</li>
 </ul>
 <p>Supongamos que tenemos la posterior <span class="math inline">\(p(\theta | x)\)</span>. Podemos generar una nueva
 <em>replicación</em> de los datos como sigue:</p>
-
 <div class="mathblock">
-<p>La distribución <strong>predictiva posterior</strong> genera nuevas observaciones a partir de
-la información observada. La denotamos como <span class="math inline">\(p(\tilde{x}|x)\)</span>. Para simular de ella:</p>
+<p>
+La distribución <strong>predictiva posterior</strong> genera nuevas observaciones a partir de la información observada. La denotamos como <span class="math inline"><span class="math inline">\(p(\tilde{x}|x)\)</span></span>.
+</p>
+<p>
+Para simular de ella:
+</p>
 <ul>
-<li>Muestreamos un valor <span class="math inline">\(\tilde{\theta}\)</span> de la posterior <span class="math inline">\(p(\theta|x)\)</span>.</li>
-<li>Simulamos del modelo de las observaciones <span class="math inline">\(\tilde{x} \sim p(\tilde{x}|\tilde{\theta})\)</span>.</li>
-<li>Repetimos el proceso hasta obtener una muestra grande.</li>
+<li>
+Muestreamos un valor <span class="math inline"><span class="math inline">\(\tilde{\theta}\)</span></span> de la posterior <span class="math inline"><span class="math inline">\(p(\theta|x)\)</span></span>.
+</li>
+<li>
+Simulamos del modelo de las observaciones <span class="math inline"><span class="math inline">\(\tilde{x} \sim p(\tilde{x}|\tilde{\theta})\)</span></span>.
+</li>
+<li>
+Repetimos el proceso hasta obtener una muestra grande.
+</li>
+<li>
+Usamos este método para producir, por ejemplo, <strong>intervalos de predicción</strong> para nuevos datos.
+</li>
 </ul>
-<p>Si queremos una replicación de las observaciones de la predictiva posterior,</p>
+<p>
+Si queremos una replicación de las observaciones de la predictiva posterior,
+</p>
 <ul>
-<li>Muestreamos un valor <span class="math inline">\(\tilde{\theta}\)</span> de la posterior <span class="math inline">\(p(\theta|x)\)</span>.</li>
-<li>Simulamos del modelo de las observaciones <span class="math inline">\(\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(\tilde{x}|\tilde{\theta})\)</span>,
-done <span class="math inline">\(n\)</span> es el tamaño de muestra de la muestra original <span class="math inline">\(x\)</span>.</li>
+<li>
+Muestreamos un valor <span class="math inline"><span class="math inline">\(\tilde{\theta}\)</span></span> de la posterior <span class="math inline"><span class="math inline">\(p(\theta|x)\)</span></span>.
+</li>
+<li>
+Simulamos del modelo de las observaciones <span class="math inline"><span class="math inline">\(\tilde{x}_1, \tilde{x}_2,\ldots, \tilde{x}_n \sim p(\tilde{x}|\tilde{\theta})\)</span></span>, done <span class="math inline"><span class="math inline">\(n\)</span></span> es el tamaño de muestra de la muestra original <span class="math inline"><span class="math inline">\(x\)</span></span>.
+</li>
+<li>
+Usamos este método para producir conjuntos de datos simulados que comparamos con los observados para verificar nuestro modelo.
+</li>
 </ul>
 </div>
-
 <div id="ejemplo-estaturas-de-tenores" class="section level3 unnumbered">
 <h3>Ejemplo: estaturas de tenores</h3>
 <p>En este ejemplo, usaremos la posterior predictiva para checar nuestro modelo.
 Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra predictiva posterior, y compararemos estas muestras con la observada.</p>
 <p>Y ahora simulamos otra muestra</p>
-<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb464-1"></a>muestra_sim &lt;-<span class="st"> </span><span class="kw">simular_normal_invgamma</span>(<span class="dv">20</span>, pars_posterior) </span>
+<div class="sourceCode" id="cb464"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb464-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb464-1"></a>muestra_sim &lt;-<span class="st"> </span><span class="kw">simular_normal_invgamma</span>(<span class="dv">20</span>, pars_posterior)</span>
 <span id="cb464-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb464-2"></a>muestra_sim <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">0</span>)</span></code></pre></div>
 <pre><code>##  [1] 167 181 184 181 167 167 172 170 177 172 169 174 182 184 176 171 175 176 168
 ## [20] 181</code></pre>
 <p>Podemos simular varias muestras y hacer una prueba de lineup:</p>
 <div class="sourceCode" id="cb466"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb466-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-1"></a><span class="kw">library</span>(nullabor)</span>
-<span id="cb466-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-2"></a>sims_obs &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">.n =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">19</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb466-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura_cm =</span> <span class="kw">map</span>(.n, <span class="op">~</span><span class="st"> </span><span class="kw">simular_normal_invgamma</span>(<span class="dv">20</span>, pars_posterior))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb466-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-2"></a>sims_obs &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">.n =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">19</span>) <span class="op">%&gt;%</span></span>
+<span id="cb466-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura_cm =</span> <span class="kw">map</span>(.n, <span class="op">~</span><span class="st"> </span><span class="kw">simular_normal_invgamma</span>(<span class="dv">20</span>, pars_posterior))) <span class="op">%&gt;%</span></span>
 <span id="cb466-4"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-4"></a><span class="st">  </span><span class="kw">unnest</span>(estatura_cm)</span>
 <span id="cb466-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-5"></a><span class="kw">set.seed</span>(<span class="dv">9921</span>)</span>
 <span id="cb466-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-6"></a>pos &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>, <span class="dv">1</span>)</span>
-<span id="cb466-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-7"></a>lineup_tbl &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="dt">true =</span> cantantes <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estatura_cm), </span>
+<span id="cb466-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-7"></a>lineup_tbl &lt;-<span class="st"> </span><span class="kw">lineup</span>(<span class="dt">true =</span> cantantes <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(estatura_cm),</span>
 <span id="cb466-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-8"></a>                     <span class="dt">samples =</span> sims_obs, <span class="dt">pos =</span> pos)</span>
 <span id="cb466-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-9"></a><span class="kw">ggplot</span>(lineup_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> estatura_cm)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="fl">2.5</span>) <span class="op">+</span></span>
 <span id="cb466-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb466-10"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>.sample)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-35-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-36-1.png" width="480" style="display: block; margin: auto;" />
 Con este tipo de gráficas podemos checar desajustes potenciales de nuestro modelo.</p>
-
 <div class="ejercicio">
 <ul>
-<li>¿Puedes encontrar los datos verdaderos? ¿Cuántos seleccionaron los
-datos correctos?</li>
-<li>Prueba hacer pruebas con una gráfica de cuantiles. ¿Qué problema
-ves y cómo lo resolverías?</li>
+<li>
+¿Puedes encontrar los datos verdaderos? ¿Cuántos seleccionaron los datos correctos?
+</li>
+<li>
+Prueba hacer pruebas con una gráfica de cuantiles. ¿Qué problema ves y cómo lo resolverías?
+</li>
 </ul>
 </div>
-
 </div>
 <div id="ejemplo-modelo-poisson" class="section level3 unnumbered">
 <h3>Ejemplo: modelo Poisson</h3>
@@ -1257,17 +1306,17 @@ y hacemos replicaciones posteriores de los datos observados:</p>
 <span id="cb467-5"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-5"></a>  sim_rep &lt;-<span class="st"> </span><span class="cf">function</span>(rep){</span>
 <span id="cb467-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-6"></a>    lambda &lt;-<span class="st"> </span><span class="kw">rgamma</span>(<span class="dv">1</span>, <span class="kw">sum</span>(x) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, n <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)</span>
 <span id="cb467-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-7"></a>    x_rep &lt;-<span class="st"> </span><span class="kw">rpois</span>(n, lambda)</span>
-<span id="cb467-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-8"></a>    <span class="kw">tibble</span>(<span class="dt">rep =</span> rep, <span class="dt">x_rep =</span> x_rep)  </span>
+<span id="cb467-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-8"></a>    <span class="kw">tibble</span>(<span class="dt">rep =</span> rep, <span class="dt">x_rep =</span> x_rep)</span>
 <span id="cb467-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-9"></a>  }</span>
 <span id="cb467-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-10"></a>}</span>
 <span id="cb467-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-11"></a>sim_rep &lt;-<span class="st"> </span><span class="kw">crear_sim_rep</span>(x)</span>
-<span id="cb467-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-12"></a>lineup_tbl &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="op">~</span><span class="st"> </span><span class="kw">sim_rep</span>(.x)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb467-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-13"></a><span class="st">  </span><span class="kw">bind_rows</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb467-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-12"></a>lineup_tbl &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="op">~</span><span class="st"> </span><span class="kw">sim_rep</span>(.x)) <span class="op">%&gt;%</span></span>
+<span id="cb467-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-13"></a><span class="st">  </span><span class="kw">bind_rows</span>() <span class="op">%&gt;%</span></span>
 <span id="cb467-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-14"></a><span class="st">  </span><span class="kw">bind_rows</span>(<span class="kw">tibble</span>(<span class="dt">rep =</span> <span class="dv">6</span>, <span class="dt">x_rep =</span> x))</span>
 <span id="cb467-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-15"></a><span class="kw">ggplot</span>(lineup_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> x_rep)) <span class="op">+</span></span>
 <span id="cb467-16"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-16"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">15</span>) <span class="op">+</span></span>
 <span id="cb467-17"><a href="introducción-a-inferencia-bayesiana-1.html#cb467-17"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>rep)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-37-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" />
 Y vemos claramente que nuestro modelo no explica apropiadamente la variación
 de los datos observados. Contrasta con:</p>
 <div class="sourceCode" id="cb468"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb468-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-1"></a><span class="kw">set.seed</span>(<span class="dv">223</span>)</span>
@@ -1278,17 +1327,17 @@ de los datos observados. Contrasta con:</p>
 <span id="cb468-6"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-6"></a>  sim_rep &lt;-<span class="st"> </span><span class="cf">function</span>(rep){</span>
 <span id="cb468-7"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-7"></a>    lambda &lt;-<span class="st"> </span><span class="kw">rgamma</span>(<span class="dv">1</span>, <span class="kw">sum</span>(x) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, n <span class="op">+</span><span class="st"> </span><span class="fl">0.1</span>)</span>
 <span id="cb468-8"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-8"></a>    x_rep &lt;-<span class="st"> </span><span class="kw">rpois</span>(n, lambda)</span>
-<span id="cb468-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-9"></a>    <span class="kw">tibble</span>(<span class="dt">rep =</span> rep, <span class="dt">x_rep =</span> x_rep)  </span>
+<span id="cb468-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-9"></a>    <span class="kw">tibble</span>(<span class="dt">rep =</span> rep, <span class="dt">x_rep =</span> x_rep)</span>
 <span id="cb468-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-10"></a>  }</span>
 <span id="cb468-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-11"></a>}</span>
 <span id="cb468-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-12"></a>sim_rep &lt;-<span class="st"> </span><span class="kw">crear_sim_rep</span>(x)</span>
-<span id="cb468-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-13"></a>lineup_tbl &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="op">~</span><span class="st"> </span><span class="kw">sim_rep</span>(.x)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb468-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-14"></a><span class="st">  </span><span class="kw">bind_rows</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb468-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-13"></a>lineup_tbl &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>, <span class="op">~</span><span class="st"> </span><span class="kw">sim_rep</span>(.x)) <span class="op">%&gt;%</span></span>
+<span id="cb468-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-14"></a><span class="st">  </span><span class="kw">bind_rows</span>() <span class="op">%&gt;%</span></span>
 <span id="cb468-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-15"></a><span class="st">  </span><span class="kw">bind_rows</span>(<span class="kw">tibble</span>(<span class="dt">rep =</span> <span class="dv">6</span>, <span class="dt">x_rep =</span> x))</span>
 <span id="cb468-16"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-16"></a><span class="kw">ggplot</span>(lineup_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> x_rep)) <span class="op">+</span></span>
 <span id="cb468-17"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-17"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">15</span>) <span class="op">+</span></span>
 <span id="cb468-18"><a href="introducción-a-inferencia-bayesiana-1.html#cb468-18"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>rep)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;" />
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-39-1.png" width="480" style="display: block; margin: auto;" />
 Y verificamos que en este caso el ajuste del modelo es apropiado.</p>
 </div>
 </div>
@@ -1308,8 +1357,8 @@ parámetros.</p>
 <p>Si un nuevo tenor llega a un coro, ¿cómo hacemos una predicción de su estatura? Como
 siempre, quisiéramos obtener un intervalo que exprese nuestra incertidumbre acerca
 del valor que vamos a observar. Entonces haríamos:</p>
-<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb469-1"></a>sims_posterior &lt;-<span class="st"> </span><span class="kw">sim_params</span>(<span class="dv">50000</span>, pars_posterior) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb469-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb469-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_pred =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), mu, sigma)) </span>
+<div class="sourceCode" id="cb469"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb469-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb469-1"></a>sims_posterior &lt;-<span class="st"> </span><span class="kw">sim_params</span>(<span class="dv">50000</span>, pars_posterior) <span class="op">%&gt;%</span></span>
+<span id="cb469-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb469-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">y_pred =</span> <span class="kw">rnorm</span>(<span class="kw">n</span>(), mu, sigma))</span>
 <span id="cb469-3"><a href="introducción-a-inferencia-bayesiana-1.html#cb469-3"></a>sims_posterior <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##      tau sigma    mu y_pred
@@ -1334,7 +1383,7 @@ pues sería demasiado corto.</p>
 <p>Es posible demostrar que en este caso, la posterior predictiva tiene una forma conocida:</p>
 <ul>
 <li>La posterior predictiva para el modelo normal-gamma inverso es una distribución
-<span class="math inline">\(t\)</span> con <span class="math inline">\(2\alpha&#39;\)</span> grados de libertad, centrada en <span class="math inline">\(\mu&#39;\)</span>, y con escala <span class="math inline">\(s^2 = \frac{beta&#39;}{alpha&#39;}\frac{n + n_0 + 1}{n +n_0}\)</span></li>
+<span class="math inline">\(t\)</span> con <span class="math inline">\(2\alpha&#39;\)</span> grados de libertad, centrada en <span class="math inline">\(\mu&#39;\)</span>, y con escala <span class="math inline">\(s^2 = \frac{\beta&#39;}{\alpha&#39;}\frac{n + n_0 + 1}{n +n_0}\)</span></li>
 </ul>
 <div class="sourceCode" id="cb473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb473-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb473-1"></a>mu_post &lt;-<span class="st"> </span>pars_posterior[<span class="dv">1</span>]</span>
 <span id="cb473-2"><a href="introducción-a-inferencia-bayesiana-1.html#cb473-2"></a>n_post &lt;-<span class="st"> </span>pars_posterior[<span class="dv">2</span>]</span>
@@ -1366,13 +1415,13 @@ podemos aproximarla usando simulación. Usando los mismos datos del ejercicio de
 <span id="cb475-9"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-9"></a>sims_pareto_posterior &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
 <span id="cb475-10"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-10"></a>  <span class="dt">theta =</span> <span class="kw">rpareto</span>(<span class="dv">100000</span>, lim_inf_post, k_posterior))</span>
 <span id="cb475-11"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-11"></a><span class="co"># Simulamos una observación para cada una de las anteriores:</span></span>
-<span id="cb475-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-12"></a>sims_post_pred &lt;-<span class="st"> </span>sims_pareto_posterior <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb475-12"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-12"></a>sims_post_pred &lt;-<span class="st"> </span>sims_pareto_posterior <span class="op">%&gt;%</span></span>
 <span id="cb475-13"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">x_pred =</span> <span class="kw">map_dbl</span>(theta, <span class="op">~</span><span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>, <span class="dv">0</span>, .x)))</span>
 <span id="cb475-14"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-14"></a><span class="co"># Graficamos</span></span>
 <span id="cb475-15"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-15"></a><span class="kw">ggplot</span>(sims_post_pred, <span class="kw">aes</span>(<span class="dt">x =</span> x_pred)) <span class="op">+</span></span>
 <span id="cb475-16"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-16"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> <span class="dv">50</span>) <span class="op">+</span></span>
 <span id="cb475-17"><a href="introducción-a-inferencia-bayesiana-1.html#cb475-17"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> lim_inf_post, <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
-<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-43-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="14-intro-bayesiana_files/figure-html/unnamed-chunk-44-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Que es una mezcla de una uniforme con una Pareto.</p>
 
 </div>
