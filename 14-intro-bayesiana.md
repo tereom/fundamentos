@@ -204,7 +204,7 @@ crear_verosim <- function(no_soles){
     verosim
 }
 # evaluar verosimilitud
-verosim <- crear_verosim(6)
+verosim <- crear_verosim(2)
 # ahora usamos regla de bayes para hacer tabla de probabilidades
 tabla_inferencia <- probs_inicial %>%
   mutate(verosimilitud = map_dbl(theta, verosim)) %>%
@@ -221,8 +221,8 @@ tabla_inferencia %>%
 ## # A tibble: 2 x 5
 ##   moneda_obs theta prob_inicial verosimilitud prob_posterior
 ##        <dbl> <dbl>        <dbl>         <dbl>          <dbl>
-## 1          1   0.4          0.5             0            NaN
-## 2          2   0.6          0.5             0            NaN
+## 1          1   0.4          0.5          0.16          0.308
+## 2          2   0.6          0.5          0.36          0.692
 ```
 
 <div class="ejercicio">
@@ -308,7 +308,7 @@ quantile(sim_inicial$theta, c(0.025, 0.975)) %>% round(2)
 
 ```
 ##  2.5% 97.5% 
-##  0.14  0.85
+##  0.15  0.85
 ```
 Es difícil justificar en abstracto por qué escogeriamos una inicial con esta
 forma. *Aunque esto los detallaremos más adelante*, puedes pensar, por el
@@ -324,7 +324,7 @@ parámetro continuo, la expresión de la derecha nos debe dar una densidad poste
 Supongamos entonces que hicimos la prueba con $n = 30$ (número de prueba) y observamos
 19 éxitos. Tendríamos entonces
 
-$$P(\theta | S_n = 19) \propto \theta^{19 + 3} (1-\theta)^{30-19 +3} = \theta^{21}(1-\theta)^{13}$$
+$$P(\theta | S_n = 19) \propto \theta^{19 + 2} (1-\theta)^{30-19 +2} = \theta^{21}(1-\theta)^{13}$$
 
 La cantidad de la derecha, una vez que normalizemos por el número $P(X=19)$, nos
 dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos
@@ -362,8 +362,8 @@ sims %>% group_by(dist) %>%
 ## # A tibble: 2 x 2
 ##   dist      theta_hat
 ##   <chr>         <dbl>
-## 1 inicial       0.499
-## 2 posterior     0.612
+## 1 inicial       0.501
+## 2 posterior     0.611
 ```
 Nota que el estimador de máxima verosimilitud es $\hat{p} = 19/30 = 0.63$, que
 es ligeramente diferente de la media posterior. ¿Por qué?
@@ -384,7 +384,7 @@ sims %>% group_by(dist) %>%
 ## # Groups:   dist [2]
 ##   dist      `0.025` `0.975`
 ##   <chr>       <dbl>   <dbl>
-## 1 inicial      0.14    0.85
+## 1 inicial      0.15    0.85
 ## 2 posterior    0.45    0.76
 ```
 El segundo renglón nos da un intervalo posterior para $\theta$ de *credibilidad*
