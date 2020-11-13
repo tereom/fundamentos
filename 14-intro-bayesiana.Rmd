@@ -199,7 +199,7 @@ crear_verosim <- function(no_soles){
     verosim
 }
 # evaluar verosimilitud
-verosim <- crear_verosim(6)
+verosim <- crear_verosim(2)
 # ahora usamos regla de bayes para hacer tabla de probabilidades
 tabla_inferencia <- probs_inicial %>%
   mutate(verosimilitud = map_dbl(theta, verosim)) %>%
@@ -320,7 +320,7 @@ parámetro continuo, la expresión de la derecha nos debe dar una densidad poste
 Supongamos entonces que hicimos la prueba con $n = 30$ (número de prueba) y observamos
 19 éxitos. Tendríamos entonces
 
-$$P(\theta | S_n = 19) \propto \theta^{19 + 3} (1-\theta)^{30-19 +3} = \theta^{21}(1-\theta)^{13}$$
+$$P(\theta | S_n = 19) \propto \theta^{19 + 2} (1-\theta)^{30-19 +2} = \theta^{21}(1-\theta)^{13}$$
 
 La cantidad de la derecha, una vez que normalizemos por el número $P(X=19)$, nos
 dará una densidad posterior (tal cual, esta expresion no integra a 1). Podemos
