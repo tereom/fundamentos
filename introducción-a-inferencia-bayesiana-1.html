@@ -347,6 +347,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#examen-parcial"><i class="fa fa-check"></i>Examen Parcial</a></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#más-pruebas-de-hipótesis"><i class="fa fa-check"></i>10. Más pruebas de hipótesis</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#introducción-modelo-beta-binomial"><i class="fa fa-check"></i>11. Introducción: modelo Beta-Binomial</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
 <li class="divider"></li>
@@ -652,7 +653,7 @@ valor no tan lejano de 0.5. Por ejemplo, con probabilidad 0.95 creemos
 que <span class="math inline">\(\theta\)</span> está en el intervalo</p>
 <div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="introducción-a-inferencia-bayesiana-1.html#cb420-1"></a><span class="kw">quantile</span>(sim_inicial<span class="op">$</span>theta, <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##  2.5% 97.5% 
-##  0.15  0.85</code></pre>
+##  0.14  0.85</code></pre>
 <p>Es difícil justificar en abstracto por qué escogeriamos una inicial con esta
 forma. <em>Aunque esto los detallaremos más adelante</em>, puedes pensar, por el
 momento, que alguien observó algunos casos de esta población, y quizá vio tres éxitos y tres fracasos. Esto sugeriría que es poco probable que la probablidad
@@ -701,8 +702,8 @@ suelen llamarse <em>intervalos de credibilidad</em>, por ejemplo:</p>
 ## # Groups:   dist [2]
 ##   dist      `0.025` `0.975`
 ##   &lt;chr&gt;       &lt;dbl&gt;   &lt;dbl&gt;
-## 1 inicial      0.15    0.85
-## 2 posterior    0.45    0.77</code></pre>
+## 1 inicial      0.14    0.85
+## 2 posterior    0.45    0.76</code></pre>
 <p>El segundo renglón nos da un intervalo posterior para <span class="math inline">\(\theta\)</span> de <em>credibilidad</em>
 95%. En inferencia bayesiana esto sustituye a los intervalos de confianza.</p>
 <ul>
