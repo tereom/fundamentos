@@ -958,6 +958,8 @@ lineup_tbl <- lineup(true = cantantes %>% select(estatura_cm),
                      samples = sims_obs, pos = pos)
 ggplot(lineup_tbl, aes(x = estatura_cm)) + geom_histogram(binwidth = 2.5) +
   facet_wrap(~.sample)
+
+attr(lineup_tbl, "pos")
 ```
 Con este tipo de gráficas podemos checar desajustes potenciales de nuestro modelo.
 
