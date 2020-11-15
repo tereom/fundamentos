@@ -674,8 +674,8 @@ encuentran bajo la influencia de la posición inicial. Esto es, debemos excluir
 el **periodo de calentamiento**. 
 
 * Una vez que tenemos un registro _largo_ de los viajes del vendedor (excluyendo 
-el calentamiento) podemos aproximar la distribución objetivo de cada valor de 
-$\theta$ simplemente contando el número relativo de veces que el vendedor visitó
+el calentamiento) podemos aproximar la distribución objetivo 
+simplemente contando el número relativo de veces que el vendedor visitó
 dicha isla.
 
 ```{r, warning=FALSE, message=FALSE, fig.width=8, fig.height=7.5}
