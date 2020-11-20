@@ -1,3 +1,8 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
 # Introducción a inferencia bayesiana
 
 ```{r setup, include=FALSE, message=FALSE}
@@ -544,6 +549,117 @@ usarse.
 en términos del conocimiento de expertos.
 - Las probabilidades iniciales son supuestos que hacemos acerca del problema de
 interés, y también están sujetas a críticas y confrontación con datos.
+
+
+## Ejemplo enfermedad desconocida {-}
+
+Una nueva enfermedad ha surgido en una población determinada y se ha observado que $1$ de cada $1,000$ habitantes posee dicha enfermedad. De manera oportuna los científicos han trabajado y desarrollaron una prueba que tiene una tasa de detección del $99\%$ y ante los falsos positivos del $5\%$ y les interesa conocer los siguientes resultados:
+
+
+1. Probabilidad de que un individuo seleccionado aleatoriamente presente la enfermedad dado que su resultado en la prueba de detección ha sido positivo
+2. Probabilidad de que un individuo seleccionado aleatoriamente no presente la enfermedad dado que su resultado en la prueba de detección ha sido positivo
+3. Probabilidad de que un individuo seleccionado aleatoriamente presente la enfermedad dado que se ha hecho 2 pruebas y en ambas su resultado ha sido positivo
+
+
+Para resolver este problema, presentemos los datos que poseemos, los cuales dependen intrínsecamente de que un individuo ha sido seleccionado de manera aleatoria:
+
+$$\mathbb{P}[\text{Presentar la enfermedad}] =  \mathbb{P}[E] = \frac{1}{1000} = 0.001   \\ \mathbb{P}[\text{No presentar la enfermedad}] = \mathbb{P}[N] = 1-  \mathbb{P}[E] = 1- \frac{1}{1000} = 0.999 \\    \mathbb{P}[\text{Test positivo}| \text{Individuo enfermo}] = \mathbb{P}[+|E] = 99\% = 0.99 \\ \text{Falsos positivos: } \mathbb{P}[+|\text{No enfermo}] = \mathbb{P}[+|N] = 5\% = 0.05$$
+
+
+Analicemos la siguiente tabla:
+
+```{r, echo = FALSE}
+data.frame(Enfermo = c('P(E,+)', 'P(E,-)' ),
+           No_enfermo = c('P(N,+)', 'P(N,-)' ))
+```
+
+
+* Sumando por renglones obtendremos: 
+  + $\mathbb{P}[+] = \mathbb{P}[E,+] + \mathbb{P}[N,+]$ 
+  + $\mathbb{P}[-] = \mathbb{P}[E,-] + \mathbb{P}[N,-]$  
+
+
+
+* Sumando por columnas obtendremos:
+  + $\mathbb{P}[E] = \mathbb{P}[E,+] + \mathbb{P}[E,-]$ 
+  + $\mathbb{P}[N] = \mathbb{P}[N,+] + \mathbb{P}[N,-]$ 
+  
+  
+Y recordemos las siguientes fórmulas: 
+
+
+* Regla de Bayes:
+
+$$ \mathbb{P}[A|B] = \frac{\mathbb{P}[A,B]}{\mathbb{P}[B]} $$
+
+* Regla de probabilidad total: dada una colección de eventos disjuntos por pares $E_1, E_2, ... E_n$:
+
+$$ \mathbb{P}[A] =  \sum_{i=1}^n \mathbb{P}[A|E_i] \mathbb{P}[E_i]$$
+
+
+Prosigamos con el cálculo de las probabilidades:
+
+1. Probabilidad de que un individuo seleccionado aleatoriamente presente la enfermedad dado que su resultado en la prueba de detección ha sido positivo:
+
+
+$$ \mathbb{P}[E|+] = \frac{\mathbb{P}[E,+]}{\mathbb{P}[+]} = \frac{\mathbb{P}[+|E] \mathbb{P}[E]} {\mathbb{P}[+|E] \mathbb{P}[E] + \mathbb{P}[+|N] \mathbb{P}[N] } = \frac{(0.99)(0.001)}{(0.99)(0.001) + (0.05)(0.999)} = \frac{0.00099}{0.05094} = 0.01943463 = 1.943463\%   \thickapprox 2\%$$
+
+
+Una vez llegado a este punto cabe recalcar que dicha probabilidad es muy baja, esto se debe a:
+
+
+* La probabilidad de tener la enfermedad es relativamente baja ($0.001$)
+
+
+* Intrísecamente se asume que el individuo es seleccionado de manera aleatoria, por lo que no tenemos más información de éste (si presenta algún sintoma, si ha estado en lugares en los que probablemente se haya contagiado, ...)
+
+
+Dejando los parámetros de las tasas de detección fijos la siguiente gráfica nos muestra cómo evoluciona la probabilidad de tener la enfermedad dado que se ha dado positivo en la prueba ante los cambios en la probabilidad de estar enfermo:
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+# install.packages("ggplot2") # <- Instalar ggplot2
+library('ggplot2')
+library('dplyr')
+
+prob_cond <- function(x){ (0.99)*(x)/((0.99)*(x) + (0.05)*(1-x))}
+prob_enf <- seq(from = 0,to = 1,length.out =  10000)
+
+
+data.frame(x = prob_enf, y = prob_cond(prob_enf)) %>% 
+  ggplot(data = ., aes(x = x, y = y)) +
+  geom_line(color = 'blue') +
+  geom_point(data = 
+               data.frame(x = 0.001, 
+                          y = (0.99)*(0.001)/((0.99)*(0.001) + (0.05)*(1-0.001)))) +
+  geom_vline(xintercept = 0.125, linetype="dotted", 
+                color = "red", size=1) +
+  ggtitle('Tener la enfermedad dado prueba +') +
+  xlab('P [ E ]') +
+  ylab('P [ E | + ]') +
+  theme_light()
+
+```
+
+El punto negro indica los datos que tenemos. Nótese que la gráfica tiene un crecimiento muy similar al logarítmico, además los cambios en $\mathbb{P}[E]$ antes de la línea punteada roja tienen una repercusión muy grande en $\mathbb{P}[E|+]$, pasando la línea punteada los cambios no tiene un efecto abrupto como en el primer caso.
+
+2. Probabilidad de que un individuo seleccionado aleatoriamente no presente la enfermedad dado que su resultado en la prueba de detección ha sido positivo
+
+
+$$ \mathbb{P}[N|+] = 1 -\mathbb{P}[E|+] = 1 - 0.01943463 = 0.9805654 = 98.05654 \thickapprox 98\%  $$
+
+
+3. Probabilidad de que un individuo seleccionado aleatoriamente presente la enfermedad dado que se ha hecho 2 pruebas y en ambas su resultado ha sido positivo
+
+
+Para este cómputo asumiremos independencia entre las pruebas y además independicia condicional, esto es, que el resultado de una prueba no afecta el resultado de otra y además son los eventos son independientes ante la condición de estar enfermo:
+
+
+
+$$ \mathbb{P}[E|+,+] = \frac{\mathbb{P}[+,+|E] \mathbb{P}[E] }{\mathbb{P}[+,+]} = \frac{\mathbb{P}[+|E] \mathbb{P}[+|E] \mathbb{P}[E] }{\mathbb{P}[+] \mathbb{P}[+]} = \frac{\mathbb{P}[+|E]^2 \mathbb{P}[E] }{\mathbb{P}[+]^2} = \frac{(0.99)^2(0.001)}{((0.99)(0.001) + (0.05)(0.999))^2} = 0.3777048 = 37.77048\%   \thickapprox 38\% $$
+¡Lo cual es un valor más grande! Pero no estamos satisfechos con dicho resultado, ¿cuántos resultados de pruebas positivas habrá que obtener para estar seguros de que sí tenemos la enfermedad?
+
+
 
 ## Análisis conjugado {-}
 
