@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Introducción a inferencia bayesiana
 
 ```{r setup, include=FALSE, message=FALSE}
@@ -276,6 +281,69 @@ sigue:
 knitr::include_graphics('images/perros.png')
 ```
 
+## Ejemplo: estimando una proporción {-}
+
+Consideremos el siguiente problema: Un virus se ha esparcido entre la población 
+de una comunidad. La tasa de detección del virus mediante una prueba de laboratorio
+es del 99% $P(+ | enferma) = 0.99$. Sabemos que la población enferma es
+tan solo el 0.1% $P(enferma) = 0.001$ y la proporción de falsos positivos de la
+prueba es de 5% $P(+ | sana) = 0.05$. Siendo **+** el resultado de la prueba positivo
+y **-** el resultado de la prueba negativo.
+
+Podemos calcular facilmente la proporción de la población sana:
+$$1- P(enferma) = P(sana) = 0.999$$
+
+Nuestra matriz de confusión queda como sigue:
+
+|$P(enferma,+)$ |$P(sana,+)$|
+|---------------|-----------|
+|$P(enferma,-)$ |$P(sana,-)$|
+
+
+* Suma por renglones: 
+  + $P(enferma,+) + P(sana,+) = P(+)$
+  + $P(enferma,-) + P(sana,-) = P(-)$.
+
+* Suma por columnas:
+  + $P(enferma,+) + P(enferma,-) = P(+)$.
+  + $P(sana,+) + P(sana,-) = P(-)$.
+
+
+
+Nos piden estimar la probabilidad de que una persona esté enferma dado que
+el resultado de su prueba haya sido positivo.
+
+
+Usando reglas de  probabilidad (regla de Bayes), podemos entonces estimar la
+probabilidad condicional de que una persona enferma se haga la prueba y resulte
+positiva:
+$$P(enferma|+) = \frac{P(enferma,+)}{P(+)} = \frac{P(+|enferma)P(enferma)}{P(+)}$$
+Notamos que en el numerador uno de los factores $P(+|enferma)$ es la 
+**verosimilitud**, el otro es la **información previa** $P(enferma)$ y en el denominador
+**la evidencia** $P(+) = P(+,enferma) + P(+,sana)$.
+
+Nuevamente usando las reglas de probabilidad podemos usar la probailidad total 
+$$P(+,enferma) = 0.99*0.001$$ 
+y la probabilidad condicional 
+$$P(sana)P(+|sana) = P(+,sana) = 0.99*0.05$$
+Ya tenemos todos los elementos para calcular la **probabilidad posterior**.
+$$P(enferma|+) = \frac{0.99*0.001}{(0.99*0.001)+(0.999*0.05)} \approx 0.019$$
+Esta es alrededor de $2\%$. Es decir que la **probabilidad posterior** aumenta
+un 20% con respecto a la **probabilidad posterior** $(0.01\%)$
+
+Ahora, supongamos que a una persona elegida de forma aleatoria se le realiza la
+prueba, ¿Cíual es la probabilidad de que esté sana y que su prueba resulte 
+positiva?
+
+$$P(sana|+) = -P(enferma|+) \approx 98\%$$
+Esta es alrededor de $2\%$. Es decir que la **probabilidad posterior** aumenta
+un 20% con respecto a la **probabilidad posterior** $(0.01\%)$
+
+Ahora, supongamos que a una persona elegida de forma aleatoria se le realiza la
+prueba, ¿Cíual es la probabilidad de que esté sana y que su prueba resulte 
+positiva?
+
+$$P(sana|+) = -P(enferma|+) \approx 98\%$$
 
 ## Ejemplo: estimando una proporción {-}
 
