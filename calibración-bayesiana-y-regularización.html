@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Sección 12 Calibración bayesiana y Regularización | EST-46111: Fundamentos de Estadística con Remuestreo</title>
+  <meta name="description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Sección 12 Calibración bayesiana y Regularización | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  <meta name="github-repo" content="tereom/fundamentos" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Sección 12 Calibración bayesiana y Regularización | EST-46111: Fundamentos de Estadística con Remuestreo" />
+  
+  <meta name="twitter:description" content="Curso de Fundamentos de Estadística con Remuestreo, maestría en Ciencia de Datos, ITAM, Otoño 2020." />
+  
+
+<meta name="author" content="Teresa Ortiz (001), Alfredo Garbuno (002), Felipe González" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="introducción-a-inferencia-bayesiana-1.html"/>
+<link rel="next" href="tareas.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<script src="libs/plotly-binding-4.9.2.1/plotly.js"></script>
+<script src="libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="libs/plotly-htmlwidgets-css-1.52.2/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="libs/plotly-main-1.52.2/plotly-latest.min.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+<link rel="stylesheet" href="css/toc.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Fundamentos de Estadística con Remuestreo</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Información del curso</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#temario"><i class="fa fa-check"></i>Temario</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#evaluación"><i class="fa fa-check"></i>Evaluación</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html"><i class="fa fa-check"></i><b>1</b> Principios de visualización</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#el-cuarteto-de-ascombe"><i class="fa fa-check"></i>El cuarteto de Ascombe</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#introducción"><i class="fa fa-check"></i>Introducción</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#visualización-popular-de-datos"><i class="fa fa-check"></i>Visualización popular de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#teoría-de-visualización-de-datos"><i class="fa fa-check"></i>Teoría de visualización de datos</a><ul>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#principios-generales-del-diseño-analítico"><i class="fa fa-check"></i>Principios generales del diseño analítico</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#técnicas-de-visualización"><i class="fa fa-check"></i>Técnicas de visualización</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#indicadores-de-calidad-gráfica"><i class="fa fa-check"></i>Indicadores de calidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#factor-de-engaño-y-chartjunk"><i class="fa fa-check"></i>Factor de engaño y Chartjunk</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#pequeños-múltiplos-y-densidad-gráfica"><i class="fa fa-check"></i>Pequeños múltiplos y densidad gráfica</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#tinta-de-datos"><i class="fa fa-check"></i>Tinta de datos</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#decoración"><i class="fa fa-check"></i>Decoración</a></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#percepción-de-escala"><i class="fa fa-check"></i>Percepción de escala</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="principios-de-visualización.html"><a href="principios-de-visualización.html#ejemplo-gráfica-de-minard"><i class="fa fa-check"></i>Ejemplo: gráfica de Minard</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html"><i class="fa fa-check"></i><b>2</b> Análisis exploratorio</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#el-papel-de-la-exploración-en-el-análisis-de-datos"><i class="fa fa-check"></i>El papel de la exploración en el análisis de datos</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#algunos-conceptos-básicos"><i class="fa fa-check"></i>Algunos conceptos básicos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#media-y-desviación-estándar"><i class="fa fa-check"></i>Media y desviación estándar</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ejemplos"><i class="fa fa-check"></i>Ejemplos</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#precios-de-casas"><i class="fa fa-check"></i>Precios de casas</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#prueba-enlace"><i class="fa fa-check"></i>Prueba Enlace</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#estados-y-calificaciones-en-sat"><i class="fa fa-check"></i>Estados y calificaciones en SAT</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#tablas-de-conteos"><i class="fa fa-check"></i>Tablas de conteos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#loess"><i class="fa fa-check"></i>Loess</a><ul>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#ajustando-curvas-loess"><i class="fa fa-check"></i>Ajustando curvas loess</a></li>
+<li class="chapter" data-level="" data-path="análisis-exploratorio.html"><a href="análisis-exploratorio.html#series-de-tiempo"><i class="fa fa-check"></i>Series de tiempo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html"><i class="fa fa-check"></i><b>3</b> Tipos de estudio y experimentos</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#motivación"><i class="fa fa-check"></i>Motivación</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#proceso-generador-de-datos"><i class="fa fa-check"></i>Proceso Generador de Datos</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-prevalencia-de-anemia"><i class="fa fa-check"></i>Ejemplo: Prevalencia de anemia</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#muestreo-aleatorio"><i class="fa fa-check"></i>Muestreo aleatorio</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#pero-si-no-podemos-hacer-muestreo-aleatorio"><i class="fa fa-check"></i>Pero si no podemos hacer muestreo aleatorio?</a><ul>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#ejemplo-policías-y-tráfico"><i class="fa fa-check"></i>Ejemplo: Policías y tráfico</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#el-estimador-estándar"><i class="fa fa-check"></i>El estimador estándar</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#experimentos-tradicionales"><i class="fa fa-check"></i>Experimentos tradicionales</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#bloqueo"><i class="fa fa-check"></i>Bloqueo</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#variables-desconocidas"><i class="fa fa-check"></i>Variables desconocidas</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#aleatorizando-el-tratamiento"><i class="fa fa-check"></i>Aleatorizando el tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#resumen-selección-de-unidades-y-tratamiento"><i class="fa fa-check"></i>Resumen: selección de unidades y tratamiento</a></li>
+<li class="chapter" data-level="" data-path="tipos-de-estudio-y-experimentos.html"><a href="tipos-de-estudio-y-experimentos.html#asignación-natural-del-tratamiento"><i class="fa fa-check"></i>Asignación natural del tratamiento</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html"><i class="fa fa-check"></i><b>4</b> Pruebas de hipótesis</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparación-con-poblaciones-de-referencia"><i class="fa fa-check"></i>Comparación con poblaciones de referencia</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#comparando-distribuciones"><i class="fa fa-check"></i>Comparando distribuciones</a></li>
+<li><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-y-el-lineup">Prueba de permutaciones y el <em>lineup</em></a></li>
+<li><a href="pruebas-de-hipótesis.html#comparaciones-usando-lineup-continuación">Comparaciones usando <em>lineup</em> (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#prueba-de-permutaciones-para-proporciones"><i class="fa fa-check"></i>Prueba de permutaciones para proporciones</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-hipótesis-tradicionales"><i class="fa fa-check"></i>Pruebas de hipótesis tradicionales</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#tomadores-de-té-continuación"><i class="fa fa-check"></i>Tomadores de té (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#pruebas-de-permutación-implementación"><i class="fa fa-check"></i>Pruebas de permutación: Implementación</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#ejemplo-tiempos-de-fusión-continuación"><i class="fa fa-check"></i>Ejemplo: tiempos de fusión (continuación)</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#separación-de-grupos"><i class="fa fa-check"></i>Separación de grupos</a><ul>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#avispas-opcional"><i class="fa fa-check"></i>Avispas (opcional)</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#la-crisis-de-replicabilidad"><i class="fa fa-check"></i>La “crisis de replicabilidad”</a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#el-jardín-de-los-senderos-que-se-bifurcan"><i class="fa fa-check"></i>El jardín de los senderos que se bifurcan</a></li>
+<li><a href="pruebas-de-hipótesis.html#ejemplo-decisiones-de-análisis-y-valores-p">Ejemplo: decisiones de análisis y valores <em>p</em></a></li>
+<li class="chapter" data-level="" data-path="pruebas-de-hipótesis.html"><a href="pruebas-de-hipótesis.html#alternativas-o-soluciones"><i class="fa fa-check"></i>Alternativas o soluciones</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html"><i class="fa fa-check"></i><b>5</b> Estimación y distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-precios-de-casas"><i class="fa fa-check"></i>Ejemplo: precios de casas</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#distribución-de-muestreo"><i class="fa fa-check"></i>Distribución de muestreo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-ejemplos"><i class="fa fa-check"></i>Más ejemplos</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#el-error-estándar"><i class="fa fa-check"></i>El error estándar</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-valor-de-casas"><i class="fa fa-check"></i>Ejemplo: valor de casas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#calculando-la-distribución-de-muestreo"><i class="fa fa-check"></i>Calculando la distribución de muestreo</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-1"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-2"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#teorema-central-del-límite"><i class="fa fa-check"></i>Teorema central del límite</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#normalidad-y-gráficas-de-cuantiles-normales"><i class="fa fa-check"></i>Normalidad y gráficas de cuantiles normales</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#prueba-de-hipótesis-de-normalidad"><i class="fa fa-check"></i>Prueba de hipótesis de normalidad</a><ul>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-3"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-4"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#ejemplo-5"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="S-distribucion-muestreo.html"><a href="S-distribucion-muestreo.html#más-del-teorema-central-del-límite"><i class="fa fa-check"></i>Más del Teorema central del límite</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html"><i class="fa fa-check"></i><b>6</b> Intervalos de confianza y remuestreo</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-introductorio"><i class="fa fa-check"></i>Ejemplo introductorio</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#la-idea-del-bootstrap"><i class="fa fa-check"></i>La idea del bootstrap</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#el-principio-de-plug-in"><i class="fa fa-check"></i>El principio de plug-in</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-6"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#discusión-propiedades-de-la-distribución-bootstrap"><i class="fa fa-check"></i>Discusión: propiedades de la distribución bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-7"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#variación-en-distribuciones-bootstrap"><i class="fa fa-check"></i>Variación en distribuciones bootstrap</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#error-estándar-bootstrap-e-intervalos-normales"><i class="fa fa-check"></i>Error estándar bootstrap e intervalos normales</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-tomadores-de-té-negro"><i class="fa fa-check"></i>Ejemplo: tomadores de té negro</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-inventario-de-casas-vendidas"><i class="fa fa-check"></i>Ejemplo: inventario de casas vendidas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#calibración-de-intervalos-de-confianza"><i class="fa fa-check"></i>Calibración de intervalos de confianza</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#interpretación-de-intervalos-de-confianza"><i class="fa fa-check"></i>Interpretación de intervalos de confianza</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#intervalos-bootstrap-de-percentiles"><i class="fa fa-check"></i>Intervalos bootstrap de percentiles</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-8"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-para-dos-muestras"><i class="fa fa-check"></i>Bootstrap para dos muestras</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-9"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#datos-pareados"><i class="fa fa-check"></i>Datos pareados</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-otras-estadísticas"><i class="fa fa-check"></i>Bootstrap y otras estadísticas</a><ul>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-estimadores-de-razón"><i class="fa fa-check"></i>Ejemplo: estimadores de razón</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#ejemplo-suavizadores"><i class="fa fa-check"></i>Ejemplo: suavizadores</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-estimadores-complejos-tablas-de-perfiles"><i class="fa fa-check"></i>Bootstrap y estimadores complejos: tablas de perfiles</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#bootstrap-y-muestras-complejas"><i class="fa fa-check"></i>Bootstrap y muestras complejas</a></li>
+<li class="chapter" data-level="" data-path="intervalos-de-confianza-y-remuestreo.html"><a href="intervalos-de-confianza-y-remuestreo.html#conclusiones-y-observaciones"><i class="fa fa-check"></i>Conclusiones y observaciones</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html"><i class="fa fa-check"></i><b>7</b> Estimación por máxima verosimilitud</a><ul>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#introducción-a-estimación-por-máxima-verosimilitud"><i class="fa fa-check"></i>Introducción a estimación por máxima verosimilitud</a></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#máxima-verosimilitud-para-observaciones-continuas"><i class="fa fa-check"></i>Máxima verosimilitud para observaciones continuas</a></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#aspectos-numéricos"><i class="fa fa-check"></i>Aspectos numéricos</a><ul>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#el-método-de-momentos"><i class="fa fa-check"></i>El método de momentos</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="S-max-verosimilitud.html"><a href="S-max-verosimilitud.html#máxima-verosimilitud-para-más-de-un-parámetro"><i class="fa fa-check"></i>Máxima verosimilitud para más de un parámetro</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html"><i class="fa fa-check"></i><b>8</b> <em>Bootstrap</em> paramétrico</a><ul>
+<li><a href="bootstrap-paramétrico.html#ventajas-y-desventajas-de-bootstrap-paramétrico">Ventajas y desventajas de <em>bootstrap</em> paramétrico</a></li>
+<li class="chapter" data-level="" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html#verificando-los-supuestos-distribucionales"><i class="fa fa-check"></i>Verificando los supuestos distribucionales</a></li>
+<li class="chapter" data-level="" data-path="bootstrap-paramétrico.html"><a href="bootstrap-paramétrico.html#modelos-mal-identificados"><i class="fa fa-check"></i>Modelos mal identificados</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html"><i class="fa fa-check"></i><b>9</b> Propiedades teóricas de MLE</a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-10"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#consistencia"><i class="fa fa-check"></i>Consistencia</a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-11"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li><a href="propiedades-teóricas-de-mle.html#equivarianza-del-textsfmle">Equivarianza del <span class="math inline">\(\textsf{MLE}\)</span></a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-12"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#normalidad-asintótica"><i class="fa fa-check"></i>Normalidad asintótica</a><ul>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#ejemplo-13"><i class="fa fa-check"></i>Ejemplo</a></li>
+<li class="chapter" data-level="" data-path="propiedades-teóricas-de-mle.html"><a href="propiedades-teóricas-de-mle.html#el-método-delta"><i class="fa fa-check"></i>El método delta</a></li>
+</ul></li>
+<li><a href="propiedades-teóricas-de-mle.html#optimalidad-del-textsfmle">Optimalidad del <span class="math inline">\(\textsf{MLE}\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html"><i class="fa fa-check"></i><b>10</b> Más de pruebas de hipótesis e intervalos</a><ul>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#prueba-de-wald"><i class="fa fa-check"></i>Prueba de Wald</a></li>
+<li><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#observación-pruebas-t-y-práctica-estadística">Observación: pruebas <span class="math inline">\(t\)</span> y práctica estadística</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#prueba-de-wald-para-dos-medias-o-proporciones"><i class="fa fa-check"></i>Prueba de Wald para dos medias o proporciones</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#datos-pareados-1"><i class="fa fa-check"></i>Datos pareados</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#pruebas-de-cociente-de-verosimilitud"><i class="fa fa-check"></i>Pruebas de cociente de verosimilitud</a><ul>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#distribución-de-referencia-para-pruebas-de-cocientes"><i class="fa fa-check"></i>Distribución de referencia para pruebas de cocientes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#otro-tipo-de-pruebas"><i class="fa fa-check"></i>Otro tipo de pruebas</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#errores-tipo-i-y-tipo-ii"><i class="fa fa-check"></i>Errores tipo I y tipo II</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#consideraciones-prácticas"><i class="fa fa-check"></i>Consideraciones prácticas</a></li>
+<li class="chapter" data-level="" data-path="más-de-pruebas-de-hipótesis-e-intervalos.html"><a href="más-de-pruebas-de-hipótesis-e-intervalos.html#pruebas-múltiples"><i class="fa fa-check"></i>Pruebas múltiples</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html"><i class="fa fa-check"></i><b>11</b> Introducción a inferencia bayesiana</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#un-primer-ejemplo-completo-de-inferencia-bayesiana"><i class="fa fa-check"></i>Un primer ejemplo completo de inferencia bayesiana</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-estimando-una-proporción"><i class="fa fa-check"></i>Ejemplo: estimando una proporción</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-observaciones-uniformes"><i class="fa fa-check"></i>Ejemplo: observaciones uniformes</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#probabilidad-a-priori"><i class="fa fa-check"></i>Probabilidad a priori</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#análisis-conjugado"><i class="fa fa-check"></i>Análisis conjugado</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-14"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#pasos-de-un-análisis-de-datos-bayesiano"><i class="fa fa-check"></i>Pasos de un análisis de datos bayesiano</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#verificación-predictiva-posterior"><i class="fa fa-check"></i>Verificación predictiva posterior</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-estaturas-de-tenores"><i class="fa fa-check"></i>Ejemplo: estaturas de tenores</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-modelo-poisson"><i class="fa fa-check"></i>Ejemplo: modelo Poisson</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#predicción"><i class="fa fa-check"></i>Predicción</a><ul>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-cantantes"><i class="fa fa-check"></i>Ejemplo: cantantes</a></li>
+<li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-posterior-predictiva-de-pareto-uniforme."><i class="fa fa-check"></i>Ejemplo: posterior predictiva de Pareto-Uniforme.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html"><i class="fa fa-check"></i><b>12</b> Calibración bayesiana y Regularización</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#enfoque-bayesiano-y-frecuentista"><i class="fa fa-check"></i>Enfoque bayesiano y frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-una-proporción"><i class="fa fa-check"></i>Ejemplo: estimación de una proporción</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#intervalos-de-agresti-coull"><i class="fa fa-check"></i>Intervalos de Agresti-Coull</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#incorporando-información-inicial"><i class="fa fa-check"></i>Incorporando información inicial</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-porporción-de-hogares-de-ingresos-grandes"><i class="fa fa-check"></i>Ejemplo: porporción de hogares de ingresos grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#inferencia-bayesiana-y-regularización"><i class="fa fa-check"></i>Inferencia bayesiana y regularización</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-modelo-normal-y-estaturas"><i class="fa fa-check"></i>Ejemplo: modelo normal y estaturas</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-proporciones"><i class="fa fa-check"></i>Ejemplo: estimación de proporciones</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#teoría-de-decisión"><i class="fa fa-check"></i>Teoría de decisión</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-frecuentista"><i class="fa fa-check"></i>Ejemplo: riesgo frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-posterior"><i class="fa fa-check"></i>Ejemplo: riesgo posterior</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#riesgo-de-bayes"><i class="fa fa-check"></i>Riesgo de Bayes</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-15"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#loess-1"><i class="fa fa-check"></i>2. Loess</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-series-de-tiempo"><i class="fa fa-check"></i>Solución: Series de tiempo</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tipos-de-estudio-y-pgd"><i class="fa fa-check"></i>3. Tipos de estudio y PGD</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#pruebas-de-hipótesis-visuales-y-permutación"><i class="fa fa-check"></i>4. Pruebas de hipótesis visuales y permutación</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-pruebas-pareadas"><i class="fa fa-check"></i>Solución: Pruebas pareadas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#distribución-muestral-y-remuestreo"><i class="fa fa-check"></i>5. Distribución muestral y remuestreo</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#tcl-e-introducción-a-bootstrap"><i class="fa fa-check"></i>6. TCL e introducción a bootstrap</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución-y-discusión-de-media"><i class="fa fa-check"></i>Solución y discusión de media</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-el-conteo-rápido"><i class="fa fa-check"></i>7. Bootstrap en el conteo rápido</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#bootstrap-en-muestras-complejas"><i class="fa fa-check"></i>8. Bootstrap en muestras complejas</a><ul>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#solución"><i class="fa fa-check"></i>Solución</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#mapas"><i class="fa fa-check"></i>Mapas</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#examen-parcial"><i class="fa fa-check"></i>Examen Parcial</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#más-pruebas-de-hipótesis"><i class="fa fa-check"></i>10. Más pruebas de hipótesis</a></li>
+<li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#introducción-modelo-beta-binomial"><i class="fa fa-check"></i>11. Introducción: modelo Beta-Binomial</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="referencias.html"><a href="referencias.html"><i class="fa fa-check"></i>Referencias</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Publicado con bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">EST-46111: Fundamentos de Estadística con Remuestreo</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="calibración-bayesiana-y-regularización" class="section level1">
+<h1><span class="header-section-number">Sección 12</span> Calibración bayesiana y Regularización</h1>
+<p>El enfoque bayesiano se puede formalizar coherentemente en términos
+de probabilidades subjetivas, y como vimos, esta es una fortaleza del enfoque bayesiano.</p>
+<p>En la práctica, sin embargo, muchas veces puede ser difícil argumentar en términos
+exclusivos de probabilidad subjetiva, aunque hagamos los esfuerzos apropiados para
+incorporar la totalidad de información que distintos actores involucrados pueden tener.</p>
+<p>Consideremos, por ejemplo, que INEGI produjera un intervalo creíble del 95%
+para el ingreso mediano de los hogares de México. Aún cuando nuestra metodología sea
+transparente y correctamente informada, algunos investigadores interesados
+puede ser que tengan recelo en usar esta información, y quizá preferirían
+hacer estimaciones propias. Esto restaría valor al trabajo cuidadoso que pusimos
+en nuestras estimaciones oficiales.</p>
+<p>Por otra parte, el enfoque frecuentista provee de ciertas garantías mínimas
+para la utilización de las estimaciones, que no dependen de la interpretación
+subjetiva de la probabilidad, sino de las propiedades del muestreo.
+Consideremos la cobertura de los intervalos de confianza:</p>
+<ul>
+<li>Bajo ciertos supuestos de nuestros modelos, la probabilidad de que
+un intervalo de confianza del 95% cubra al verdadero valor poblacional es del 95%. Esta
+probabilidad es sobre las distintas muestras que se pueden obtener según el
+diseño del muestreo.</li>
+</ul>
+<p>Los intervalos creíbles en principio no tienen por qué cumplir esta propiedad, pero
+consideramos que en la práctica es una garantía mínima que deberían cumplir.</p>
+<p>El enfoque resultante se llama <strong>bayesiano calibrado</strong>, <span class="citation">(<span class="citeproc-not-found" data-reference-id="little2011"><strong>???</strong></span>)</span> . La idea
+es seguir el enfoque bayesiano usual para construir nuestras estimaciones,
+pero verificar hasta donde sea posible que los intervalos resultantes satisfacen
+alguna garantía frecuentista básica.</p>
+<p><strong>Observación</strong>. checar que la cobertura real es similar a la nominal es importante
+en los dos enfoques: frecuentista y bayesiano. Los intervalos frecuentistas, como
+hemos visto, generalmente son aproximados, y por lo tanto no cumplen automáticamente
+esta propiedad de calibración.</p>
+<div id="enfoque-bayesiano-y-frecuentista" class="section level2 unnumbered">
+<h2>Enfoque bayesiano y frecuentista</h2>
+<p>Los métodos estadísticos clásicos toman el punto de vista <strong>frecuentista</strong> y se
+basa en los siguientes puntos (<span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span>):</p>
+<ol style="list-style-type: decimal">
+<li><p>La probabilidad se interpreta como un límite de frecuencias relativas, donde
+las probabilidades son propiedades objetivas en el mundo real.</p></li>
+<li><p>En un modelo, los parámetros son constantes fijas (desconocidas). Como
+consecuencia, no se pueden realizar afirmaciones probabilísticas útiles en
+relación a éstos.</p></li>
+<li><p>Los procedimientos estadísticos deben diseñarse con el objetivo de tener
+propiedades frecuentistas bien definidas. Por ejemplo, un intervalo de confianza
+del <span class="math inline">\(95\%\)</span> debe contener el verdadero valor del parámetro con frecuencia límite
+de al menos el <span class="math inline">\(95\%\)</span>.</p></li>
+</ol>
+<p>En contraste, el acercamiento <strong>Bayesiano</strong> muchas veces se describe por los
+siguientes postulados:</p>
+<ol style="list-style-type: decimal">
+<li><p>La probabilidad describe grados de creencia, no frecuencias limite. Como
+tal uno puede hacer afirmaciones probabilísticas acerca de muchas cosas y no
+solo datos sujetos a variabilidad aleatoria. Por ejemplo, puedo decir: “La
+probabilidad de que Einstein tomara una taza de té el primero de agosto de <span class="math inline">\(1948\)</span>”
+es <span class="math inline">\(0.35\)</span>, esto no hace referencia a ninguna frecuencia relativa sino que refleja
+la certeza que yo tengo de que la proposición sea verdadera.</p></li>
+<li><p>Podemos hacer afirmaciones probabilísticas de parámetros.</p></li>
+<li><p>Podemos hacer inferencia de un parámetro <span class="math inline">\(\theta\)</span> por medio de
+distribuciones de probabilidad. Las inferencias como estimaciones puntuales y
+estimaciones de intervalos se pueden extraer de dicha distribución.</p></li>
+</ol>
+<p>Finalmente, en el enfoque <strong>bayesiano calibrado</strong> (<span class="citation">(<span class="citeproc-not-found" data-reference-id="little2011"><strong>???</strong></span>)</span>):</p>
+<ol style="list-style-type: decimal">
+<li>Usamos el enfoque bayesiano para modelar y hacer afirmaciones probabilísticas
+de los parámetros.</li>
+<li>Buscamos cumplir las garantías frecuentistas del inciso 3).</li>
+</ol>
+</div>
+<div id="ejemplo-estimación-de-una-proporción" class="section level2 unnumbered">
+<h2>Ejemplo: estimación de una proporción</h2>
+<p>Recordamos nuestro problema de estimación de una proporcion <span class="math inline">\(\theta\)</span>. Usando
+la distribución inicial <span class="math inline">\(p(\theta)\sim \mathsf{Beta}(2,2)\)</span>, y la verosimilitud estándar
+binomial, vimos que la posterior cuando observamos <span class="math inline">\(k\)</span>
+éxitos es <span class="math display">\[p(\theta|k) \sim \mathsf{Beta}(k + 2, n - k + 2)\]</span>.</p>
+<p>La media posterior es
+<span class="math display">\[\frac{k + 2}{n + 4} \]</span>
+que podemos interpretar como: agrega 2 éxitos y 2 fracasos a los datos observados
+y calcula la proporción de éxitos. Un intervalo posterior de credibilidad del 95% se calcula
+encontrando los cuantiles 0.025 y 0.975 de una <span class="math inline">\(\mathsf{Beta}(k + 2, n - k + 2)\)</span></p>
+<p><span class="math display">\[I_a = \left [q_{0.025}(k+2, n+4), q_{0.975}(k+2, n+4)\right ]\]</span>
+Que compararemos con el intervalo usual de Wald: si <span class="math inline">\(\hat{\theta} = \frac{k}{n}\)</span>, entonces</p>
+<p><span class="math display">\[I_w = \left [\hat{\theta} - 2 \sqrt{\frac{\hat{\theta}(1-\hat{\theta})}{n}}, \hat{\theta} + 2 \sqrt{\frac{\hat{\theta}(1-\hat{\theta})}{n}}\right]\]</span>
+¿Cómo podemos comparar la calibración de estos dos intervalos? Nominalmente, deben
+tener cobertura de 95%. Hagamos un ejercicio de simulación para distintos
+tamaños de muestra <span class="math inline">\(n\)</span> y posibles valores <span class="math inline">\(\theta\in (0,1)\)</span>:</p>
+<div class="sourceCode" id="cb476"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb476-1"><a href="calibración-bayesiana-y-regularización.html#cb476-1"></a><span class="kw">set.seed</span>(<span class="dv">332</span>)</span>
+<span id="cb476-2"><a href="calibración-bayesiana-y-regularización.html#cb476-2"></a>simular_muestras &lt;-<span class="st"> </span><span class="cf">function</span>(M, n, p){</span>
+<span id="cb476-3"><a href="calibración-bayesiana-y-regularización.html#cb476-3"></a>  k =<span class="st"> </span><span class="kw">rbinom</span>(M, n, p)</span>
+<span id="cb476-4"><a href="calibración-bayesiana-y-regularización.html#cb476-4"></a>  <span class="kw">tibble</span>(<span class="dt">rep =</span> <span class="dv">1</span><span class="op">:</span>M, <span class="dt">n =</span> n, <span class="dt">p =</span> p, <span class="dt">k =</span> k)</span>
+<span id="cb476-5"><a href="calibración-bayesiana-y-regularización.html#cb476-5"></a>}</span>
+<span id="cb476-6"><a href="calibración-bayesiana-y-regularización.html#cb476-6"></a>intervalo_wald &lt;-<span class="st"> </span><span class="cf">function</span>(n, k){</span>
+<span id="cb476-7"><a href="calibración-bayesiana-y-regularización.html#cb476-7"></a>  p_hat &lt;-<span class="st"> </span>k <span class="op">/</span><span class="st"> </span>n</span>
+<span id="cb476-8"><a href="calibración-bayesiana-y-regularización.html#cb476-8"></a>  ee_hat &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p_hat <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_hat) <span class="op">/</span><span class="st"> </span>n)</span>
+<span id="cb476-9"><a href="calibración-bayesiana-y-regularización.html#cb476-9"></a>  <span class="kw">tibble</span>(<span class="dt">inf =</span> p_hat <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>ee_hat, <span class="dt">sup =</span> p_hat <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>ee_hat)</span>
+<span id="cb476-10"><a href="calibración-bayesiana-y-regularización.html#cb476-10"></a>}</span>
+<span id="cb476-11"><a href="calibración-bayesiana-y-regularización.html#cb476-11"></a>intervalo_bayes &lt;-<span class="st"> </span><span class="cf">function</span>(n, k, <span class="dt">a =</span> <span class="dv">2</span>, <span class="dt">b =</span> <span class="dv">2</span>){</span>
+<span id="cb476-12"><a href="calibración-bayesiana-y-regularización.html#cb476-12"></a>  a &lt;-<span class="st"> </span>k <span class="op">+</span><span class="st"> </span>a</span>
+<span id="cb476-13"><a href="calibración-bayesiana-y-regularización.html#cb476-13"></a>  b &lt;-<span class="st"> </span>n <span class="op">-</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span>b</span>
+<span id="cb476-14"><a href="calibración-bayesiana-y-regularización.html#cb476-14"></a>  <span class="kw">tibble</span>(<span class="dt">inf =</span> <span class="kw">qbeta</span>(<span class="fl">0.025</span>, a, b), <span class="dt">sup =</span> <span class="kw">qbeta</span>(<span class="fl">0.975</span>, a, b))</span>
+<span id="cb476-15"><a href="calibración-bayesiana-y-regularización.html#cb476-15"></a>}</span>
+<span id="cb476-16"><a href="calibración-bayesiana-y-regularización.html#cb476-16"></a><span class="kw">set.seed</span>(<span class="dv">812</span>)</span>
+<span id="cb476-17"><a href="calibración-bayesiana-y-regularización.html#cb476-17"></a>ejemplo &lt;-<span class="st"> </span><span class="kw">simular_muestras</span>(<span class="dv">5</span>, <span class="dv">20</span>, <span class="fl">0.4</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb477"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb477-1"><a href="calibración-bayesiana-y-regularización.html#cb477-1"></a>ejemplo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">intervalo =</span> <span class="kw">intervalo_wald</span>(n, k)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(intervalo) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb477-2"><a href="calibración-bayesiana-y-regularización.html#cb477-2"></a><span class="st">  </span><span class="kw">bind_cols</span>(ejemplo) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>rep)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 5
+##      inf   sup     n     p     k
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+## 1 0.0211 0.379    20   0.4     4
+## 2 0.228  0.672    20   0.4     9
+## 3 0.276  0.724    20   0.4    10
+## 4 0.228  0.672    20   0.4     9
+## 5 0.137  0.563    20   0.4     7</code></pre>
+<div class="sourceCode" id="cb479"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb479-1"><a href="calibración-bayesiana-y-regularización.html#cb479-1"></a>ejemplo <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">intervalo =</span> <span class="kw">intervalo_bayes</span>(n, k)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(intervalo) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb479-2"><a href="calibración-bayesiana-y-regularización.html#cb479-2"></a><span class="st">  </span><span class="kw">bind_cols</span>(ejemplo) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>rep)</span></code></pre></div>
+<pre><code>## # A tibble: 5 x 5
+##     inf   sup     n     p     k
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+## 1 0.102 0.437    20   0.4     4
+## 2 0.268 0.655    20   0.4     9
+## 3 0.306 0.694    20   0.4    10
+## 4 0.268 0.655    20   0.4     9
+## 5 0.197 0.573    20   0.4     7</code></pre>
+<p>¿Cuáles de estos intervalos cubren al verdadero valor? Nótese que <strong>no podemos
+descalificar a ningún método por no cubrir una vez</strong>. Es fácil producir un intervalo
+con 100% de cobertura: (0,1). Pero no nos informa dónde es probable que esté
+el parámetro.</p>
+<p>Sin embargo, podemos checar la cobertura frecuentista haciendo una cantidad grande de simulaciones:</p>
+<div class="sourceCode" id="cb481"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb481-1"><a href="calibración-bayesiana-y-regularización.html#cb481-1"></a>parametros &lt;-<span class="st"> </span><span class="kw">crossing</span>(<span class="dt">n =</span> <span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">100</span>, <span class="dv">400</span>), </span>
+<span id="cb481-2"><a href="calibración-bayesiana-y-regularización.html#cb481-2"></a>                       <span class="dt">p =</span> <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.015</span>, <span class="fl">0.02</span>, <span class="fl">0.025</span>, <span class="fl">0.03</span>, <span class="fl">0.035</span>, <span class="fl">0.04</span>, <span class="fl">0.05</span>, <span class="fl">0.07</span>, <span class="fl">0.1</span>, <span class="fl">0.15</span>))</span>
+<span id="cb481-3"><a href="calibración-bayesiana-y-regularización.html#cb481-3"></a><span class="kw">set.seed</span>(<span class="dv">2343</span>)</span>
+<span id="cb481-4"><a href="calibración-bayesiana-y-regularización.html#cb481-4"></a><span class="co"># simulaciones</span></span>
+<span id="cb481-5"><a href="calibración-bayesiana-y-regularización.html#cb481-5"></a>simulaciones &lt;-<span class="st"> </span>parametros <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-6"><a href="calibración-bayesiana-y-regularización.html#cb481-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">muestra =</span> <span class="kw">map2</span>(n, p, <span class="op">~</span><span class="st"> </span><span class="kw">simular_muestras</span>(<span class="dv">50000</span>, .x, .y) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(rep, k))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-7"><a href="calibración-bayesiana-y-regularización.html#cb481-7"></a><span class="st">  </span><span class="kw">unnest</span>(muestra)</span>
+<span id="cb481-8"><a href="calibración-bayesiana-y-regularización.html#cb481-8"></a><span class="co"># calcular_cobertura</span></span>
+<span id="cb481-9"><a href="calibración-bayesiana-y-regularización.html#cb481-9"></a>calcular_cobertura &lt;-<span class="st"> </span><span class="cf">function</span>(simulaciones, construir_intervalo){</span>
+<span id="cb481-10"><a href="calibración-bayesiana-y-regularización.html#cb481-10"></a>  <span class="co"># nombre de función</span></span>
+<span id="cb481-11"><a href="calibración-bayesiana-y-regularización.html#cb481-11"></a>  intervalo_nombre &lt;-<span class="st"> </span><span class="kw">substitute</span>(construir_intervalo) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>()</span>
+<span id="cb481-12"><a href="calibración-bayesiana-y-regularización.html#cb481-12"></a>  cobertura_tbl &lt;-<span class="st"> </span>simulaciones <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-13"><a href="calibración-bayesiana-y-regularización.html#cb481-13"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">intervalo  =</span> <span class="kw">construir_intervalo</span>(n, k)) <span class="op">%&gt;%</span></span>
+<span id="cb481-14"><a href="calibración-bayesiana-y-regularización.html#cb481-14"></a><span class="st">    </span><span class="kw">pull</span>(intervalo) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-15"><a href="calibración-bayesiana-y-regularización.html#cb481-15"></a><span class="st">    </span><span class="kw">bind_cols</span>(simulaciones) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-16"><a href="calibración-bayesiana-y-regularización.html#cb481-16"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cubre =</span> p <span class="op">&gt;=</span><span class="st"> </span>inf <span class="op">&amp;</span><span class="st"> </span>p <span class="op">&lt;=</span><span class="st"> </span>sup) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-17"><a href="calibración-bayesiana-y-regularización.html#cb481-17"></a><span class="st">    </span><span class="kw">group_by</span>(n, p) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb481-18"><a href="calibración-bayesiana-y-regularización.html#cb481-18"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">cobertura =</span> <span class="kw">mean</span>(cubre), <span class="dt">long_media =</span> <span class="kw">mean</span>(sup <span class="op">-</span><span class="st"> </span>inf))</span>
+<span id="cb481-19"><a href="calibración-bayesiana-y-regularización.html#cb481-19"></a>  cobertura_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> intervalo_nombre)</span>
+<span id="cb481-20"><a href="calibración-bayesiana-y-regularización.html#cb481-20"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb482"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb482-1"><a href="calibración-bayesiana-y-regularización.html#cb482-1"></a>cobertura_wald &lt;-<span class="st"> </span><span class="kw">calcular_cobertura</span>(simulaciones, intervalo_wald)</span>
+<span id="cb482-2"><a href="calibración-bayesiana-y-regularización.html#cb482-2"></a>cobertura_wald</span></code></pre></div>
+<pre><code>## # A tibble: 66 x 5
+## # Groups:   n [6]
+##        n     p cobertura long_media tipo          
+##    &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;         
+##  1     5 0.01     0.0483     0.0347 intervalo_wald
+##  2     5 0.015    0.0733     0.0527 intervalo_wald
+##  3     5 0.02     0.0954     0.0689 intervalo_wald
+##  4     5 0.025    0.119      0.0862 intervalo_wald
+##  5     5 0.03     0.140      0.102  intervalo_wald
+##  6     5 0.035    0.165      0.120  intervalo_wald
+##  7     5 0.04     0.187      0.137  intervalo_wald
+##  8     5 0.05     0.227      0.167  intervalo_wald
+##  9     5 0.07     0.299      0.223  intervalo_wald
+## 10     5 0.1      0.398      0.303  intervalo_wald
+## # … with 56 more rows</code></pre>
+<div class="sourceCode" id="cb484"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb484-1"><a href="calibración-bayesiana-y-regularización.html#cb484-1"></a>graficar_cobertura &lt;-<span class="st"> </span><span class="cf">function</span>(cobertura_tbl){</span>
+<span id="cb484-2"><a href="calibración-bayesiana-y-regularización.html#cb484-2"></a>  <span class="kw">ggplot</span>(cobertura_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> p, <span class="dt">y =</span> cobertura, <span class="dt">colour =</span> tipo)) <span class="op">+</span></span>
+<span id="cb484-3"><a href="calibración-bayesiana-y-regularización.html#cb484-3"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="fl">0.95</span>, <span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span></span>
+<span id="cb484-4"><a href="calibración-bayesiana-y-regularización.html#cb484-4"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb484-5"><a href="calibración-bayesiana-y-regularización.html#cb484-5"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>n) <span class="op">+</span></span>
+<span id="cb484-6"><a href="calibración-bayesiana-y-regularización.html#cb484-6"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>) </span>
+<span id="cb484-7"><a href="calibración-bayesiana-y-regularización.html#cb484-7"></a>}</span>
+<span id="cb484-8"><a href="calibración-bayesiana-y-regularización.html#cb484-8"></a>cobertura_wald <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb484-9"><a href="calibración-bayesiana-y-regularización.html#cb484-9"></a><span class="st">  </span><span class="kw">graficar_cobertura</span>()</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>La cobertura real es mucho más baja que la nominal en muchos casos, especialmente
+cuando la <span class="math inline">\(p\)</span> es baja y <span class="math inline">\(n\)</span> es chica. Pero incluso para muestras relativamente grandes (100),
+la cobertura es mala si <span class="math inline">\(p\)</span> es chica.</p>
+<p>Ahora probamos nuestro método alternativo:</p>
+<div class="sourceCode" id="cb485"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb485-1"><a href="calibración-bayesiana-y-regularización.html#cb485-1"></a>cobertura_bayes &lt;-<span class="st"> </span><span class="kw">calcular_cobertura</span>(simulaciones, intervalo_bayes)</span></code></pre></div>
+<div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="calibración-bayesiana-y-regularización.html#cb486-1"></a><span class="kw">bind_rows</span>(cobertura_wald, cobertura_bayes) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb486-2"><a href="calibración-bayesiana-y-regularización.html#cb486-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="kw">factor</span>(tipo, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&#39;intervalo_wald&#39;</span>, <span class="st">&#39;intervalo_bayes&#39;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb486-3"><a href="calibración-bayesiana-y-regularización.html#cb486-3"></a><span class="st">  </span><span class="kw">graficar_cobertura</span>()</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Y vemos que en general el intervalo de Bayes es superior al de Wald, en sentido
+de que su cobertura real es más cercana a la nominal. El caso donde fallan los dos
+es para muestras muy chicas <span class="math inline">\(n=5, 10\)</span>, con probabilidades de éxito chicas <span class="math inline">\(p\leq 0.02\)</span>.</p>
+<ul>
+<li>Sin embargo, si tenemos información previa acerca del tamaño de la proporción que estamos
+estimando, es posible obtener buena calibración con el método bayesiano.</li>
+</ul>
+<p>En este caso particular, <strong>tenemos argumentos frecuentistas</strong>
+para utilizar el método bayesiano. Por ejemplo, si el INEGI utilizara estos
+intervalos creíbles, un análisis de calibración de este tipo sostendría esa decisión.</p>
+</div>
+<div id="intervalos-de-agresti-coull" class="section level2 unnumbered">
+<h2>Intervalos de Agresti-Coull</h2>
+<p>Un método intermedio que se usa para obtener mejores intervalos cuando
+estimamos proporciones es el siguiente:</p>
+<ul>
+<li>Agregar dos 1’s y dos 0’s a los datos.</li>
+<li>Utilizar el método de Wald con estos datos modificados.</li>
+</ul>
+<div class="sourceCode" id="cb487"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb487-1"><a href="calibración-bayesiana-y-regularización.html#cb487-1"></a>intervalo_agresti_coull &lt;-<span class="st"> </span><span class="cf">function</span>(n, k){</span>
+<span id="cb487-2"><a href="calibración-bayesiana-y-regularización.html#cb487-2"></a>  p_hat &lt;-<span class="st"> </span>(k <span class="op">+</span><span class="st"> </span><span class="dv">2</span>)<span class="op">/</span><span class="st"> </span>(n <span class="op">+</span><span class="st"> </span><span class="dv">4</span>)</span>
+<span id="cb487-3"><a href="calibración-bayesiana-y-regularización.html#cb487-3"></a>  ee_hat &lt;-<span class="st"> </span><span class="kw">sqrt</span>(p_hat <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_hat) <span class="op">/</span><span class="st"> </span>n)</span>
+<span id="cb487-4"><a href="calibración-bayesiana-y-regularización.html#cb487-4"></a>  <span class="kw">tibble</span>(<span class="dt">inf =</span> p_hat <span class="op">-</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>ee_hat, <span class="dt">sup =</span> p_hat <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>ee_hat)</span>
+<span id="cb487-5"><a href="calibración-bayesiana-y-regularización.html#cb487-5"></a>}</span>
+<span id="cb487-6"><a href="calibración-bayesiana-y-regularización.html#cb487-6"></a>cobertura_ac &lt;-<span class="st"> </span><span class="kw">calcular_cobertura</span>(simulaciones, intervalo_agresti_coull)</span></code></pre></div>
+<div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="calibración-bayesiana-y-regularización.html#cb488-1"></a><span class="kw">bind_rows</span>(cobertura_wald, cobertura_bayes, cobertura_ac) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb488-2"><a href="calibración-bayesiana-y-regularización.html#cb488-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tipo =</span> <span class="kw">factor</span>(tipo, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&#39;intervalo_wald&#39;</span>, <span class="st">&#39;intervalo_bayes&#39;</span>, <span class="st">&#39;intervalo_agresti_coull&#39;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb488-3"><a href="calibración-bayesiana-y-regularización.html#cb488-3"></a><span class="st">  </span><span class="kw">graficar_cobertura</span>()</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Que tiende a ser demasiado conservador para proporciones chicas:</p>
+<div class="sourceCode" id="cb489"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb489-1"><a href="calibración-bayesiana-y-regularización.html#cb489-1"></a><span class="kw">graficar_cobertura</span>(cobertura_ac) <span class="op">+</span></span>
+<span id="cb489-2"><a href="calibración-bayesiana-y-regularización.html#cb489-2"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="fl">0.9</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p><strong>Conclusión 1</strong>: Los intervalos de Agresti-Coull son una buena alternativa
+para estimar proporciones como sustituto de los intervalos clásicos de Wald, aunque
+tienden a ser muy conservadores para muestras chicas</p>
+<p>Idealmente podemos utilizar un método bayesiano
+pues normalmente tenemos información inicial acerca de las proporciones que
+queremos estimar.</p>
+</div>
+<div id="incorporando-información-inicial" class="section level2 unnumbered">
+<h2>Incorporando información inicial</h2>
+<p>Nótese que generalmente tenemos información acerca de la cantidad que
+queremos estimar: por ejemplo, que proporción de visitantes de un sitio web
+compra algo (usualmente muy baja, menos de 2%), qué proporción de personas tiene diabetes tipo 1
+(una proporción muy baja, menos de 1 por millar), o qué proporción de hogares tienen ingresos trimestrales
+mayores a 150 mil pesos (menos de %5 con alta probabilidad).</p>
+<p>En este caso, tenemos que ajustar nuestra inicial. Por ejemplo, para el problema
+de ingresos, podríamos usar una <span class="math inline">\(\mathsf{Beta}(2, 100)\)</span>, cuyos cuantiles son:</p>
+<div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="calibración-bayesiana-y-regularización.html#cb490-1"></a><span class="co"># uno de cada 100</span></span>
+<span id="cb490-2"><a href="calibración-bayesiana-y-regularización.html#cb490-2"></a>a &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb490-3"><a href="calibración-bayesiana-y-regularización.html#cb490-3"></a>b &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb490-4"><a href="calibración-bayesiana-y-regularización.html#cb490-4"></a>beta_sims &lt;-<span class="st"> </span><span class="kw">rbeta</span>(<span class="dv">5000</span>, a, b)</span>
+<span id="cb490-5"><a href="calibración-bayesiana-y-regularización.html#cb490-5"></a><span class="kw">quantile</span>(beta_sims, <span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.50</span>, <span class="fl">0.90</span>, <span class="fl">0.99</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)</span></code></pre></div>
+<pre><code>##    1%    5%   50%   90%   99% 
+## 0.001 0.004 0.016 0.039 0.067</code></pre>
+<div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="calibración-bayesiana-y-regularización.html#cb492-1"></a><span class="kw">qplot</span>(beta_sims)</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Veamos cómo se ven los intervalos bayesianos producidos con esta inicial:</p>
+<div class="sourceCode" id="cb493"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb493-1"><a href="calibración-bayesiana-y-regularización.html#cb493-1"></a>crear_intervalo_bayes &lt;-<span class="st"> </span><span class="cf">function</span>(a, b){</span>
+<span id="cb493-2"><a href="calibración-bayesiana-y-regularización.html#cb493-2"></a></span>
+<span id="cb493-3"><a href="calibración-bayesiana-y-regularización.html#cb493-3"></a>  intervalo_fun &lt;-<span class="st"> </span><span class="cf">function</span>(n, k){</span>
+<span id="cb493-4"><a href="calibración-bayesiana-y-regularización.html#cb493-4"></a>    a_post &lt;-<span class="st"> </span>k <span class="op">+</span><span class="st"> </span>a</span>
+<span id="cb493-5"><a href="calibración-bayesiana-y-regularización.html#cb493-5"></a>    b_post &lt;-<span class="st"> </span>n <span class="op">-</span><span class="st"> </span>k <span class="op">+</span><span class="st"> </span>b</span>
+<span id="cb493-6"><a href="calibración-bayesiana-y-regularización.html#cb493-6"></a>    <span class="kw">tibble</span>(<span class="dt">inf =</span> <span class="kw">qbeta</span>(<span class="fl">0.025</span>, a_post, b_post), <span class="dt">sup =</span> <span class="kw">qbeta</span>(<span class="fl">0.975</span>, a_post, b_post))</span>
+<span id="cb493-7"><a href="calibración-bayesiana-y-regularización.html#cb493-7"></a>  }</span>
+<span id="cb493-8"><a href="calibración-bayesiana-y-regularización.html#cb493-8"></a>  intervalo_fun</span>
+<span id="cb493-9"><a href="calibración-bayesiana-y-regularización.html#cb493-9"></a>}</span>
+<span id="cb493-10"><a href="calibración-bayesiana-y-regularización.html#cb493-10"></a>intervalo_bayes_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">crear_intervalo_bayes</span>(a, b)</span></code></pre></div>
+<div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="calibración-bayesiana-y-regularización.html#cb494-1"></a>cobertura_bayes &lt;-<span class="st"> </span><span class="kw">calcular_cobertura</span>(simulaciones,</span>
+<span id="cb494-2"><a href="calibración-bayesiana-y-regularización.html#cb494-2"></a>                                      intervalo_bayes_<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb495"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb495-1"><a href="calibración-bayesiana-y-regularización.html#cb495-1"></a><span class="kw">graficar_cobertura</span>(<span class="kw">bind_rows</span>(cobertura_bayes, cobertura_ac) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(p <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.05</span>)) <span class="op">+</span></span>
+<span id="cb495-2"><a href="calibración-bayesiana-y-regularización.html#cb495-2"></a><span class="st">  </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Y vemos que la calibración es similar. Notemos sin embargo que
+la longitud del del intervalo bayesiano es <strong>mucho menor</strong> que el de
+Agresti-Coull cuando la muestra es chica:</p>
+<div class="sourceCode" id="cb496"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb496-1"><a href="calibración-bayesiana-y-regularización.html#cb496-1"></a><span class="kw">ggplot</span>(<span class="kw">bind_rows</span>(cobertura_bayes, cobertura_ac), </span>
+<span id="cb496-2"><a href="calibración-bayesiana-y-regularización.html#cb496-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> p, <span class="dt">y =</span> long_media, <span class="dt">colour =</span> tipo)) <span class="op">+</span></span>
+<span id="cb496-3"><a href="calibración-bayesiana-y-regularización.html#cb496-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>n) </span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Cuando la muestra es chica, los intervalos de bayes son similares
+a los iniciales, y mucho más cortos que los de Agresti-Coull.
+Para muestras intermedias (50-100) los intervalos bayesianos
+son más informativos que los de Agresti-Coull, con calibración similar, y
+representan aprendizaje por encima de lo que sabíamos en la inicial.
+Para muestras grandes, obtenemos resultados simililares.</p>
+<p>Por ejemplo:</p>
+<div class="sourceCode" id="cb497"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb497-1"><a href="calibración-bayesiana-y-regularización.html#cb497-1"></a><span class="kw">set.seed</span>(<span class="dv">2131</span>)</span>
+<span id="cb497-2"><a href="calibración-bayesiana-y-regularización.html#cb497-2"></a>k &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">50</span>, <span class="fl">0.03</span>)</span>
+<span id="cb497-3"><a href="calibración-bayesiana-y-regularización.html#cb497-3"></a>k</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<div class="sourceCode" id="cb499"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb499-1"><a href="calibración-bayesiana-y-regularización.html#cb499-1"></a><span class="kw">intervalo_agresti_coull</span>(<span class="dv">50</span>, k) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 2
+##     inf   sup
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.022   0.2</code></pre>
+<p>es un intervalo muy grande que puede incluir valores negativos. En contraste, el intervalo
+bayesiano es:</p>
+<div class="sourceCode" id="cb501"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb501-1"><a href="calibración-bayesiana-y-regularización.html#cb501-1"></a><span class="kw">intervalo_bayes_2</span>(<span class="dv">50</span>, k) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 2
+##     inf   sup
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.015 0.076</code></pre>
+<p>Aún quitando valores negativos, los intervalos de Agresti-Coull son mucho más anchos.
+La aproximación bayesiana, entonces, utiliza información previa
+para dar un resultado considerablemente
+más informativo, con calibración similar a Agresti-Coull.</p>
+<p>¿Aprendimos algo? Comparemos la posterior con la inicial:</p>
+<div class="sourceCode" id="cb503"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb503-1"><a href="calibración-bayesiana-y-regularización.html#cb503-1"></a>beta_sims_inicial &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">prop =</span> <span class="kw">rbeta</span>(<span class="dv">5000</span>, a, b), <span class="dt">dist =</span> <span class="st">&quot;inicial&quot;</span>)</span>
+<span id="cb503-2"><a href="calibración-bayesiana-y-regularización.html#cb503-2"></a>beta_sims_posterior &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">prop =</span> <span class="kw">rbeta</span>(<span class="dv">5000</span>, a <span class="op">+</span><span class="st"> </span>k, b <span class="op">+</span><span class="st"> </span><span class="dv">50</span>), <span class="dt">dist =</span> <span class="st">&quot;posterior&quot;</span>)</span>
+<span id="cb503-3"><a href="calibración-bayesiana-y-regularización.html#cb503-3"></a><span class="kw">bind_rows</span>(beta_sims_inicial, beta_sims_posterior) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb503-4"><a href="calibración-bayesiana-y-regularización.html#cb503-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> prop, <span class="dt">fill =</span> dist)) <span class="op">+</span></span>
+<span id="cb503-5"><a href="calibración-bayesiana-y-regularización.html#cb503-5"></a><span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>) </span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Donde vemos que no aprendimos mucho en este caso, pero nuestras creencias
+sí cambiaron en comparación con la inicial.</p>
+<p><strong>Conclusión 2</strong>: con el enfoque bayesiano podemos obtener intervalos
+informativos con calibración razonable, incluso con información inicial que
+no es muy precisa. Los intervalos de Agresti-Coull son poco informativos
+para muestras chicas y/o proporciones chicas.</p>
+<div id="ejemplo-porporción-de-hogares-de-ingresos-grandes" class="section level3 unnumbered">
+<h3>Ejemplo: porporción de hogares de ingresos grandes</h3>
+<p>Usaremos los datos de ENIGH como ejemplo (ignorando el diseño, pero es posible hacer todas
+las estimaciones correctamente) para estimar
+el porcentaje de hogares que tienen ingreso corriente de más
+de 150 mil pesos al trimestre. Suponemos que la muestra del enigh es la población,
+y tomaremos una muestra iid de esta población.
+Usamos la misma inicial que mostramos arriba, que es
+una Beta con parámetros</p>
+<div class="sourceCode" id="cb504"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb504-1"><a href="calibración-bayesiana-y-regularización.html#cb504-1"></a><span class="kw">c</span>(a,b)</span></code></pre></div>
+<pre><code>## [1]   2 100</code></pre>
+<div class="sourceCode" id="cb506"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb506-1"><a href="calibración-bayesiana-y-regularización.html#cb506-1"></a><span class="kw">set.seed</span>(<span class="dv">2521</span>)</span>
+<span id="cb506-2"><a href="calibración-bayesiana-y-regularización.html#cb506-2"></a>muestra_enigh &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb506-3"><a href="calibración-bayesiana-y-regularización.html#cb506-3"></a><span class="st">  </span><span class="kw">select</span>(ing_cor) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb506-4"><a href="calibración-bayesiana-y-regularización.html#cb506-4"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">120</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb506-5"><a href="calibración-bayesiana-y-regularización.html#cb506-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mas_150mil =</span> ing_cor <span class="op">&gt;</span><span class="st"> </span><span class="dv">150000</span>)</span></code></pre></div>
+<p>Un intervalo de 95% es entonces</p>
+<div class="sourceCode" id="cb507"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb507-1"><a href="calibración-bayesiana-y-regularización.html#cb507-1"></a>k &lt;-<span class="st"> </span><span class="kw">sum</span>(muestra_enigh<span class="op">$</span>mas_150mil)</span>
+<span id="cb507-2"><a href="calibración-bayesiana-y-regularización.html#cb507-2"></a>k</span></code></pre></div>
+<pre><code>## [1] 3</code></pre>
+<div class="sourceCode" id="cb509"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb509-1"><a href="calibración-bayesiana-y-regularización.html#cb509-1"></a><span class="kw">intervalo_bayes_2</span>(<span class="dv">120</span>, <span class="kw">sum</span>(muestra_enigh<span class="op">$</span>mas_150mil)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 2
+##     inf   sup
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.007 0.046</code></pre>
+<p>La media posterior es</p>
+<div class="sourceCode" id="cb511"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb511-1"><a href="calibración-bayesiana-y-regularización.html#cb511-1"></a>prop_post &lt;-<span class="st"> </span>(a <span class="op">+</span><span class="st"> </span>k) <span class="op">/</span><span class="st"> </span>(<span class="dv">120</span> <span class="op">+</span><span class="st"> </span>b)</span>
+<span id="cb511-2"><a href="calibración-bayesiana-y-regularización.html#cb511-2"></a>prop_post</span></code></pre></div>
+<pre><code>## [1] 0.02272727</code></pre>
+<p>El estimador de máxima verosimilitud es</p>
+<div class="sourceCode" id="cb513"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb513-1"><a href="calibración-bayesiana-y-regularización.html#cb513-1"></a>k <span class="op">/</span><span class="st"> </span><span class="dv">120</span></span></code></pre></div>
+<pre><code>## [1] 0.025</code></pre>
+<p>¿Cuál es la verdadera proporción?</p>
+<div class="sourceCode" id="cb515"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb515-1"><a href="calibración-bayesiana-y-regularización.html#cb515-1"></a><span class="kw">read_csv</span>(<span class="st">&quot;data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb515-2"><a href="calibración-bayesiana-y-regularización.html#cb515-2"></a><span class="st">  </span><span class="kw">select</span>(ing_cor) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb515-3"><a href="calibración-bayesiana-y-regularización.html#cb515-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mas_150mil =</span> ing_cor <span class="op">&gt;</span><span class="st"> </span><span class="dv">150000</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb515-4"><a href="calibración-bayesiana-y-regularización.html#cb515-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">prop_pob =</span> <span class="kw">mean</span>(mas_150mil))</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 1
+##   prop_pob
+##      &lt;dbl&gt;
+## 1   0.0277</code></pre>
+<p>En este caso, nuestro intervalo cubre a la proporción poblacional.</p>
+</div>
+</div>
+<div id="inferencia-bayesiana-y-regularización" class="section level2 unnumbered">
+<h2>Inferencia bayesiana y regularización</h2>
+<p>Como hemos visto en análisis y modelos anteriores, la posterior que usamos
+para hacer inferencia combina aspectos de la inicial con la verosimilitud (los datos).
+Una manera de ver esta combinación y sus beneficios es pensando en término de
+<em>regularización</em> de estimaciones.</p>
+<ul>
+<li>En las muestras hay variación. Algunas muestras particulares nos dan estimaciones
+de máxima verosimilitud pobres de los parámetros de interés (estimaciones ruidosas).</li>
+<li>Cuando esas estimaciones pobres están en una zona de baja probabilidad de la
+inicial, la estimación posterior tiende a moverse (o <em>encogerse</em>) hacia las
+zonas de alta probabilidad de la inicial.</li>
+<li>Esto <em>filtra</em> ruido en las estimaciones.</li>
+<li>El mecanismo resulta en una reducción del <strong>error cuadrático medio</strong>, mediante
+una reducción de la varianza de los estimadores (aunque quizá el sesgo aumente).</li>
+</ul>
+<p>Esta es una técnica poderosa, especialmente para problemas complejos donde tenemos
+pocos datos para cada parámetro. En general, excluímos resultados que no concuerdan
+con el conocimiento previo, y esto resulta en <strong>mayor precisión</strong> en las estimaciones.</p>
+</div>
+<div id="ejemplo-modelo-normal-y-estaturas" class="section level2 unnumbered">
+<h2>Ejemplo: modelo normal y estaturas</h2>
+<p>Haremos un experimento donde simularemos muestras de los datos de cantantes. Usaremos el
+modelo normal-gamma inverso que discutimos anteriormente, con la información inicial
+que elicitamos. ¿Cómo se compara la estimación de máxima verosimilitud con la media
+posterior?</p>
+<div class="sourceCode" id="cb517"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb517-1"><a href="calibración-bayesiana-y-regularización.html#cb517-1"></a><span class="co"># inicial para media, ver sección anterior para discusión (normal)</span></span>
+<span id="cb517-2"><a href="calibración-bayesiana-y-regularización.html#cb517-2"></a>mu_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">175</span></span>
+<span id="cb517-3"><a href="calibración-bayesiana-y-regularización.html#cb517-3"></a>n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">5</span></span>
+<span id="cb517-4"><a href="calibración-bayesiana-y-regularización.html#cb517-4"></a><span class="co"># inicial para sigma^2 (gamma inversa)</span></span>
+<span id="cb517-5"><a href="calibración-bayesiana-y-regularización.html#cb517-5"></a>a &lt;-<span class="st"> </span><span class="dv">3</span></span>
+<span id="cb517-6"><a href="calibración-bayesiana-y-regularización.html#cb517-6"></a>b &lt;-<span class="st"> </span><span class="dv">140</span></span></code></pre></div>
+<p>Para este ejemplo chico, usaremos muestras de tamaño 5:</p>
+<div class="sourceCode" id="cb518"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb518-1"><a href="calibración-bayesiana-y-regularización.html#cb518-1"></a><span class="kw">set.seed</span>(<span class="dv">3413</span>)</span>
+<span id="cb518-2"><a href="calibración-bayesiana-y-regularización.html#cb518-2"></a><span class="co"># ver sección anterior para explicación de esta función</span></span>
+<span id="cb518-3"><a href="calibración-bayesiana-y-regularización.html#cb518-3"></a>calcular_pars_posterior &lt;-<span class="st"> </span><span class="cf">function</span>(x, pars_inicial){</span>
+<span id="cb518-4"><a href="calibración-bayesiana-y-regularización.html#cb518-4"></a>  <span class="co"># iniciales</span></span>
+<span id="cb518-5"><a href="calibración-bayesiana-y-regularización.html#cb518-5"></a>  mu_<span class="dv">0</span> &lt;-<span class="st"> </span>pars_inicial[<span class="dv">1</span>]</span>
+<span id="cb518-6"><a href="calibración-bayesiana-y-regularización.html#cb518-6"></a>  n_<span class="dv">0</span> &lt;-<span class="st"> </span>pars_inicial[<span class="dv">2</span>]</span>
+<span id="cb518-7"><a href="calibración-bayesiana-y-regularización.html#cb518-7"></a>  a_<span class="dv">0</span> &lt;-<span class="st"> </span>pars_inicial[<span class="dv">3</span>]</span>
+<span id="cb518-8"><a href="calibración-bayesiana-y-regularización.html#cb518-8"></a>  b_<span class="dv">0</span> &lt;-<span class="st"> </span>pars_inicial[<span class="dv">4</span>]</span>
+<span id="cb518-9"><a href="calibración-bayesiana-y-regularización.html#cb518-9"></a>  <span class="co"># muestra</span></span>
+<span id="cb518-10"><a href="calibración-bayesiana-y-regularización.html#cb518-10"></a>  n &lt;-<span class="st"> </span><span class="kw">length</span>(x)</span>
+<span id="cb518-11"><a href="calibración-bayesiana-y-regularización.html#cb518-11"></a>  media &lt;-<span class="st"> </span><span class="kw">mean</span>(x)</span>
+<span id="cb518-12"><a href="calibración-bayesiana-y-regularización.html#cb518-12"></a>  S2 &lt;-<span class="st"> </span><span class="kw">sum</span>((x <span class="op">-</span><span class="st"> </span>media)<span class="op">^</span><span class="dv">2</span>)</span>
+<span id="cb518-13"><a href="calibración-bayesiana-y-regularización.html#cb518-13"></a>  <span class="co"># sigma post</span></span>
+<span id="cb518-14"><a href="calibración-bayesiana-y-regularización.html#cb518-14"></a>  a_<span class="dv">1</span> &lt;-<span class="st"> </span>a_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>n</span>
+<span id="cb518-15"><a href="calibración-bayesiana-y-regularización.html#cb518-15"></a>  b_<span class="dv">1</span> &lt;-<span class="st"> </span>b_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>S2 <span class="op">+</span><span class="st"> </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span>(n <span class="op">*</span><span class="st"> </span>n_<span class="dv">0</span>) <span class="op">/</span><span class="st"> </span>(n <span class="op">+</span><span class="st"> </span>n_<span class="dv">0</span>) <span class="op">*</span><span class="st"> </span>(media <span class="op">-</span><span class="st"> </span>mu_<span class="dv">0</span>)<span class="op">^</span><span class="dv">2</span></span>
+<span id="cb518-16"><a href="calibración-bayesiana-y-regularización.html#cb518-16"></a>  <span class="co"># posterior mu</span></span>
+<span id="cb518-17"><a href="calibración-bayesiana-y-regularización.html#cb518-17"></a>  mu_<span class="dv">1</span> &lt;-<span class="st"> </span>(n_<span class="dv">0</span> <span class="op">*</span><span class="st"> </span>mu_<span class="dv">0</span> <span class="op">+</span><span class="st"> </span>n <span class="op">*</span><span class="st"> </span>media) <span class="op">/</span><span class="st"> </span>(n <span class="op">+</span><span class="st"> </span>n_<span class="dv">0</span>)</span>
+<span id="cb518-18"><a href="calibración-bayesiana-y-regularización.html#cb518-18"></a>  n_<span class="dv">1</span> &lt;-<span class="st"> </span>n <span class="op">+</span><span class="st"> </span>n_<span class="dv">0</span></span>
+<span id="cb518-19"><a href="calibración-bayesiana-y-regularización.html#cb518-19"></a>  <span class="kw">c</span>(mu_<span class="dv">1</span>, n_<span class="dv">1</span>, a_<span class="dv">1</span>, b_<span class="dv">1</span>)</span>
+<span id="cb518-20"><a href="calibración-bayesiana-y-regularización.html#cb518-20"></a>}</span></code></pre></div>
+<p>Y también de la sección anterior:</p>
+<div class="sourceCode" id="cb519"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb519-1"><a href="calibración-bayesiana-y-regularización.html#cb519-1"></a>sim_params &lt;-<span class="st"> </span><span class="cf">function</span>(m, pars){</span>
+<span id="cb519-2"><a href="calibración-bayesiana-y-regularización.html#cb519-2"></a>  mu_<span class="dv">0</span> &lt;-<span class="st"> </span>pars[<span class="dv">1</span>]</span>
+<span id="cb519-3"><a href="calibración-bayesiana-y-regularización.html#cb519-3"></a>  n_<span class="dv">0</span> &lt;-<span class="st"> </span>pars[<span class="dv">2</span>]</span>
+<span id="cb519-4"><a href="calibración-bayesiana-y-regularización.html#cb519-4"></a>  a &lt;-<span class="st"> </span>pars[<span class="dv">3</span>]</span>
+<span id="cb519-5"><a href="calibración-bayesiana-y-regularización.html#cb519-5"></a>  b &lt;-<span class="st"> </span>pars[<span class="dv">4</span>]</span>
+<span id="cb519-6"><a href="calibración-bayesiana-y-regularización.html#cb519-6"></a>  <span class="co"># simular sigmas</span></span>
+<span id="cb519-7"><a href="calibración-bayesiana-y-regularización.html#cb519-7"></a>  sims &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">tau =</span> <span class="kw">rgamma</span>(m, a, b)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb519-8"><a href="calibración-bayesiana-y-regularización.html#cb519-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">sigma =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(tau))</span>
+<span id="cb519-9"><a href="calibración-bayesiana-y-regularización.html#cb519-9"></a>  <span class="co"># simular mu</span></span>
+<span id="cb519-10"><a href="calibración-bayesiana-y-regularización.html#cb519-10"></a>  sims &lt;-<span class="st"> </span>sims <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">mu =</span> <span class="kw">rnorm</span>(m, mu_<span class="dv">0</span>, sigma <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(n_<span class="dv">0</span>)))</span>
+<span id="cb519-11"><a href="calibración-bayesiana-y-regularización.html#cb519-11"></a>  sims</span>
+<span id="cb519-12"><a href="calibración-bayesiana-y-regularización.html#cb519-12"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb520"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb520-1"><a href="calibración-bayesiana-y-regularización.html#cb520-1"></a><span class="co"># simular muestras y calcular medias posteriores</span></span>
+<span id="cb520-2"><a href="calibración-bayesiana-y-regularización.html#cb520-2"></a>simular_muestra &lt;-<span class="st"> </span><span class="cf">function</span>(rep, mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a_<span class="dv">0</span>, b_<span class="dv">0</span>){</span>
+<span id="cb520-3"><a href="calibración-bayesiana-y-regularización.html#cb520-3"></a>  cantantes &lt;-<span class="st"> </span>lattice<span class="op">::</span>singer <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-4"><a href="calibración-bayesiana-y-regularización.html#cb520-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">estatura_cm =</span> <span class="fl">2.54</span> <span class="op">*</span><span class="st"> </span>height) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-5"><a href="calibración-bayesiana-y-regularización.html#cb520-5"></a><span class="st">    </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(voice.part, <span class="st">&quot;Tenor&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-6"><a href="calibración-bayesiana-y-regularización.html#cb520-6"></a><span class="st">    </span><span class="kw">sample_n</span>(<span class="dv">5</span>, <span class="dt">replace =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb520-7"><a href="calibración-bayesiana-y-regularización.html#cb520-7"></a>  pars_posterior &lt;-<span class="st"> </span><span class="kw">calcular_pars_posterior</span>(cantantes<span class="op">$</span>estatura_cm,</span>
+<span id="cb520-8"><a href="calibración-bayesiana-y-regularización.html#cb520-8"></a>                                            <span class="kw">c</span>(mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a_<span class="dv">0</span>, b_<span class="dv">0</span>))</span>
+<span id="cb520-9"><a href="calibración-bayesiana-y-regularización.html#cb520-9"></a>  medias_post &lt;-<span class="st"> </span></span>
+<span id="cb520-10"><a href="calibración-bayesiana-y-regularización.html#cb520-10"></a><span class="st">    </span><span class="kw">sim_params</span>(<span class="dv">1000</span>, pars_posterior) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-11"><a href="calibración-bayesiana-y-regularización.html#cb520-11"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), mean)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-12"><a href="calibración-bayesiana-y-regularización.html#cb520-12"></a><span class="st">    </span><span class="kw">select</span>(mu, sigma)</span>
+<span id="cb520-13"><a href="calibración-bayesiana-y-regularización.html#cb520-13"></a>  media &lt;-<span class="st"> </span><span class="kw">mean</span>(cantantes<span class="op">$</span>estatura_cm)</span>
+<span id="cb520-14"><a href="calibración-bayesiana-y-regularización.html#cb520-14"></a>  est_mv &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mu&quot;</span> =<span class="st"> </span>media,</span>
+<span id="cb520-15"><a href="calibración-bayesiana-y-regularización.html#cb520-15"></a>              <span class="st">&quot;sigma&quot;</span> =<span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">mean</span>((cantantes<span class="op">$</span>estatura_cm <span class="op">-</span><span class="st"> </span>media)<span class="op">^</span><span class="dv">2</span>)))</span>
+<span id="cb520-16"><a href="calibración-bayesiana-y-regularización.html#cb520-16"></a>  <span class="kw">bind_rows</span>(medias_post, est_mv) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-17"><a href="calibración-bayesiana-y-regularización.html#cb520-17"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">rep =</span> rep, <span class="dt">tipo =</span> <span class="kw">c</span>(<span class="st">&quot;media_post&quot;</span>, <span class="st">&quot;max_verosim&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb520-18"><a href="calibración-bayesiana-y-regularización.html#cb520-18"></a><span class="st">    </span><span class="kw">pivot_longer</span>(mu<span class="op">:</span>sigma, <span class="dt">names_to =</span> <span class="st">&quot;parametro&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;estimador&quot;</span>)</span>
+<span id="cb520-19"><a href="calibración-bayesiana-y-regularización.html#cb520-19"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb521"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb521-1"><a href="calibración-bayesiana-y-regularización.html#cb521-1"></a>poblacion &lt;-<span class="st"> </span>lattice<span class="op">::</span>singer <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb521-2"><a href="calibración-bayesiana-y-regularización.html#cb521-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">estatura_cm =</span> <span class="fl">2.54</span> <span class="op">*</span><span class="st"> </span>height) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb521-3"><a href="calibración-bayesiana-y-regularización.html#cb521-3"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_detect</span>(voice.part, <span class="st">&quot;Tenor&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb521-4"><a href="calibración-bayesiana-y-regularización.html#cb521-4"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mu =</span> <span class="kw">mean</span>(estatura_cm), <span class="dt">sigma =</span> <span class="kw">sd</span>(estatura_cm)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb521-5"><a href="calibración-bayesiana-y-regularización.html#cb521-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(mu<span class="op">:</span>sigma, <span class="dt">names_to =</span> <span class="st">&quot;parametro&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;valor_pob&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb522"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb522-1"><a href="calibración-bayesiana-y-regularización.html#cb522-1"></a>errores &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">simular_muestra</span>(.x, mu_<span class="dv">0</span>, n_<span class="dv">0</span>, a, b)) <span class="op">%&gt;%</span></span>
+<span id="cb522-2"><a href="calibración-bayesiana-y-regularización.html#cb522-2"></a><span class="st">  </span><span class="kw">bind_rows</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(poblacion) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb522-3"><a href="calibración-bayesiana-y-regularización.html#cb522-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">error =</span> (estimador <span class="op">-</span><span class="st"> </span>valor_pob))</span>
+<span id="cb522-4"><a href="calibración-bayesiana-y-regularización.html#cb522-4"></a><span class="kw">ggplot</span>(errores, <span class="kw">aes</span>(<span class="dt">x =</span> error, <span class="dt">fill =</span> tipo)) <span class="op">+</span></span>
+<span id="cb522-5"><a href="calibración-bayesiana-y-regularización.html#cb522-5"></a><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">20</span>, <span class="dt">position =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro)</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-32-1.png" width="576" style="display: block; margin: auto;" />
+Vemos claramente que la estimación de la desviación estándar de
+nuestro modelo es claramente superior a la de máxima verosimilitud. En resumen:</p>
+<div class="sourceCode" id="cb523"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb523-1"><a href="calibración-bayesiana-y-regularización.html#cb523-1"></a>errores <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb523-2"><a href="calibración-bayesiana-y-regularización.html#cb523-2"></a><span class="st">  </span><span class="kw">group_by</span>(tipo, parametro) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb523-3"><a href="calibración-bayesiana-y-regularización.html#cb523-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">recm =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>(error<span class="op">^</span><span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb523-4"><a href="calibración-bayesiana-y-regularización.html#cb523-4"></a><span class="st">  </span><span class="kw">arrange</span>(parametro)</span></code></pre></div>
+<pre><code>## # A tibble: 4 x 3
+## # Groups:   tipo [2]
+##   tipo        parametro  recm
+##   &lt;chr&gt;       &lt;chr&gt;     &lt;dbl&gt;
+## 1 max_verosim mu         2.85
+## 2 media_post  mu         1.55
+## 3 max_verosim sigma      2.45
+## 4 media_post  sigma      1.04</code></pre>
+<p>Obtenemos una ganancia considerable en cuanto a la estimación de la desviación
+estandar de esta población. Los estimadores de la media superior
+son superiores a los de máxima verosimilitud en términos de error cuadrático medio.</p>
+<p>Podemos graficar las dos estimaciones, muestra a muestra, para entender
+cómo sucede esto:</p>
+<div class="sourceCode" id="cb525"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb525-1"><a href="calibración-bayesiana-y-regularización.html#cb525-1"></a>errores <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb525-2"><a href="calibración-bayesiana-y-regularización.html#cb525-2"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>error) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb525-3"><a href="calibración-bayesiana-y-regularización.html#cb525-3"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> tipo, <span class="dt">values_from =</span> estimador) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb525-4"><a href="calibración-bayesiana-y-regularización.html#cb525-4"></a><span class="st">  </span><span class="kw">filter</span>(parametro <span class="op">==</span><span class="st"> &quot;sigma&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb525-5"><a href="calibración-bayesiana-y-regularización.html#cb525-5"></a><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> max_verosim, <span class="dt">y =</span> media_post)) <span class="op">+</span></span>
+<span id="cb525-6"><a href="calibración-bayesiana-y-regularización.html#cb525-6"></a><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb525-7"><a href="calibración-bayesiana-y-regularización.html#cb525-7"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="kw">sqrt</span>(b<span class="op">/</span>(a <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)), <span class="dt">lty =</span> <span class="dv">2</span>, <span class="dt">color =</span> <span class="st">&#39;black&#39;</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb525-8"><a href="calibración-bayesiana-y-regularización.html#cb525-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb525-9"><a href="calibración-bayesiana-y-regularización.html#cb525-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Estimación de sigma&quot;</span>) <span class="op">+</span></span>
+<span id="cb525-10"><a href="calibración-bayesiana-y-regularización.html#cb525-10"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Estimador MV de sigma&quot;</span>) <span class="op">+</span></span>
+<span id="cb525-11"><a href="calibración-bayesiana-y-regularización.html#cb525-11"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Media posterior de sigma&quot;</span>) <span class="op">+</span></span>
+<span id="cb525-12"><a href="calibración-bayesiana-y-regularización.html#cb525-12"></a><span class="st">  </span><span class="kw">coord_fixed</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb525-13"><a href="calibración-bayesiana-y-regularización.html#cb525-13"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="dv">13</span>, <span class="dt">y =</span> <span class="dv">11</span>, <span class="dt">xend =</span> <span class="dv">13</span>, <span class="dt">yend =</span> <span class="kw">sqrt</span>(b<span class="op">/</span>(a <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))), </span>
+<span id="cb525-14"><a href="calibración-bayesiana-y-regularización.html#cb525-14"></a>               <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">&quot;cm&quot;</span>))) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb525-15"><a href="calibración-bayesiana-y-regularización.html#cb525-15"></a><span class="st">  </span><span class="kw">geom_segment</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="fl">.5</span>, <span class="dt">y =</span> <span class="dv">6</span>, <span class="dt">xend =</span> <span class="fl">.5</span>, <span class="dt">yend =</span> <span class="kw">sqrt</span>(b<span class="op">/</span>(a <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))), </span>
+<span id="cb525-16"><a href="calibración-bayesiana-y-regularización.html#cb525-16"></a>               <span class="dt">colour=</span><span class="st">&#39;red&#39;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, <span class="dt">arrow =</span> <span class="kw">arrow</span>(<span class="dt">length =</span> <span class="kw">unit</span>(<span class="fl">0.5</span>, <span class="st">&quot;cm&quot;</span>)))</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-34-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Nótese como estimaciones demasiado bajas o demasiada altas son contraídas
+hacia valores más consistentes con la inicial, lo cual resulta en
+menor error. El valor esperado de <span class="math inline">\(\sigma\)</span> bajo la distribución inicial
+se muestra como una horizontal punteada.</p>
+</div>
+<div id="ejemplo-estimación-de-proporciones" class="section level2 unnumbered">
+<h2>Ejemplo: estimación de proporciones</h2>
+<p>Ahora repetimos el ejercicio</p>
+<div class="sourceCode" id="cb526"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb526-1"><a href="calibración-bayesiana-y-regularización.html#cb526-1"></a><span class="co"># inicial</span></span>
+<span id="cb526-2"><a href="calibración-bayesiana-y-regularización.html#cb526-2"></a>a &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb526-3"><a href="calibración-bayesiana-y-regularización.html#cb526-3"></a>b &lt;-<span class="st"> </span><span class="dv">100</span></span>
+<span id="cb526-4"><a href="calibración-bayesiana-y-regularización.html#cb526-4"></a><span class="kw">qbeta</span>(<span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.99</span>), a, b)</span></code></pre></div>
+<pre><code>## [1] 0.001477084 0.063921446</code></pre>
+<div class="sourceCode" id="cb528"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb528-1"><a href="calibración-bayesiana-y-regularización.html#cb528-1"></a><span class="co"># datos</span></span>
+<span id="cb528-2"><a href="calibración-bayesiana-y-regularización.html#cb528-2"></a>datos &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/conjunto_de_datos_enigh_2018_ns_csv/conjunto_de_datos_concentradohogar_enigh_2018_ns/conjunto_de_datos/conjunto_de_datos_concentradohogar_enigh_2018_ns.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb528-3"><a href="calibración-bayesiana-y-regularización.html#cb528-3"></a><span class="st">    </span><span class="kw">select</span>(ing_cor)</span>
+<span id="cb528-4"><a href="calibración-bayesiana-y-regularización.html#cb528-4"></a><span class="co"># estimaciones</span></span>
+<span id="cb528-5"><a href="calibración-bayesiana-y-regularización.html#cb528-5"></a>obtener_estimados &lt;-<span class="st"> </span><span class="cf">function</span>(datos){</span>
+<span id="cb528-6"><a href="calibración-bayesiana-y-regularización.html#cb528-6"></a>  muestra_enigh &lt;-<span class="st">  </span>datos <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb528-7"><a href="calibración-bayesiana-y-regularización.html#cb528-7"></a><span class="st">    </span><span class="kw">sample_n</span>(<span class="dv">120</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb528-8"><a href="calibración-bayesiana-y-regularización.html#cb528-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">mas_150mil =</span> ing_cor <span class="op">&gt;</span><span class="st"> </span><span class="dv">150000</span>)</span>
+<span id="cb528-9"><a href="calibración-bayesiana-y-regularización.html#cb528-9"></a>  k &lt;-<span class="st"> </span><span class="kw">sum</span>(muestra_enigh<span class="op">$</span>mas_150mil)</span>
+<span id="cb528-10"><a href="calibración-bayesiana-y-regularización.html#cb528-10"></a>  <span class="kw">tibble</span>(<span class="dt">k =</span> k, <span class="dt">est_mv =</span> k<span class="op">/</span><span class="dv">120</span>, <span class="dt">media_post =</span> (a <span class="op">+</span><span class="st"> </span>k) <span class="op">/</span><span class="st"> </span>(<span class="dv">120</span> <span class="op">+</span><span class="st"> </span>b), <span class="dt">pob =</span> <span class="fl">0.02769</span>)</span>
+<span id="cb528-11"><a href="calibración-bayesiana-y-regularización.html#cb528-11"></a>}</span>
+<span id="cb528-12"><a href="calibración-bayesiana-y-regularización.html#cb528-12"></a>estimadores_sim &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">200</span>, <span class="op">~</span><span class="kw">obtener_estimados</span>(datos)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb528-13"><a href="calibración-bayesiana-y-regularización.html#cb528-13"></a><span class="st">  </span><span class="kw">bind_rows</span>() </span>
+<span id="cb528-14"><a href="calibración-bayesiana-y-regularización.html#cb528-14"></a><span class="co"># calculo de errores</span></span>
+<span id="cb528-15"><a href="calibración-bayesiana-y-regularización.html#cb528-15"></a>error_cm &lt;-<span class="st"> </span>estimadores_sim <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb528-16"><a href="calibración-bayesiana-y-regularización.html#cb528-16"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">error_mv =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>((est_mv <span class="op">-</span><span class="st"> </span>pob)<span class="op">^</span><span class="dv">2</span>)),</span>
+<span id="cb528-17"><a href="calibración-bayesiana-y-regularización.html#cb528-17"></a>         <span class="dt">error_post =</span> <span class="kw">sqrt</span>(<span class="kw">mean</span>((media_post <span class="op">-</span><span class="st"> </span>pob)<span class="op">^</span><span class="dv">2</span>)))</span>
+<span id="cb528-18"><a href="calibración-bayesiana-y-regularización.html#cb528-18"></a>error_cm</span></code></pre></div>
+<pre><code>## # A tibble: 1 x 2
+##   error_mv error_post
+##      &lt;dbl&gt;      &lt;dbl&gt;
+## 1   0.0145    0.00896</code></pre>
+<p>Podemos ver claramente que las medias posteriores están encogidas hacia valores
+más chicos (donde la inicial tiene densidad alta) comparadas con las
+estimaciones de máxima verosimilitud:</p>
+<div class="sourceCode" id="cb530"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb530-1"><a href="calibración-bayesiana-y-regularización.html#cb530-1"></a>estimadores_sim_ag &lt;-<span class="st"> </span>estimadores_sim <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb530-2"><a href="calibración-bayesiana-y-regularización.html#cb530-2"></a><span class="st">  </span><span class="kw">group_by</span>(k, est_mv, media_post) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb530-3"><a href="calibración-bayesiana-y-regularización.html#cb530-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">n =</span> <span class="kw">n</span>())</span>
+<span id="cb530-4"><a href="calibración-bayesiana-y-regularización.html#cb530-4"></a><span class="kw">ggplot</span>(estimadores_sim_ag, <span class="kw">aes</span>(<span class="dt">x =</span> est_mv, media_post, <span class="dt">size =</span> n)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb530-5"><a href="calibración-bayesiana-y-regularización.html#cb530-5"></a><span class="st">  </span><span class="kw">geom_abline</span>()</span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-36-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="teoría-de-decisión" class="section level2 unnumbered">
+<h2>Teoría de decisión</h2>
+<p>En esta parte (que sigue a <span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span> a grandes rasgos),
+discutimos brevemente teoría general que nos sirve para seleccionar
+estimadores puntuales, y que esperemos ponga en contexto la parte
+anterior que acabamos de discutir. Usaremos algunos conceptos que vimos
+en la parte de propiedades de estimadores de máxima verosimilitud.</p>
+<p>Definimos una <strong>función de pérdida</strong> <span class="math inline">\(L(\theta, \hat{\theta}_n)\)</span>, que
+mide el costo de la discrepancia entre nuestro estimador</p>
+<p><span class="math display">\[\hat{\theta}_n = t(X_1,\ldots, X_n) = t(X)\]</span></p>
+<p>y el verdadero valor <span class="math inline">\(\theta\)</span>
+poblacional. Es posible considerar distintas funciones de pérdida, pero
+como en secciones anteriores, usaremos la <strong>pérdida cuadrática</strong>, definida por:</p>
+<p><span class="math display">\[L(\theta, \hat{\theta}_n) = (\theta - \hat{\theta}_n)^2\]</span></p>
+<p>Esta función toma distintos valores dependiendo de la muestra y del parámetro
+<span class="math inline">\(\theta\)</span>, y necesitamos resumirla para dar una evaluación de qué tan bueno
+es el estimador <span class="math inline">\(\hat{\theta}_n\)</span>.</p>
+<p>Ahora que hemos considerado tanto estadística bayesiana como frecuentista,
+podemos pensar en resumir esta función de distintas maneras.</p>
+<p>Comenzamos pensando de manera frecuentista. En este caso, consideramos a <span class="math inline">\(\theta\)</span> como
+un valor fijo, y nos preguntamos qué pasaría con la pérdida con distintas muestras
+potenciales que podríamos observar.</p>
+<p>Definimos como antes el <strong>riesgo</strong> (frecuentista) como:</p>
+<p><span class="math display">\[R(\theta, t) = \mathbb{E}_X\left[ (\theta - \hat{\theta}_n)^2 \, \big| \, \theta\right]\]</span></p>
+<p>donde promediamos a lo largo de las muestras posibles, con <span class="math inline">\(\theta\)</span> fijo. Esta
+cantidad no nos dice necesariamente cómo escoger un buen estimador para
+<span class="math inline">\(\theta\)</span>, pues dependiendo de dónde está <span class="math inline">\(\theta\)</span> puede tomar valores distintos.</p>
+<p>Ahora vamos a pensar de manera bayesiana: en este caso, los datos serán fijos
+una vez que los obervemos de manera que <span class="math inline">\(\hat{\theta}_n\)</span> está fijo, y el parámetro
+<span class="math inline">\(\theta\)</span> es una cantidad aleatoria con distribución inicial <span class="math inline">\(p(\theta)\)</span>.
+Entonces consideraríamos el promedio sobre la posterior dado por:</p>
+<p><span class="math display">\[\rho(t, X) = \mathbb{E}_{p(\theta|X)}\left[(\theta - \hat{\theta})^2 \, \big | \, X \right]\]</span>
+que llamamos <strong>riesgo posterior</strong>. Esta cantidad se calcula con la posterior de
+los parámetros dados los datos, y nos dice, una vez que vimos los datos, cómo es
+el error de nuestro estimador. Nótese que esta cantidad no es útil para escoger
+un estimador bueno <span class="math inline">\(t\)</span> antes de ver los datos, pero nos sirve para evaluar a un
+estimador dados los datos.</p>
+<p>En el primer caso, promediamos sobre posibles muestras, y en el segundo por
+valores posibles de <span class="math inline">\(\theta\)</span> para una muestra dada.</p>
+<div id="ejemplo-riesgo-frecuentista" class="section level3 unnumbered">
+<h3>Ejemplo: riesgo frecuentista</h3>
+<p>Para observaciones bernoulli, el estimador de máxima verosimilitud es <span class="math inline">\(\hat{p}_1 = k /n\)</span>, donde <span class="math inline">\(n\)</span> es el tamaño de muestra y <span class="math inline">\(k\)</span> el número de éxitos observados.
+Podemos usar también como estimador la media posterior de un modelo
+Beta-Bernoulli con inicial <span class="math inline">\(a=2, b=2\)</span>, que nos daría <span class="math inline">\(\hat{p}_2 = \frac{k + 2}{n + 4}\)</span>.</p>
+<p>Aunque podemos hacer los cálculos analíticos, aproximaremos el riesgo bajo
+el error cuadrático usando simulación</p>
+<div class="sourceCode" id="cb531"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb531-1"><a href="calibración-bayesiana-y-regularización.html#cb531-1"></a>perdida_cuad &lt;-<span class="st"> </span><span class="cf">function</span>(p, p_hat){</span>
+<span id="cb531-2"><a href="calibración-bayesiana-y-regularización.html#cb531-2"></a> (p <span class="op">-</span><span class="st"> </span>p_hat)<span class="op">^</span><span class="dv">2</span> </span>
+<span id="cb531-3"><a href="calibración-bayesiana-y-regularización.html#cb531-3"></a>}</span>
+<span id="cb531-4"><a href="calibración-bayesiana-y-regularización.html#cb531-4"></a><span class="co"># dos estimadores</span></span>
+<span id="cb531-5"><a href="calibración-bayesiana-y-regularización.html#cb531-5"></a>t_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="cf">function</span>(n, x)  x <span class="op">/</span><span class="st"> </span>n </span>
+<span id="cb531-6"><a href="calibración-bayesiana-y-regularización.html#cb531-6"></a>t_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="cf">function</span>(n, x)  (x <span class="op">+</span><span class="st"> </span><span class="dv">2</span>) <span class="op">/</span><span class="st"> </span>(n <span class="op">+</span><span class="st"> </span><span class="dv">4</span>)</span>
+<span id="cb531-7"><a href="calibración-bayesiana-y-regularización.html#cb531-7"></a>estimar_riesgo &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">20</span>, theta, perdida, <span class="dt">reps =</span> <span class="dv">10000</span>){</span>
+<span id="cb531-8"><a href="calibración-bayesiana-y-regularización.html#cb531-8"></a>  x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(reps, n, theta)</span>
+<span id="cb531-9"><a href="calibración-bayesiana-y-regularización.html#cb531-9"></a>  <span class="co"># calcular estimaciones</span></span>
+<span id="cb531-10"><a href="calibración-bayesiana-y-regularización.html#cb531-10"></a>  theta_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">t_1</span>(n, x)</span>
+<span id="cb531-11"><a href="calibración-bayesiana-y-regularización.html#cb531-11"></a>  theta_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">t_2</span>(n, x)</span>
+<span id="cb531-12"><a href="calibración-bayesiana-y-regularización.html#cb531-12"></a>  <span class="co"># calcular pérdida</span></span>
+<span id="cb531-13"><a href="calibración-bayesiana-y-regularización.html#cb531-13"></a>  media_perdida &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb531-14"><a href="calibración-bayesiana-y-regularización.html#cb531-14"></a>    <span class="dt">n =</span> n, <span class="dt">theta =</span> theta,</span>
+<span id="cb531-15"><a href="calibración-bayesiana-y-regularización.html#cb531-15"></a>    <span class="dt">estimador =</span> <span class="kw">c</span>(<span class="st">&quot;MLE&quot;</span>, <span class="st">&quot;Posterior&quot;</span>), </span>
+<span id="cb531-16"><a href="calibración-bayesiana-y-regularización.html#cb531-16"></a>    <span class="dt">riesgo =</span> <span class="kw">c</span>(<span class="kw">mean</span>(<span class="kw">perdida</span>(theta, theta_<span class="dv">1</span>)), <span class="kw">mean</span>(<span class="kw">perdida</span>(theta, theta_<span class="dv">2</span>))))</span>
+<span id="cb531-17"><a href="calibración-bayesiana-y-regularización.html#cb531-17"></a>  media_perdida</span>
+<span id="cb531-18"><a href="calibración-bayesiana-y-regularización.html#cb531-18"></a>}</span>
+<span id="cb531-19"><a href="calibración-bayesiana-y-regularización.html#cb531-19"></a><span class="kw">estimar_riesgo</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">theta =</span> <span class="fl">0.1</span>, <span class="dt">perdida =</span> perdida_cuad)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 4
+##       n theta estimador  riesgo
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+## 1    20   0.1 MLE       0.00449
+## 2    20   0.1 Posterior 0.00753</code></pre>
+<p>Como dijimos, esta cantidad depende de <span class="math inline">\(\theta\)</span> que no conocemos. Así que
+calculamos para cada valor de <span class="math inline">\(\theta:\)</span></p>
+<p>Las funciones de riesgo <span class="math inline">\(R(\theta, t_1)\)</span> y <span class="math inline">\(R(\theta, t_2)\)</span> (dependen de <span class="math inline">\(\theta\)</span>)
+se ven aproximadamente como sigue:</p>
+<div class="sourceCode" id="cb533"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb533-1"><a href="calibración-bayesiana-y-regularización.html#cb533-1"></a>p_seq &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.001</span>)</span>
+<span id="cb533-2"><a href="calibración-bayesiana-y-regularización.html#cb533-2"></a>riesgo_tbl &lt;-<span class="st"> </span><span class="kw">map</span>(p_seq, <span class="op">~</span><span class="st"> </span><span class="kw">estimar_riesgo</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">theta =</span> .x, <span class="dt">perdida =</span> perdida_cuad)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb533-3"><a href="calibración-bayesiana-y-regularización.html#cb533-3"></a><span class="st">  </span><span class="kw">bind_rows</span>()</span>
+<span id="cb533-4"><a href="calibración-bayesiana-y-regularización.html#cb533-4"></a><span class="kw">ggplot</span>(riesgo_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> theta, <span class="dt">y =</span> riesgo, <span class="dt">colour =</span> estimador)) <span class="op">+</span></span>
+<span id="cb533-5"><a href="calibración-bayesiana-y-regularización.html#cb533-5"></a><span class="st">  </span><span class="kw">geom_line</span>() </span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-38-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Y vemos que el riesgo depende del verdadero valor del parametro:
+en los extremos, el estimador de máxima verosimilitud tiene menos riesgo,
+pero en el centro tiene más (esto es independiente del tipo de intervalos
+que construyamos y su cobertura).</p>
+<p>La razón es que las estimaciones de tipo Agresti-Coull (<span class="math inline">\(\theta_2\)</span>)
+están contraídas hacia 0.5 (agregamos dos éxitos y dos fracasos). Esto produce
+sesgo en la estimación para valores extremos de <span class="math inline">\(\theta\)</span>. Sin embargo,
+para valores centrales de <span class="math inline">\(\theta\)</span> tiene menos variabilidad
+(por regularización) que el estimador de máxima verosimilitud, y sufre poco
+de sesgo.</p>
+</div>
+<div id="ejemplo-riesgo-posterior" class="section level3 unnumbered">
+<h3>Ejemplo: riesgo posterior</h3>
+<p>Supongamos que la inicial es <span class="math inline">\(\theta \sim \mathsf{Beta}(5,3)\)</span></p>
+<div class="sourceCode" id="cb534"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb534-1"><a href="calibración-bayesiana-y-regularización.html#cb534-1"></a>estimar_riesgo_post &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">20</span>, x, perdida, <span class="dt">reps =</span> <span class="dv">20000</span>){</span>
+<span id="cb534-2"><a href="calibración-bayesiana-y-regularización.html#cb534-2"></a>  <span class="co"># calcular estimaciones</span></span>
+<span id="cb534-3"><a href="calibración-bayesiana-y-regularización.html#cb534-3"></a>  theta_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">t_1</span>(n, x)</span>
+<span id="cb534-4"><a href="calibración-bayesiana-y-regularización.html#cb534-4"></a>  theta_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">t_2</span>(n, x)</span>
+<span id="cb534-5"><a href="calibración-bayesiana-y-regularización.html#cb534-5"></a>  <span class="co"># simular de posterior</span></span>
+<span id="cb534-6"><a href="calibración-bayesiana-y-regularización.html#cb534-6"></a>  theta_post &lt;-<span class="st"> </span><span class="kw">rbeta</span>(reps, x <span class="op">+</span><span class="st"> </span><span class="dv">5</span>, n <span class="op">-</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="dv">3</span>)</span>
+<span id="cb534-7"><a href="calibración-bayesiana-y-regularización.html#cb534-7"></a>  <span class="co"># calcular pérdida</span></span>
+<span id="cb534-8"><a href="calibración-bayesiana-y-regularización.html#cb534-8"></a>  media_perdida &lt;-<span class="st"> </span><span class="kw">tibble</span>(</span>
+<span id="cb534-9"><a href="calibración-bayesiana-y-regularización.html#cb534-9"></a>    <span class="dt">n =</span> n, <span class="dt">x =</span> x,</span>
+<span id="cb534-10"><a href="calibración-bayesiana-y-regularización.html#cb534-10"></a>    <span class="dt">estimador =</span> <span class="kw">c</span>(<span class="st">&quot;MLE&quot;</span>, <span class="st">&quot;Posterior&quot;</span>), </span>
+<span id="cb534-11"><a href="calibración-bayesiana-y-regularización.html#cb534-11"></a>    <span class="dt">riesgo_post=</span> <span class="kw">c</span>(<span class="kw">mean</span>(<span class="kw">perdida</span>(theta_post, theta_<span class="dv">1</span>)), <span class="kw">mean</span>(<span class="kw">perdida</span>(theta_post, theta_<span class="dv">2</span>))))</span>
+<span id="cb534-12"><a href="calibración-bayesiana-y-regularización.html#cb534-12"></a>  media_perdida</span>
+<span id="cb534-13"><a href="calibración-bayesiana-y-regularización.html#cb534-13"></a>}</span>
+<span id="cb534-14"><a href="calibración-bayesiana-y-regularización.html#cb534-14"></a><span class="kw">estimar_riesgo_post</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">x =</span> <span class="dv">8</span>, <span class="dt">perdida =</span> perdida_cuad)</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 4
+##       n     x estimador riesgo_post
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+## 1    20     8 MLE            0.0128
+## 2    20     8 Posterior      0.0109</code></pre>
+<p>Como dijimos, esta cantidad depende de los datos <span class="math inline">\(x\)</span> que no hemos observado. Así que
+calculamos para cada valor de <span class="math inline">\(x\)</span>:</p>
+<p>Las funciones de pérdida promedio
+<span class="math inline">\(\rho(x, t_1)\)</span> y <span class="math inline">\(\rho(x, t_2)\)</span> (dependen de <span class="math inline">\(x\)</span>)
+se ven aproximadamente como sigue:</p>
+<div class="sourceCode" id="cb536"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb536-1"><a href="calibración-bayesiana-y-regularización.html#cb536-1"></a>x_seq &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="dv">1</span>)</span>
+<span id="cb536-2"><a href="calibración-bayesiana-y-regularización.html#cb536-2"></a>riesgo_post_tbl &lt;-<span class="st"> </span></span>
+<span id="cb536-3"><a href="calibración-bayesiana-y-regularización.html#cb536-3"></a><span class="st">  </span><span class="kw">map</span>(x_seq, <span class="op">~</span><span class="st"> </span><span class="kw">estimar_riesgo_post</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">x =</span> .x, <span class="dt">perdida =</span> perdida_cuad)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb536-4"><a href="calibración-bayesiana-y-regularización.html#cb536-4"></a><span class="st">  </span><span class="kw">bind_rows</span>()</span>
+<span id="cb536-5"><a href="calibración-bayesiana-y-regularización.html#cb536-5"></a><span class="kw">ggplot</span>(riesgo_post_tbl, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> riesgo_post, <span class="dt">colour =</span> estimador)) <span class="op">+</span></span>
+<span id="cb536-6"><a href="calibración-bayesiana-y-regularización.html#cb536-6"></a><span class="st">  </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() </span></code></pre></div>
+<p><img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-40-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>Donde vemos que la pérdida del estimador bayesiano es mejor para valores extremos
+de número de éxitos observado <span class="math inline">\(x\)</span>, pero tiene más riesgo posterior
+para valores chicos de <span class="math inline">\(x\)</span>. En general es mejor el estimador <span class="math inline">\(\theta_2\)</span>. El
+estimador de máxima verosimilitud tiene más riesgo en los extremos, lo que esperaríamos
+porque no tenemos la regularización que aporta la posterior. Igualmente,
+vemos más riesgo para valores chicos de <span class="math inline">\(x\)</span> que para valores grandes: esto
+es porque la inicial está concentrada en valores reslativamente grandes
+de <span class="math inline">\(\theta\)</span>.</p>
+</div>
+</div>
+<div id="riesgo-de-bayes" class="section level2 unnumbered">
+<h2>Riesgo de Bayes</h2>
+<p>Finalmente, podemos crear un resumen unificado considerando:</p>
+<ul>
+<li>Si no conocemos el valor del parámetro <span class="math inline">\(\theta\)</span>, podemos promediar
+el riesgo frecuentista con la inicial <span class="math inline">\(p(\theta)\)</span></li>
+<li>Si no conocemos los datos observados, podemos promediar usando
+datos generados por la marginal <span class="math inline">\(p(x)\)</span> de <span class="math inline">\(x\)</span> bajo el modelo de datos
+<span class="math inline">\(p(x|\theta)\)</span> y la inicial <span class="math inline">\(p(\theta)\)</span>.</li>
+</ul>
+<p>Por la ley de la esperanza iterada, estos dos resultados son iguales. La cantidad
+resultante</p>
+<p><span class="math display">\[r(t) = \int R(\theta,t) p(\theta)\, d\theta = \int r(x, t)p(x|\theta)p(\theta)\, d\theta\, dx\]</span>
+Se llama <strong>riesgo de Bayes</strong> para el estimador <span class="math inline">\(t\)</span>.</p>
+<div id="ejemplo-15" class="section level3 unnumbered">
+<h3>Ejemplo</h3>
+<p>Podemos calcular</p>
+<div class="sourceCode" id="cb537"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb537-1"><a href="calibración-bayesiana-y-regularización.html#cb537-1"></a>marginal_tbl &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">m =</span> <span class="dv">5000</span>){</span>
+<span id="cb537-2"><a href="calibración-bayesiana-y-regularización.html#cb537-2"></a>  theta &lt;-<span class="st"> </span><span class="kw">rbeta</span>(m, <span class="dv">5</span>, <span class="dv">3</span>)</span>
+<span id="cb537-3"><a href="calibración-bayesiana-y-regularización.html#cb537-3"></a>  x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(m, <span class="dt">size =</span> n, <span class="dt">p =</span> theta)</span>
+<span id="cb537-4"><a href="calibración-bayesiana-y-regularización.html#cb537-4"></a>  <span class="kw">tibble</span>(<span class="dt">x =</span> x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(x) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb537-5"><a href="calibración-bayesiana-y-regularización.html#cb537-5"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">n_x =</span> <span class="kw">n</span>())</span>
+<span id="cb537-6"><a href="calibración-bayesiana-y-regularización.html#cb537-6"></a>}</span>
+<span id="cb537-7"><a href="calibración-bayesiana-y-regularización.html#cb537-7"></a>riesgo_post_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(<span class="kw">marginal_tbl</span>()) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb537-8"><a href="calibración-bayesiana-y-regularización.html#cb537-8"></a><span class="st">  </span><span class="kw">group_by</span>(estimador) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb537-9"><a href="calibración-bayesiana-y-regularización.html#cb537-9"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">riesgo_bayes =</span> <span class="kw">sum</span>(riesgo_post <span class="op">*</span><span class="st"> </span>n_x) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n_x))</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   estimador riesgo_bayes
+##   &lt;chr&gt;            &lt;dbl&gt;
+## 1 MLE            0.0104 
+## 2 Posterior      0.00833</code></pre>
+<p>o también</p>
+<div class="sourceCode" id="cb539"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb539-1"><a href="calibración-bayesiana-y-regularización.html#cb539-1"></a>theta_tbl &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">theta =</span> <span class="kw">rbeta</span>(<span class="dv">50000</span>, <span class="dv">5</span>, <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb539-2"><a href="calibración-bayesiana-y-regularización.html#cb539-2"></a><span class="st">  </span><span class="kw">group_by</span>(theta) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb539-3"><a href="calibración-bayesiana-y-regularización.html#cb539-3"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">n_x =</span> <span class="kw">n</span>())</span>
+<span id="cb539-4"><a href="calibración-bayesiana-y-regularización.html#cb539-4"></a>  </span>
+<span id="cb539-5"><a href="calibración-bayesiana-y-regularización.html#cb539-5"></a>riesgo_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(theta_tbl) <span class="op">%&gt;%</span></span>
+<span id="cb539-6"><a href="calibración-bayesiana-y-regularización.html#cb539-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">n_x =</span> <span class="kw">ifelse</span>(<span class="kw">is.na</span>(n_x), <span class="dv">0</span>, n_x)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb539-7"><a href="calibración-bayesiana-y-regularización.html#cb539-7"></a><span class="st">  </span><span class="kw">group_by</span>(estimador) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb539-8"><a href="calibración-bayesiana-y-regularización.html#cb539-8"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">riesgo_bayes =</span> <span class="kw">sum</span>(riesgo <span class="op">*</span><span class="st"> </span>n_x) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n_x))</span></code></pre></div>
+<pre><code>## # A tibble: 2 x 2
+##   estimador riesgo_bayes
+##   &lt;chr&gt;            &lt;dbl&gt;
+## 1 MLE            0.0104 
+## 2 Posterior      0.00839</code></pre>
+<p>Ahora consideremos cómo decidiríamos, desde el punto de vista Bayesiano, qué
+estimador usar:</p>
+<ol style="list-style-type: decimal">
+<li>(Estimador de Bayes) Si tenemos los datos <span class="math inline">\(X\)</span>, escogeríamos una
+función <span class="math inline">\(t_X\)</span> que minimice el riesgo posterior <span class="math inline">\(\rho(t, X)\)</span>, y nuestro
+estimador es <span class="math inline">\(\hat{\theta}_n = t_X (X)\)</span>.</li>
+<li>(Regla de Bayes) Si no tenemos los datos, escogeríamos el estimador una función
+<span class="math inline">\(t\)</span> que minimice el riesgo de Bayes <span class="math inline">\(r(t)\)</span>, y estimaríamos usando <span class="math inline">\(\hat{\theta}_n = t(X)\)</span></li>
+<li>Pero como el riesgo de Bayes es el promedio del riesgo posterior, la
+solución de 1 nos da la solución de 2. Es decir, el estimador que escogemos
+condicional a los datos <span class="math inline">\(X\)</span> es el mismo que escogeríamos antes de escoger los
+datos, dada una distribución inicial <span class="math inline">\(p(\theta).\)</span></li>
+</ol>
+<p>Por ejemplo, es posible demostrar que bajo la pérdida cuadrática, la regla de
+Bayes es utilizar la media posterior, bajo la pérdida absoluta, la mediana
+posterior, etc.</p>
+<p>Este estimador de Bayes tiene sentido desde el punto de vista frecuentista,
+también, porque <strong>minimiza el riesgo frecuentista promedio</strong>, suponiendo la
+inicial <span class="math inline">\(p(\theta)\)</span>. Por ejemplo, para la pérdida cuadrática podemos usar la
+descomposición de sesgo y varianza y obtenemos:</p>
+<p><span class="math display">\[r(t) = \mathbb{E}[R(\theta,t)] = \mathbb{E}[ \mathsf{Sesgo}_\theta^2(t)] +\mathbb{E}[\mathsf{Var}_\theta(t)] \]</span></p>
+<p>Podemos ver entonces que el estimador de Bayes, en este caso la media posterior,
+es resultado de minimizar la suma de estas dos cantidades: por eso puede
+incurrir en sesgo, si ese costo se subsana con una reducción considerable de la
+varianza. Los estimadores insesgados que vimos en esta sección fueron subóptimos
+en muchos casos justamente porque son insesgados, e incurren en varianza grande.</p>
+
+<div class="ejercicio">
+Regresa a los ejemplos anteriores donde evaluamos el desempeño de la media
+posterior en varios ejemplos. Muestra en las gráficas dónde ves el balance
+entre sesgo y varianza que cumplen cuando los comparamos con estimadores
+insesgados.
+</div>
+
+<p>Desde el punto de vista frecuentista, la cuestión es más complicada y
+hay varias maneras de proceder. En primer lugar, comenzaríamos con el
+riesgo frecuentista <span class="math inline">\(R(\theta, t)\)</span>. Una idea es,por ejemplo, calcular el
+riesgo máximo:
+<span class="math display">\[R_{\max} (t) = \underset{\theta}{\max} R(\theta, t).\]</span>
+En nuestro ejemplo de arriba el máximo se alcanza en 0.5, y tomaríamos
+eso evaluación de los estimadores <span class="math inline">\(\theta_1\)</span> o <span class="math inline">\(\theta_2\)</span>. Buscaríamos entonces
+estimadores que minimicen este máximo, es decir, <strong>estimadores minimax</strong>. Pero también
+es posible enfocar este problema considerando sólo estimadores <em>insesgados</em>, lo que
+nos lleva por ejemplo a buscar estimadores con mínima varianza. También podemos
+enfocarnos en buscar estimador <em>admisibles</em>, que son aquellos cuyo riesgo no está
+dominado para toda <span class="math inline">\(\theta\)</span> por otro estimador, y así sucesivamente.</p>
+<p>Finalmente, es posible demostrar (ver <span class="citation">Wasserman (<a href="#ref-Wasserman" role="doc-biblioref">2013</a>)</span>) que típicamente, para muestras
+grandes, el estimador de máxima verosimilitud es cercano
+a ser minimax y además es una regla de Bayes. Estas son buenas propiedades, pero
+debemos contar con que el régimen asintótico se cumpla aproximadamente.</p>
+
+</div>
+</div>
+</div>
+<h3>Referencias</h3>
+<div id="refs" class="references">
+<div id="ref-Wasserman">
+<p>Wasserman, Larry. 2013. <em>All of Statistics: A Concise Course in Statistical Inference</em>. Springer Science &amp; Business Media.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introducción-a-inferencia-bayesiana-1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="tareas.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/tereom/fundamentos/edit/master/15-bayesiana-calibracion.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["fundamentos-estadistica.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -14,3 +14,4 @@ bootstrap-paramétrico
 propiedades-teóricas-de-mle
 más-de-pruebas-de-hipótesis-e-intervalos
 introducción-a-inferencia-bayesiana-1
+calibración-bayesiana-y-regularización

@@ -327,6 +327,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-posterior-predictiva-de-pareto-uniforme."><i class="fa fa-check"></i>Ejemplo: posterior predictiva de Pareto-Uniforme.</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="12" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html"><i class="fa fa-check"></i><b>12</b> Calibración bayesiana y Regularización</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#enfoque-bayesiano-y-frecuentista"><i class="fa fa-check"></i>Enfoque bayesiano y frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-una-proporción"><i class="fa fa-check"></i>Ejemplo: estimación de una proporción</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#intervalos-de-agresti-coull"><i class="fa fa-check"></i>Intervalos de Agresti-Coull</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#incorporando-información-inicial"><i class="fa fa-check"></i>Incorporando información inicial</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-porporción-de-hogares-de-ingresos-grandes"><i class="fa fa-check"></i>Ejemplo: porporción de hogares de ingresos grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#inferencia-bayesiana-y-regularización"><i class="fa fa-check"></i>Inferencia bayesiana y regularización</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-modelo-normal-y-estaturas"><i class="fa fa-check"></i>Ejemplo: modelo normal y estaturas</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-proporciones"><i class="fa fa-check"></i>Ejemplo: estimación de proporciones</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#teoría-de-decisión"><i class="fa fa-check"></i>Teoría de decisión</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-frecuentista"><i class="fa fa-check"></i>Ejemplo: riesgo frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-posterior"><i class="fa fa-check"></i>Ejemplo: riesgo posterior</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#riesgo-de-bayes"><i class="fa fa-check"></i>Riesgo de Bayes</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-15"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#loess-1"><i class="fa fa-check"></i>2. Loess</a><ul>
@@ -442,16 +460,16 @@ del IMSS de hospitalizaciones de menores, ya sea por anemia o
 que por otra causa (infecciones gastrointestinales, apendicitis, tratamiento de
 leucemia, …), se registró
 si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="tipos-de-estudio-y-experimentos.html#cb52-1"></a><span class="kw">head</span>(paciente)</span>
-<span id="cb52-2"><a href="tipos-de-estudio-y-experimentos.html#cb52-2"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
-<span id="cb52-3"><a href="tipos-de-estudio-y-experimentos.html#cb52-3"></a><span class="co">#&gt;    edad padecimiento         sexo   anemia</span></span>
-<span id="cb52-4"><a href="tipos-de-estudio-y-experimentos.html#cb52-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;   &lt;int&gt;</span></span>
-<span id="cb52-5"><a href="tipos-de-estudio-y-experimentos.html#cb52-5"></a><span class="co">#&gt; 1     8 picadura alacrán     mujer       0</span></span>
-<span id="cb52-6"><a href="tipos-de-estudio-y-experimentos.html#cb52-6"></a><span class="co">#&gt; 2    10 infección intestinal hombre      1</span></span>
-<span id="cb52-7"><a href="tipos-de-estudio-y-experimentos.html#cb52-7"></a><span class="co">#&gt; 3     7 mordedura de perro   hombre      1</span></span>
-<span id="cb52-8"><a href="tipos-de-estudio-y-experimentos.html#cb52-8"></a><span class="co">#&gt; 4     8 asma                 hombre      1</span></span>
-<span id="cb52-9"><a href="tipos-de-estudio-y-experimentos.html#cb52-9"></a><span class="co">#&gt; 5    13 infección intestinal mujer       0</span></span>
-<span id="cb52-10"><a href="tipos-de-estudio-y-experimentos.html#cb52-10"></a><span class="co">#&gt; 6     7 picadura alacrán     hombre      0</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="tipos-de-estudio-y-experimentos.html#cb51-1"></a><span class="kw">head</span>(paciente)</span>
+<span id="cb51-2"><a href="tipos-de-estudio-y-experimentos.html#cb51-2"></a><span class="co">#&gt; # A tibble: 6 x 4</span></span>
+<span id="cb51-3"><a href="tipos-de-estudio-y-experimentos.html#cb51-3"></a><span class="co">#&gt;    edad padecimiento         sexo   anemia</span></span>
+<span id="cb51-4"><a href="tipos-de-estudio-y-experimentos.html#cb51-4"></a><span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;                &lt;chr&gt;   &lt;int&gt;</span></span>
+<span id="cb51-5"><a href="tipos-de-estudio-y-experimentos.html#cb51-5"></a><span class="co">#&gt; 1     8 picadura alacrán     mujer       0</span></span>
+<span id="cb51-6"><a href="tipos-de-estudio-y-experimentos.html#cb51-6"></a><span class="co">#&gt; 2    10 infección intestinal hombre      1</span></span>
+<span id="cb51-7"><a href="tipos-de-estudio-y-experimentos.html#cb51-7"></a><span class="co">#&gt; 3     7 mordedura de perro   hombre      1</span></span>
+<span id="cb51-8"><a href="tipos-de-estudio-y-experimentos.html#cb51-8"></a><span class="co">#&gt; 4     8 asma                 hombre      1</span></span>
+<span id="cb51-9"><a href="tipos-de-estudio-y-experimentos.html#cb51-9"></a><span class="co">#&gt; 5    13 infección intestinal mujer       0</span></span>
+<span id="cb51-10"><a href="tipos-de-estudio-y-experimentos.html#cb51-10"></a><span class="co">#&gt; 6     7 picadura alacrán     hombre      0</span></span></code></pre></div>
 <ul>
 <li>¿Qué nos dice esta cantidad acerca de la anemia en la población?<br />
 </li>
@@ -459,10 +477,10 @@ si el menor tenía anemia. En nuestra muestra el 47% de los niños tiene anemia.
 </li>
 <li>¿Cómo calculamos intervalos de confianza?</li>
 </ul>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="tipos-de-estudio-y-experimentos.html#cb53-1"></a><span class="co"># Si calculo el error estándar de la p estimada como sigue, es correcto?</span></span>
-<span id="cb53-2"><a href="tipos-de-estudio-y-experimentos.html#cb53-2"></a>p &lt;-<span class="st"> </span><span class="kw">mean</span>(paciente<span class="op">$</span>anemia)</span>
-<span id="cb53-3"><a href="tipos-de-estudio-y-experimentos.html#cb53-3"></a><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span><span class="dv">5000</span>)</span>
-<span id="cb53-4"><a href="tipos-de-estudio-y-experimentos.html#cb53-4"></a><span class="co">#&gt; [1] 0.007060751</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="tipos-de-estudio-y-experimentos.html#cb52-1"></a><span class="co"># Si calculo el error estándar de la p estimada como sigue, es correcto?</span></span>
+<span id="cb52-2"><a href="tipos-de-estudio-y-experimentos.html#cb52-2"></a>p &lt;-<span class="st"> </span><span class="kw">mean</span>(paciente<span class="op">$</span>anemia)</span>
+<span id="cb52-3"><a href="tipos-de-estudio-y-experimentos.html#cb52-3"></a><span class="kw">sqrt</span>(p <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p) <span class="op">/</span><span class="st"> </span><span class="dv">5000</span>)</span>
+<span id="cb52-4"><a href="tipos-de-estudio-y-experimentos.html#cb52-4"></a><span class="co">#&gt; [1] 0.007060751</span></span></code></pre></div>
 </div>
 <div id="muestreo-aleatorio" class="section level2 unnumbered">
 <h2>Muestreo aleatorio</h2>
@@ -477,41 +495,41 @@ o errores estándar).</p>
 <h2>Pero si no podemos hacer muestreo aleatorio?</h2>
 <p>En el caso de prevalencia de anemia, discutiendo con médicos e investigadores
 nos informan que la anemia se presenta en tasas más altas en niños más chicos.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tipos-de-estudio-y-experimentos.html#cb54-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb54-2"><a href="tipos-de-estudio-y-experimentos.html#cb54-2"></a><span class="st">  </span><span class="kw">count</span>(edad) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb54-3"><a href="tipos-de-estudio-y-experimentos.html#cb54-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
-<span id="cb54-4"><a href="tipos-de-estudio-y-experimentos.html#cb54-4"></a><span class="co">#&gt; # A tibble: 10 x 3</span></span>
-<span id="cb54-5"><a href="tipos-de-estudio-y-experimentos.html#cb54-5"></a><span class="co">#&gt;     edad     n  prop</span></span>
-<span id="cb54-6"><a href="tipos-de-estudio-y-experimentos.html#cb54-6"></a><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
-<span id="cb54-7"><a href="tipos-de-estudio-y-experimentos.html#cb54-7"></a><span class="co">#&gt;  1     6  1001    20</span></span>
-<span id="cb54-8"><a href="tipos-de-estudio-y-experimentos.html#cb54-8"></a><span class="co">#&gt;  2     7   931    19</span></span>
-<span id="cb54-9"><a href="tipos-de-estudio-y-experimentos.html#cb54-9"></a><span class="co">#&gt;  3     8   980    20</span></span>
-<span id="cb54-10"><a href="tipos-de-estudio-y-experimentos.html#cb54-10"></a><span class="co">#&gt;  4     9   445     9</span></span>
-<span id="cb54-11"><a href="tipos-de-estudio-y-experimentos.html#cb54-11"></a><span class="co">#&gt;  5    10   484    10</span></span>
-<span id="cb54-12"><a href="tipos-de-estudio-y-experimentos.html#cb54-12"></a><span class="co">#&gt;  6    11   489    10</span></span>
-<span id="cb54-13"><a href="tipos-de-estudio-y-experimentos.html#cb54-13"></a><span class="co">#&gt;  7    12   246     5</span></span>
-<span id="cb54-14"><a href="tipos-de-estudio-y-experimentos.html#cb54-14"></a><span class="co">#&gt;  8    13   239     5</span></span>
-<span id="cb54-15"><a href="tipos-de-estudio-y-experimentos.html#cb54-15"></a><span class="co">#&gt;  9    14    90     2</span></span>
-<span id="cb54-16"><a href="tipos-de-estudio-y-experimentos.html#cb54-16"></a><span class="co">#&gt; 10    15    95     2</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="tipos-de-estudio-y-experimentos.html#cb53-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb53-2"><a href="tipos-de-estudio-y-experimentos.html#cb53-2"></a><span class="st">  </span><span class="kw">count</span>(edad) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb53-3"><a href="tipos-de-estudio-y-experimentos.html#cb53-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
+<span id="cb53-4"><a href="tipos-de-estudio-y-experimentos.html#cb53-4"></a><span class="co">#&gt; # A tibble: 10 x 3</span></span>
+<span id="cb53-5"><a href="tipos-de-estudio-y-experimentos.html#cb53-5"></a><span class="co">#&gt;     edad     n  prop</span></span>
+<span id="cb53-6"><a href="tipos-de-estudio-y-experimentos.html#cb53-6"></a><span class="co">#&gt;    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;</span></span>
+<span id="cb53-7"><a href="tipos-de-estudio-y-experimentos.html#cb53-7"></a><span class="co">#&gt;  1     6  1001    20</span></span>
+<span id="cb53-8"><a href="tipos-de-estudio-y-experimentos.html#cb53-8"></a><span class="co">#&gt;  2     7   931    19</span></span>
+<span id="cb53-9"><a href="tipos-de-estudio-y-experimentos.html#cb53-9"></a><span class="co">#&gt;  3     8   980    20</span></span>
+<span id="cb53-10"><a href="tipos-de-estudio-y-experimentos.html#cb53-10"></a><span class="co">#&gt;  4     9   445     9</span></span>
+<span id="cb53-11"><a href="tipos-de-estudio-y-experimentos.html#cb53-11"></a><span class="co">#&gt;  5    10   484    10</span></span>
+<span id="cb53-12"><a href="tipos-de-estudio-y-experimentos.html#cb53-12"></a><span class="co">#&gt;  6    11   489    10</span></span>
+<span id="cb53-13"><a href="tipos-de-estudio-y-experimentos.html#cb53-13"></a><span class="co">#&gt;  7    12   246     5</span></span>
+<span id="cb53-14"><a href="tipos-de-estudio-y-experimentos.html#cb53-14"></a><span class="co">#&gt;  8    13   239     5</span></span>
+<span id="cb53-15"><a href="tipos-de-estudio-y-experimentos.html#cb53-15"></a><span class="co">#&gt;  9    14    90     2</span></span>
+<span id="cb53-16"><a href="tipos-de-estudio-y-experimentos.html#cb53-16"></a><span class="co">#&gt; 10    15    95     2</span></span></code></pre></div>
 <p>Y consultando con las proyecciones de población notamos que los niños chicos
 están sobrerepresentados en la muestra. Lo que nos hace considerar que debemos
 buscar una manera de ponderar nuestras observaciones para que reflejen a la
 población.</p>
 <p>Más aún, investigamos que algunas enfermedades están asociadas a mayor
 prevalencia de anemia:</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="tipos-de-estudio-y-experimentos.html#cb55-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-2"><a href="tipos-de-estudio-y-experimentos.html#cb55-2"></a><span class="st">  </span><span class="kw">count</span>(padecimiento) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb55-3"><a href="tipos-de-estudio-y-experimentos.html#cb55-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span>
-<span id="cb55-4"><a href="tipos-de-estudio-y-experimentos.html#cb55-4"></a><span class="co">#&gt; # A tibble: 7 x 2</span></span>
-<span id="cb55-5"><a href="tipos-de-estudio-y-experimentos.html#cb55-5"></a><span class="co">#&gt;   padecimiento               n</span></span>
-<span id="cb55-6"><a href="tipos-de-estudio-y-experimentos.html#cb55-6"></a><span class="co">#&gt;   &lt;chr&gt;                  &lt;int&gt;</span></span>
-<span id="cb55-7"><a href="tipos-de-estudio-y-experimentos.html#cb55-7"></a><span class="co">#&gt; 1 infección respiratoria   745</span></span>
-<span id="cb55-8"><a href="tipos-de-estudio-y-experimentos.html#cb55-8"></a><span class="co">#&gt; 2 mordedura de perro       723</span></span>
-<span id="cb55-9"><a href="tipos-de-estudio-y-experimentos.html#cb55-9"></a><span class="co">#&gt; 3 úlcera                   723</span></span>
-<span id="cb55-10"><a href="tipos-de-estudio-y-experimentos.html#cb55-10"></a><span class="co">#&gt; 4 asma                     713</span></span>
-<span id="cb55-11"><a href="tipos-de-estudio-y-experimentos.html#cb55-11"></a><span class="co">#&gt; 5 apendcitis               704</span></span>
-<span id="cb55-12"><a href="tipos-de-estudio-y-experimentos.html#cb55-12"></a><span class="co">#&gt; 6 picadura alacrán         701</span></span>
-<span id="cb55-13"><a href="tipos-de-estudio-y-experimentos.html#cb55-13"></a><span class="co">#&gt; 7 infección intestinal     691</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="tipos-de-estudio-y-experimentos.html#cb54-1"></a>paciente <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-2"><a href="tipos-de-estudio-y-experimentos.html#cb54-2"></a><span class="st">  </span><span class="kw">count</span>(padecimiento) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb54-3"><a href="tipos-de-estudio-y-experimentos.html#cb54-3"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="op">-</span>n)</span>
+<span id="cb54-4"><a href="tipos-de-estudio-y-experimentos.html#cb54-4"></a><span class="co">#&gt; # A tibble: 7 x 2</span></span>
+<span id="cb54-5"><a href="tipos-de-estudio-y-experimentos.html#cb54-5"></a><span class="co">#&gt;   padecimiento               n</span></span>
+<span id="cb54-6"><a href="tipos-de-estudio-y-experimentos.html#cb54-6"></a><span class="co">#&gt;   &lt;chr&gt;                  &lt;int&gt;</span></span>
+<span id="cb54-7"><a href="tipos-de-estudio-y-experimentos.html#cb54-7"></a><span class="co">#&gt; 1 infección respiratoria   745</span></span>
+<span id="cb54-8"><a href="tipos-de-estudio-y-experimentos.html#cb54-8"></a><span class="co">#&gt; 2 mordedura de perro       723</span></span>
+<span id="cb54-9"><a href="tipos-de-estudio-y-experimentos.html#cb54-9"></a><span class="co">#&gt; 3 úlcera                   723</span></span>
+<span id="cb54-10"><a href="tipos-de-estudio-y-experimentos.html#cb54-10"></a><span class="co">#&gt; 4 asma                     713</span></span>
+<span id="cb54-11"><a href="tipos-de-estudio-y-experimentos.html#cb54-11"></a><span class="co">#&gt; 5 apendcitis               704</span></span>
+<span id="cb54-12"><a href="tipos-de-estudio-y-experimentos.html#cb54-12"></a><span class="co">#&gt; 6 picadura alacrán         701</span></span>
+<span id="cb54-13"><a href="tipos-de-estudio-y-experimentos.html#cb54-13"></a><span class="co">#&gt; 7 infección intestinal     691</span></span></code></pre></div>
 <p>Utilizamos esta información para modelar y <em>corregir</em> nuestra estimación
 original. Por ejemplo con modelos de regresión. Sin embargo,
 debemos preguntarnos:</p>
@@ -723,20 +741,20 @@ tenemos para cada caso los dos posibles resultados hipotéticos
 <span class="math inline">\(y_0\)</span> y <span class="math inline">\(y_1\)</span> (con
 policia y sin policia). En el experimento asignamos el
 tratamiento al azar:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="tipos-de-estudio-y-experimentos.html#cb59-1"></a>muestra_exp &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb59-2"><a href="tipos-de-estudio-y-experimentos.html#cb59-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb59-3"><a href="tipos-de-estudio-y-experimentos.html#cb59-3"></a><span class="st">  </span><span class="co"># asignar tratamiento al azar, esta es nuestra intervención:</span></span>
-<span id="cb59-4"><a href="tipos-de-estudio-y-experimentos.html#cb59-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tratamiento_policia =</span> <span class="kw">rbernoulli</span>(<span class="kw">length</span>(y_<span class="dv">0</span>), <span class="fl">0.5</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb59-5"><a href="tipos-de-estudio-y-experimentos.html#cb59-5"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
-<span id="cb59-6"><a href="tipos-de-estudio-y-experimentos.html#cb59-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_exp =</span> <span class="kw">ifelse</span>(tratamiento_policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="tipos-de-estudio-y-experimentos.html#cb58-1"></a>muestra_exp &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-2"><a href="tipos-de-estudio-y-experimentos.html#cb58-2"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-3"><a href="tipos-de-estudio-y-experimentos.html#cb58-3"></a><span class="st">  </span><span class="co"># asignar tratamiento al azar, esta es nuestra intervención:</span></span>
+<span id="cb58-4"><a href="tipos-de-estudio-y-experimentos.html#cb58-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tratamiento_policia =</span> <span class="kw">rbernoulli</span>(<span class="kw">length</span>(y_<span class="dv">0</span>), <span class="fl">0.5</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb58-5"><a href="tipos-de-estudio-y-experimentos.html#cb58-5"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
+<span id="cb58-6"><a href="tipos-de-estudio-y-experimentos.html#cb58-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_exp =</span> <span class="kw">ifelse</span>(tratamiento_policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
 <p>Nótese la diferencia si tomamos la asignación natural del tratamiento (policía o no):</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="tipos-de-estudio-y-experimentos.html#cb60-1"></a><span class="kw">set.seed</span>(<span class="dv">134</span>)</span>
-<span id="cb60-2"><a href="tipos-de-estudio-y-experimentos.html#cb60-2"></a>muestra_natural &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
-<span id="cb60-3"><a href="tipos-de-estudio-y-experimentos.html#cb60-3"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb60-4"><a href="tipos-de-estudio-y-experimentos.html#cb60-4"></a><span class="st">  </span><span class="co"># usamos el tratamiento que se asignó</span></span>
-<span id="cb60-5"><a href="tipos-de-estudio-y-experimentos.html#cb60-5"></a><span class="st">  </span><span class="co"># policia indica si hubo o no policía en ese crucero</span></span>
-<span id="cb60-6"><a href="tipos-de-estudio-y-experimentos.html#cb60-6"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
-<span id="cb60-7"><a href="tipos-de-estudio-y-experimentos.html#cb60-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_obs =</span> <span class="kw">ifelse</span>(policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="tipos-de-estudio-y-experimentos.html#cb59-1"></a><span class="kw">set.seed</span>(<span class="dv">134</span>)</span>
+<span id="cb59-2"><a href="tipos-de-estudio-y-experimentos.html#cb59-2"></a>muestra_natural &lt;-<span class="st"> </span>trafico_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(categoria <span class="op">!=</span><span class="st"> &quot;Fluido&quot;</span>) <span class="op">%&gt;%</span><span class="st">  </span></span>
+<span id="cb59-3"><a href="tipos-de-estudio-y-experimentos.html#cb59-3"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">200</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-4"><a href="tipos-de-estudio-y-experimentos.html#cb59-4"></a><span class="st">  </span><span class="co"># usamos el tratamiento que se asignó</span></span>
+<span id="cb59-5"><a href="tipos-de-estudio-y-experimentos.html#cb59-5"></a><span class="st">  </span><span class="co"># policia indica si hubo o no policía en ese crucero</span></span>
+<span id="cb59-6"><a href="tipos-de-estudio-y-experimentos.html#cb59-6"></a><span class="st">  </span><span class="co"># observar resultado</span></span>
+<span id="cb59-7"><a href="tipos-de-estudio-y-experimentos.html#cb59-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">tiempo_espera_obs =</span> <span class="kw">ifelse</span>(policia <span class="op">==</span><span class="dv">1</span>, y_<span class="dv">1</span>, y_<span class="dv">0</span>))</span></code></pre></div>
 <p>Resumimos nuestros resultados del experimento son:</p>
 <pre><code>#&gt; # A tibble: 2 x 3
 #&gt; # Groups:   categoria [2]

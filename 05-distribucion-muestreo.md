@@ -150,20 +150,78 @@ replicar_muestreo(marco_casas, m = 10, n = 100) %>%
   formatear_tabla()
 ```
 
-
-
-|id_muestra | total_muestra| factor_exp| est_total_millones|
-|:----------|-------------:|----------:|------------------:|
-|1          |       17594.8|       11.4|              201.3|
-|2          |       17423.9|       11.4|              199.3|
-|3          |       18444.3|       11.4|              211.0|
-|4          |       17696.6|       11.4|              202.4|
-|5          |       17275.8|       11.4|              197.6|
-|6          |       17867.6|       11.4|              204.4|
-|7          |       18450.8|       11.4|              211.1|
-|8          |       18187.2|       11.4|              208.1|
-|9          |       18604.2|       11.4|              212.8|
-|10         |       19144.4|       11.4|              219.0|
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> id_muestra </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total_muestra </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> factor_exp </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> est_total_millones </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 1 </td>
+   <td style="text-align:right;"> 17594.8 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 201.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:right;"> 17423.9 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 199.3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:right;"> 18444.3 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 211.0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:right;"> 17696.6 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 202.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:right;"> 17275.8 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 197.6 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
+   <td style="text-align:right;"> 17867.6 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 204.4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 7 </td>
+   <td style="text-align:right;"> 18450.8 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 211.1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 8 </td>
+   <td style="text-align:right;"> 18187.2 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 208.1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
+   <td style="text-align:right;"> 18604.2 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 212.8 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 10 </td>
+   <td style="text-align:right;"> 19144.4 </td>
+   <td style="text-align:right;"> 11.4 </td>
+   <td style="text-align:right;"> 219.0 </td>
+  </tr>
+</tbody>
+</table>
 
 Como vemos, hay variación considerable en nuestro estimador del total, pero
 la estimación que haríamos con cualquiera de estas muestras no es muy mala. Ahora

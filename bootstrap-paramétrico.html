@@ -327,6 +327,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-posterior-predictiva-de-pareto-uniforme."><i class="fa fa-check"></i>Ejemplo: posterior predictiva de Pareto-Uniforme.</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="12" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html"><i class="fa fa-check"></i><b>12</b> Calibración bayesiana y Regularización</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#enfoque-bayesiano-y-frecuentista"><i class="fa fa-check"></i>Enfoque bayesiano y frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-una-proporción"><i class="fa fa-check"></i>Ejemplo: estimación de una proporción</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#intervalos-de-agresti-coull"><i class="fa fa-check"></i>Intervalos de Agresti-Coull</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#incorporando-información-inicial"><i class="fa fa-check"></i>Incorporando información inicial</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-porporción-de-hogares-de-ingresos-grandes"><i class="fa fa-check"></i>Ejemplo: porporción de hogares de ingresos grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#inferencia-bayesiana-y-regularización"><i class="fa fa-check"></i>Inferencia bayesiana y regularización</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-modelo-normal-y-estaturas"><i class="fa fa-check"></i>Ejemplo: modelo normal y estaturas</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-proporciones"><i class="fa fa-check"></i>Ejemplo: estimación de proporciones</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#teoría-de-decisión"><i class="fa fa-check"></i>Teoría de decisión</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-frecuentista"><i class="fa fa-check"></i>Ejemplo: riesgo frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-posterior"><i class="fa fa-check"></i>Ejemplo: riesgo posterior</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#riesgo-de-bayes"><i class="fa fa-check"></i>Riesgo de Bayes</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-15"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#loess-1"><i class="fa fa-check"></i>2. Loess</a><ul>
@@ -385,56 +403,56 @@ verosimilitud de la normal que vimos arriba.</p>
 verosimilitud cuando tenemos una muestra <span class="math inline">\(X_1, \ldots, X_n \sim \mathsf{N}(\mu, \sigma^2)\)</span>
 (puedes derivar e igualar a cero para encontrar el mínimo). También podemos resolver numéricamente.</p>
 <p>Supongamos que tenemos la siguiente muestra:</p>
-<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="bootstrap-paramétrico.html#cb299-1"></a><span class="kw">set.seed</span>(<span class="dv">41852</span>)</span>
-<span id="cb299-2"><a href="bootstrap-paramétrico.html#cb299-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="bootstrap-paramétrico.html#cb298-1"></a><span class="kw">set.seed</span>(<span class="dv">41852</span>)</span>
+<span id="cb298-2"><a href="bootstrap-paramétrico.html#cb298-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">150</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p>La función generadora de la log-verosimilitud para una muestra es (ve la expresión
 del ejercicio anterior y calcula su logaritmo), y generamos la función de verosimilitud
 para nuestra muestra:</p>
-<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="bootstrap-paramétrico.html#cb300-1"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb300-2"><a href="bootstrap-paramétrico.html#cb300-2"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
-<span id="cb300-3"><a href="bootstrap-paramétrico.html#cb300-3"></a>    media =<span class="st"> </span>pars[<span class="dv">1</span>]</span>
-<span id="cb300-4"><a href="bootstrap-paramétrico.html#cb300-4"></a>    desv_est =<span class="st"> </span>pars[<span class="dv">2</span>]</span>
-<span id="cb300-5"><a href="bootstrap-paramétrico.html#cb300-5"></a>    <span class="co"># ve la ecuación del ejercicio anterior</span></span>
-<span id="cb300-6"><a href="bootstrap-paramétrico.html#cb300-6"></a>    z &lt;-<span class="st"> </span>(x <span class="op">-</span><span class="st"> </span>media) <span class="op">/</span><span class="st"> </span>desv_est</span>
-<span id="cb300-7"><a href="bootstrap-paramétrico.html#cb300-7"></a>    log_verosim &lt;-<span class="st"> </span><span class="op">-</span>(<span class="kw">log</span>(desv_est) <span class="op">+</span><span class="st">  </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(z<span class="op">^</span><span class="dv">2</span>))</span>
-<span id="cb300-8"><a href="bootstrap-paramétrico.html#cb300-8"></a>    log_verosim</span>
-<span id="cb300-9"><a href="bootstrap-paramétrico.html#cb300-9"></a>  }  </span>
-<span id="cb300-10"><a href="bootstrap-paramétrico.html#cb300-10"></a>  log_p</span>
-<span id="cb300-11"><a href="bootstrap-paramétrico.html#cb300-11"></a>}</span>
-<span id="cb300-12"><a href="bootstrap-paramétrico.html#cb300-12"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span></code></pre></div>
+<div class="sourceCode" id="cb299"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb299-1"><a href="bootstrap-paramétrico.html#cb299-1"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb299-2"><a href="bootstrap-paramétrico.html#cb299-2"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
+<span id="cb299-3"><a href="bootstrap-paramétrico.html#cb299-3"></a>    media =<span class="st"> </span>pars[<span class="dv">1</span>]</span>
+<span id="cb299-4"><a href="bootstrap-paramétrico.html#cb299-4"></a>    desv_est =<span class="st"> </span>pars[<span class="dv">2</span>]</span>
+<span id="cb299-5"><a href="bootstrap-paramétrico.html#cb299-5"></a>    <span class="co"># ve la ecuación del ejercicio anterior</span></span>
+<span id="cb299-6"><a href="bootstrap-paramétrico.html#cb299-6"></a>    z &lt;-<span class="st"> </span>(x <span class="op">-</span><span class="st"> </span>media) <span class="op">/</span><span class="st"> </span>desv_est</span>
+<span id="cb299-7"><a href="bootstrap-paramétrico.html#cb299-7"></a>    log_verosim &lt;-<span class="st"> </span><span class="op">-</span>(<span class="kw">log</span>(desv_est) <span class="op">+</span><span class="st">  </span><span class="fl">0.5</span> <span class="op">*</span><span class="st"> </span><span class="kw">mean</span>(z<span class="op">^</span><span class="dv">2</span>))</span>
+<span id="cb299-8"><a href="bootstrap-paramétrico.html#cb299-8"></a>    log_verosim</span>
+<span id="cb299-9"><a href="bootstrap-paramétrico.html#cb299-9"></a>  }  </span>
+<span id="cb299-10"><a href="bootstrap-paramétrico.html#cb299-10"></a>  log_p</span>
+<span id="cb299-11"><a href="bootstrap-paramétrico.html#cb299-11"></a>}</span>
+<span id="cb299-12"><a href="bootstrap-paramétrico.html#cb299-12"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span></code></pre></div>
 <p>Ahora optimizamos (checa que el método converge):</p>
-<div class="sourceCode" id="cb301"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb301-1"><a href="bootstrap-paramétrico.html#cb301-1"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
-<span id="cb301-2"><a href="bootstrap-paramétrico.html#cb301-2"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="bootstrap-paramétrico.html#cb300-1"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb300-2"><a href="bootstrap-paramétrico.html#cb300-2"></a>res<span class="op">$</span>convergence</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="bootstrap-paramétrico.html#cb303-1"></a>est_mle &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb303-2"><a href="bootstrap-paramétrico.html#cb303-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb302"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb302-1"><a href="bootstrap-paramétrico.html#cb302-1"></a>est_mle &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb302-2"><a href="bootstrap-paramétrico.html#cb302-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span></code></pre></div>
 <p>Una vez que tenemos nuestros estimadores puntuales,</p>
-<div class="sourceCode" id="cb304"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb304-1"><a href="bootstrap-paramétrico.html#cb304-1"></a>est_mle</span></code></pre></div>
+<div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="bootstrap-paramétrico.html#cb303-1"></a>est_mle</span></code></pre></div>
 <pre><code>##       estimador
 ## media  1.136001
 ## sigma  1.838421</code></pre>
 <p>Sustituimos estos parámetros en la distribución normal y simulamos una muestra del
 mismo tamaño que la original:</p>
-<div class="sourceCode" id="cb306"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb306-1"><a href="bootstrap-paramétrico.html#cb306-1"></a>simular_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(n, media, sigma){</span>
-<span id="cb306-2"><a href="bootstrap-paramétrico.html#cb306-2"></a>  <span class="kw">rnorm</span>(n, media, sigma)</span>
-<span id="cb306-3"><a href="bootstrap-paramétrico.html#cb306-3"></a>}</span>
-<span id="cb306-4"><a href="bootstrap-paramétrico.html#cb306-4"></a>muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="kw">length</span>(muestra), </span>
-<span id="cb306-5"><a href="bootstrap-paramétrico.html#cb306-5"></a>                                    est_mle[<span class="st">&quot;media&quot;</span>, <span class="st">&quot;estimador&quot;</span>],</span>
-<span id="cb306-6"><a href="bootstrap-paramétrico.html#cb306-6"></a>                                    est_mle[<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;estimador&quot;</span>])</span>
-<span id="cb306-7"><a href="bootstrap-paramétrico.html#cb306-7"></a><span class="kw">head</span>(muestra_bootstrap)</span></code></pre></div>
+<div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="bootstrap-paramétrico.html#cb305-1"></a>simular_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(n, media, sigma){</span>
+<span id="cb305-2"><a href="bootstrap-paramétrico.html#cb305-2"></a>  <span class="kw">rnorm</span>(n, media, sigma)</span>
+<span id="cb305-3"><a href="bootstrap-paramétrico.html#cb305-3"></a>}</span>
+<span id="cb305-4"><a href="bootstrap-paramétrico.html#cb305-4"></a>muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="kw">length</span>(muestra), </span>
+<span id="cb305-5"><a href="bootstrap-paramétrico.html#cb305-5"></a>                                    est_mle[<span class="st">&quot;media&quot;</span>, <span class="st">&quot;estimador&quot;</span>],</span>
+<span id="cb305-6"><a href="bootstrap-paramétrico.html#cb305-6"></a>                                    est_mle[<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;estimador&quot;</span>])</span>
+<span id="cb305-7"><a href="bootstrap-paramétrico.html#cb305-7"></a><span class="kw">head</span>(muestra_bootstrap)</span></code></pre></div>
 <pre><code>## [1]  1.8583885  2.2084326  2.5852895  2.5174462 -0.7428032  0.5995989</code></pre>
 <p>Una vez que tenemos esta muestra <em>bootstrap</em> recalculamos los estimadores de máxima
 verosimlitud. Esto se hace optimizando:</p>
-<div class="sourceCode" id="cb308"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb308-1"><a href="bootstrap-paramétrico.html#cb308-1"></a><span class="co"># creamos nueva verosimilitud para muestra bootstrap</span></span>
-<span id="cb308-2"><a href="bootstrap-paramétrico.html#cb308-2"></a>log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
-<span id="cb308-3"><a href="bootstrap-paramétrico.html#cb308-3"></a><span class="co"># optimizamos</span></span>
-<span id="cb308-4"><a href="bootstrap-paramétrico.html#cb308-4"></a>res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p_boot, </span>
-<span id="cb308-5"><a href="bootstrap-paramétrico.html#cb308-5"></a>  <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
-<span id="cb308-6"><a href="bootstrap-paramétrico.html#cb308-6"></a>res_boot<span class="op">$</span>convergence</span></code></pre></div>
+<div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="bootstrap-paramétrico.html#cb307-1"></a><span class="co"># creamos nueva verosimilitud para muestra bootstrap</span></span>
+<span id="cb307-2"><a href="bootstrap-paramétrico.html#cb307-2"></a>log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
+<span id="cb307-3"><a href="bootstrap-paramétrico.html#cb307-3"></a><span class="co"># optimizamos</span></span>
+<span id="cb307-4"><a href="bootstrap-paramétrico.html#cb307-4"></a>res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p_boot, </span>
+<span id="cb307-5"><a href="bootstrap-paramétrico.html#cb307-5"></a>  <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb307-6"><a href="bootstrap-paramétrico.html#cb307-6"></a>res_boot<span class="op">$</span>convergence</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb310"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb310-1"><a href="bootstrap-paramétrico.html#cb310-1"></a>est_mle_boot &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res_boot<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb310-2"><a href="bootstrap-paramétrico.html#cb310-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span>
-<span id="cb310-3"><a href="bootstrap-paramétrico.html#cb310-3"></a>est_mle_boot</span></code></pre></div>
+<div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="bootstrap-paramétrico.html#cb309-1"></a>est_mle_boot &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res_boot<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb309-2"><a href="bootstrap-paramétrico.html#cb309-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span>
+<span id="cb309-3"><a href="bootstrap-paramétrico.html#cb309-3"></a>est_mle_boot</span></code></pre></div>
 <pre><code>##       estimador
 ## media  1.235914
 ## sigma  1.710042</code></pre>
@@ -445,20 +463,20 @@ que no teníamos en el <em>bootstrap</em> no paramétrico. Ahora es necesario re
 número grande de veces.</p>
 <p>Nótese que esta función solo envuelve el proceso de remuestreo,
 cálculo de la función de verosimilitud y optimización:</p>
-<div class="sourceCode" id="cb312"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb312-1"><a href="bootstrap-paramétrico.html#cb312-1"></a>rep_boot &lt;-<span class="st"> </span><span class="cf">function</span>(rep, crear_log_p, est_mle, n){</span>
-<span id="cb312-2"><a href="bootstrap-paramétrico.html#cb312-2"></a>  muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="kw">length</span>(muestra), </span>
-<span id="cb312-3"><a href="bootstrap-paramétrico.html#cb312-3"></a>                               est_mle[<span class="st">&quot;media&quot;</span>, <span class="st">&quot;estimador&quot;</span>], </span>
-<span id="cb312-4"><a href="bootstrap-paramétrico.html#cb312-4"></a>                               est_mle[<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;estimador&quot;</span>])</span>
-<span id="cb312-5"><a href="bootstrap-paramétrico.html#cb312-5"></a>  log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
-<span id="cb312-6"><a href="bootstrap-paramétrico.html#cb312-6"></a>  <span class="co"># optimizamos</span></span>
-<span id="cb312-7"><a href="bootstrap-paramétrico.html#cb312-7"></a>  res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p_boot, </span>
-<span id="cb312-8"><a href="bootstrap-paramétrico.html#cb312-8"></a>    <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
-<span id="cb312-9"><a href="bootstrap-paramétrico.html#cb312-9"></a>  <span class="kw">try</span>(<span class="cf">if</span>(res_boot<span class="op">$</span>convergence <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">stop</span>(<span class="st">&quot;No se alcanzó convergencia.&quot;</span>))</span>
-<span id="cb312-10"><a href="bootstrap-paramétrico.html#cb312-10"></a>  <span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador_boot =</span> res_boot<span class="op">$</span>par) </span>
-<span id="cb312-11"><a href="bootstrap-paramétrico.html#cb312-11"></a>}</span>
-<span id="cb312-12"><a href="bootstrap-paramétrico.html#cb312-12"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, crear_log_p, est_mle, </span>
-<span id="cb312-13"><a href="bootstrap-paramétrico.html#cb312-13"></a>                                        <span class="dt">n =</span> <span class="kw">length</span>(muestra)), <span class="dt">rep =</span> <span class="st">&quot;.id&quot;</span>) </span>
-<span id="cb312-14"><a href="bootstrap-paramétrico.html#cb312-14"></a>reps_boot</span></code></pre></div>
+<div class="sourceCode" id="cb311"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb311-1"><a href="bootstrap-paramétrico.html#cb311-1"></a>rep_boot &lt;-<span class="st"> </span><span class="cf">function</span>(rep, crear_log_p, est_mle, n){</span>
+<span id="cb311-2"><a href="bootstrap-paramétrico.html#cb311-2"></a>  muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="kw">length</span>(muestra), </span>
+<span id="cb311-3"><a href="bootstrap-paramétrico.html#cb311-3"></a>                               est_mle[<span class="st">&quot;media&quot;</span>, <span class="st">&quot;estimador&quot;</span>], </span>
+<span id="cb311-4"><a href="bootstrap-paramétrico.html#cb311-4"></a>                               est_mle[<span class="st">&quot;sigma&quot;</span>, <span class="st">&quot;estimador&quot;</span>])</span>
+<span id="cb311-5"><a href="bootstrap-paramétrico.html#cb311-5"></a>  log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
+<span id="cb311-6"><a href="bootstrap-paramétrico.html#cb311-6"></a>  <span class="co"># optimizamos</span></span>
+<span id="cb311-7"><a href="bootstrap-paramétrico.html#cb311-7"></a>  res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p_boot, </span>
+<span id="cb311-8"><a href="bootstrap-paramétrico.html#cb311-8"></a>    <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb311-9"><a href="bootstrap-paramétrico.html#cb311-9"></a>  <span class="kw">try</span>(<span class="cf">if</span>(res_boot<span class="op">$</span>convergence <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">stop</span>(<span class="st">&quot;No se alcanzó convergencia.&quot;</span>))</span>
+<span id="cb311-10"><a href="bootstrap-paramétrico.html#cb311-10"></a>  <span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador_boot =</span> res_boot<span class="op">$</span>par) </span>
+<span id="cb311-11"><a href="bootstrap-paramétrico.html#cb311-11"></a>}</span>
+<span id="cb311-12"><a href="bootstrap-paramétrico.html#cb311-12"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, crear_log_p, est_mle, </span>
+<span id="cb311-13"><a href="bootstrap-paramétrico.html#cb311-13"></a>                                        <span class="dt">n =</span> <span class="kw">length</span>(muestra)), <span class="dt">rep =</span> <span class="st">&quot;.id&quot;</span>) </span>
+<span id="cb311-14"><a href="bootstrap-paramétrico.html#cb311-14"></a>reps_boot</span></code></pre></div>
 <pre><code>## # A tibble: 10,000 x 2
 ##    parametro estimador_boot
 ##    &lt;chr&gt;              &lt;dbl&gt;
@@ -474,24 +492,24 @@ cálculo de la función de verosimilitud y optimización:</p>
 ## 10 sigma              1.73 
 ## # … with 9,990 more rows</code></pre>
 <p>Ya ahora podemos estimar error estándar:</p>
-<div class="sourceCode" id="cb314"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb314-1"><a href="bootstrap-paramétrico.html#cb314-1"></a>error_est &lt;-<span class="st"> </span>reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(parametro) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb314-2"><a href="bootstrap-paramétrico.html#cb314-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">ee_boot =</span> <span class="kw">sd</span>(estimador_boot)) </span>
-<span id="cb314-3"><a href="bootstrap-paramétrico.html#cb314-3"></a>error_est</span></code></pre></div>
+<div class="sourceCode" id="cb313"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb313-1"><a href="bootstrap-paramétrico.html#cb313-1"></a>error_est &lt;-<span class="st"> </span>reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(parametro) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb313-2"><a href="bootstrap-paramétrico.html#cb313-2"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">ee_boot =</span> <span class="kw">sd</span>(estimador_boot)) </span>
+<span id="cb313-3"><a href="bootstrap-paramétrico.html#cb313-3"></a>error_est</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##   parametro ee_boot
 ##   &lt;chr&gt;       &lt;dbl&gt;
 ## 1 media       0.150
 ## 2 sigma       0.106</code></pre>
 <p>Así que nuestra estimación final sería:</p>
-<div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="bootstrap-paramétrico.html#cb316-1"></a><span class="kw">bind_cols</span>(est_mle, error_est) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb316-2"><a href="bootstrap-paramétrico.html#cb316-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb316-3"><a href="bootstrap-paramétrico.html#cb316-3"></a><span class="st">  </span><span class="kw">select</span>(parametro, estimador, ee_boot)</span></code></pre></div>
+<div class="sourceCode" id="cb315"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb315-1"><a href="bootstrap-paramétrico.html#cb315-1"></a><span class="kw">bind_cols</span>(est_mle, error_est) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb315-2"><a href="bootstrap-paramétrico.html#cb315-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round, <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb315-3"><a href="bootstrap-paramétrico.html#cb315-3"></a><span class="st">  </span><span class="kw">select</span>(parametro, estimador, ee_boot)</span></code></pre></div>
 <pre><code>##   parametro estimador ee_boot
 ## 1     media     1.136   0.150
 ## 2     sigma     1.838   0.106</code></pre>
 <p>Si usamos la rutina estándar de <code>R</code> (dejaremos para después explicar cómo
 calcula los errores estándar esta rutina —no es con bootstrap):</p>
-<div class="sourceCode" id="cb318"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb318-1"><a href="bootstrap-paramétrico.html#cb318-1"></a>broom<span class="op">::</span><span class="kw">tidy</span>(MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;normal&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb317"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb317-1"><a href="bootstrap-paramétrico.html#cb317-1"></a>broom<span class="op">::</span><span class="kw">tidy</span>(MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;normal&quot;</span>))</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 3
 ##   term  estimate std.error
 ##   &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;
@@ -499,31 +517,31 @@ calcula los errores estándar esta rutina —no es con bootstrap):</p>
 ## 2 sd        1.84     0.106</code></pre>
 <p>Podemos checar también la normalidad aproximada de las distribuciones
 bootstrap para construir nuestros intervalos:</p>
-<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="bootstrap-paramétrico.html#cb320-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">sample =</span> estimador_boot)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb320-2"><a href="bootstrap-paramétrico.html#cb320-2"></a><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb320-3"><a href="bootstrap-paramétrico.html#cb320-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb319"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb319-1"><a href="bootstrap-paramétrico.html#cb319-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">sample =</span> estimador_boot)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb319-2"><a href="bootstrap-paramétrico.html#cb319-2"></a><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb319-3"><a href="bootstrap-paramétrico.html#cb319-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-11-1.png" width="480" style="display: block; margin: auto;" />
 La distribuciones son aproximadamente normales. Nótese que esto no siempre
 sucede, especialmente con parámetros de dispersión como <span class="math inline">\(\sigma\)</span>.</p>
 <p><strong>Ejemplo</strong>. Supongamos que tenemos una muestra más chica. Repasa los pasos
 para asegurarte que entiendes el procedimiento:</p>
-<div class="sourceCode" id="cb321"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb321-1"><a href="bootstrap-paramétrico.html#cb321-1"></a><span class="kw">set.seed</span>(<span class="dv">4182</span>)</span>
-<span id="cb321-2"><a href="bootstrap-paramétrico.html#cb321-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">6</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span>
-<span id="cb321-3"><a href="bootstrap-paramétrico.html#cb321-3"></a><span class="co"># función de verosimilitud</span></span>
-<span id="cb321-4"><a href="bootstrap-paramétrico.html#cb321-4"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
-<span id="cb321-5"><a href="bootstrap-paramétrico.html#cb321-5"></a><span class="co"># máxima verosimilitud</span></span>
-<span id="cb321-6"><a href="bootstrap-paramétrico.html#cb321-6"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
-<span id="cb321-7"><a href="bootstrap-paramétrico.html#cb321-7"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<div class="sourceCode" id="cb320"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb320-1"><a href="bootstrap-paramétrico.html#cb320-1"></a><span class="kw">set.seed</span>(<span class="dv">4182</span>)</span>
+<span id="cb320-2"><a href="bootstrap-paramétrico.html#cb320-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">6</span>, <span class="dt">mean =</span> <span class="dv">1</span>, <span class="dt">sd =</span> <span class="dv">2</span>)</span>
+<span id="cb320-3"><a href="bootstrap-paramétrico.html#cb320-3"></a><span class="co"># función de verosimilitud</span></span>
+<span id="cb320-4"><a href="bootstrap-paramétrico.html#cb320-4"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
+<span id="cb320-5"><a href="bootstrap-paramétrico.html#cb320-5"></a><span class="co"># máxima verosimilitud</span></span>
+<span id="cb320-6"><a href="bootstrap-paramétrico.html#cb320-6"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>, <span class="dt">maxit =</span> <span class="dv">1000</span>), <span class="dt">method =</span> <span class="st">&quot;Nelder-Mead&quot;</span>)</span>
+<span id="cb320-7"><a href="bootstrap-paramétrico.html#cb320-7"></a>res<span class="op">$</span>convergence</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb323"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb323-1"><a href="bootstrap-paramétrico.html#cb323-1"></a>est_mle &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb323-2"><a href="bootstrap-paramétrico.html#cb323-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span>
-<span id="cb323-3"><a href="bootstrap-paramétrico.html#cb323-3"></a>est_mle</span></code></pre></div>
+<div class="sourceCode" id="cb322"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb322-1"><a href="bootstrap-paramétrico.html#cb322-1"></a>est_mle &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">parametro =</span> <span class="kw">c</span>(<span class="st">&quot;media&quot;</span>, <span class="st">&quot;sigma&quot;</span>), <span class="dt">estimador =</span> res<span class="op">$</span>par) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb322-2"><a href="bootstrap-paramétrico.html#cb322-2"></a><span class="st">  </span><span class="kw">column_to_rownames</span>(<span class="dt">var =</span> <span class="st">&quot;parametro&quot;</span>)</span>
+<span id="cb322-3"><a href="bootstrap-paramétrico.html#cb322-3"></a>est_mle</span></code></pre></div>
 <pre><code>##       estimador
 ## media 0.3982829
 ## sigma 2.3988969</code></pre>
 <p>Hacemos <em>bootstrap</em> paramétrico</p>
-<div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="bootstrap-paramétrico.html#cb325-1"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, crear_log_p, est_mle, <span class="dt">n =</span> <span class="kw">length</span>(muestra)), <span class="dt">.id =</span> <span class="st">&quot;rep&quot;</span>) </span>
-<span id="cb325-2"><a href="bootstrap-paramétrico.html#cb325-2"></a>reps_boot</span></code></pre></div>
+<div class="sourceCode" id="cb324"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb324-1"><a href="bootstrap-paramétrico.html#cb324-1"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5000</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, crear_log_p, est_mle, <span class="dt">n =</span> <span class="kw">length</span>(muestra)), <span class="dt">.id =</span> <span class="st">&quot;rep&quot;</span>) </span>
+<span id="cb324-2"><a href="bootstrap-paramétrico.html#cb324-2"></a>reps_boot</span></code></pre></div>
 <pre><code>## # A tibble: 10,000 x 3
 ##    rep   parametro estimador_boot
 ##    &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;
@@ -538,12 +556,12 @@ para asegurarte que entiendes el procedimiento:</p>
 ##  9 5     media             -0.228
 ## 10 5     sigma              1.73 
 ## # … with 9,990 more rows</code></pre>
-<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="bootstrap-paramétrico.html#cb327-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">sample =</span> estimador_boot)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb327-2"><a href="bootstrap-paramétrico.html#cb327-2"></a><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
-<span id="cb327-3"><a href="bootstrap-paramétrico.html#cb327-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb326"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb326-1"><a href="bootstrap-paramétrico.html#cb326-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">sample =</span> estimador_boot)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb326-2"><a href="bootstrap-paramétrico.html#cb326-2"></a><span class="st">  </span><span class="kw">geom_qq</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_qq_line</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>) <span class="op">+</span></span>
+<span id="cb326-3"><a href="bootstrap-paramétrico.html#cb326-3"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="bootstrap-paramétrico.html#cb328-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">x =</span> estimador_boot)) <span class="op">+</span></span>
-<span id="cb328-2"><a href="bootstrap-paramétrico.html#cb328-2"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro)</span></code></pre></div>
+<div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="bootstrap-paramétrico.html#cb327-1"></a><span class="kw">ggplot</span>(reps_boot, <span class="kw">aes</span>(<span class="dt">x =</span> estimador_boot)) <span class="op">+</span></span>
+<span id="cb327-2"><a href="bootstrap-paramétrico.html#cb327-2"></a><span class="st">  </span><span class="kw">geom_histogram</span>() <span class="op">+</span><span class="kw">facet_wrap</span>(<span class="op">~</span>parametro)</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-14-2.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Donde vemos que la distribución de <span class="math inline">\(\sigma\)</span> tienen sesgo a la derecha, pues en algunos
 casos obtenemos estimaciones muy cercanas a cero. Podemos
@@ -551,8 +569,8 @@ usar intervalos de percentiles.</p>
 <p><strong>Ejercicio (extra)</strong>. Con más de un parámetro, podemos preguntarnos cómo dependen
 las estimaciones individuales - en algunos casos pueden estar correlacionadas. Podemos
 examinar este comportamiendo visualizando las replicaciones bootstrap</p>
-<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="bootstrap-paramétrico.html#cb329-1"></a><span class="kw">ggplot</span>(reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> parametro, <span class="dt">values_from =</span> estimador_boot),</span>
-<span id="cb329-2"><a href="bootstrap-paramétrico.html#cb329-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> media, <span class="dt">y =</span> sigma)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb328"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb328-1"><a href="bootstrap-paramétrico.html#cb328-1"></a><span class="kw">ggplot</span>(reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> parametro, <span class="dt">values_from =</span> estimador_boot),</span>
+<span id="cb328-2"><a href="bootstrap-paramétrico.html#cb328-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> media, <span class="dt">y =</span> sigma)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_equal</span>()</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-15-1.png" width="480" style="display: block; margin: auto;" />
 Esta es nuestra aproximación a la distribución de remuestreo de nuestro
 par de estadísticas <span class="math inline">\((\mu_{\mathsf{MLE}}, \sigma_{\mathsf{MLE}})\)</span>. En este caso, parecen ser
@@ -607,33 +625,33 @@ calculamos el estimador de máxima verosimilitud <span class="math inline">\(\th
 observados. Enchufamos <span class="math inline">\(\hat{f} = f(x;\theta_{\mathsf{MLE}})\)</span>, y hacemos una gráfica
 de los cuantiles teóricos de <span class="math inline">\(\hat{f}\)</span> contra los cuantiles muestrales.</p>
 <p><strong>Ejemplo</strong>. Consideramos la siguiente muestra:</p>
-<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="bootstrap-paramétrico.html#cb330-1"></a><span class="kw">set.seed</span>(<span class="dv">32</span>)</span>
-<span id="cb330-2"><a href="bootstrap-paramétrico.html#cb330-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rgamma</span>(<span class="dv">150</span>, <span class="fl">0.4</span>, <span class="dv">1</span>)</span>
-<span id="cb330-3"><a href="bootstrap-paramétrico.html#cb330-3"></a><span class="kw">qplot</span>(muestra) </span></code></pre></div>
+<div class="sourceCode" id="cb329"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb329-1"><a href="bootstrap-paramétrico.html#cb329-1"></a><span class="kw">set.seed</span>(<span class="dv">32</span>)</span>
+<span id="cb329-2"><a href="bootstrap-paramétrico.html#cb329-2"></a>muestra &lt;-<span class="st"> </span><span class="kw">rgamma</span>(<span class="dv">150</span>, <span class="fl">0.4</span>, <span class="dv">1</span>)</span>
+<span id="cb329-3"><a href="bootstrap-paramétrico.html#cb329-3"></a><span class="kw">qplot</span>(muestra) </span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Y queremos usar un modelo exponencial. Encontramos los estimadores de maxima
 verosimilitud</p>
-<div class="sourceCode" id="cb331"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb331-1"><a href="bootstrap-paramétrico.html#cb331-1"></a>est_mle &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;exponential&quot;</span>)</span>
-<span id="cb331-2"><a href="bootstrap-paramétrico.html#cb331-2"></a>rate_mle &lt;-<span class="st"> </span>est_mle<span class="op">$</span>estimate</span>
-<span id="cb331-3"><a href="bootstrap-paramétrico.html#cb331-3"></a>rate_mle</span></code></pre></div>
+<div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="bootstrap-paramétrico.html#cb330-1"></a>est_mle &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;exponential&quot;</span>)</span>
+<span id="cb330-2"><a href="bootstrap-paramétrico.html#cb330-2"></a>rate_mle &lt;-<span class="st"> </span>est_mle<span class="op">$</span>estimate</span>
+<span id="cb330-3"><a href="bootstrap-paramétrico.html#cb330-3"></a>rate_mle</span></code></pre></div>
 <pre><code>##    rate 
 ## 2.76054</code></pre>
-<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="bootstrap-paramétrico.html#cb333-1"></a>g_exp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">muestra =</span> muestra), <span class="kw">aes</span>(<span class="dt">sample =</span> muestra)) <span class="op">+</span></span>
-<span id="cb333-2"><a href="bootstrap-paramétrico.html#cb333-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qexp, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">rate =</span> rate_mle)) <span class="op">+</span></span>
-<span id="cb333-3"><a href="bootstrap-paramétrico.html#cb333-3"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles exponenciales&quot;</span>)</span>
-<span id="cb333-4"><a href="bootstrap-paramétrico.html#cb333-4"></a>g_exp</span></code></pre></div>
+<div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="bootstrap-paramétrico.html#cb332-1"></a>g_exp &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">muestra =</span> muestra), <span class="kw">aes</span>(<span class="dt">sample =</span> muestra)) <span class="op">+</span></span>
+<span id="cb332-2"><a href="bootstrap-paramétrico.html#cb332-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qexp, <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">rate =</span> rate_mle)) <span class="op">+</span></span>
+<span id="cb332-3"><a href="bootstrap-paramétrico.html#cb332-3"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles exponenciales&quot;</span>)</span>
+<span id="cb332-4"><a href="bootstrap-paramétrico.html#cb332-4"></a>g_exp</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-19-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Donde vemos que el desajuste es considerable, y los datos tienen
 una cola derecha considerablemente más larga que la de exponencial (datos son
 casi dos veces más grande de lo que esperaríamos), y la cola
 izquierda está más comprimida en los datos que en una exponencial.</p>
 <p>Sin embargo, si ajustamos una gamma:</p>
-<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="bootstrap-paramétrico.html#cb334-1"></a>est_mle &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;gamma&quot;</span>)<span class="op">$</span>estimate</span>
-<span id="cb334-2"><a href="bootstrap-paramétrico.html#cb334-2"></a>g_gamma &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">muestra =</span> muestra), <span class="kw">aes</span>(<span class="dt">sample =</span> muestra)) <span class="op">+</span></span>
-<span id="cb334-3"><a href="bootstrap-paramétrico.html#cb334-3"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qgamma, </span>
-<span id="cb334-4"><a href="bootstrap-paramétrico.html#cb334-4"></a>          <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">shape =</span> est_mle[<span class="dv">1</span>], <span class="dt">rate =</span> est_mle[<span class="dv">2</span>])) <span class="op">+</span></span>
-<span id="cb334-5"><a href="bootstrap-paramétrico.html#cb334-5"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles gamma&quot;</span>)</span>
-<span id="cb334-6"><a href="bootstrap-paramétrico.html#cb334-6"></a>g_exp <span class="op">+</span><span class="st"> </span>g_gamma</span></code></pre></div>
+<div class="sourceCode" id="cb333"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb333-1"><a href="bootstrap-paramétrico.html#cb333-1"></a>est_mle &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">fitdistr</span>(muestra, <span class="st">&quot;gamma&quot;</span>)<span class="op">$</span>estimate</span>
+<span id="cb333-2"><a href="bootstrap-paramétrico.html#cb333-2"></a>g_gamma &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">tibble</span>(<span class="dt">muestra =</span> muestra), <span class="kw">aes</span>(<span class="dt">sample =</span> muestra)) <span class="op">+</span></span>
+<span id="cb333-3"><a href="bootstrap-paramétrico.html#cb333-3"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qgamma, </span>
+<span id="cb333-4"><a href="bootstrap-paramétrico.html#cb333-4"></a>          <span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">shape =</span> est_mle[<span class="dv">1</span>], <span class="dt">rate =</span> est_mle[<span class="dv">2</span>])) <span class="op">+</span></span>
+<span id="cb333-5"><a href="bootstrap-paramétrico.html#cb333-5"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles gamma&quot;</span>)</span>
+<span id="cb333-6"><a href="bootstrap-paramétrico.html#cb333-6"></a>g_exp <span class="op">+</span><span class="st"> </span>g_gamma</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-20-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>El ajuste es considerablemente mejor para la distribución gamma
 (puedes hacer el protocolo <em>rorschach</em> para
@@ -654,13 +672,13 @@ valores observados se comporta aproximadamente normal. Puedes también intentar 
 una distribución gamma.</p>
 <p>Separamos por Cena y Comida, dividimos entre número de personas y probamos
 ajustando un modelo para cada horario:</p>
-<div class="sourceCode" id="cb335"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb335-1"><a href="bootstrap-paramétrico.html#cb335-1"></a>propinas &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/propinas.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb335-2"><a href="bootstrap-paramétrico.html#cb335-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cuenta_persona =</span> cuenta_total <span class="op">/</span><span class="st"> </span>num_personas)</span>
-<span id="cb335-3"><a href="bootstrap-paramétrico.html#cb335-3"></a>propinas_mle &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb335-4"><a href="bootstrap-paramétrico.html#cb335-4"></a><span class="st">  </span><span class="kw">group_by</span>(momento) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb335-5"><a href="bootstrap-paramétrico.html#cb335-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">est_mle =</span> <span class="kw">list</span>(<span class="kw">tidy</span>(MASS<span class="op">::</span><span class="kw">fitdistr</span>(cuenta_persona, <span class="st">&quot;lognormal&quot;</span>))))  <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb335-6"><a href="bootstrap-paramétrico.html#cb335-6"></a><span class="st">  </span><span class="kw">unnest</span>(est_mle)</span>
-<span id="cb335-7"><a href="bootstrap-paramétrico.html#cb335-7"></a>propinas_mle </span></code></pre></div>
+<div class="sourceCode" id="cb334"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb334-1"><a href="bootstrap-paramétrico.html#cb334-1"></a>propinas &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/propinas.csv&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb334-2"><a href="bootstrap-paramétrico.html#cb334-2"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cuenta_persona =</span> cuenta_total <span class="op">/</span><span class="st"> </span>num_personas)</span>
+<span id="cb334-3"><a href="bootstrap-paramétrico.html#cb334-3"></a>propinas_mle &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb334-4"><a href="bootstrap-paramétrico.html#cb334-4"></a><span class="st">  </span><span class="kw">group_by</span>(momento) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb334-5"><a href="bootstrap-paramétrico.html#cb334-5"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">est_mle =</span> <span class="kw">list</span>(<span class="kw">tidy</span>(MASS<span class="op">::</span><span class="kw">fitdistr</span>(cuenta_persona, <span class="st">&quot;lognormal&quot;</span>))))  <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb334-6"><a href="bootstrap-paramétrico.html#cb334-6"></a><span class="st">  </span><span class="kw">unnest</span>(est_mle)</span>
+<span id="cb334-7"><a href="bootstrap-paramétrico.html#cb334-7"></a>propinas_mle </span></code></pre></div>
 <pre><code>## # A tibble: 4 x 4
 ##   momento term    estimate std.error
 ##   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
@@ -671,15 +689,15 @@ ajustando un modelo para cada horario:</p>
 <p>Ojo: estos parámetros están en escala logarítmica. Puedes revisar <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">aquí</a>
 para ver cómo calcular media y desviación estándar de las distribuciones originales.
 Ahora verificamos el ajuste:</p>
-<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="bootstrap-paramétrico.html#cb337-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(momento <span class="op">==</span><span class="st"> &quot;Cena&quot;</span>), <span class="kw">aes</span>(<span class="dt">sample =</span> cuenta_persona)) <span class="op">+</span></span>
-<span id="cb337-2"><a href="bootstrap-paramétrico.html#cb337-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">mean =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">1</span>], <span class="dt">sd =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">2</span>]),</span>
-<span id="cb337-3"><a href="bootstrap-paramétrico.html#cb337-3"></a>          <span class="dt">distribution =</span> stats<span class="op">::</span>qlnorm) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)) <span class="op">+</span></span>
-<span id="cb337-4"><a href="bootstrap-paramétrico.html#cb337-4"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Cena&quot;</span>)</span>
-<span id="cb337-5"><a href="bootstrap-paramétrico.html#cb337-5"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(momento <span class="op">==</span><span class="st"> &quot;Comida&quot;</span>), <span class="kw">aes</span>(<span class="dt">sample =</span> cuenta_persona)) <span class="op">+</span></span>
-<span id="cb337-6"><a href="bootstrap-paramétrico.html#cb337-6"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">mean =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">3</span>], <span class="dt">sd =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">4</span>]),</span>
-<span id="cb337-7"><a href="bootstrap-paramétrico.html#cb337-7"></a>          <span class="dt">distribution =</span> stats<span class="op">::</span>qlnorm) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)) <span class="op">+</span></span>
-<span id="cb337-8"><a href="bootstrap-paramétrico.html#cb337-8"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Comida&quot;</span>)</span>
-<span id="cb337-9"><a href="bootstrap-paramétrico.html#cb337-9"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb336"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb336-1"><a href="bootstrap-paramétrico.html#cb336-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(momento <span class="op">==</span><span class="st"> &quot;Cena&quot;</span>), <span class="kw">aes</span>(<span class="dt">sample =</span> cuenta_persona)) <span class="op">+</span></span>
+<span id="cb336-2"><a href="bootstrap-paramétrico.html#cb336-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">mean =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">1</span>], <span class="dt">sd =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">2</span>]),</span>
+<span id="cb336-3"><a href="bootstrap-paramétrico.html#cb336-3"></a>          <span class="dt">distribution =</span> stats<span class="op">::</span>qlnorm) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)) <span class="op">+</span></span>
+<span id="cb336-4"><a href="bootstrap-paramétrico.html#cb336-4"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Cena&quot;</span>)</span>
+<span id="cb336-5"><a href="bootstrap-paramétrico.html#cb336-5"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(momento <span class="op">==</span><span class="st"> &quot;Comida&quot;</span>), <span class="kw">aes</span>(<span class="dt">sample =</span> cuenta_persona)) <span class="op">+</span></span>
+<span id="cb336-6"><a href="bootstrap-paramétrico.html#cb336-6"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">dparams =</span> <span class="kw">list</span>(<span class="dt">mean =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">3</span>], <span class="dt">sd =</span> propinas_mle<span class="op">$</span>estimate[<span class="dv">4</span>]),</span>
+<span id="cb336-7"><a href="bootstrap-paramétrico.html#cb336-7"></a>          <span class="dt">distribution =</span> stats<span class="op">::</span>qlnorm) <span class="op">+</span><span class="st"> </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">20</span>)) <span class="op">+</span></span>
+<span id="cb336-8"><a href="bootstrap-paramétrico.html#cb336-8"></a><span class="st">  </span><span class="kw">geom_abline</span>() <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Comida&quot;</span>)</span>
+<span id="cb336-9"><a href="bootstrap-paramétrico.html#cb336-9"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span></span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-22-1.png" width="480" style="display: block; margin: auto;" />
 El ajuste es bueno, aunque podríamos checar la cola de la derecha en la Comida:
 ¿por qué existen esos valores relativamente grandes (alrededor de 25% más altos
@@ -712,78 +730,78 @@ al azar no es muy lejano a 1/5, que es la probabilidad de acertar a al azar.</p>
 <p>Aquí está la función para simular y la log verosimilitud correspondiente. Aquí vamos
 a ver un problema más difícil, así que usaremos la transformación logit para las
 proporciones, y no obtener resultados fuera del rango 0-1 al optimizar:</p>
-<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="bootstrap-paramétrico.html#cb338-1"></a>inv_logit &lt;-<span class="st"> </span><span class="cf">function</span>(theta){</span>
-<span id="cb338-2"><a href="bootstrap-paramétrico.html#cb338-2"></a>  <span class="kw">exp</span>(theta) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(theta))</span>
-<span id="cb338-3"><a href="bootstrap-paramétrico.html#cb338-3"></a>}</span>
-<span id="cb338-4"><a href="bootstrap-paramétrico.html#cb338-4"></a>logit &lt;-<span class="st"> </span><span class="cf">function</span>(p){</span>
-<span id="cb338-5"><a href="bootstrap-paramétrico.html#cb338-5"></a>  <span class="kw">log</span>(p <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>p))</span>
-<span id="cb338-6"><a href="bootstrap-paramétrico.html#cb338-6"></a>}</span>
-<span id="cb338-7"><a href="bootstrap-paramétrico.html#cb338-7"></a><span class="co"># Simular datos</span></span>
-<span id="cb338-8"><a href="bootstrap-paramétrico.html#cb338-8"></a>sim_formas &lt;-<span class="st"> </span><span class="cf">function</span>(probs){</span>
-<span id="cb338-9"><a href="bootstrap-paramétrico.html#cb338-9"></a>  p_azar &lt;-<span class="st"> </span>probs[<span class="dv">1</span>]</span>
-<span id="cb338-10"><a href="bootstrap-paramétrico.html#cb338-10"></a>  p_corr &lt;-<span class="st"> </span>probs[<span class="dv">2</span>]</span>
-<span id="cb338-11"><a href="bootstrap-paramétrico.html#cb338-11"></a>  tipo &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_azar)</span>
-<span id="cb338-12"><a href="bootstrap-paramétrico.html#cb338-12"></a>  <span class="cf">if</span>(tipo<span class="op">==</span><span class="dv">0</span>){</span>
-<span id="cb338-13"><a href="bootstrap-paramétrico.html#cb338-13"></a>    <span class="co"># al azar</span></span>
-<span id="cb338-14"><a href="bootstrap-paramétrico.html#cb338-14"></a>    x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>)</span>
-<span id="cb338-15"><a href="bootstrap-paramétrico.html#cb338-15"></a>  } <span class="cf">else</span> {</span>
-<span id="cb338-16"><a href="bootstrap-paramétrico.html#cb338-16"></a>    <span class="co"># no al azar</span></span>
-<span id="cb338-17"><a href="bootstrap-paramétrico.html#cb338-17"></a>    x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, p_corr)</span>
-<span id="cb338-18"><a href="bootstrap-paramétrico.html#cb338-18"></a>  }</span>
-<span id="cb338-19"><a href="bootstrap-paramétrico.html#cb338-19"></a>  x</span>
-<span id="cb338-20"><a href="bootstrap-paramétrico.html#cb338-20"></a>}</span>
-<span id="cb338-21"><a href="bootstrap-paramétrico.html#cb338-21"></a>simular_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(n, params){</span>
-<span id="cb338-22"><a href="bootstrap-paramétrico.html#cb338-22"></a>  muestra &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="op">~</span><span class="st"> </span><span class="kw">sim_formas</span>(<span class="dt">probs =</span> <span class="kw">inv_logit</span>(params)))</span>
-<span id="cb338-23"><a href="bootstrap-paramétrico.html#cb338-23"></a>  muestra</span>
-<span id="cb338-24"><a href="bootstrap-paramétrico.html#cb338-24"></a>}</span>
-<span id="cb338-25"><a href="bootstrap-paramétrico.html#cb338-25"></a><span class="co"># log verosimilitud</span></span>
-<span id="cb338-26"><a href="bootstrap-paramétrico.html#cb338-26"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb338-27"><a href="bootstrap-paramétrico.html#cb338-27"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
-<span id="cb338-28"><a href="bootstrap-paramétrico.html#cb338-28"></a>    p_azar =<span class="st"> </span><span class="kw">inv_logit</span>(pars[<span class="dv">1</span>])</span>
-<span id="cb338-29"><a href="bootstrap-paramétrico.html#cb338-29"></a>    p_corr =<span class="st"> </span><span class="kw">inv_logit</span>(pars[<span class="dv">2</span>])</span>
-<span id="cb338-30"><a href="bootstrap-paramétrico.html#cb338-30"></a>    <span class="kw">sum</span>(<span class="kw">log</span>(p_azar <span class="op">*</span><span class="st"> </span><span class="kw">dbinom</span>(x, <span class="dv">10</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_azar) <span class="op">*</span><span class="st"> </span><span class="kw">dbinom</span>(x, <span class="dv">10</span>, p_corr)))</span>
-<span id="cb338-31"><a href="bootstrap-paramétrico.html#cb338-31"></a>  }  </span>
-<span id="cb338-32"><a href="bootstrap-paramétrico.html#cb338-32"></a>  log_p</span>
-<span id="cb338-33"><a href="bootstrap-paramétrico.html#cb338-33"></a>}</span>
-<span id="cb338-34"><a href="bootstrap-paramétrico.html#cb338-34"></a><span class="co"># simular datos</span></span>
-<span id="cb338-35"><a href="bootstrap-paramétrico.html#cb338-35"></a><span class="kw">set.seed</span>(<span class="dv">12</span>)</span>
-<span id="cb338-36"><a href="bootstrap-paramétrico.html#cb338-36"></a>muestra &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="dv">200</span>, <span class="dt">params =</span> <span class="kw">logit</span>(<span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.29</span>)))</span>
-<span id="cb338-37"><a href="bootstrap-paramétrico.html#cb338-37"></a><span class="kw">qplot</span>(muestra)</span></code></pre></div>
+<div class="sourceCode" id="cb337"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb337-1"><a href="bootstrap-paramétrico.html#cb337-1"></a>inv_logit &lt;-<span class="st"> </span><span class="cf">function</span>(theta){</span>
+<span id="cb337-2"><a href="bootstrap-paramétrico.html#cb337-2"></a>  <span class="kw">exp</span>(theta) <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(theta))</span>
+<span id="cb337-3"><a href="bootstrap-paramétrico.html#cb337-3"></a>}</span>
+<span id="cb337-4"><a href="bootstrap-paramétrico.html#cb337-4"></a>logit &lt;-<span class="st"> </span><span class="cf">function</span>(p){</span>
+<span id="cb337-5"><a href="bootstrap-paramétrico.html#cb337-5"></a>  <span class="kw">log</span>(p <span class="op">/</span><span class="st"> </span>(<span class="dv">1</span><span class="op">-</span>p))</span>
+<span id="cb337-6"><a href="bootstrap-paramétrico.html#cb337-6"></a>}</span>
+<span id="cb337-7"><a href="bootstrap-paramétrico.html#cb337-7"></a><span class="co"># Simular datos</span></span>
+<span id="cb337-8"><a href="bootstrap-paramétrico.html#cb337-8"></a>sim_formas &lt;-<span class="st"> </span><span class="cf">function</span>(probs){</span>
+<span id="cb337-9"><a href="bootstrap-paramétrico.html#cb337-9"></a>  p_azar &lt;-<span class="st"> </span>probs[<span class="dv">1</span>]</span>
+<span id="cb337-10"><a href="bootstrap-paramétrico.html#cb337-10"></a>  p_corr &lt;-<span class="st"> </span>probs[<span class="dv">2</span>]</span>
+<span id="cb337-11"><a href="bootstrap-paramétrico.html#cb337-11"></a>  tipo &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_azar)</span>
+<span id="cb337-12"><a href="bootstrap-paramétrico.html#cb337-12"></a>  <span class="cf">if</span>(tipo<span class="op">==</span><span class="dv">0</span>){</span>
+<span id="cb337-13"><a href="bootstrap-paramétrico.html#cb337-13"></a>    <span class="co"># al azar</span></span>
+<span id="cb337-14"><a href="bootstrap-paramétrico.html#cb337-14"></a>    x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>)</span>
+<span id="cb337-15"><a href="bootstrap-paramétrico.html#cb337-15"></a>  } <span class="cf">else</span> {</span>
+<span id="cb337-16"><a href="bootstrap-paramétrico.html#cb337-16"></a>    <span class="co"># no al azar</span></span>
+<span id="cb337-17"><a href="bootstrap-paramétrico.html#cb337-17"></a>    x &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, p_corr)</span>
+<span id="cb337-18"><a href="bootstrap-paramétrico.html#cb337-18"></a>  }</span>
+<span id="cb337-19"><a href="bootstrap-paramétrico.html#cb337-19"></a>  x</span>
+<span id="cb337-20"><a href="bootstrap-paramétrico.html#cb337-20"></a>}</span>
+<span id="cb337-21"><a href="bootstrap-paramétrico.html#cb337-21"></a>simular_modelo &lt;-<span class="st"> </span><span class="cf">function</span>(n, params){</span>
+<span id="cb337-22"><a href="bootstrap-paramétrico.html#cb337-22"></a>  muestra &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="op">~</span><span class="st"> </span><span class="kw">sim_formas</span>(<span class="dt">probs =</span> <span class="kw">inv_logit</span>(params)))</span>
+<span id="cb337-23"><a href="bootstrap-paramétrico.html#cb337-23"></a>  muestra</span>
+<span id="cb337-24"><a href="bootstrap-paramétrico.html#cb337-24"></a>}</span>
+<span id="cb337-25"><a href="bootstrap-paramétrico.html#cb337-25"></a><span class="co"># log verosimilitud</span></span>
+<span id="cb337-26"><a href="bootstrap-paramétrico.html#cb337-26"></a>crear_log_p &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb337-27"><a href="bootstrap-paramétrico.html#cb337-27"></a>  log_p &lt;-<span class="st"> </span><span class="cf">function</span>(pars){</span>
+<span id="cb337-28"><a href="bootstrap-paramétrico.html#cb337-28"></a>    p_azar =<span class="st"> </span><span class="kw">inv_logit</span>(pars[<span class="dv">1</span>])</span>
+<span id="cb337-29"><a href="bootstrap-paramétrico.html#cb337-29"></a>    p_corr =<span class="st"> </span><span class="kw">inv_logit</span>(pars[<span class="dv">2</span>])</span>
+<span id="cb337-30"><a href="bootstrap-paramétrico.html#cb337-30"></a>    <span class="kw">sum</span>(<span class="kw">log</span>(p_azar <span class="op">*</span><span class="st"> </span><span class="kw">dbinom</span>(x, <span class="dv">10</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">5</span>) <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p_azar) <span class="op">*</span><span class="st"> </span><span class="kw">dbinom</span>(x, <span class="dv">10</span>, p_corr)))</span>
+<span id="cb337-31"><a href="bootstrap-paramétrico.html#cb337-31"></a>  }  </span>
+<span id="cb337-32"><a href="bootstrap-paramétrico.html#cb337-32"></a>  log_p</span>
+<span id="cb337-33"><a href="bootstrap-paramétrico.html#cb337-33"></a>}</span>
+<span id="cb337-34"><a href="bootstrap-paramétrico.html#cb337-34"></a><span class="co"># simular datos</span></span>
+<span id="cb337-35"><a href="bootstrap-paramétrico.html#cb337-35"></a><span class="kw">set.seed</span>(<span class="dv">12</span>)</span>
+<span id="cb337-36"><a href="bootstrap-paramétrico.html#cb337-36"></a>muestra &lt;-<span class="st"> </span><span class="kw">simular_modelo</span>(<span class="dv">200</span>, <span class="dt">params =</span> <span class="kw">logit</span>(<span class="kw">c</span>(<span class="fl">0.3</span>, <span class="fl">0.29</span>)))</span>
+<span id="cb337-37"><a href="bootstrap-paramétrico.html#cb337-37"></a><span class="kw">qplot</span>(muestra)</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb339"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb339-1"><a href="bootstrap-paramétrico.html#cb339-1"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
-<span id="cb339-2"><a href="bootstrap-paramétrico.html#cb339-2"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
-<span id="cb339-3"><a href="bootstrap-paramétrico.html#cb339-3"></a>res<span class="op">$</span>convergence</span></code></pre></div>
+<div class="sourceCode" id="cb338"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb338-1"><a href="bootstrap-paramétrico.html#cb338-1"></a>log_p &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra)</span>
+<span id="cb338-2"><a href="bootstrap-paramétrico.html#cb338-2"></a>res &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), log_p, <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb338-3"><a href="bootstrap-paramétrico.html#cb338-3"></a>res<span class="op">$</span>convergence</span></code></pre></div>
 <pre><code>## [1] 0</code></pre>
-<div class="sourceCode" id="cb341"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb341-1"><a href="bootstrap-paramétrico.html#cb341-1"></a>est_mle &lt;-<span class="st"> </span>res<span class="op">$</span>par</span>
-<span id="cb341-2"><a href="bootstrap-paramétrico.html#cb341-2"></a><span class="kw">names</span>(est_mle) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;p_azar_logit&quot;</span>, <span class="st">&quot;p_corr_logit&quot;</span>)</span>
-<span id="cb341-3"><a href="bootstrap-paramétrico.html#cb341-3"></a>est_mle</span></code></pre></div>
+<div class="sourceCode" id="cb340"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb340-1"><a href="bootstrap-paramétrico.html#cb340-1"></a>est_mle &lt;-<span class="st"> </span>res<span class="op">$</span>par</span>
+<span id="cb340-2"><a href="bootstrap-paramétrico.html#cb340-2"></a><span class="kw">names</span>(est_mle) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;p_azar_logit&quot;</span>, <span class="st">&quot;p_corr_logit&quot;</span>)</span>
+<span id="cb340-3"><a href="bootstrap-paramétrico.html#cb340-3"></a>est_mle</span></code></pre></div>
 <pre><code>## p_azar_logit p_corr_logit 
 ##   -0.0343061   -0.7474912</code></pre>
-<div class="sourceCode" id="cb343"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb343-1"><a href="bootstrap-paramétrico.html#cb343-1"></a>probs_mle &lt;-<span class="st"> </span><span class="kw">inv_logit</span>(est_mle)</span>
-<span id="cb343-2"><a href="bootstrap-paramétrico.html#cb343-2"></a><span class="kw">names</span>(probs_mle) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;p_azar&quot;</span>, <span class="st">&quot;p_corr&quot;</span>)</span>
-<span id="cb343-3"><a href="bootstrap-paramétrico.html#cb343-3"></a>probs_mle</span></code></pre></div>
+<div class="sourceCode" id="cb342"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb342-1"><a href="bootstrap-paramétrico.html#cb342-1"></a>probs_mle &lt;-<span class="st"> </span><span class="kw">inv_logit</span>(est_mle)</span>
+<span id="cb342-2"><a href="bootstrap-paramétrico.html#cb342-2"></a><span class="kw">names</span>(probs_mle) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;p_azar&quot;</span>, <span class="st">&quot;p_corr&quot;</span>)</span>
+<span id="cb342-3"><a href="bootstrap-paramétrico.html#cb342-3"></a>probs_mle</span></code></pre></div>
 <pre><code>##    p_azar    p_corr 
 ## 0.4914243 0.3213682</code></pre>
 <p>En primer lugar, parece ser que nuestras estimaciones son menos precias. Vamos
 a hacer <em>bootstrap</em> paramétrico:</p>
-<div class="sourceCode" id="cb345"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb345-1"><a href="bootstrap-paramétrico.html#cb345-1"></a>rep_boot &lt;-<span class="st"> </span><span class="cf">function</span>(rep, simular, crear_log_p, pars, n){</span>
-<span id="cb345-2"><a href="bootstrap-paramétrico.html#cb345-2"></a>  muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular</span>(n, pars)</span>
-<span id="cb345-3"><a href="bootstrap-paramétrico.html#cb345-3"></a>  log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
-<span id="cb345-4"><a href="bootstrap-paramétrico.html#cb345-4"></a>  <span class="co"># optimizamos</span></span>
-<span id="cb345-5"><a href="bootstrap-paramétrico.html#cb345-5"></a>  res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), log_p_boot, </span>
-<span id="cb345-6"><a href="bootstrap-paramétrico.html#cb345-6"></a>    <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
-<span id="cb345-7"><a href="bootstrap-paramétrico.html#cb345-7"></a>  <span class="kw">try</span>(<span class="cf">if</span>(res_boot<span class="op">$</span>convergence <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">stop</span>(<span class="st">&quot;No se alcanzó convergencia.&quot;</span>))</span>
-<span id="cb345-8"><a href="bootstrap-paramétrico.html#cb345-8"></a>  est_mle_boot &lt;-<span class="st"> </span>res_boot<span class="op">$</span>par </span>
-<span id="cb345-9"><a href="bootstrap-paramétrico.html#cb345-9"></a>  <span class="kw">names</span>(est_mle_boot) &lt;-<span class="st"> </span><span class="kw">names</span>(pars)</span>
-<span id="cb345-10"><a href="bootstrap-paramétrico.html#cb345-10"></a>  est_mle_boot[<span class="st">&quot;rep&quot;</span>] &lt;-<span class="st"> </span>rep</span>
-<span id="cb345-11"><a href="bootstrap-paramétrico.html#cb345-11"></a>  est_mle_boot[<span class="st">&quot;convergence&quot;</span>] &lt;-<span class="st"> </span>res_boot<span class="op">$</span>convergence</span>
-<span id="cb345-12"><a href="bootstrap-paramétrico.html#cb345-12"></a>  est_mle_boot</span>
-<span id="cb345-13"><a href="bootstrap-paramétrico.html#cb345-13"></a>}</span>
-<span id="cb345-14"><a href="bootstrap-paramétrico.html#cb345-14"></a><span class="kw">set.seed</span>(<span class="dv">8934</span>)</span>
-<span id="cb345-15"><a href="bootstrap-paramétrico.html#cb345-15"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, simular_modelo, crear_log_p, est_mle, </span>
-<span id="cb345-16"><a href="bootstrap-paramétrico.html#cb345-16"></a>                                   <span class="dt">n =</span> <span class="kw">length</span>(muestra))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb345-17"><a href="bootstrap-paramétrico.html#cb345-17"></a><span class="st">  </span>bind_rows</span>
-<span id="cb345-18"><a href="bootstrap-paramétrico.html#cb345-18"></a>reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), round, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
+<div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="bootstrap-paramétrico.html#cb344-1"></a>rep_boot &lt;-<span class="st"> </span><span class="cf">function</span>(rep, simular, crear_log_p, pars, n){</span>
+<span id="cb344-2"><a href="bootstrap-paramétrico.html#cb344-2"></a>  muestra_bootstrap &lt;-<span class="st"> </span><span class="kw">simular</span>(n, pars)</span>
+<span id="cb344-3"><a href="bootstrap-paramétrico.html#cb344-3"></a>  log_p_boot &lt;-<span class="st"> </span><span class="kw">crear_log_p</span>(muestra_bootstrap)</span>
+<span id="cb344-4"><a href="bootstrap-paramétrico.html#cb344-4"></a>  <span class="co"># optimizamos</span></span>
+<span id="cb344-5"><a href="bootstrap-paramétrico.html#cb344-5"></a>  res_boot &lt;-<span class="st"> </span><span class="kw">optim</span>(<span class="kw">c</span>(<span class="fl">0.0</span>, <span class="fl">0.0</span>), log_p_boot, </span>
+<span id="cb344-6"><a href="bootstrap-paramétrico.html#cb344-6"></a>    <span class="dt">control =</span> <span class="kw">list</span>(<span class="dt">fnscale =</span> <span class="dv">-1</span>))</span>
+<span id="cb344-7"><a href="bootstrap-paramétrico.html#cb344-7"></a>  <span class="kw">try</span>(<span class="cf">if</span>(res_boot<span class="op">$</span>convergence <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>) <span class="kw">stop</span>(<span class="st">&quot;No se alcanzó convergencia.&quot;</span>))</span>
+<span id="cb344-8"><a href="bootstrap-paramétrico.html#cb344-8"></a>  est_mle_boot &lt;-<span class="st"> </span>res_boot<span class="op">$</span>par </span>
+<span id="cb344-9"><a href="bootstrap-paramétrico.html#cb344-9"></a>  <span class="kw">names</span>(est_mle_boot) &lt;-<span class="st"> </span><span class="kw">names</span>(pars)</span>
+<span id="cb344-10"><a href="bootstrap-paramétrico.html#cb344-10"></a>  est_mle_boot[<span class="st">&quot;rep&quot;</span>] &lt;-<span class="st"> </span>rep</span>
+<span id="cb344-11"><a href="bootstrap-paramétrico.html#cb344-11"></a>  est_mle_boot[<span class="st">&quot;convergence&quot;</span>] &lt;-<span class="st"> </span>res_boot<span class="op">$</span>convergence</span>
+<span id="cb344-12"><a href="bootstrap-paramétrico.html#cb344-12"></a>  est_mle_boot</span>
+<span id="cb344-13"><a href="bootstrap-paramétrico.html#cb344-13"></a>}</span>
+<span id="cb344-14"><a href="bootstrap-paramétrico.html#cb344-14"></a><span class="kw">set.seed</span>(<span class="dv">8934</span>)</span>
+<span id="cb344-15"><a href="bootstrap-paramétrico.html#cb344-15"></a>reps_boot &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">500</span>, <span class="op">~</span><span class="st"> </span><span class="kw">rep_boot</span>(.x, simular_modelo, crear_log_p, est_mle, </span>
+<span id="cb344-16"><a href="bootstrap-paramétrico.html#cb344-16"></a>                                   <span class="dt">n =</span> <span class="kw">length</span>(muestra))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb344-17"><a href="bootstrap-paramétrico.html#cb344-17"></a><span class="st">  </span>bind_rows</span>
+<span id="cb344-18"><a href="bootstrap-paramétrico.html#cb344-18"></a>reps_boot <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">everything</span>(), round, <span class="dv">2</span>)) <span class="op">%&gt;%</span><span class="st"> </span>head</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   p_azar_logit p_corr_logit   rep convergence
 ##          &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
@@ -794,11 +812,11 @@ a hacer <em>bootstrap</em> paramétrico:</p>
 ## 5         0.36        -0.55     5           0
 ## 6         0.74        -0.61     6           0</code></pre>
 <p>El optimizador encontró resultados que no tienen sentido:</p>
-<div class="sourceCode" id="cb347"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb347-1"><a href="bootstrap-paramétrico.html#cb347-1"></a><span class="kw">ggplot</span>(reps_boot, </span>
-<span id="cb347-2"><a href="bootstrap-paramétrico.html#cb347-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">inv_logit</span>(p_azar_logit), <span class="dt">y =</span> <span class="kw">inv_logit</span>(p_corr_logit), </span>
-<span id="cb347-3"><a href="bootstrap-paramétrico.html#cb347-3"></a>           <span class="dt">colour =</span> <span class="kw">factor</span>(convergence))) <span class="op">+</span></span>
-<span id="cb347-4"><a href="bootstrap-paramétrico.html#cb347-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb347-5"><a href="bootstrap-paramétrico.html#cb347-5"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;p_azar&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;p_corr&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="bootstrap-paramétrico.html#cb346-1"></a><span class="kw">ggplot</span>(reps_boot, </span>
+<span id="cb346-2"><a href="bootstrap-paramétrico.html#cb346-2"></a>       <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">inv_logit</span>(p_azar_logit), <span class="dt">y =</span> <span class="kw">inv_logit</span>(p_corr_logit), </span>
+<span id="cb346-3"><a href="bootstrap-paramétrico.html#cb346-3"></a>           <span class="dt">colour =</span> <span class="kw">factor</span>(convergence))) <span class="op">+</span></span>
+<span id="cb346-4"><a href="bootstrap-paramétrico.html#cb346-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb346-5"><a href="bootstrap-paramétrico.html#cb346-5"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;p_azar&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;p_corr&quot;</span>)</span></code></pre></div>
 <p><img src="10-bootstrap-parametrico_files/figure-html/unnamed-chunk-27-1.png" width="480" style="display: block; margin: auto;" />
 Y notamos un problema grave: Tenemos mucha variación en nuestros estimadores,
 y la correlación entre las estimaciones es alta. Esto deberíamos haberlo esperado,

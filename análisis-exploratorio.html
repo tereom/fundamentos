@@ -327,6 +327,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="introducción-a-inferencia-bayesiana-1.html"><a href="introducción-a-inferencia-bayesiana-1.html#ejemplo-posterior-predictiva-de-pareto-uniforme."><i class="fa fa-check"></i>Ejemplo: posterior predictiva de Pareto-Uniforme.</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="12" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html"><i class="fa fa-check"></i><b>12</b> Calibración bayesiana y Regularización</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#enfoque-bayesiano-y-frecuentista"><i class="fa fa-check"></i>Enfoque bayesiano y frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-una-proporción"><i class="fa fa-check"></i>Ejemplo: estimación de una proporción</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#intervalos-de-agresti-coull"><i class="fa fa-check"></i>Intervalos de Agresti-Coull</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#incorporando-información-inicial"><i class="fa fa-check"></i>Incorporando información inicial</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-porporción-de-hogares-de-ingresos-grandes"><i class="fa fa-check"></i>Ejemplo: porporción de hogares de ingresos grandes</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#inferencia-bayesiana-y-regularización"><i class="fa fa-check"></i>Inferencia bayesiana y regularización</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-modelo-normal-y-estaturas"><i class="fa fa-check"></i>Ejemplo: modelo normal y estaturas</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-estimación-de-proporciones"><i class="fa fa-check"></i>Ejemplo: estimación de proporciones</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#teoría-de-decisión"><i class="fa fa-check"></i>Teoría de decisión</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-frecuentista"><i class="fa fa-check"></i>Ejemplo: riesgo frecuentista</a></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-riesgo-posterior"><i class="fa fa-check"></i>Ejemplo: riesgo posterior</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#riesgo-de-bayes"><i class="fa fa-check"></i>Riesgo de Bayes</a><ul>
+<li class="chapter" data-level="" data-path="calibración-bayesiana-y-regularización.html"><a href="calibración-bayesiana-y-regularización.html#ejemplo-15"><i class="fa fa-check"></i>Ejemplo</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html"><i class="fa fa-check"></i>Tareas</a><ul>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#anáslisis-exploratorio"><i class="fa fa-check"></i>1. Anáslisis Exploratorio</a></li>
 <li class="chapter" data-level="" data-path="tareas.html"><a href="tareas.html#loess-1"><i class="fa fa-check"></i>2. Loess</a><ul>
@@ -430,101 +448,229 @@ cuatro días consecutivos:</p>
 <span id="cb3-20"><a href="análisis-exploratorio.html#cb3-20"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dia  =</span> <span class="kw">fct_relevel</span>(dia, <span class="kw">c</span>(<span class="st">&quot;Jue&quot;</span>, <span class="st">&quot;Vie&quot;</span>, <span class="st">&quot;Sab&quot;</span>, <span class="st">&quot;Dom&quot;</span>)))</span></code></pre></div>
 <p>Y vemos una muestra</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="análisis-exploratorio.html#cb4-1"></a><span class="kw">sample_n</span>(propinas, <span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
-<pre><code>## Warning in kableExtra::kable_styling(., latex_options = c(&quot;striped&quot;),
-## bootstrap_options = c(&quot;striped&quot;, : Please specify format in kable. kableExtra
-## can customize either HTML or LaTeX outputs. See https://haozhu233.github.io/
-## kableExtra/ for details.</code></pre>
-<table>
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
-<tr class="header">
-<th align="right">cuenta_total</th>
-<th align="right">propina</th>
-<th align="left">fumador</th>
-<th align="left">dia</th>
-<th align="left">momento</th>
-<th align="right">num_personas</th>
+<tr>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+cuenta_total
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+propina
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+fumador
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+dia
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+momento
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+num_personas
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="right">32.83</td>
-<td align="right">1.17</td>
-<td align="left">Si</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+10.59
+</td>
+<td style="text-align:right;">
+1.61
+</td>
+<td style="text-align:left;">
+Si
+</td>
+<td style="text-align:left;">
+Sab
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
-<tr class="even">
-<td align="right">16.66</td>
-<td align="right">3.40</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+10.07
+</td>
+<td style="text-align:right;">
+1.25
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Sab
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
-<tr class="odd">
-<td align="right">3.07</td>
-<td align="right">1.00</td>
-<td align="left">Si</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">1</td>
+<tr>
+<td style="text-align:right;">
+22.49
+</td>
+<td style="text-align:right;">
+3.50
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Vie
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
-<tr class="even">
-<td align="right">9.55</td>
-<td align="right">1.45</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+12.66
+</td>
+<td style="text-align:right;">
+2.50
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Dom
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
-<tr class="odd">
-<td align="right">20.69</td>
-<td align="right">5.00</td>
-<td align="left">No</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">5</td>
+<tr>
+<td style="text-align:right;">
+14.78
+</td>
+<td style="text-align:right;">
+3.23
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Dom
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
-<tr class="even">
-<td align="right">25.21</td>
-<td align="right">4.29</td>
-<td align="left">Si</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+13.13
+</td>
+<td style="text-align:right;">
+2.00
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Dom
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
-<tr class="odd">
-<td align="right">15.77</td>
-<td align="right">2.23</td>
-<td align="left">No</td>
-<td align="left">Sab</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+25.56
+</td>
+<td style="text-align:right;">
+4.34
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Dom
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+4
+</td>
 </tr>
-<tr class="even">
-<td align="right">9.68</td>
-<td align="right">1.32</td>
-<td align="left">No</td>
-<td align="left">Dom</td>
-<td align="left">Cena</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+10.07
+</td>
+<td style="text-align:right;">
+1.83
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Jue
+</td>
+<td style="text-align:left;">
+Comida
+</td>
+<td style="text-align:right;">
+1
+</td>
 </tr>
-<tr class="odd">
-<td align="right">12.43</td>
-<td align="right">1.80</td>
-<td align="left">No</td>
-<td align="left">Jue</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+16.97
+</td>
+<td style="text-align:right;">
+3.50
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Dom
+</td>
+<td style="text-align:left;">
+Cena
+</td>
+<td style="text-align:right;">
+3
+</td>
 </tr>
-<tr class="even">
-<td align="right">16.27</td>
-<td align="right">2.50</td>
-<td align="left">Si</td>
-<td align="left">Vie</td>
-<td align="left">Comida</td>
-<td align="right">2</td>
+<tr>
+<td style="text-align:right;">
+18.28
+</td>
+<td style="text-align:right;">
+4.00
+</td>
+<td style="text-align:left;">
+No
+</td>
+<td style="text-align:left;">
+Jue
+</td>
+<td style="text-align:left;">
+Comida
+</td>
+<td style="text-align:right;">
+2
+</td>
 </tr>
 </tbody>
 </table>
@@ -555,11 +701,11 @@ En general la colección de datos no está ordenada por sus valores. Esto es deb
 \end{align}\]</span></span>
 </p>
 </div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="análisis-exploratorio.html#cb6-1"></a>propinas &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span></span>
-<span id="cb6-2"><a href="análisis-exploratorio.html#cb6-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orden_cuenta =</span> <span class="kw">rank</span>(cuenta_total, <span class="dt">ties.method =</span> <span class="st">&quot;first&quot;</span>),</span>
-<span id="cb6-3"><a href="análisis-exploratorio.html#cb6-3"></a>         <span class="dt">f =</span> (orden_cuenta <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())</span>
-<span id="cb6-4"><a href="análisis-exploratorio.html#cb6-4"></a>cuenta &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(orden_cuenta, f, cuenta_total) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(f)</span>
-<span id="cb6-5"><a href="análisis-exploratorio.html#cb6-5"></a><span class="kw">bind_rows</span>(<span class="kw">head</span>(cuenta), <span class="kw">tail</span>(cuenta)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="análisis-exploratorio.html#cb5-1"></a>propinas &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span></span>
+<span id="cb5-2"><a href="análisis-exploratorio.html#cb5-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">orden_cuenta =</span> <span class="kw">rank</span>(cuenta_total, <span class="dt">ties.method =</span> <span class="st">&quot;first&quot;</span>),</span>
+<span id="cb5-3"><a href="análisis-exploratorio.html#cb5-3"></a>         <span class="dt">f =</span> (orden_cuenta <span class="op">-</span><span class="st"> </span><span class="fl">0.5</span>) <span class="op">/</span><span class="st"> </span><span class="kw">n</span>())</span>
+<span id="cb5-4"><a href="análisis-exploratorio.html#cb5-4"></a>cuenta &lt;-<span class="st"> </span>propinas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(orden_cuenta, f, cuenta_total) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">arrange</span>(f)</span>
+<span id="cb5-5"><a href="análisis-exploratorio.html#cb5-5"></a><span class="kw">bind_rows</span>(<span class="kw">head</span>(cuenta), <span class="kw">tail</span>(cuenta)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -710,14 +856,14 @@ cuenta_total
 </tbody>
 </table>
 <p>También podemos graficar los datos en orden, interpolando valores consecutivos.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="análisis-exploratorio.html#cb7-1"></a>g_orden &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">y =</span> orden_cuenta, <span class="dt">x =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb7-2"><a href="análisis-exploratorio.html#cb7-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb7-3"><a href="análisis-exploratorio.html#cb7-3"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Cuenta total&quot;</span>)</span>
-<span id="cb7-4"><a href="análisis-exploratorio.html#cb7-4"></a>g_cuantiles &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">y =</span> f, <span class="dt">x =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb7-5"><a href="análisis-exploratorio.html#cb7-5"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb7-6"><a href="análisis-exploratorio.html#cb7-6"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb7-7"><a href="análisis-exploratorio.html#cb7-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;&quot;</span>)</span>
-<span id="cb7-8"><a href="análisis-exploratorio.html#cb7-8"></a>g_orden <span class="op">+</span><span class="st"> </span>g_cuantiles</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="análisis-exploratorio.html#cb6-1"></a>g_orden &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">y =</span> orden_cuenta, <span class="dt">x =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb6-2"><a href="análisis-exploratorio.html#cb6-2"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb6-3"><a href="análisis-exploratorio.html#cb6-3"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Cuenta total&quot;</span>)</span>
+<span id="cb6-4"><a href="análisis-exploratorio.html#cb6-4"></a>g_cuantiles &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">y =</span> f, <span class="dt">x =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb6-5"><a href="análisis-exploratorio.html#cb6-5"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb6-6"><a href="análisis-exploratorio.html#cb6-6"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb6-7"><a href="análisis-exploratorio.html#cb6-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;&quot;</span>)</span>
+<span id="cb6-8"><a href="análisis-exploratorio.html#cb6-8"></a>g_orden <span class="op">+</span><span class="st"> </span>g_cuantiles</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>A esta función le llamamos la <strong>función de cuantiles</strong> para la variable
 <code>cuenta_total</code>. Nos sirve para comparar directamente los distintos valores que
@@ -791,9 +937,9 @@ particiones resaltan distintos aspectos de los datos.</p>
 ¿Cómo se ve la gráfica de cuantiles de las propinas? ¿Cómo crees que esta gráfica se compara con distintos histogramas?
 </p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="análisis-exploratorio.html#cb8-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas, <span class="kw">aes</span>(<span class="dt">sample =</span> propina)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb8-2"><a href="análisis-exploratorio.html#cb8-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;propina&quot;</span>)</span>
-<span id="cb8-3"><a href="análisis-exploratorio.html#cb8-3"></a>g_<span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="análisis-exploratorio.html#cb7-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(propinas, <span class="kw">aes</span>(<span class="dt">sample =</span> propina)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="análisis-exploratorio.html#cb7-2"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;propina&quot;</span>)</span>
+<span id="cb7-3"><a href="análisis-exploratorio.html#cb7-3"></a>g_<span class="dv">1</span></span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-13-1.png" width="384" /></p>
 <p><strong>Observación</strong>. Cuando hay datos repetidos, los cuantiles tienen que interpretarse como sigue:
 el cuantil-<span class="math inline">\(f\)</span> con valor <span class="math inline">\(q\)</span> satisface que existe una proporción aproximada <span class="math inline">\(f\)</span> de los datos que están en el valor
@@ -804,9 +950,9 @@ paquetes o funciones de un mismo programa), ver <a href="http://www.maths.usyd.e
 <p>Finalmente, una gráfica más compacta que resume la gráfica de cuantiles o el
 histograma es el <strong>diagrama de caja y brazos</strong>. Mostramos dos versiones, la
 clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="análisis-exploratorio.html#cb9-1"></a><span class="kw">library</span>(ggthemes)</span>
-<span id="cb9-2"><a href="análisis-exploratorio.html#cb9-2"></a>cuartiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(cuenta<span class="op">$</span>cuenta_total)</span>
-<span id="cb9-3"><a href="análisis-exploratorio.html#cb9-3"></a><span class="kw">t</span>(cuartiles) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="análisis-exploratorio.html#cb8-1"></a><span class="kw">library</span>(ggthemes)</span>
+<span id="cb8-2"><a href="análisis-exploratorio.html#cb8-2"></a>cuartiles &lt;-<span class="st"> </span><span class="kw">quantile</span>(cuenta<span class="op">$</span>cuenta_total)</span>
+<span id="cb8-3"><a href="análisis-exploratorio.html#cb8-3"></a><span class="kw">t</span>(cuartiles) <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -847,26 +993,26 @@ clásica de Tukey (T) y otra versión menos común de Spear/Tufte (ST):</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="análisis-exploratorio.html#cb10-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> f, <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb10-2"><a href="análisis-exploratorio.html#cb10-2"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles: Cuenta total&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-3"><a href="análisis-exploratorio.html#cb10-3"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> cuartiles[<span class="dv">2</span>], <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-4"><a href="análisis-exploratorio.html#cb10-4"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> cuartiles[<span class="dv">3</span>], <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-5"><a href="análisis-exploratorio.html#cb10-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> cuartiles[<span class="dv">4</span>], <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
-<span id="cb10-6"><a href="análisis-exploratorio.html#cb10-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</span>
-<span id="cb10-7"><a href="análisis-exploratorio.html#cb10-7"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;ST&quot;</span>, <span class="dt">levels =</span><span class="kw">c</span>(<span class="st">&quot;ST&quot;</span>)), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb10-8"><a href="análisis-exploratorio.html#cb10-8"></a><span class="st">  </span><span class="kw">geom_tufteboxplot</span>() <span class="op">+</span></span>
-<span id="cb10-9"><a href="análisis-exploratorio.html#cb10-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
-<span id="cb10-10"><a href="análisis-exploratorio.html#cb10-10"></a>g_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;T&quot;</span>), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb10-11"><a href="análisis-exploratorio.html#cb10-11"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
-<span id="cb10-12"><a href="análisis-exploratorio.html#cb10-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
-<span id="cb10-13"><a href="análisis-exploratorio.html#cb10-13"></a>g_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;P&quot;</span>), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb10-14"><a href="análisis-exploratorio.html#cb10-14"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">height =</span> <span class="dv">0</span>, <span class="dt">width =</span><span class="fl">0.2</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
-<span id="cb10-15"><a href="análisis-exploratorio.html#cb10-15"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
-<span id="cb10-16"><a href="análisis-exploratorio.html#cb10-16"></a>g_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;V&quot;</span>), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
-<span id="cb10-17"><a href="análisis-exploratorio.html#cb10-17"></a><span class="st">  </span><span class="kw">geom_violin</span>() <span class="op">+</span></span>
-<span id="cb10-18"><a href="análisis-exploratorio.html#cb10-18"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
-<span id="cb10-19"><a href="análisis-exploratorio.html#cb10-19"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">4</span> <span class="op">+</span></span>
-<span id="cb10-20"><a href="análisis-exploratorio.html#cb10-20"></a><span class="st">  </span><span class="kw">plot_layout</span>(<span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="análisis-exploratorio.html#cb9-1"></a>g_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> f, <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb9-2"><a href="análisis-exploratorio.html#cb9-2"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Gráfica de cuantiles: Cuenta total&quot;</span>) <span class="op">+</span></span>
+<span id="cb9-3"><a href="análisis-exploratorio.html#cb9-3"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> cuartiles[<span class="dv">2</span>], <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
+<span id="cb9-4"><a href="análisis-exploratorio.html#cb9-4"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> cuartiles[<span class="dv">3</span>], <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
+<span id="cb9-5"><a href="análisis-exploratorio.html#cb9-5"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> cuartiles[<span class="dv">4</span>], <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>) <span class="op">+</span></span>
+<span id="cb9-6"><a href="análisis-exploratorio.html#cb9-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</span>
+<span id="cb9-7"><a href="análisis-exploratorio.html#cb9-7"></a>g_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;ST&quot;</span>, <span class="dt">levels =</span><span class="kw">c</span>(<span class="st">&quot;ST&quot;</span>)), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb9-8"><a href="análisis-exploratorio.html#cb9-8"></a><span class="st">  </span><span class="kw">geom_tufteboxplot</span>() <span class="op">+</span></span>
+<span id="cb9-9"><a href="análisis-exploratorio.html#cb9-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-10"><a href="análisis-exploratorio.html#cb9-10"></a>g_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;T&quot;</span>), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb9-11"><a href="análisis-exploratorio.html#cb9-11"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
+<span id="cb9-12"><a href="análisis-exploratorio.html#cb9-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-13"><a href="análisis-exploratorio.html#cb9-13"></a>g_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;P&quot;</span>), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb9-14"><a href="análisis-exploratorio.html#cb9-14"></a><span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">height =</span> <span class="dv">0</span>, <span class="dt">width =</span><span class="fl">0.2</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>) <span class="op">+</span></span>
+<span id="cb9-15"><a href="análisis-exploratorio.html#cb9-15"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-16"><a href="análisis-exploratorio.html#cb9-16"></a>g_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">ggplot</span>(cuenta, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">factor</span>(<span class="st">&quot;V&quot;</span>), <span class="dt">y =</span> cuenta_total)) <span class="op">+</span></span>
+<span id="cb9-17"><a href="análisis-exploratorio.html#cb9-17"></a><span class="st">  </span><span class="kw">geom_violin</span>() <span class="op">+</span></span>
+<span id="cb9-18"><a href="análisis-exploratorio.html#cb9-18"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot; &quot;</span>) <span class="op">+</span><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">ylab</span>(<span class="st">&quot;&quot;</span>)</span>
+<span id="cb9-19"><a href="análisis-exploratorio.html#cb9-19"></a>g_<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">2</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>g_<span class="dv">4</span> <span class="op">+</span></span>
+<span id="cb9-20"><a href="análisis-exploratorio.html#cb9-20"></a><span class="st">  </span><span class="kw">plot_layout</span>(<span class="dt">widths =</span> <span class="kw">c</span>(<span class="dv">8</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
 <div class="cols">
 <div class="col">
@@ -958,7 +1104,7 @@ En particular nos interesa entender la variación del precio de las casas.</p>
 <p>Por este motivo calculamos los cuantiles que corresponden al 25%, 50% y 75%
 (<strong>cuartiles</strong>), así como el mínimo y máximo de los precios de
 las casas:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="análisis-exploratorio.html#cb11-1"></a><span class="kw">quantile</span>(casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(precio_miles))</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="análisis-exploratorio.html#cb10-1"></a><span class="kw">quantile</span>(casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(precio_miles))</span></code></pre></div>
 <pre><code>##    0%   25%   50%   75%  100% 
 ##  37.9 132.0 165.0 215.0 755.0</code></pre>
 <div class="ejercicio">
@@ -970,36 +1116,36 @@ Comprueba que el mínimo y máximo están asociados a los cuantiles 0% y 100%, r
 zona de la ciudad en que se encuentra una vivienda. Podemos usar diagramas de
 caja y brazos para hacer una <strong>comparación burda</strong> de los precios en distintas
 zonas de la ciudad:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="análisis-exploratorio.html#cb13-1"></a><span class="kw">ggplot</span>(casas, <span class="kw">aes</span>(<span class="dt">x =</span> nombre_zona, <span class="dt">y =</span> precio_miles)) <span class="op">+</span></span>
-<span id="cb13-2"><a href="análisis-exploratorio.html#cb13-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
-<span id="cb13-3"><a href="análisis-exploratorio.html#cb13-3"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="análisis-exploratorio.html#cb12-1"></a><span class="kw">ggplot</span>(casas, <span class="kw">aes</span>(<span class="dt">x =</span> nombre_zona, <span class="dt">y =</span> precio_miles)) <span class="op">+</span></span>
+<span id="cb12-2"><a href="análisis-exploratorio.html#cb12-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
+<span id="cb12-3"><a href="análisis-exploratorio.html#cb12-3"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>La primera pregunta que nos hacemos es cómo pueden variar las características de
 las casas dentro de cada zona. Para esto, podemos considerar el área de las
 casas. En lugar de graficar el precio, graficamos el precio por metro cuadrado,
 por ejemplo:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="análisis-exploratorio.html#cb14-1"></a><span class="kw">ggplot</span>(casas, <span class="kw">aes</span>(<span class="dt">x =</span> nombre_zona, <span class="dt">y =</span> precio_m2)) <span class="op">+</span></span>
-<span id="cb14-2"><a href="análisis-exploratorio.html#cb14-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
-<span id="cb14-3"><a href="análisis-exploratorio.html#cb14-3"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="análisis-exploratorio.html#cb13-1"></a><span class="kw">ggplot</span>(casas, <span class="kw">aes</span>(<span class="dt">x =</span> nombre_zona, <span class="dt">y =</span> precio_m2)) <span class="op">+</span></span>
+<span id="cb13-2"><a href="análisis-exploratorio.html#cb13-2"></a><span class="st">  </span><span class="kw">geom_boxplot</span>() <span class="op">+</span></span>
+<span id="cb13-3"><a href="análisis-exploratorio.html#cb13-3"></a><span class="st">  </span><span class="kw">coord_flip</span>()</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>Podemos cuantificar la variación que observamos de zona a zona y la variación
 que hay dentro de cada una de las zonas. Una primera aproximación es observar
 las variación del precio al calcular la mediana dentro de cada zona, y después
 cuantificar por medio de cuantiles cómo varía la mediana entre zonas:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="análisis-exploratorio.html#cb15-1"></a>casas <span class="op">%&gt;%</span></span>
-<span id="cb15-2"><a href="análisis-exploratorio.html#cb15-2"></a><span class="st">  </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
-<span id="cb15-3"><a href="análisis-exploratorio.html#cb15-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mediana_zona =</span> <span class="kw">median</span>(precio_m2), <span class="dt">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb15-4"><a href="análisis-exploratorio.html#cb15-4"></a><span class="st">  </span><span class="kw">pull</span>(mediana_zona) <span class="op">%&gt;%</span></span>
-<span id="cb15-5"><a href="análisis-exploratorio.html#cb15-5"></a><span class="st">  </span><span class="kw">quantile</span>() <span class="op">%&gt;%</span></span>
-<span id="cb15-6"><a href="análisis-exploratorio.html#cb15-6"></a><span class="st">  </span><span class="kw">round</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="análisis-exploratorio.html#cb14-1"></a>casas <span class="op">%&gt;%</span></span>
+<span id="cb14-2"><a href="análisis-exploratorio.html#cb14-2"></a><span class="st">  </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
+<span id="cb14-3"><a href="análisis-exploratorio.html#cb14-3"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mediana_zona =</span> <span class="kw">median</span>(precio_m2), <span class="dt">.groups =</span> <span class="st">&quot;drop&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb14-4"><a href="análisis-exploratorio.html#cb14-4"></a><span class="st">  </span><span class="kw">pull</span>(mediana_zona) <span class="op">%&gt;%</span></span>
+<span id="cb14-5"><a href="análisis-exploratorio.html#cb14-5"></a><span class="st">  </span><span class="kw">quantile</span>() <span class="op">%&gt;%</span></span>
+<span id="cb14-6"><a href="análisis-exploratorio.html#cb14-6"></a><span class="st">  </span><span class="kw">round</span>()</span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ##  963 1219 1298 1420 1725</code></pre>
 <p>Por otro lado, las variaciones con respecto a las medianas <strong>dentro</strong> de cada
 zona, por grupo, se resume como:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="análisis-exploratorio.html#cb17-1"></a><span class="kw">quantile</span>(casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
-<span id="cb17-2"><a href="análisis-exploratorio.html#cb17-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">residual =</span> precio_m2 <span class="op">-</span><span class="st"> </span><span class="kw">median</span>(precio_m2)) <span class="op">%&gt;%</span></span>
-<span id="cb17-3"><a href="análisis-exploratorio.html#cb17-3"></a><span class="st">  </span><span class="kw">pull</span>(residual)) <span class="op">%&gt;%</span></span>
-<span id="cb17-4"><a href="análisis-exploratorio.html#cb17-4"></a><span class="st">  </span><span class="kw">round</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="análisis-exploratorio.html#cb16-1"></a><span class="kw">quantile</span>(casas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
+<span id="cb16-2"><a href="análisis-exploratorio.html#cb16-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">residual =</span> precio_m2 <span class="op">-</span><span class="st"> </span><span class="kw">median</span>(precio_m2)) <span class="op">%&gt;%</span></span>
+<span id="cb16-3"><a href="análisis-exploratorio.html#cb16-3"></a><span class="st">  </span><span class="kw">pull</span>(residual)) <span class="op">%&gt;%</span></span>
+<span id="cb16-4"><a href="análisis-exploratorio.html#cb16-4"></a><span class="st">  </span><span class="kw">round</span>()</span></code></pre></div>
 <pre><code>##   0%  25%  50%  75% 100% 
 ## -765 -166    0  172 1314</code></pre>
 <p>Nótese que este último paso tiene sentido pues la variación dentro de las zonas,
@@ -1008,21 +1154,21 @@ hecho de manera efectiva si se hubiera utilizado el precio de las casas sin
 ajustar por su tamaño.</p>
 <p>Podemos resumir este primer análisis de varianza con un par de gráficas de
 cuantiles <span class="citation">(Cleveland <a href="#ref-cleveland93" role="doc-biblioref">1993</a>)</span>:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="análisis-exploratorio.html#cb19-1"></a>mediana &lt;-<span class="st"> </span><span class="kw">median</span>(casas<span class="op">$</span>precio_m2)</span>
-<span id="cb19-2"><a href="análisis-exploratorio.html#cb19-2"></a>resumen &lt;-<span class="st"> </span>casas <span class="op">%&gt;%</span></span>
-<span id="cb19-3"><a href="análisis-exploratorio.html#cb19-3"></a><span class="st">  </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
-<span id="cb19-4"><a href="análisis-exploratorio.html#cb19-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mediana_zona =</span> <span class="kw">median</span>(precio_m2)) <span class="op">%&gt;%</span></span>
-<span id="cb19-5"><a href="análisis-exploratorio.html#cb19-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">residual =</span> precio_m2 <span class="op">-</span><span class="st"> </span>mediana_zona) <span class="op">%&gt;%</span></span>
-<span id="cb19-6"><a href="análisis-exploratorio.html#cb19-6"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
-<span id="cb19-7"><a href="análisis-exploratorio.html#cb19-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mediana_zona =</span> mediana_zona <span class="op">-</span><span class="st"> </span>mediana) <span class="op">%&gt;%</span></span>
-<span id="cb19-8"><a href="análisis-exploratorio.html#cb19-8"></a><span class="st">  </span><span class="kw">select</span>(nombre_zona, mediana_zona, residual) <span class="op">%&gt;%</span></span>
-<span id="cb19-9"><a href="análisis-exploratorio.html#cb19-9"></a><span class="st">  </span><span class="kw">pivot_longer</span>(mediana_zona<span class="op">:</span>residual, <span class="dt">names_to =</span> <span class="st">&quot;tipo&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;valor&quot;</span>)</span>
-<span id="cb19-10"><a href="análisis-exploratorio.html#cb19-10"></a><span class="kw">ggplot</span>(resumen, <span class="kw">aes</span>(<span class="dt">sample =</span> valor)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb19-11"><a href="análisis-exploratorio.html#cb19-11"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif) <span class="op">+</span></span>
-<span id="cb19-12"><a href="análisis-exploratorio.html#cb19-12"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>tipo) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb19-13"><a href="análisis-exploratorio.html#cb19-13"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Precio por m2&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span></span>
-<span id="cb19-14"><a href="análisis-exploratorio.html#cb19-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Precio por m2 por zona&quot;</span>,</span>
-<span id="cb19-15"><a href="análisis-exploratorio.html#cb19-15"></a>       <span class="dt">caption =</span> <span class="kw">paste0</span>(<span class="st">&quot;Mediana total de &quot;</span>, <span class="kw">round</span>(mediana)))</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="análisis-exploratorio.html#cb18-1"></a>mediana &lt;-<span class="st"> </span><span class="kw">median</span>(casas<span class="op">$</span>precio_m2)</span>
+<span id="cb18-2"><a href="análisis-exploratorio.html#cb18-2"></a>resumen &lt;-<span class="st"> </span>casas <span class="op">%&gt;%</span></span>
+<span id="cb18-3"><a href="análisis-exploratorio.html#cb18-3"></a><span class="st">  </span><span class="kw">group_by</span>(nombre_zona) <span class="op">%&gt;%</span></span>
+<span id="cb18-4"><a href="análisis-exploratorio.html#cb18-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mediana_zona =</span> <span class="kw">median</span>(precio_m2)) <span class="op">%&gt;%</span></span>
+<span id="cb18-5"><a href="análisis-exploratorio.html#cb18-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">residual =</span> precio_m2 <span class="op">-</span><span class="st"> </span>mediana_zona) <span class="op">%&gt;%</span></span>
+<span id="cb18-6"><a href="análisis-exploratorio.html#cb18-6"></a><span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
+<span id="cb18-7"><a href="análisis-exploratorio.html#cb18-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">mediana_zona =</span> mediana_zona <span class="op">-</span><span class="st"> </span>mediana) <span class="op">%&gt;%</span></span>
+<span id="cb18-8"><a href="análisis-exploratorio.html#cb18-8"></a><span class="st">  </span><span class="kw">select</span>(nombre_zona, mediana_zona, residual) <span class="op">%&gt;%</span></span>
+<span id="cb18-9"><a href="análisis-exploratorio.html#cb18-9"></a><span class="st">  </span><span class="kw">pivot_longer</span>(mediana_zona<span class="op">:</span>residual, <span class="dt">names_to =</span> <span class="st">&quot;tipo&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;valor&quot;</span>)</span>
+<span id="cb18-10"><a href="análisis-exploratorio.html#cb18-10"></a><span class="kw">ggplot</span>(resumen, <span class="kw">aes</span>(<span class="dt">sample =</span> valor)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb18-11"><a href="análisis-exploratorio.html#cb18-11"></a><span class="st">  </span><span class="kw">geom_qq</span>(<span class="dt">distribution =</span> stats<span class="op">::</span>qunif) <span class="op">+</span></span>
+<span id="cb18-12"><a href="análisis-exploratorio.html#cb18-12"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>tipo) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb18-13"><a href="análisis-exploratorio.html#cb18-13"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Precio por m2&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="st">&quot;f&quot;</span>) <span class="op">+</span></span>
+<span id="cb18-14"><a href="análisis-exploratorio.html#cb18-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;Precio por m2 por zona&quot;</span>,</span>
+<span id="cb18-15"><a href="análisis-exploratorio.html#cb18-15"></a>       <span class="dt">caption =</span> <span class="kw">paste0</span>(<span class="st">&quot;Mediana total de &quot;</span>, <span class="kw">round</span>(mediana)))</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/fig-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>Vemos que la mayor parte de la variación del precio por metro cuadrado ocurre
 dentro de cada zona, una vez que controlamos por el tamaño de las casas. La
@@ -1040,13 +1186,13 @@ desentrañar qué variación del precio se debe a la zona y cuál se debe a la c
 <p>Consideremos la prueba Enlace (2011) de matemáticas para primarias. Una primera
 pregunta que alguien podría hacerse es: ¿cuáles escuelas son mejores en este
 rubro, las privadas o las públicas?</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="análisis-exploratorio.html#cb20-1"></a>enlace_tbl &lt;-<span class="st"> </span>enlace <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(tipo) <span class="op">%&gt;%</span></span>
-<span id="cb20-2"><a href="análisis-exploratorio.html#cb20-2"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">n_escuelas =</span> <span class="kw">n</span>(),</span>
-<span id="cb20-3"><a href="análisis-exploratorio.html#cb20-3"></a>              <span class="dt">cuantiles =</span> <span class="kw">list</span>(<span class="kw">cuantil</span>(mate_<span class="dv">6</span>, <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>)))) <span class="op">%&gt;%</span></span>
-<span id="cb20-4"><a href="análisis-exploratorio.html#cb20-4"></a><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">cols =</span> cuantiles) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">valor =</span> <span class="kw">round</span>(valor))</span>
-<span id="cb20-5"><a href="análisis-exploratorio.html#cb20-5"></a>enlace_tbl <span class="op">%&gt;%</span></span>
-<span id="cb20-6"><a href="análisis-exploratorio.html#cb20-6"></a><span class="st">  </span><span class="kw">spread</span>(cuantil, valor) <span class="op">%&gt;%</span></span>
-<span id="cb20-7"><a href="análisis-exploratorio.html#cb20-7"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="análisis-exploratorio.html#cb19-1"></a>enlace_tbl &lt;-<span class="st"> </span>enlace <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(tipo) <span class="op">%&gt;%</span></span>
+<span id="cb19-2"><a href="análisis-exploratorio.html#cb19-2"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">n_escuelas =</span> <span class="kw">n</span>(),</span>
+<span id="cb19-3"><a href="análisis-exploratorio.html#cb19-3"></a>              <span class="dt">cuantiles =</span> <span class="kw">list</span>(<span class="kw">cuantil</span>(mate_<span class="dv">6</span>, <span class="kw">c</span>(<span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.95</span>)))) <span class="op">%&gt;%</span></span>
+<span id="cb19-4"><a href="análisis-exploratorio.html#cb19-4"></a><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">cols =</span> cuantiles) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">valor =</span> <span class="kw">round</span>(valor))</span>
+<span id="cb19-5"><a href="análisis-exploratorio.html#cb19-5"></a>enlace_tbl <span class="op">%&gt;%</span></span>
+<span id="cb19-6"><a href="análisis-exploratorio.html#cb19-6"></a><span class="st">  </span><span class="kw">spread</span>(cuantil, valor) <span class="op">%&gt;%</span></span>
+<span id="cb19-7"><a href="análisis-exploratorio.html#cb19-7"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1194,15 +1340,15 @@ datos oficiales agregados por <code>estado</code> de Estados Unidos. Consideremo
 <code>sat</code>, que es la calificación promedio de los alumnos en cada estado
 (para 1997) y <code>expend</code>, que es el gasto en miles de dólares
 por estudiante en (1994-1995).</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="análisis-exploratorio.html#cb21-1"></a>sat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/sat.csv&quot;</span>)</span>
-<span id="cb21-2"><a href="análisis-exploratorio.html#cb21-2"></a>sat_tbl &lt;-<span class="st"> </span>sat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(state, expend, sat) <span class="op">%&gt;%</span></span>
-<span id="cb21-3"><a href="análisis-exploratorio.html#cb21-3"></a><span class="st">    </span><span class="kw">gather</span>(variable, valor, expend<span class="op">:</span>sat) <span class="op">%&gt;%</span></span>
-<span id="cb21-4"><a href="análisis-exploratorio.html#cb21-4"></a><span class="st">    </span><span class="kw">group_by</span>(variable) <span class="op">%&gt;%</span></span>
-<span id="cb21-5"><a href="análisis-exploratorio.html#cb21-5"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">cuantiles =</span> <span class="kw">list</span>(<span class="kw">cuantil</span>(valor))) <span class="op">%&gt;%</span></span>
-<span id="cb21-6"><a href="análisis-exploratorio.html#cb21-6"></a><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw">c</span>(cuantiles)) <span class="op">%&gt;%</span></span>
-<span id="cb21-7"><a href="análisis-exploratorio.html#cb21-7"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">valor =</span> <span class="kw">round</span>(valor, <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb21-8"><a href="análisis-exploratorio.html#cb21-8"></a><span class="st">    </span><span class="kw">spread</span>(cuantil, valor)</span>
-<span id="cb21-9"><a href="análisis-exploratorio.html#cb21-9"></a>sat_tbl <span class="op">%&gt;%</span><span class="st"> </span>formatear_tabla</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="análisis-exploratorio.html#cb20-1"></a>sat &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/sat.csv&quot;</span>)</span>
+<span id="cb20-2"><a href="análisis-exploratorio.html#cb20-2"></a>sat_tbl &lt;-<span class="st"> </span>sat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(state, expend, sat) <span class="op">%&gt;%</span></span>
+<span id="cb20-3"><a href="análisis-exploratorio.html#cb20-3"></a><span class="st">    </span><span class="kw">gather</span>(variable, valor, expend<span class="op">:</span>sat) <span class="op">%&gt;%</span></span>
+<span id="cb20-4"><a href="análisis-exploratorio.html#cb20-4"></a><span class="st">    </span><span class="kw">group_by</span>(variable) <span class="op">%&gt;%</span></span>
+<span id="cb20-5"><a href="análisis-exploratorio.html#cb20-5"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">cuantiles =</span> <span class="kw">list</span>(<span class="kw">cuantil</span>(valor))) <span class="op">%&gt;%</span></span>
+<span id="cb20-6"><a href="análisis-exploratorio.html#cb20-6"></a><span class="st">    </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw">c</span>(cuantiles)) <span class="op">%&gt;%</span></span>
+<span id="cb20-7"><a href="análisis-exploratorio.html#cb20-7"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">valor =</span> <span class="kw">round</span>(valor, <span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb20-8"><a href="análisis-exploratorio.html#cb20-8"></a><span class="st">    </span><span class="kw">spread</span>(cuantil, valor)</span>
+<span id="cb20-9"><a href="análisis-exploratorio.html#cb20-9"></a>sat_tbl <span class="op">%&gt;%</span><span class="st"> </span>formatear_tabla</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1276,11 +1422,11 @@ dólares) a lo largo de los estados.</p>
 <p>Ahora hacemos nuestro primer ejercico de comparación: ¿Cómo se ven las
 calificaciones para estados en distintos niveles de gasto? Podemos usar una
 gráfica de dispersión:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="análisis-exploratorio.html#cb22-1"></a><span class="kw">library</span>(ggrepel)</span>
-<span id="cb22-2"><a href="análisis-exploratorio.html#cb22-2"></a> <span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> expend, <span class="dt">y =</span> sat, <span class="dt">label =</span> state)) <span class="op">+</span></span>
-<span id="cb22-3"><a href="análisis-exploratorio.html#cb22-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>(<span class="dt">colour =</span> <span class="st">&quot;gray50&quot;</span>) <span class="op">+</span></span>
-<span id="cb22-4"><a href="análisis-exploratorio.html#cb22-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Gasto por alumno (miles de dólares)&quot;</span>) <span class="op">+</span></span>
-<span id="cb22-5"><a href="análisis-exploratorio.html#cb22-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Calificación promedio en SAT&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="análisis-exploratorio.html#cb21-1"></a><span class="kw">library</span>(ggrepel)</span>
+<span id="cb21-2"><a href="análisis-exploratorio.html#cb21-2"></a> <span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> expend, <span class="dt">y =</span> sat, <span class="dt">label =</span> state)) <span class="op">+</span></span>
+<span id="cb21-3"><a href="análisis-exploratorio.html#cb21-3"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>(<span class="dt">colour =</span> <span class="st">&quot;gray50&quot;</span>) <span class="op">+</span></span>
+<span id="cb21-4"><a href="análisis-exploratorio.html#cb21-4"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Gasto por alumno (miles de dólares)&quot;</span>) <span class="op">+</span></span>
+<span id="cb21-5"><a href="análisis-exploratorio.html#cb21-5"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Calificación promedio en SAT&quot;</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-34-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Estas comparaciones no son de alta calidad, solo estamos usando 2 variables
 —que son muy pocas— y no hay mucho que podamos decir en cuanto explicación.
@@ -1294,10 +1440,10 @@ gráfica de manera sencilla.</strong></p>
 producir diferencias de este tipo. Sin embargo, ¡descubrimos que existe una
 variable adicional! Ésta es el porcentaje de alumnos de cada estado que toma el
 SAT. Podemos agregar como sigue:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="análisis-exploratorio.html#cb23-1"></a> <span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> expend, <span class="dt">y =</span> math, <span class="dt">label=</span>state, <span class="dt">colour =</span> frac)) <span class="op">+</span></span>
-<span id="cb23-2"><a href="análisis-exploratorio.html#cb23-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>() <span class="op">+</span></span>
-<span id="cb23-3"><a href="análisis-exploratorio.html#cb23-3"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Gasto por alumno (miles de dólares)&quot;</span>) <span class="op">+</span></span>
-<span id="cb23-4"><a href="análisis-exploratorio.html#cb23-4"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Calificación en matemáticas&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="análisis-exploratorio.html#cb22-1"></a> <span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> expend, <span class="dt">y =</span> math, <span class="dt">label=</span>state, <span class="dt">colour =</span> frac)) <span class="op">+</span></span>
+<span id="cb22-2"><a href="análisis-exploratorio.html#cb22-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_text_repel</span>() <span class="op">+</span></span>
+<span id="cb22-3"><a href="análisis-exploratorio.html#cb22-3"></a><span class="st">  </span><span class="kw">xlab</span>(<span class="st">&quot;Gasto por alumno (miles de dólares)&quot;</span>) <span class="op">+</span></span>
+<span id="cb22-4"><a href="análisis-exploratorio.html#cb22-4"></a><span class="st">  </span><span class="kw">ylab</span>(<span class="st">&quot;Calificación en matemáticas&quot;</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-35-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Esto nos permite entender por qué nuestra comparación inicial es relativamente
 pobre. Los estados con mejores resultados promedio en el SAT son aquellos donde
@@ -1306,18 +1452,18 @@ es considerable.</p>
 <p>En este punto podemos hacer varias cosas. Una primera idea es intentar comparar
 estados más similares en cuanto a la población de alumnos que asiste. Podríamos
 hacer grupos como sigue:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="análisis-exploratorio.html#cb24-1"></a><span class="kw">set.seed</span>(<span class="dv">991</span>)</span>
-<span id="cb24-2"><a href="análisis-exploratorio.html#cb24-2"></a>k_medias_sat &lt;-<span class="st"> </span><span class="kw">kmeans</span>(sat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(frac), <span class="dt">centers =</span> <span class="dv">4</span>,  <span class="dt">nstart =</span> <span class="dv">100</span>, <span class="dt">iter.max =</span> <span class="dv">100</span>)</span>
-<span id="cb24-3"><a href="análisis-exploratorio.html#cb24-3"></a>sat<span class="op">$</span>clase &lt;-<span class="st"> </span>k_medias_sat<span class="op">$</span>cluster</span>
-<span id="cb24-4"><a href="análisis-exploratorio.html#cb24-4"></a>sat &lt;-<span class="st"> </span>sat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(clase) <span class="op">%&gt;%</span></span>
-<span id="cb24-5"><a href="análisis-exploratorio.html#cb24-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">clase_media =</span> <span class="kw">round</span>(<span class="kw">mean</span>(frac))) <span class="op">%&gt;%</span></span>
-<span id="cb24-6"><a href="análisis-exploratorio.html#cb24-6"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
-<span id="cb24-7"><a href="análisis-exploratorio.html#cb24-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">clase_media =</span> <span class="kw">factor</span>(clase_media))</span>
-<span id="cb24-8"><a href="análisis-exploratorio.html#cb24-8"></a>sat &lt;-<span class="st"> </span>sat <span class="op">%&gt;%</span></span>
-<span id="cb24-9"><a href="análisis-exploratorio.html#cb24-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rank_p =</span> <span class="kw">rank</span>(frac, <span class="dt">ties=</span> <span class="st">&quot;first&quot;</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(frac))</span>
-<span id="cb24-10"><a href="análisis-exploratorio.html#cb24-10"></a><span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> rank_p, <span class="dt">y =</span> frac, <span class="dt">label =</span> state,</span>
-<span id="cb24-11"><a href="análisis-exploratorio.html#cb24-11"></a>                <span class="dt">colour =</span> clase_media)) <span class="op">+</span></span>
-<span id="cb24-12"><a href="análisis-exploratorio.html#cb24-12"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="análisis-exploratorio.html#cb23-1"></a><span class="kw">set.seed</span>(<span class="dv">991</span>)</span>
+<span id="cb23-2"><a href="análisis-exploratorio.html#cb23-2"></a>k_medias_sat &lt;-<span class="st"> </span><span class="kw">kmeans</span>(sat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(frac), <span class="dt">centers =</span> <span class="dv">4</span>,  <span class="dt">nstart =</span> <span class="dv">100</span>, <span class="dt">iter.max =</span> <span class="dv">100</span>)</span>
+<span id="cb23-3"><a href="análisis-exploratorio.html#cb23-3"></a>sat<span class="op">$</span>clase &lt;-<span class="st"> </span>k_medias_sat<span class="op">$</span>cluster</span>
+<span id="cb23-4"><a href="análisis-exploratorio.html#cb23-4"></a>sat &lt;-<span class="st"> </span>sat <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(clase) <span class="op">%&gt;%</span></span>
+<span id="cb23-5"><a href="análisis-exploratorio.html#cb23-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">clase_media =</span> <span class="kw">round</span>(<span class="kw">mean</span>(frac))) <span class="op">%&gt;%</span></span>
+<span id="cb23-6"><a href="análisis-exploratorio.html#cb23-6"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
+<span id="cb23-7"><a href="análisis-exploratorio.html#cb23-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">clase_media =</span> <span class="kw">factor</span>(clase_media))</span>
+<span id="cb23-8"><a href="análisis-exploratorio.html#cb23-8"></a>sat &lt;-<span class="st"> </span>sat <span class="op">%&gt;%</span></span>
+<span id="cb23-9"><a href="análisis-exploratorio.html#cb23-9"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">rank_p =</span> <span class="kw">rank</span>(frac, <span class="dt">ties=</span> <span class="st">&quot;first&quot;</span>) <span class="op">/</span><span class="st"> </span><span class="kw">length</span>(frac))</span>
+<span id="cb23-10"><a href="análisis-exploratorio.html#cb23-10"></a><span class="kw">ggplot</span>(sat, <span class="kw">aes</span>(<span class="dt">x =</span> rank_p, <span class="dt">y =</span> frac, <span class="dt">label =</span> state,</span>
+<span id="cb23-11"><a href="análisis-exploratorio.html#cb23-11"></a>                <span class="dt">colour =</span> clase_media)) <span class="op">+</span></span>
+<span id="cb23-12"><a href="análisis-exploratorio.html#cb23-12"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">2</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-36-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Estos resultados indican que es más probable que buenos alumnos decidan hacer el
 SAT. Lo interesante es que esto ocurre de manera diferente en cada estado. Por
@@ -1330,19 +1476,19 @@ historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:</p>
 <div id="tablas-de-conteos" class="section level3 unnumbered">
 <h3>Tablas de conteos</h3>
 <p>Consideremos los siguientes datos de tomadores de té (del paquete FactoMineR <span class="citation">(Lê et al. <a href="#ref-factominer" role="doc-biblioref">2008</a>)</span>):</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="análisis-exploratorio.html#cb25-1"></a>tea &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/tea.csv&quot;</span>)</span>
-<span id="cb25-2"><a href="análisis-exploratorio.html#cb25-2"></a><span class="co"># nombres y códigos</span></span>
-<span id="cb25-3"><a href="análisis-exploratorio.html#cb25-3"></a>te &lt;-<span class="st"> </span>tea <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(how, price, sugar) <span class="op">%&gt;%</span></span>
-<span id="cb25-4"><a href="análisis-exploratorio.html#cb25-4"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">presentacion =</span> how, <span class="dt">precio =</span> price, <span class="dt">azucar =</span> sugar) <span class="op">%&gt;%</span></span>
-<span id="cb25-5"><a href="análisis-exploratorio.html#cb25-5"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
-<span id="cb25-6"><a href="análisis-exploratorio.html#cb25-6"></a>    <span class="dt">presentacion =</span> <span class="kw">fct_recode</span>(presentacion,</span>
-<span id="cb25-7"><a href="análisis-exploratorio.html#cb25-7"></a>        <span class="dt">suelto =</span> <span class="st">&quot;unpackaged&quot;</span>, <span class="dt">bolsas =</span> <span class="st">&quot;tea bag&quot;</span>, <span class="dt">mixto =</span> <span class="st">&quot;tea bag+unpackaged&quot;</span>),</span>
-<span id="cb25-8"><a href="análisis-exploratorio.html#cb25-8"></a>    <span class="dt">precio =</span> <span class="kw">fct_recode</span>(precio,</span>
-<span id="cb25-9"><a href="análisis-exploratorio.html#cb25-9"></a>        <span class="dt">marca =</span> <span class="st">&quot;p_branded&quot;</span>, <span class="dt">variable =</span> <span class="st">&quot;p_variable&quot;</span>, <span class="dt">barato =</span> <span class="st">&quot;p_cheap&quot;</span>,</span>
-<span id="cb25-10"><a href="análisis-exploratorio.html#cb25-10"></a>        <span class="dt">marca_propia =</span> <span class="st">&quot;p_private label&quot;</span>, <span class="dt">desconocido =</span> <span class="st">&quot;p_unknown&quot;</span>, <span class="dt">fino =</span> <span class="st">&quot;p_upscale&quot;</span>),</span>
-<span id="cb25-11"><a href="análisis-exploratorio.html#cb25-11"></a>    <span class="dt">azucar =</span> <span class="kw">fct_recode</span>(azucar,</span>
-<span id="cb25-12"><a href="análisis-exploratorio.html#cb25-12"></a>        sin_azúcar =<span class="st"> &quot;No.sugar&quot;</span>, con_azúcar =<span class="st"> &quot;sugar&quot;</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="análisis-exploratorio.html#cb26-1"></a><span class="kw">sample_n</span>(te, <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="análisis-exploratorio.html#cb24-1"></a>tea &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/tea.csv&quot;</span>)</span>
+<span id="cb24-2"><a href="análisis-exploratorio.html#cb24-2"></a><span class="co"># nombres y códigos</span></span>
+<span id="cb24-3"><a href="análisis-exploratorio.html#cb24-3"></a>te &lt;-<span class="st"> </span>tea <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(how, price, sugar) <span class="op">%&gt;%</span></span>
+<span id="cb24-4"><a href="análisis-exploratorio.html#cb24-4"></a><span class="st">  </span><span class="kw">rename</span>(<span class="dt">presentacion =</span> how, <span class="dt">precio =</span> price, <span class="dt">azucar =</span> sugar) <span class="op">%&gt;%</span></span>
+<span id="cb24-5"><a href="análisis-exploratorio.html#cb24-5"></a><span class="st">  </span><span class="kw">mutate</span>(</span>
+<span id="cb24-6"><a href="análisis-exploratorio.html#cb24-6"></a>    <span class="dt">presentacion =</span> <span class="kw">fct_recode</span>(presentacion,</span>
+<span id="cb24-7"><a href="análisis-exploratorio.html#cb24-7"></a>        <span class="dt">suelto =</span> <span class="st">&quot;unpackaged&quot;</span>, <span class="dt">bolsas =</span> <span class="st">&quot;tea bag&quot;</span>, <span class="dt">mixto =</span> <span class="st">&quot;tea bag+unpackaged&quot;</span>),</span>
+<span id="cb24-8"><a href="análisis-exploratorio.html#cb24-8"></a>    <span class="dt">precio =</span> <span class="kw">fct_recode</span>(precio,</span>
+<span id="cb24-9"><a href="análisis-exploratorio.html#cb24-9"></a>        <span class="dt">marca =</span> <span class="st">&quot;p_branded&quot;</span>, <span class="dt">variable =</span> <span class="st">&quot;p_variable&quot;</span>, <span class="dt">barato =</span> <span class="st">&quot;p_cheap&quot;</span>,</span>
+<span id="cb24-10"><a href="análisis-exploratorio.html#cb24-10"></a>        <span class="dt">marca_propia =</span> <span class="st">&quot;p_private label&quot;</span>, <span class="dt">desconocido =</span> <span class="st">&quot;p_unknown&quot;</span>, <span class="dt">fino =</span> <span class="st">&quot;p_upscale&quot;</span>),</span>
+<span id="cb24-11"><a href="análisis-exploratorio.html#cb24-11"></a>    <span class="dt">azucar =</span> <span class="kw">fct_recode</span>(azucar,</span>
+<span id="cb24-12"><a href="análisis-exploratorio.html#cb24-12"></a>        sin_azúcar =<span class="st"> &quot;No.sugar&quot;</span>, con_azúcar =<span class="st"> &quot;sugar&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="análisis-exploratorio.html#cb25-1"></a><span class="kw">sample_n</span>(te, <span class="dv">10</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 10 x 3
 ##    presentacion precio      azucar    
 ##    &lt;fct&gt;        &lt;fct&gt;       &lt;fct&gt;     
@@ -1358,13 +1504,13 @@ historia. Para esto, ajustemos rectas de mínimos cuadrados como referencia:</p>
 ## 10 mixto        variable    sin_azúcar</code></pre>
 <p>Nos interesa ver qué personas compran té suelto, y de qué tipo. Empezamos por
 ver las proporciones que compran té según su empaque (en bolsita o suelto):</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="análisis-exploratorio.html#cb28-1"></a>precio &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb28-2"><a href="análisis-exploratorio.html#cb28-2"></a><span class="st">  </span><span class="kw">count</span>(precio) <span class="op">%&gt;%</span></span>
-<span id="cb28-3"><a href="análisis-exploratorio.html#cb28-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
-<span id="cb28-4"><a href="análisis-exploratorio.html#cb28-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</span>
-<span id="cb28-5"><a href="análisis-exploratorio.html#cb28-5"></a>tipo &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></span>
-<span id="cb28-6"><a href="análisis-exploratorio.html#cb28-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pct =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
-<span id="cb28-7"><a href="análisis-exploratorio.html#cb28-7"></a>tipo <span class="op">%&gt;%</span><span class="st"> </span>formatear_tabla</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="análisis-exploratorio.html#cb27-1"></a>precio &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb27-2"><a href="análisis-exploratorio.html#cb27-2"></a><span class="st">  </span><span class="kw">count</span>(precio) <span class="op">%&gt;%</span></span>
+<span id="cb27-3"><a href="análisis-exploratorio.html#cb27-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
+<span id="cb27-4"><a href="análisis-exploratorio.html#cb27-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</span>
+<span id="cb27-5"><a href="análisis-exploratorio.html#cb27-5"></a>tipo &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">tally</span>() <span class="op">%&gt;%</span></span>
+<span id="cb27-6"><a href="análisis-exploratorio.html#cb27-6"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pct =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n)))</span>
+<span id="cb27-7"><a href="análisis-exploratorio.html#cb27-7"></a>tipo <span class="op">%&gt;%</span><span class="st"> </span>formatear_tabla</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1418,18 +1564,18 @@ suelto
 <p>La mayor parte de las personas toma té en bolsas. Sin embargo, el tipo de té
 (en términos de precio o marca) que compran es muy distinto dependiendo de la
 presentación:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="análisis-exploratorio.html#cb29-1"></a>tipo &lt;-<span class="st"> </span>tipo <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb29-2"><a href="análisis-exploratorio.html#cb29-2"></a><span class="st">  </span><span class="kw">select</span>(presentacion, <span class="dt">prop_presentacion =</span> pct)</span>
-<span id="cb29-3"><a href="análisis-exploratorio.html#cb29-3"></a>tabla_cruzada &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
-<span id="cb29-4"><a href="análisis-exploratorio.html#cb29-4"></a><span class="st">  </span><span class="kw">count</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
-<span id="cb29-5"><a href="análisis-exploratorio.html#cb29-5"></a><span class="st">  </span><span class="co"># porcentajes por presentación</span></span>
-<span id="cb29-6"><a href="análisis-exploratorio.html#cb29-6"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
-<span id="cb29-7"><a href="análisis-exploratorio.html#cb29-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
-<span id="cb29-8"><a href="análisis-exploratorio.html#cb29-8"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</span>
-<span id="cb29-9"><a href="análisis-exploratorio.html#cb29-9"></a>tabla_cruzada <span class="op">%&gt;%</span></span>
-<span id="cb29-10"><a href="análisis-exploratorio.html#cb29-10"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> presentacion, <span class="dt">values_from =</span> prop,</span>
-<span id="cb29-11"><a href="análisis-exploratorio.html#cb29-11"></a>              <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">prop =</span> <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb29-12"><a href="análisis-exploratorio.html#cb29-12"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="análisis-exploratorio.html#cb28-1"></a>tipo &lt;-<span class="st"> </span>tipo <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb28-2"><a href="análisis-exploratorio.html#cb28-2"></a><span class="st">  </span><span class="kw">select</span>(presentacion, <span class="dt">prop_presentacion =</span> pct)</span>
+<span id="cb28-3"><a href="análisis-exploratorio.html#cb28-3"></a>tabla_cruzada &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
+<span id="cb28-4"><a href="análisis-exploratorio.html#cb28-4"></a><span class="st">  </span><span class="kw">count</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
+<span id="cb28-5"><a href="análisis-exploratorio.html#cb28-5"></a><span class="st">  </span><span class="co"># porcentajes por presentación</span></span>
+<span id="cb28-6"><a href="análisis-exploratorio.html#cb28-6"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
+<span id="cb28-7"><a href="análisis-exploratorio.html#cb28-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> <span class="kw">round</span>(<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
+<span id="cb28-8"><a href="análisis-exploratorio.html#cb28-8"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>n)</span>
+<span id="cb28-9"><a href="análisis-exploratorio.html#cb28-9"></a>tabla_cruzada <span class="op">%&gt;%</span></span>
+<span id="cb28-10"><a href="análisis-exploratorio.html#cb28-10"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> presentacion, <span class="dt">values_from =</span> prop,</span>
+<span id="cb28-11"><a href="análisis-exploratorio.html#cb28-11"></a>              <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">prop =</span> <span class="dv">0</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb28-12"><a href="análisis-exploratorio.html#cb28-12"></a><span class="st">  </span><span class="kw">formatear_tabla</span>()</span></code></pre></div>
 <table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1537,22 +1683,22 @@ variable
 <p>Estos datos podemos examinarlos un rato y llegar a conclusiones. Notemos que el
 uso de tablas no permite mostrar claramente patrones. Tampoco por medio de
 gráficas como la siguiente:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="análisis-exploratorio.html#cb30-1"></a><span class="kw">ggplot</span>(tabla_cruzada <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span></span>
-<span id="cb30-2"><a href="análisis-exploratorio.html#cb30-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">price =</span> <span class="kw">fct_reorder</span>(precio, prop)),</span>
-<span id="cb30-3"><a href="análisis-exploratorio.html#cb30-3"></a>  <span class="kw">aes</span>(<span class="dt">x =</span> precio, <span class="dt">y =</span> prop, <span class="dt">group =</span> presentacion, <span class="dt">colour =</span> presentacion)) <span class="op">+</span></span>
-<span id="cb30-4"><a href="análisis-exploratorio.html#cb30-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="análisis-exploratorio.html#cb29-1"></a><span class="kw">ggplot</span>(tabla_cruzada <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span></span>
+<span id="cb29-2"><a href="análisis-exploratorio.html#cb29-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">price =</span> <span class="kw">fct_reorder</span>(precio, prop)),</span>
+<span id="cb29-3"><a href="análisis-exploratorio.html#cb29-3"></a>  <span class="kw">aes</span>(<span class="dt">x =</span> precio, <span class="dt">y =</span> prop, <span class="dt">group =</span> presentacion, <span class="dt">colour =</span> presentacion)) <span class="op">+</span></span>
+<span id="cb29-4"><a href="análisis-exploratorio.html#cb29-4"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-42-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>En lugar de eso, calcularemos <em>perfiles columna</em>. Esto es, comparamos cada una
 de las columnas con la columna marginal (en la tabla de tipo de estilo de té):</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="análisis-exploratorio.html#cb31-1"></a>num_grupos &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(presentacion))</span>
-<span id="cb31-2"><a href="análisis-exploratorio.html#cb31-2"></a>tabla &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
-<span id="cb31-3"><a href="análisis-exploratorio.html#cb31-3"></a><span class="st">  </span><span class="kw">count</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
-<span id="cb31-4"><a href="análisis-exploratorio.html#cb31-4"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
-<span id="cb31-5"><a href="análisis-exploratorio.html#cb31-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop_precio =</span> (<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
-<span id="cb31-6"><a href="análisis-exploratorio.html#cb31-6"></a><span class="st">  </span><span class="kw">group_by</span>(precio) <span class="op">%&gt;%</span></span>
-<span id="cb31-7"><a href="análisis-exploratorio.html#cb31-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prom_prop =</span> <span class="kw">sum</span>(prop_precio)<span class="op">/</span>num_grupos) <span class="op">%&gt;%</span></span>
-<span id="cb31-8"><a href="análisis-exploratorio.html#cb31-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(prop_precio <span class="op">/</span><span class="st"> </span>prom_prop <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb31-9"><a href="análisis-exploratorio.html#cb31-9"></a>tabla</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="análisis-exploratorio.html#cb30-1"></a>num_grupos &lt;-<span class="st"> </span><span class="kw">n_distinct</span>(te <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(presentacion))</span>
+<span id="cb30-2"><a href="análisis-exploratorio.html#cb30-2"></a>tabla &lt;-<span class="st"> </span>te <span class="op">%&gt;%</span></span>
+<span id="cb30-3"><a href="análisis-exploratorio.html#cb30-3"></a><span class="st">  </span><span class="kw">count</span>(presentacion, precio) <span class="op">%&gt;%</span></span>
+<span id="cb30-4"><a href="análisis-exploratorio.html#cb30-4"></a><span class="st">  </span><span class="kw">group_by</span>(presentacion) <span class="op">%&gt;%</span></span>
+<span id="cb30-5"><a href="análisis-exploratorio.html#cb30-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop_precio =</span> (<span class="dv">100</span> <span class="op">*</span><span class="st"> </span>n <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(n))) <span class="op">%&gt;%</span></span>
+<span id="cb30-6"><a href="análisis-exploratorio.html#cb30-6"></a><span class="st">  </span><span class="kw">group_by</span>(precio) <span class="op">%&gt;%</span></span>
+<span id="cb30-7"><a href="análisis-exploratorio.html#cb30-7"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prom_prop =</span> <span class="kw">sum</span>(prop_precio)<span class="op">/</span>num_grupos) <span class="op">%&gt;%</span></span>
+<span id="cb30-8"><a href="análisis-exploratorio.html#cb30-8"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">perfil =</span> <span class="dv">100</span> <span class="op">*</span><span class="st"> </span>(prop_precio <span class="op">/</span><span class="st"> </span>prom_prop <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))</span>
+<span id="cb30-9"><a href="análisis-exploratorio.html#cb30-9"></a>tabla</span></code></pre></div>
 <pre><code>## # A tibble: 17 x 6
 ## # Groups:   precio [6]
 ##    presentacion precio           n prop_precio prom_prop perfil
@@ -1574,30 +1720,30 @@ de las columnas con la columna marginal (en la tabla de tipo de estilo de té):<
 ## 15 suelto       marca_propia     1        2.78      5.48  -49.3
 ## 16 suelto       fino            20       55.6      28.0    98.4
 ## 17 suelto       variable         9       25        36.3   -31.1</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="análisis-exploratorio.html#cb33-1"></a>tabla_perfil &lt;-<span class="st"> </span>tabla <span class="op">%&gt;%</span></span>
-<span id="cb33-2"><a href="análisis-exploratorio.html#cb33-2"></a><span class="st">  </span><span class="kw">select</span>(presentacion, precio, perfil, <span class="dt">pct =</span> prom_prop) <span class="op">%&gt;%</span></span>
-<span id="cb33-3"><a href="análisis-exploratorio.html#cb33-3"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> presentacion, <span class="dt">values_from =</span> perfil,</span>
-<span id="cb33-4"><a href="análisis-exploratorio.html#cb33-4"></a>              <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">perfil =</span> <span class="fl">-100.0</span>))</span>
-<span id="cb33-5"><a href="análisis-exploratorio.html#cb33-5"></a>if_profile &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
-<span id="cb33-6"><a href="análisis-exploratorio.html#cb33-6"></a>  <span class="kw">any</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">&amp;</span><span class="st"> </span><span class="kw">any</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span>
-<span id="cb33-7"><a href="análisis-exploratorio.html#cb33-7"></a>}</span>
-<span id="cb33-8"><a href="análisis-exploratorio.html#cb33-8"></a>marcar &lt;-<span class="st"> </span><span class="kw">marcar_tabla_fun</span>(<span class="dv">25</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>)</span>
-<span id="cb33-9"><a href="análisis-exploratorio.html#cb33-9"></a>tab_out &lt;-<span class="st"> </span>tabla_perfil <span class="op">%&gt;%</span></span>
-<span id="cb33-10"><a href="análisis-exploratorio.html#cb33-10"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(bolsas)) <span class="op">%&gt;%</span></span>
-<span id="cb33-11"><a href="análisis-exploratorio.html#cb33-11"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
-<span id="cb33-12"><a href="análisis-exploratorio.html#cb33-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb33-13"><a href="análisis-exploratorio.html#cb33-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(if_profile), marcar)) <span class="op">%&gt;%</span></span>
-<span id="cb33-14"><a href="análisis-exploratorio.html#cb33-14"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">format_table_salida</span>(), <span class="dt">escape =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb33-15"><a href="análisis-exploratorio.html#cb33-15"></a>               <span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span></span>
-<span id="cb33-16"><a href="análisis-exploratorio.html#cb33-16"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;scale_down&quot;</span>),</span>
-<span id="cb33-17"><a href="análisis-exploratorio.html#cb33-17"></a>                            <span class="dt">bootstrap_options =</span> <span class="kw">c</span>( <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>),</span>
-<span id="cb33-18"><a href="análisis-exploratorio.html#cb33-18"></a>                            <span class="dt">full_width =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb33-19"><a href="análisis-exploratorio.html#cb33-19"></a></span>
-<span id="cb33-20"><a href="análisis-exploratorio.html#cb33-20"></a><span class="cf">if</span> (knitr<span class="op">::</span><span class="kw">is_latex_output</span>()) {</span>
-<span id="cb33-21"><a href="análisis-exploratorio.html#cb33-21"></a>  <span class="kw">gsub</span>(<span class="st">&quot;marca_propia&quot;</span>, <span class="st">&quot;marca-propia&quot;</span>, tab_out)</span>
-<span id="cb33-22"><a href="análisis-exploratorio.html#cb33-22"></a>} <span class="cf">else</span> {</span>
-<span id="cb33-23"><a href="análisis-exploratorio.html#cb33-23"></a>  tab_out</span>
-<span id="cb33-24"><a href="análisis-exploratorio.html#cb33-24"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="análisis-exploratorio.html#cb32-1"></a>tabla_perfil &lt;-<span class="st"> </span>tabla <span class="op">%&gt;%</span></span>
+<span id="cb32-2"><a href="análisis-exploratorio.html#cb32-2"></a><span class="st">  </span><span class="kw">select</span>(presentacion, precio, perfil, <span class="dt">pct =</span> prom_prop) <span class="op">%&gt;%</span></span>
+<span id="cb32-3"><a href="análisis-exploratorio.html#cb32-3"></a><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> presentacion, <span class="dt">values_from =</span> perfil,</span>
+<span id="cb32-4"><a href="análisis-exploratorio.html#cb32-4"></a>              <span class="dt">values_fill =</span> <span class="kw">list</span>(<span class="dt">perfil =</span> <span class="fl">-100.0</span>))</span>
+<span id="cb32-5"><a href="análisis-exploratorio.html#cb32-5"></a>if_profile &lt;-<span class="st"> </span><span class="cf">function</span>(x){</span>
+<span id="cb32-6"><a href="análisis-exploratorio.html#cb32-6"></a>  <span class="kw">any</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>) <span class="op">&amp;</span><span class="st"> </span><span class="kw">any</span>(x <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span>
+<span id="cb32-7"><a href="análisis-exploratorio.html#cb32-7"></a>}</span>
+<span id="cb32-8"><a href="análisis-exploratorio.html#cb32-8"></a>marcar &lt;-<span class="st"> </span><span class="kw">marcar_tabla_fun</span>(<span class="dv">25</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;black&quot;</span>)</span>
+<span id="cb32-9"><a href="análisis-exploratorio.html#cb32-9"></a>tab_out &lt;-<span class="st"> </span>tabla_perfil <span class="op">%&gt;%</span></span>
+<span id="cb32-10"><a href="análisis-exploratorio.html#cb32-10"></a><span class="st">  </span><span class="kw">arrange</span>(<span class="kw">desc</span>(bolsas)) <span class="op">%&gt;%</span></span>
+<span id="cb32-11"><a href="análisis-exploratorio.html#cb32-11"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct, <span class="kw">everything</span>()) <span class="op">%&gt;%</span></span>
+<span id="cb32-12"><a href="análisis-exploratorio.html#cb32-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(is.numeric), round)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb32-13"><a href="análisis-exploratorio.html#cb32-13"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="kw">across</span>(<span class="kw">where</span>(if_profile), marcar)) <span class="op">%&gt;%</span></span>
+<span id="cb32-14"><a href="análisis-exploratorio.html#cb32-14"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">format_table_salida</span>(), <span class="dt">escape =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb32-15"><a href="análisis-exploratorio.html#cb32-15"></a>               <span class="dt">booktabs =</span> T) <span class="op">%&gt;%</span></span>
+<span id="cb32-16"><a href="análisis-exploratorio.html#cb32-16"></a><span class="st">  </span>kableExtra<span class="op">::</span><span class="kw">kable_styling</span>(<span class="dt">latex_options =</span> <span class="kw">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;scale_down&quot;</span>),</span>
+<span id="cb32-17"><a href="análisis-exploratorio.html#cb32-17"></a>                            <span class="dt">bootstrap_options =</span> <span class="kw">c</span>( <span class="st">&quot;hover&quot;</span>, <span class="st">&quot;condensed&quot;</span>),</span>
+<span id="cb32-18"><a href="análisis-exploratorio.html#cb32-18"></a>                            <span class="dt">full_width =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb32-19"><a href="análisis-exploratorio.html#cb32-19"></a></span>
+<span id="cb32-20"><a href="análisis-exploratorio.html#cb32-20"></a><span class="cf">if</span> (knitr<span class="op">::</span><span class="kw">is_latex_output</span>()) {</span>
+<span id="cb32-21"><a href="análisis-exploratorio.html#cb32-21"></a>  <span class="kw">gsub</span>(<span class="st">&quot;marca_propia&quot;</span>, <span class="st">&quot;marca-propia&quot;</span>, tab_out)</span>
+<span id="cb32-22"><a href="análisis-exploratorio.html#cb32-22"></a>} <span class="cf">else</span> {</span>
+<span id="cb32-23"><a href="análisis-exploratorio.html#cb32-23"></a>  tab_out</span>
+<span id="cb32-24"><a href="análisis-exploratorio.html#cb32-24"></a>}</span></code></pre></div>
 <table class="table table-hover table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -1726,16 +1872,16 @@ fino
 <p>Leemos esta tabla como sigue: por ejemplo, los compradores de té suelto compran té <em>fino</em> a una
 tasa casi el doble (98%) que el promedio.</p>
 <p>También podemos graficar como:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="análisis-exploratorio.html#cb34-1"></a>tabla_graf &lt;-<span class="st"> </span>tabla_perfil <span class="op">%&gt;%</span></span>
-<span id="cb34-2"><a href="análisis-exploratorio.html#cb34-2"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
-<span id="cb34-3"><a href="análisis-exploratorio.html#cb34-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">precio =</span> <span class="kw">fct_reorder</span>(precio, bolsas)) <span class="op">%&gt;%</span></span>
-<span id="cb34-4"><a href="análisis-exploratorio.html#cb34-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct) <span class="op">%&gt;%</span></span>
-<span id="cb34-5"><a href="análisis-exploratorio.html#cb34-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span>precio, <span class="dt">names_to =</span> <span class="st">&quot;presentacion&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;perfil&quot;</span>)</span>
-<span id="cb34-6"><a href="análisis-exploratorio.html#cb34-6"></a>g_perfil &lt;-<span class="st"> </span><span class="kw">ggplot</span>(tabla_graf,</span>
-<span id="cb34-7"><a href="análisis-exploratorio.html#cb34-7"></a>  <span class="kw">aes</span>(<span class="dt">x =</span> precio, <span class="dt">xend =</span> precio, <span class="dt">y =</span> perfil, <span class="dt">yend =</span> <span class="dv">0</span>, <span class="dt">group =</span> presentacion)) <span class="op">+</span></span>
-<span id="cb34-8"><a href="análisis-exploratorio.html#cb34-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_segment</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>presentacion) <span class="op">+</span></span>
-<span id="cb34-9"><a href="análisis-exploratorio.html#cb34-9"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span> , <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()</span>
-<span id="cb34-10"><a href="análisis-exploratorio.html#cb34-10"></a>g_perfil</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="análisis-exploratorio.html#cb33-1"></a>tabla_graf &lt;-<span class="st"> </span>tabla_perfil <span class="op">%&gt;%</span></span>
+<span id="cb33-2"><a href="análisis-exploratorio.html#cb33-2"></a><span class="st">  </span>ungroup <span class="op">%&gt;%</span></span>
+<span id="cb33-3"><a href="análisis-exploratorio.html#cb33-3"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">precio =</span> <span class="kw">fct_reorder</span>(precio, bolsas)) <span class="op">%&gt;%</span></span>
+<span id="cb33-4"><a href="análisis-exploratorio.html#cb33-4"></a><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>pct) <span class="op">%&gt;%</span></span>
+<span id="cb33-5"><a href="análisis-exploratorio.html#cb33-5"></a><span class="st">  </span><span class="kw">pivot_longer</span>(<span class="dt">cols =</span> <span class="op">-</span>precio, <span class="dt">names_to =</span> <span class="st">&quot;presentacion&quot;</span>, <span class="dt">values_to =</span> <span class="st">&quot;perfil&quot;</span>)</span>
+<span id="cb33-6"><a href="análisis-exploratorio.html#cb33-6"></a>g_perfil &lt;-<span class="st"> </span><span class="kw">ggplot</span>(tabla_graf,</span>
+<span id="cb33-7"><a href="análisis-exploratorio.html#cb33-7"></a>  <span class="kw">aes</span>(<span class="dt">x =</span> precio, <span class="dt">xend =</span> precio, <span class="dt">y =</span> perfil, <span class="dt">yend =</span> <span class="dv">0</span>, <span class="dt">group =</span> presentacion)) <span class="op">+</span></span>
+<span id="cb33-8"><a href="análisis-exploratorio.html#cb33-8"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_segment</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_wrap</span>(<span class="op">~</span>presentacion) <span class="op">+</span></span>
+<span id="cb33-9"><a href="análisis-exploratorio.html#cb33-9"></a><span class="st">  </span><span class="kw">geom_hline</span>(<span class="dt">yintercept =</span> <span class="dv">0</span> , <span class="dt">colour =</span> <span class="st">&quot;gray&quot;</span>)<span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()</span>
+<span id="cb33-10"><a href="análisis-exploratorio.html#cb33-10"></a>g_perfil</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-45-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p><strong>Observación</strong>: hay dos maneras de construir la columna promedio: tomando los
 porcentajes sobre todos los datos, o promediando los porcentajes de las
@@ -1773,13 +1919,13 @@ veces podemos apreciar mejor la relación entre ellas si agregamos una curva
 <p>Los siguientes datos muestran los premios ofrecidos y las ventas totales
 de una lotería a lo largo de 53 sorteos (las unidades son cantidades de dinero
 indexadas). Graficamos en escalas logarítmicas y agregamos una curva <em>loess</em>.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="análisis-exploratorio.html#cb35-1"></a><span class="co"># cargamos los datos</span></span>
-<span id="cb35-2"><a href="análisis-exploratorio.html#cb35-2"></a><span class="kw">load</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;ventas_sorteo.Rdata&quot;</span>))</span>
-<span id="cb35-3"><a href="análisis-exploratorio.html#cb35-3"></a></span>
-<span id="cb35-4"><a href="análisis-exploratorio.html#cb35-4"></a><span class="kw">ggplot</span>(ventas.sorteo, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(premio), <span class="dt">y =</span> <span class="kw">log</span>(ventas.tot<span class="fl">.1</span>))) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb35-5"><a href="análisis-exploratorio.html#cb35-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb35-6"><a href="análisis-exploratorio.html#cb35-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
-<span id="cb35-7"><a href="análisis-exploratorio.html#cb35-7"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="análisis-exploratorio.html#cb34-1"></a><span class="co"># cargamos los datos</span></span>
+<span id="cb34-2"><a href="análisis-exploratorio.html#cb34-2"></a><span class="kw">load</span>(here<span class="op">::</span><span class="kw">here</span>(<span class="st">&quot;data&quot;</span>, <span class="st">&quot;ventas_sorteo.Rdata&quot;</span>))</span>
+<span id="cb34-3"><a href="análisis-exploratorio.html#cb34-3"></a></span>
+<span id="cb34-4"><a href="análisis-exploratorio.html#cb34-4"></a><span class="kw">ggplot</span>(ventas.sorteo, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(premio), <span class="dt">y =</span> <span class="kw">log</span>(ventas.tot<span class="fl">.1</span>))) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb34-5"><a href="análisis-exploratorio.html#cb34-5"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb34-6"><a href="análisis-exploratorio.html#cb34-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">alpha =</span> <span class="fl">0.5</span>, <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">degree =</span> <span class="dv">1</span>), </span>
+<span id="cb34-7"><a href="análisis-exploratorio.html#cb34-7"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-46-1.png" width="345.6" /></p>
 <p>El patrón no era difícil de ver en los datos originales, sin embargo, la curva
@@ -1802,14 +1948,14 @@ paramétricas de curvas a conjuntos de datos dados.</p>
 En este caso, las constantes <span class="math inline"><span class="math inline">\(a\)</span></span> y <span class="math inline"><span class="math inline">\(b\)</span></span> se pueden encontrar diferenciando esta función objetivo. Más aún, estamos ajustando una recta a los datos, pero podemos repetir el argumento con otras familias de funciones (por ejemplo cuadráticas).
 </p>
 </div>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="análisis-exploratorio.html#cb37-1"></a><span class="kw">ggplot</span>(ventas.sorteo, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(premio), <span class="dt">y =</span> <span class="kw">log</span>(ventas.tot<span class="fl">.1</span>))) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb37-2"><a href="análisis-exploratorio.html#cb37-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
-<span id="cb37-3"><a href="análisis-exploratorio.html#cb37-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="análisis-exploratorio.html#cb36-1"></a><span class="kw">ggplot</span>(ventas.sorteo, <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log</span>(premio), <span class="dt">y =</span> <span class="kw">log</span>(ventas.tot<span class="fl">.1</span>))) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb36-2"><a href="análisis-exploratorio.html#cb36-2"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></span>
+<span id="cb36-3"><a href="análisis-exploratorio.html#cb36-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span></code></pre></div>
 <pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-47-1.png" width="345.6" /></p>
 <p>Donde los parámetros <span class="math inline">\(a\)</span> y <span class="math inline">\(b\)</span> están dados por:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="análisis-exploratorio.html#cb39-1"></a>mod_lineal &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(ventas.tot<span class="fl">.1</span>) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(premio), <span class="dt">data =</span> ventas.sorteo)</span>
-<span id="cb39-2"><a href="análisis-exploratorio.html#cb39-2"></a><span class="kw">round</span>(<span class="kw">coef</span>(mod_lineal), <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="análisis-exploratorio.html#cb38-1"></a>mod_lineal &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="kw">log</span>(ventas.tot<span class="fl">.1</span>) <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(premio), <span class="dt">data =</span> ventas.sorteo)</span>
+<span id="cb38-2"><a href="análisis-exploratorio.html#cb38-2"></a><span class="kw">round</span>(<span class="kw">coef</span>(mod_lineal), <span class="dv">2</span>)</span></code></pre></div>
 <pre><code>## (Intercept) log(premio) 
 ##        4.56        0.47</code></pre>
 <p>De modo que la curva ajustada es <span class="math inline">\(\log(V) = 4.6 + 0.47 \log(P)\)</span>, o en las
@@ -1865,10 +2011,10 @@ re-escalamos a <span class="math inline">\([0,1]\)</span> haciendo corresponder 
 <p>Aplicamos el tricubo (gráfica de abajo), para encontrar los pesos de cada punto.
 Los puntos que están a una distancia mayor a <span class="math inline">\(d_q(x)\)</span> reciben un peso de cero, y
 los más cercanos un peso que depende de que tan cercanos están a <span class="math inline">\(x\)</span>.</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="análisis-exploratorio.html#cb41-1"></a>tricubo &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
-<span id="cb41-2"><a href="análisis-exploratorio.html#cb41-2"></a>  <span class="kw">ifelse</span>(<span class="kw">abs</span>(x) <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>, (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">abs</span>(x) <span class="op">^</span><span class="st"> </span><span class="dv">3</span>) <span class="op">^</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>)</span>
-<span id="cb41-3"><a href="análisis-exploratorio.html#cb41-3"></a>}</span>
-<span id="cb41-4"><a href="análisis-exploratorio.html#cb41-4"></a><span class="kw">curve</span>(tricubo, <span class="dt">from =</span> <span class="fl">-1.5</span>, <span class="dt">to =</span> <span class="fl">1.5</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="análisis-exploratorio.html#cb40-1"></a>tricubo &lt;-<span class="st"> </span><span class="cf">function</span>(x) {</span>
+<span id="cb40-2"><a href="análisis-exploratorio.html#cb40-2"></a>  <span class="kw">ifelse</span>(<span class="kw">abs</span>(x) <span class="op">&lt;</span><span class="st"> </span><span class="dv">1</span>, (<span class="dv">1</span> <span class="op">-</span><span class="st"> </span><span class="kw">abs</span>(x) <span class="op">^</span><span class="st"> </span><span class="dv">3</span>) <span class="op">^</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">0</span>)</span>
+<span id="cb40-3"><a href="análisis-exploratorio.html#cb40-3"></a>}</span>
+<span id="cb40-4"><a href="análisis-exploratorio.html#cb40-4"></a><span class="kw">curve</span>(tricubo, <span class="dt">from =</span> <span class="fl">-1.5</span>, <span class="dt">to =</span> <span class="fl">1.5</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-49-1.png" width="364.8" /></p>
 <p>Finalmente ajustamos una recta de mínimos cuadrados ponderados por los pesos
 <span class="math inline">\(w_i(x)\)</span>, es decir, minimizamos</p>
@@ -1923,18 +2069,18 @@ aspectos multivariados? ¿Qué tan bien explica o sugiere estructura, mecanismos
 causalidad?</p>
 <div id="datos-de-natalidad-para-méxico" class="section level5 unnumbered">
 <h5>Datos de natalidad para México</h5>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="análisis-exploratorio.html#cb42-1"></a><span class="kw">library</span>(lubridate)</span>
-<span id="cb42-2"><a href="análisis-exploratorio.html#cb42-2"></a><span class="kw">library</span>(ggthemes)</span>
-<span id="cb42-3"><a href="análisis-exploratorio.html#cb42-3"></a><span class="kw">theme_set</span>(<span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">14</span>))</span>
-<span id="cb42-4"><a href="análisis-exploratorio.html#cb42-4"></a>natalidad &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;./data/nacimientos/natalidad.rds&quot;</span>) <span class="op">%&gt;%</span></span>
-<span id="cb42-5"><a href="análisis-exploratorio.html#cb42-5"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dia_semana =</span> <span class="kw">weekdays</span>(fecha)) <span class="op">%&gt;%</span></span>
-<span id="cb42-6"><a href="análisis-exploratorio.html#cb42-6"></a><span class="st">    </span><span class="kw">mutate</span>(dia_añ<span class="dt">o =</span> <span class="kw">yday</span>(fecha)) <span class="op">%&gt;%</span></span>
-<span id="cb42-7"><a href="análisis-exploratorio.html#cb42-7"></a><span class="st">    </span><span class="kw">mutate</span>(añ<span class="dt">o =</span> <span class="kw">year</span>(fecha)) <span class="op">%&gt;%</span></span>
-<span id="cb42-8"><a href="análisis-exploratorio.html#cb42-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">mes =</span> <span class="kw">month</span>(fecha)) <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span></span>
-<span id="cb42-9"><a href="análisis-exploratorio.html#cb42-9"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dia_semana =</span> <span class="kw">recode</span>(dia_semana, <span class="dt">Monday =</span> <span class="st">&quot;Lunes&quot;</span>, <span class="dt">Tuesday =</span> <span class="st">&quot;Martes&quot;</span>, <span class="dt">Wednesday =</span> <span class="st">&quot;Miércoles&quot;</span>,</span>
-<span id="cb42-10"><a href="análisis-exploratorio.html#cb42-10"></a>                               <span class="dt">Thursday =</span> <span class="st">&quot;Jueves&quot;</span>, <span class="dt">Friday =</span> <span class="st">&quot;Viernes&quot;</span>, <span class="dt">Saturday =</span> <span class="st">&quot;Sábado&quot;</span>, <span class="dt">Sunday =</span> <span class="st">&quot;Domingo&quot;</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb42-11"><a href="análisis-exploratorio.html#cb42-11"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dia_semana =</span> <span class="kw">fct_relevel</span>(dia_semana, <span class="kw">c</span>(<span class="st">&quot;Lunes&quot;</span>, <span class="st">&quot;Martes&quot;</span>, <span class="st">&quot;Miércoles&quot;</span>,</span>
-<span id="cb42-12"><a href="análisis-exploratorio.html#cb42-12"></a>                                                  <span class="st">&quot;Jueves&quot;</span>, <span class="st">&quot;Viernes&quot;</span>, <span class="st">&quot;Sábado&quot;</span>, <span class="st">&quot;Domingo&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="análisis-exploratorio.html#cb41-1"></a><span class="kw">library</span>(lubridate)</span>
+<span id="cb41-2"><a href="análisis-exploratorio.html#cb41-2"></a><span class="kw">library</span>(ggthemes)</span>
+<span id="cb41-3"><a href="análisis-exploratorio.html#cb41-3"></a><span class="kw">theme_set</span>(<span class="kw">theme_minimal</span>(<span class="dt">base_size =</span> <span class="dv">14</span>))</span>
+<span id="cb41-4"><a href="análisis-exploratorio.html#cb41-4"></a>natalidad &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;./data/nacimientos/natalidad.rds&quot;</span>) <span class="op">%&gt;%</span></span>
+<span id="cb41-5"><a href="análisis-exploratorio.html#cb41-5"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dia_semana =</span> <span class="kw">weekdays</span>(fecha)) <span class="op">%&gt;%</span></span>
+<span id="cb41-6"><a href="análisis-exploratorio.html#cb41-6"></a><span class="st">    </span><span class="kw">mutate</span>(dia_añ<span class="dt">o =</span> <span class="kw">yday</span>(fecha)) <span class="op">%&gt;%</span></span>
+<span id="cb41-7"><a href="análisis-exploratorio.html#cb41-7"></a><span class="st">    </span><span class="kw">mutate</span>(añ<span class="dt">o =</span> <span class="kw">year</span>(fecha)) <span class="op">%&gt;%</span></span>
+<span id="cb41-8"><a href="análisis-exploratorio.html#cb41-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">mes =</span> <span class="kw">month</span>(fecha)) <span class="op">%&gt;%</span><span class="st"> </span>ungroup <span class="op">%&gt;%</span></span>
+<span id="cb41-9"><a href="análisis-exploratorio.html#cb41-9"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dia_semana =</span> <span class="kw">recode</span>(dia_semana, <span class="dt">Monday =</span> <span class="st">&quot;Lunes&quot;</span>, <span class="dt">Tuesday =</span> <span class="st">&quot;Martes&quot;</span>, <span class="dt">Wednesday =</span> <span class="st">&quot;Miércoles&quot;</span>,</span>
+<span id="cb41-10"><a href="análisis-exploratorio.html#cb41-10"></a>                               <span class="dt">Thursday =</span> <span class="st">&quot;Jueves&quot;</span>, <span class="dt">Friday =</span> <span class="st">&quot;Viernes&quot;</span>, <span class="dt">Saturday =</span> <span class="st">&quot;Sábado&quot;</span>, <span class="dt">Sunday =</span> <span class="st">&quot;Domingo&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb41-11"><a href="análisis-exploratorio.html#cb41-11"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">dia_semana =</span> <span class="kw">fct_relevel</span>(dia_semana, <span class="kw">c</span>(<span class="st">&quot;Lunes&quot;</span>, <span class="st">&quot;Martes&quot;</span>, <span class="st">&quot;Miércoles&quot;</span>,</span>
+<span id="cb41-12"><a href="análisis-exploratorio.html#cb41-12"></a>                                                  <span class="st">&quot;Jueves&quot;</span>, <span class="st">&quot;Viernes&quot;</span>, <span class="st">&quot;Sábado&quot;</span>, <span class="st">&quot;Domingo&quot;</span>)))</span></code></pre></div>
 <p>Consideremos los <em>datos agregados</em> del número de nacimientos (registrados) por
 día desde 1999 hasta 2016. Un primer intento podría ser hacer una gráfica de la
 serie de tiempo. Sin embargo, vemos que no es muy útil:</p>
@@ -1967,9 +2113,9 @@ y(t) = f_{t}(t) + f_{e}(t) + f_{c}(t) + \varepsilon.
 con vecindades relativamente grandes. Quizá preferiríamos suavizar menos para capturar más
 variación lenta, pero si hacemos esto en este punto empezamos a absorber parte
 de la componente anual:</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="análisis-exploratorio.html#cb43-1"></a>mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(n <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> natalidad, <span class="dt">span =</span> <span class="fl">0.2</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
-<span id="cb43-2"><a href="análisis-exploratorio.html#cb43-2"></a>datos_dia &lt;-<span class="st"> </span>natalidad <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ajuste_1 =</span> <span class="kw">fitted</span>(mod_<span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb43-3"><a href="análisis-exploratorio.html#cb43-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_1 =</span> n <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="análisis-exploratorio.html#cb42-1"></a>mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(n <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> natalidad, <span class="dt">span =</span> <span class="fl">0.2</span>, <span class="dt">degree =</span> <span class="dv">1</span>)</span>
+<span id="cb42-2"><a href="análisis-exploratorio.html#cb42-2"></a>datos_dia &lt;-<span class="st"> </span>natalidad <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ajuste_1 =</span> <span class="kw">fitted</span>(mod_<span class="dv">1</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb42-3"><a href="análisis-exploratorio.html#cb42-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_1 =</span> n <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">1</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-55-1.png" width="95%" style="display: block; margin: auto;" /></p>
 <p>Notemos que a principios de 2000 el suavizador está en niveles de alrededor de
 7000 nacimientos diarios, hacia 2015 ese número es más cercano a unos 6000.</p>
@@ -1980,9 +2126,9 @@ de la componente anual:</p>
 realizar mejores comparaciones (por ejemplo, comparar un día de 2000 y de 2015
 tendria más sentido). Ahora, ajustamos <strong>los residuales del suavizado anterior</strong>,
 pero con menos suavizamiento. Así evitamos capturar tendencia:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="análisis-exploratorio.html#cb44-1"></a>mod_anual &lt;-<span class="st"> </span><span class="kw">loess</span>(res_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> datos_dia, <span class="dt">degree =</span> <span class="dv">2</span>, <span class="dt">span =</span> <span class="fl">0.005</span>)</span>
-<span id="cb44-2"><a href="análisis-exploratorio.html#cb44-2"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ajuste_2 =</span> <span class="kw">fitted</span>(mod_anual)) <span class="op">%&gt;%</span></span>
-<span id="cb44-3"><a href="análisis-exploratorio.html#cb44-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_2 =</span> res_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="análisis-exploratorio.html#cb43-1"></a>mod_anual &lt;-<span class="st"> </span><span class="kw">loess</span>(res_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> datos_dia, <span class="dt">degree =</span> <span class="dv">2</span>, <span class="dt">span =</span> <span class="fl">0.005</span>)</span>
+<span id="cb43-2"><a href="análisis-exploratorio.html#cb43-2"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">ajuste_2 =</span> <span class="kw">fitted</span>(mod_anual)) <span class="op">%&gt;%</span></span>
+<span id="cb43-3"><a href="análisis-exploratorio.html#cb43-3"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_2 =</span> res_<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">2</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-57-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="día-de-la-semana" class="section level5 unnumbered">
@@ -1992,14 +2138,14 @@ hemos incorporado las variaciones estacionales (componente anual) de nuestra
 serie de tiempo. Ahora, veremos cómo capturar el efecto por día de la semana. En
 este caso, podemos hacer suavizamiento <em>loess</em> para cada serie de manera
 independiente</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="análisis-exploratorio.html#cb45-1"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span></span>
-<span id="cb45-2"><a href="análisis-exploratorio.html#cb45-2"></a><span class="st">    </span><span class="kw">group_by</span>(dia_semana) <span class="op">%&gt;%</span></span>
-<span id="cb45-3"><a href="análisis-exploratorio.html#cb45-3"></a><span class="st">    </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></span>
-<span id="cb45-4"><a href="análisis-exploratorio.html#cb45-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">ajuste_mod =</span></span>
-<span id="cb45-5"><a href="análisis-exploratorio.html#cb45-5"></a>      <span class="kw">map</span>(data, <span class="op">~</span><span class="st"> </span><span class="kw">loess</span>(res_<span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> .x, <span class="dt">span =</span> <span class="fl">0.1</span>, <span class="dt">degree =</span> <span class="dv">1</span>))) <span class="op">%&gt;%</span></span>
-<span id="cb45-6"><a href="análisis-exploratorio.html#cb45-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">ajuste_3 =</span>  <span class="kw">map</span>(ajuste_mod, fitted)) <span class="op">%&gt;%</span></span>
-<span id="cb45-7"><a href="análisis-exploratorio.html#cb45-7"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>ajuste_mod) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw">c</span>(data, ajuste_<span class="dv">3</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb45-8"><a href="análisis-exploratorio.html#cb45-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_3 =</span> res_<span class="dv">2</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="análisis-exploratorio.html#cb44-1"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span></span>
+<span id="cb44-2"><a href="análisis-exploratorio.html#cb44-2"></a><span class="st">    </span><span class="kw">group_by</span>(dia_semana) <span class="op">%&gt;%</span></span>
+<span id="cb44-3"><a href="análisis-exploratorio.html#cb44-3"></a><span class="st">    </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></span>
+<span id="cb44-4"><a href="análisis-exploratorio.html#cb44-4"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">ajuste_mod =</span></span>
+<span id="cb44-5"><a href="análisis-exploratorio.html#cb44-5"></a>      <span class="kw">map</span>(data, <span class="op">~</span><span class="st"> </span><span class="kw">loess</span>(res_<span class="dv">2</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> .x, <span class="dt">span =</span> <span class="fl">0.1</span>, <span class="dt">degree =</span> <span class="dv">1</span>))) <span class="op">%&gt;%</span></span>
+<span id="cb44-6"><a href="análisis-exploratorio.html#cb44-6"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">ajuste_3 =</span>  <span class="kw">map</span>(ajuste_mod, fitted)) <span class="op">%&gt;%</span></span>
+<span id="cb44-7"><a href="análisis-exploratorio.html#cb44-7"></a><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>ajuste_mod) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unnest</span>(<span class="dt">cols =</span> <span class="kw">c</span>(data, ajuste_<span class="dv">3</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb44-8"><a href="análisis-exploratorio.html#cb44-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">res_3 =</span> res_<span class="dv">2</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>ungroup</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-59-1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <div id="residuales" class="section level5 unnumbered">
@@ -2021,11 +2167,11 @@ hacer mejores estimaciones de cada componente, y es posible suavizar menos sin
 capturar <em>componentes de más alta frecuencia.</em></p>
 <p>Así que podemos regresar a la serie original para hacer mejores estimaciones,
 más suavizadas:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="análisis-exploratorio.html#cb47-1"></a><span class="co"># Quitamos componente anual y efecto de día de la semana</span></span>
-<span id="cb47-2"><a href="análisis-exploratorio.html#cb47-2"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">n_1 =</span> n <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">2</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">3</span>)</span>
-<span id="cb47-3"><a href="análisis-exploratorio.html#cb47-3"></a><span class="co"># Reajustamos</span></span>
-<span id="cb47-4"><a href="análisis-exploratorio.html#cb47-4"></a>mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(n_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> datos_dia, <span class="dt">span =</span> <span class="fl">0.02</span>, <span class="dt">degree =</span> <span class="dv">2</span>,</span>
-<span id="cb47-5"><a href="análisis-exploratorio.html#cb47-5"></a>               <span class="dt">family =</span> <span class="st">&quot;symmetric&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="análisis-exploratorio.html#cb46-1"></a><span class="co"># Quitamos componente anual y efecto de día de la semana</span></span>
+<span id="cb46-2"><a href="análisis-exploratorio.html#cb46-2"></a>datos_dia &lt;-<span class="st"> </span>datos_dia <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">n_1 =</span> n <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">2</span> <span class="op">-</span><span class="st"> </span>ajuste_<span class="dv">3</span>)</span>
+<span id="cb46-3"><a href="análisis-exploratorio.html#cb46-3"></a><span class="co"># Reajustamos</span></span>
+<span id="cb46-4"><a href="análisis-exploratorio.html#cb46-4"></a>mod_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="kw">loess</span>(n_<span class="dv">1</span> <span class="op">~</span><span class="st"> </span><span class="kw">as.numeric</span>(fecha), <span class="dt">data =</span> datos_dia, <span class="dt">span =</span> <span class="fl">0.02</span>, <span class="dt">degree =</span> <span class="dv">2</span>,</span>
+<span id="cb46-5"><a href="análisis-exploratorio.html#cb46-5"></a>               <span class="dt">family =</span> <span class="st">&quot;symmetric&quot;</span>)</span></code></pre></div>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-63-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p><img src="02-exploratorio_files/figure-html/unnamed-chunk-65-1.png" width="90%" style="display: block; margin: auto;" /></p>
 <p>Y ahora repetimos con la componente de día de la semana:</p>
@@ -2040,7 +2186,7 @@ originales.</p>
 <p>Este último paso nos permite diversas comparaciones que explican la variación que vimos en
 los datos. Una gran parte de los residuales está entre <span class="math inline">\(\pm 250\)</span> nacimientos por
 día. Sin embargo, vemos que las colas tienen una dispersión mucho mayor:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="análisis-exploratorio.html#cb48-1"></a><span class="kw">quantile</span>(datos_dia<span class="op">$</span>res_<span class="dv">6</span>, <span class="kw">c</span>(<span class="dv">00</span>, <span class="fl">.01</span>,<span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.90</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>round</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="análisis-exploratorio.html#cb47-1"></a><span class="kw">quantile</span>(datos_dia<span class="op">$</span>res_<span class="dv">6</span>, <span class="kw">c</span>(<span class="dv">00</span>, <span class="fl">.01</span>,<span class="fl">0.05</span>, <span class="fl">0.10</span>, <span class="fl">0.90</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span>, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>round</span></code></pre></div>
 <pre><code>##    0%    1%    5%   10%   90%   95%   99%  100% 
 ## -2238 -1134  -315  -202   188   268   516  2521</code></pre>
 <p>¿A qué se deben estas colas tan largas?</p>

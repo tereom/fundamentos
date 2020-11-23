@@ -78,27 +78,100 @@ Y vemos una muestra
 sample_n(propinas, 10) %>% formatear_tabla()
 ```
 
-```
-## Warning in kableExtra::kable_styling(., latex_options = c("striped"),
-## bootstrap_options = c("striped", : Please specify format in kable. kableExtra
-## can customize either HTML or LaTeX outputs. See https://haozhu233.github.io/
-## kableExtra/ for details.
-```
-
-
-
-| cuenta_total| propina|fumador |dia |momento | num_personas|
-|------------:|-------:|:-------|:---|:-------|------------:|
-|        32.83|    1.17|Si      |Sab |Cena    |            2|
-|        16.66|    3.40|No      |Jue |Comida  |            2|
-|         3.07|    1.00|Si      |Sab |Cena    |            1|
-|         9.55|    1.45|No      |Sab |Cena    |            2|
-|        20.69|    5.00|No      |Dom |Cena    |            5|
-|        25.21|    4.29|Si      |Sab |Cena    |            2|
-|        15.77|    2.23|No      |Sab |Cena    |            2|
-|         9.68|    1.32|No      |Dom |Cena    |            2|
-|        12.43|    1.80|No      |Jue |Comida  |            2|
-|        16.27|    2.50|Si      |Vie |Comida  |            2|
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> cuenta_total </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> propina </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> fumador </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> dia </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> momento </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> num_personas </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 10.59 </td>
+   <td style="text-align:right;"> 1.61 </td>
+   <td style="text-align:left;"> Si </td>
+   <td style="text-align:left;"> Sab </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 10.07 </td>
+   <td style="text-align:right;"> 1.25 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Sab </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 22.49 </td>
+   <td style="text-align:right;"> 3.50 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Vie </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 12.66 </td>
+   <td style="text-align:right;"> 2.50 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Dom </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 14.78 </td>
+   <td style="text-align:right;"> 3.23 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Dom </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 13.13 </td>
+   <td style="text-align:right;"> 2.00 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Dom </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 25.56 </td>
+   <td style="text-align:right;"> 4.34 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Dom </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 4 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 10.07 </td>
+   <td style="text-align:right;"> 1.83 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Jue </td>
+   <td style="text-align:left;"> Comida </td>
+   <td style="text-align:right;"> 1 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 16.97 </td>
+   <td style="text-align:right;"> 3.50 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Dom </td>
+   <td style="text-align:left;"> Cena </td>
+   <td style="text-align:right;"> 3 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 18.28 </td>
+   <td style="text-align:right;"> 4.00 </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Jue </td>
+   <td style="text-align:left;"> Comida </td>
+   <td style="text-align:right;"> 2 </td>
+  </tr>
+</tbody>
+</table>
 
 
 Aquí la unidad de observación es una cuenta particular. Tenemos tres mediciones

@@ -264,11 +264,27 @@ Los datos que obtuvimos en nuestra encuesta, en conteos, son:
 
 
 
-
-|sugar    | bolsa_exclusivo| suelto o bolsa|
-|:--------|---------------:|--------------:|
-|No.sugar |              81|             74|
-|sugar    |              89|             56|
+<table class="table table-striped table-hover table-condensed table-responsive" style="width: auto !important; margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> sugar </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> bolsa_exclusivo </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> suelto o bolsa </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> No.sugar </td>
+   <td style="text-align:right;"> 81 </td>
+   <td style="text-align:right;"> 74 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> sugar </td>
+   <td style="text-align:right;"> 89 </td>
+   <td style="text-align:right;"> 56 </td>
+  </tr>
+</tbody>
+</table>
 
 Y en proporciones tenemos que:
 

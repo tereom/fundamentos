@@ -244,6 +244,16 @@ Justifica las siguientes aseveraciones (para este ejemplo):
 </ul>
 </div>
 
+Puedes experimentar en esta [shiny app](https://tereom.shinyapps.io/app_bernoulli/) con diferentes iniciales, número de volados y observación de éxitos.
+
+
+```r
+knitr::include_app("https://tereom.shinyapps.io/app_bernoulli/", 
+    height = "1000px")
+```
+
+<iframe src="https://tereom.shinyapps.io/app_bernoulli/?showcase=0" width="480" height="1000px"></iframe>
+
 Ahora resumimos los elementos básicos de la inferencia bayesiana, que son
 relativamente simples:
 
@@ -362,7 +372,7 @@ sims %>% group_by(dist) %>%
 ## # A tibble: 2 x 2
 ##   dist      theta_hat
 ##   <chr>         <dbl>
-## 1 inicial       0.501
+## 1 inicial       0.499
 ## 2 posterior     0.611
 ```
 Nota que el estimador de máxima verosimilitud es $\hat{p} = 19/30 = 0.63$, que
@@ -446,7 +456,7 @@ Ahora regresamos al problema de estimación del máximo de una distribución uni
 En este caso, consideraremos un problema más concreto. Supongamos que hay una lotería
 (tipo tradicional)
 en México y no sabemos cuántos números hay. Obtendremos una muestra iid de $n$ números,
-ya haremos una aproximación continua, suponiendo que
+y haremos una aproximación continua, suponiendo que
 
 $$X_i \sim U[0,\theta]$$
 
@@ -455,7 +465,8 @@ $$P(X_1,\ldots, X_n|\theta) = \theta^{-n},$$
 cuando $\theta$ es mayor que todas las $X_i$, y cero en otro caso. Necesitaremos
 una inicial $P(\theta)$.
 
-Por la forma que tiene la verosimilitud, podemos intentar una distribución Pareto,
+Por la forma que tiene la verosimilitud, podemos intentar una 
+[distribución Pareto](https://en.wikipedia.org/wiki/Pareto_distribution),
 que tiene la forma
 
 $$P(\theta) = \frac{\alpha \theta_0^\alpha}{\theta^{\alpha + 1}}$$
@@ -480,7 +491,7 @@ Nótese ahora que la posterior cumple (multiplicando verosimilitud por inicial):
 $$P(\theta|X_1,\ldots, X_n |\theta) \propto \theta^{-(n + 2.1)}$$
 
 para $\theta$ mayor que el máximo de las $X_n$'s y 300, y cero en otro caso. Esta distribución
-es pareto con $\theta_0' = \max\{300, X_1,\ldots, X_n\}$ y $\alpha = n + 1.1$
+es pareto con $\theta_0' = \max\{300, X_1,\ldots, X_n\}$ y $\alpha' = n + 1.1$
 
 Una vez planteado nuestro modelo, veamos los datos. Obtuvimos la siguiente
 muestra de números:
@@ -656,7 +667,7 @@ Otro ejemplo típico es el modelo normal-normal:
 - (Normal-normal) Si $X_i\sim \mathsf{N}(\mu,\sigma)$, con $\sigma$ conocida, y tomamos
 como distribución inicial para $\mu \sim \mathsf{N}(\mu_0,\sigma_0)$, y definimos
 la *precisión* $\tau$ como el inverso de la varianza $\sigma^2$, entonces la posterior
-de $mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
+de $\mu$ es Normal con media $(1-\lambda) \mu_0 + \lambda\overline{x}$, 
 y precisión $\tau_0 + n\tau$, donde $\lambda = \frac{n\tau}{\tau_0 + n\tau}$
 
 \BeginKnitrBlock{ejercicio}<div class="ejercicio">Completa cuadrados para mostrar las fórmulas del modelo normal-normal con
@@ -669,12 +680,12 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
 
   - $\tau = \frac{1}{\sigma^2} \sim \mathsf{Gamma}(\alpha,\beta)$
   - $\mu|\sigma$ es normal con media $\mu_0$ y varianza $\sigma^2 / {n_0}$ , y
-  - $p(\mu, \sigma) = p(\mu|\sigma)p(\sigma)$
+  - $p(\mu, \sigma) = p(\mu|\sigma)p(\sigma)$  
 
 - Entonces la posterior es:
   - $\tau|x$ es $\mathsf{Gamma}(\alpha', \beta')$, con $\alpha' = \alpha + n/2$,
   $\beta' = \beta + \frac{1}{2}\sum_{i=1}^{n}(x_{i} - \bar{x})^2 + \frac{nn_0}{n+n_0}\frac{({\bar{x}}-\mu_{0})^2}{2}$
-  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $ \sigma^2/({n_0 +n})$.
+  - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $\sigma^2/({n_0 +n})$.
 
   - $p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)$
 
@@ -688,7 +699,7 @@ para simular de la conjunta de $\mu$ y $\tau$ podemos simular primero $\tau$ (o 
 usar este valor para simular de $\mu$: el par de valores resultantes son una simulación
 de la conjunta.
 
-2. Los parámetros $a,b$ para la inicial de $\tau$ pueden interpretarse como sigue: $\sqrt{b/a}$ es
+2. Los parámetros $\alpha,\beta$ para la inicial de $\tau$ pueden interpretarse como sigue: $\sqrt{\beta/\alpha}$ es
 un valor "típico" a priori para la varianza poblacional, y $a$ indica qué tan seguros estamos de
 este valor típico.
 
@@ -1050,7 +1061,7 @@ Una vez que ajustamos un modelo bayesiano, podemos simular nuevas observaciones
 a partir del modelo. Esto tiene dos utilidades:
 
 - Hacer predicciones acerca de datos no observados.
-- Confirmar que nuevas producidas simuladas con el modelo son similares a las
+- Confirmar que nuevas observaciones, producidas simulando con el modelo son similares a las
 que de hecho observamos. Esto nos permite confirmar la calidad del ajuste del
 modelo, y se llama **verificación predictiva posterior**.
 
