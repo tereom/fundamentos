@@ -985,6 +985,15 @@ y hacemos replicaciones posteriores de los datos observados:
 
 ```{r}
 x <- rnbinom(250, mu = 20, size = 3)
+crear_sim_rep <- function(x){
+  n <- length(x)
+  suma <- sum(x)
+  sim_rep <- function(rep){
+    lambda <- rgamma(1, sum(x) + 1, n + 0.1)
+    x_rep <- rpois(n, lambda)
+    tibble(rep = rep, x_rep = x_rep)
+  }
+}
 sim_rep <- crear_sim_rep(x)
 lineup_tbl <- map(1:5, ~ sim_rep(.x)) %>%
   bind_rows() %>%
