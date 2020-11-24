@@ -33,9 +33,9 @@ $$p(\theta|x) \propto p(x|\theta) \,  p(\theta).$$
 Supongamos por ejemplo que quisiéramos calcular las medias posteriores de los
 parámetros $\theta$. En teoría, tendríamos que calcular
 
-$$\hat \theta = \mathbb{E}[{\theta}\, |\, x] = \int \theta \, p(\theta|x) \, d\theta$$
+$$\hat \theta = \mathbb{E}[{\theta}\, |\, x] = \int \theta \, p(\theta|x) \, \text{d}\theta$$
 Entonces es necesario calcular también $p(x)$, que resulta de la integral
-$$p(x) = \int p(x|\theta) \, p(\theta)\, d\theta$$
+$$p(x) = \int p(x|\theta) \, p(\theta)\, \text{d}\theta$$
 
 Si no tenemos expresiones analíticas simples, tendremos que aproximar numéricamente
 estas integrales de alguna forma. 
@@ -140,7 +140,7 @@ aproximar integrales: por ejemplo, para calcular medias posteriores.
 
 Supongamos que tenemos una densidad $p(\theta)$. 
 
-```{block2, type='mathblock'}
+```{block, type='mathblock'}
 **Integración Monte Carlo**. Supongamos que queremos calcular el valor esperado de
 $g(X)$, donde $X\sim p(X\,|\,\theta).$ Es decir, la variable aleatoria $X$ se
 distribuye de acuerdo al modelo probabilistico $p(X \, | \, \theta),$ de tal forma que 
@@ -162,12 +162,12 @@ aplicado este teorema en varias ocasiones. Nos ha sido útil cuando
 ejemplo, o usando un método estándar como inversión de la función de distribución acumulada).
 
 ### Ejemplo {-}
-En este ejemplo repetimos cosas que ya hemos visto. En el caso de estimación
-de una proporción $\theta, tenemos como inicial
-$p(\theta) \propto \theta$, que es $\mathsf{Beta}(2,1)$. Si observamos 3 éxitos en 4 pruebas,
-entonces sabemos que la posterior es $p(\theta|x)\propto \theta^4(1-\theta)$, que 
-es $\mathsf{Beta}(5, 2)$. Si queremos calcular media y segundo momento posterior para $\theta$,
-en teoría necesitamos calcular
+En este ejemplo repetimos cosas que ya hemos visto. En el caso de estimación de
+una proporción $\theta,$ tenemos como inicial $p(\theta) \propto \theta$, que es
+$\mathsf{Beta}(2,1)$. Si observamos 3 éxitos en 4 pruebas, entonces sabemos que
+la posterior es $p(\theta|x)\propto \theta^4(1-\theta)$, que es
+$\mathsf{Beta}(5, 2)$. Si queremos calcular media y segundo momento posterior
+para $\theta$, en teoría necesitamos calcular
 
 $$\mu = \int_0^1 \theta p(\theta|X = 3)\, d\theta,\,\, \mu_2=\int_0^1 \theta^2 p(\theta|X = 3)\, d\theta$$
 
@@ -268,13 +268,15 @@ que mango sea el sabor preferido por la población es de 66%. La integral corres
 no es trivial.
 
 
-```{block2, type='ejercicio'}
+```{block, type='ejercicio'}
+
 - ¿Cuáles son las probabilidades a priori de que cada sabor sea el preferido
 por la población?
 - ¿Cuál es la integral correspondiente a las probabilidades que acabamos de calcular?
   ¿Qué tan fácil es hacer esta integral de manera analítica?
 - Calcula la probabilidad de que mango sea preferido a limón?
 - ¿Qué conclusión práctica sacas de estos resultados?
+
 ```
 
 
@@ -451,10 +453,12 @@ de Markov** cuya distribución a largo plazo es $p(\theta)$. Esto implica que si
 $\theta^{(1)},\theta^{(2)}, \ldots, \theta^{(M)}$ es una simulación de esta
 cadena, y $M$ es suficientemente grande
 
-1. La distribución de las $\theta^{(i)}$ es aproximadamente $p(\theta)$,
-2. Tenemos que
-$$ \frac1M \sum_{m = 1}^M h(\theta^{(m)}) \to \int h(\theta)p(\theta)\, d\theta$$
+- La distribución de las $\theta^{(i)}$ es aproximadamente $p(\theta)$,
+- Tenemos que
+$$ \frac1M \sum_{m = 1}^M h\left(\theta^{(m)}\right) \to \int h(\theta)p(\theta)\, d\theta$$
+
 cuando $M\to \infty$
+
 ```
 
 **Observaciones**: 
@@ -584,6 +588,7 @@ Repite este proceso varias veces. Verifica que:
     de la cadena de Markov. Explica cómo afecta a cada caso el valor inicial de las
     simulaciones de Metrópolis.
   - Repite para otra estadística, como la desviación estándar o el rangon intercuartil.
+  
 ```
 
 
@@ -1234,7 +1239,7 @@ donde vemos que el resultado que obtuvimos es razonablemente consistente
 con nuestra información inicial, y las 10 mil tiradas de dado
 fueron altamente informativas. 
 
-```{block2, type="ejercicio"}
+```{block, type="ejercicio"}
 
 - ¿Qué crees que pasaría si sólo hubieramos tirado 40 veces cada
 dado? ¿Qué tanto habríamos aprendido? Puedes usar datos

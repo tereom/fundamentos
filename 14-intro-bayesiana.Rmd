@@ -617,41 +617,44 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
 
 **Observaciones**
 
-1. Nótese que este último ejemplo tienen más de un parámetro. En estos casos,
-el objeto de interés es la **posterior conjunta** de los parámetros $p(\theta_1,\theta_2,\cdots, \theta_p|x)$.
-Este último ejemplo es relativamente simple pues por la selección de iniciales,
-para simular de la conjunta de $\mu$ y $\tau$ podemos simular primero $\tau$ (o $\sigma$), y después
-usar este valor para simular de $\mu$: el par de valores resultantes son una simulación
-de la conjunta.
+1. Nótese que este último ejemplo tienen más de un parámetro. En estos casos, el
+objeto de interés es la **posterior conjunta** de los parámetros
+$p(\theta_1,\theta_2,\cdots, \theta_p|x)$. Este último ejemplo es relativamente
+simple pues por la selección de iniciales, para simular de la conjunta de $\mu$
+y $\tau$ podemos simular primero $\tau$ (o $\sigma$), y después usar este valor
+para simular de $\mu$: el par de valores resultantes son una simulación de la
+conjunta.
 
-2. Los parámetros $a,b$ para la inicial de $\tau$ pueden interpretarse como sigue: $\sqrt{b/a}$ es
-un valor "típico" a priori para la varianza poblacional, y $a$ indica qué tan seguros estamos de
-este valor típico.
+2. Los parámetros $a,b$ para la inicial de $\tau$ pueden interpretarse como
+sigue: $\sqrt{b/a}$ es un valor "típico" a priori para la varianza poblacional,
+y $a$ indica qué tan seguros estamos de este valor típico.
 
-3. Nótese que para que funcionen las fórmulas de la manera más simple,
-escogimos una dependencia a priori
-entre la media y la precisión: $\tau = \sigma^{-2}$ indica la escala de variabilidad que hay en la
-población, la incial de la media tiene varianza $\sigma^2/n_0$. Si la escala
-de variabilidad de la población es más grande, tenemos más incertidumbre acerca de la localización
+3. Nótese que para que funcionen las fórmulas de la manera más simple, escogimos
+una dependencia a priori entre la media y la precisión: $\tau = \sigma^{-2}$
+indica la escala de variabilidad que hay en la población, la incial de la media
+tiene varianza $\sigma^2/n_0$. Si la escala de variabilidad de la población es
+más grande, tenemos más incertidumbre acerca de la localización
 de la media.
 
-4. Aunque esto tiene sentido en algunas aplicaciones, y por convenviencia usamos esta familia
-conjugada, muchas veces es preferible otro tipo de especificaciones para las iniciales: por ejemplo,
-la media normal y la desviación estándar uniforme, o media normal, con iniciales
-independientes. Sin embargo, estos casos
-no son tratables con análisis conjugado (veremos más adelante cómo tratarlos con MCMC).
+4. Aunque esto tiene sentido en algunas aplicaciones, y por convenviencia usamos
+esta familia conjugada, muchas veces es preferible otro tipo de especificaciones
+para las iniciales: por ejemplo, la media normal y la desviación estándar
+uniforme, o media normal, con iniciales independientes. Sin embargo, estos casos
+no son tratables con análisis conjugado (veremos más adelante cómo tratarlos con
+MCMC).
 
 
 ### Ejemplo {-}
-Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor con
-una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de forma que $X_i\sim \mathsf{N}(\mu, \sigma^2)$.
+Supongamos que queremos estimar la estatura de los cantantes de tesitura tenor
+con una muestra iid de tenores de Estados Unidos. Usaremos el modelo normal de
+forma que $X_i\sim \mathsf{N}(\mu, \sigma^2)$.
 
-Una vez decidido el modelo, tenemos que poner distribución inicial para los parámetros
-$(\mu, \sigma^2)$.
+Una vez decidido el modelo, tenemos que poner distribución inicial para los
+parámetros $(\mu, \sigma^2)$.
 
-Comenzamos con $\sigma^2$. Como está el modelo,
-esta inicial debe estar dada para la precisión $\tau$, pero podemos simular para ver cómo
-se ve nuestra inicial para la desviación estándar. En la población general la desviación
+Comenzamos con $\sigma^2$. Como está el modelo, esta inicial debe estar dada
+para la precisión $\tau$, pero podemos simular para ver cómo se ve nuestra
+inicial para la desviación estándar. En la población general la desviación
 estándar es alrededor de 7 centímetros
 
 ```{r}
@@ -671,31 +674,26 @@ Ahora simulamos para calcular cuantiles
 tau <- rgamma(1000, a, b)
 quantile(tau, c(0.05, 0.95))
 sigma <- 1 / sqrt(tau)
-mean(sigma)
-quantile(sigma, c(0.05, 0.95))
+c(media = 1/sqrt(mean(tau)), media_sigma = mean(sigma), quantile(sigma, c(0.05, 0.95)))
 ```
 Que es dispersión considerable: con poca probabilidad la desviación estándar
 es menor a 4 centímetros, y también creemos que es poco creíble la desviación
 estándar sea de más de 13 centímetros.
 
 
-Comenzamos con $\mu$. Sabemos, por ejemplo, que
-con alta probabilidad la media debe ser algún número entre 1.60 y 1.80. Podemos investigar: la media
-nacional en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82.
-Esto es *variabilidad en la población*: debe ser muy poco probable, por ejemplo, que la
-media de tenores sea 1.82
-Quizá los
-cantantes tienden a ser un poco más altos o bajos que la población general, así que
-podríamos agregar algo de dispersión.
+Comenzamos con $\mu$. Sabemos, por ejemplo, que con alta probabilidad la media
+debe ser algún número entre 1.60 y 1.80. Podemos investigar: la media nacional
+en estados unidos está alrededor de 1.75, y el percentil 90% es 1.82. Esto es
+*variabilidad en la población*: debe ser muy poco probable, por ejemplo, que la
+media de tenores sea 1.82 Quizá los cantantes tienden a ser un poco más altos o
+bajos que la población general, así que podríamos agregar algo de dispersión.
 
-Podemos establecer parámetros y simular de la marginal a partir
-de las fórmulas de arriba para entender
-cómo se ve la inicial de $\mu$:
-
+Podemos establecer parámetros y simular de la marginal a partir de las fórmulas
+de arriba para entender cómo se ve la inicial de $\mu$:
 
 ```{r}
 mu_0 <- 175 # valor medio de inicial
-n_0 <- 5 # cuánta concentración en la inicial
+n_0 <- 5    # cuánta concentración en la inicial
 tau <- rgamma(1000, a,b)
 sigma <- 1/sqrt(tau)
 mu <- map_dbl(sigma, ~ rnorm(1, mu_0, .x / sqrt(n_0)))
@@ -726,16 +724,17 @@ sims_tbl <- tibble(rep = 1:20) %>%
   unnest(cols = c(estatura))
 ggplot(sims_tbl, aes(x = estatura)) + geom_histogram() +
   facet_wrap(~ rep) +
-  geom_vline(xintercept = c(150, 180), colour = "red")
+  geom_vline(xintercept = c(150, 180), colour = "red") + 
+  ggtitle("Realizaciones de datos bajo la previa")
 ```
 
-Pusimos líneas de referencia en 150 y 180. Vemos que nuestras iniciales no producen
-simulaciones totalmente fuera del contexto, y parecen cubrir apropiadamente el
-espacio de posiblidades para estaturas de los tenores. Quizá hay algunas realizaciones
-poco creíbles, pero no extremadamente. En este punto, podemos regresar y ajustar
-la inicial para $\sigma$, que parece tomar valores demasiado grandes (produciendo
-por ejemplo una simulación con estatura de 220 y 140, que deberían ser menos probables).
-
+Pusimos líneas de referencia en 150 y 180. Vemos que nuestras iniciales no
+producen simulaciones totalmente fuera del contexto, y parecen cubrir
+apropiadamente el espacio de posiblidades para estaturas de los tenores. Quizá
+hay algunas realizaciones poco creíbles, pero no extremadamente. En este punto,
+podemos regresar y ajustar la inicial para $\sigma$, que parece tomar valores
+demasiado grandes (produciendo por ejemplo una simulación con estatura de 220 y
+140, que deberían ser menos probables).
 
 Ahora podemos usar los datos para calcular nuestras posteriores.
 
@@ -767,7 +766,7 @@ calcular_pars_posterior <- function(x, pars_inicial){
   # posterior mu
   mu_1 <- (n_0 * mu_0 + n * media) / (n + n_0)
   n_1 <- n + n_0
-  c(mu_1, n_1, a_1, b_1)
+  c(mu = mu_1, n = n_1, alpha = a_1, beta = b_1)
 }
 pars_posterior <- calcular_pars_posterior(cantantes$estatura_cm, c(mu_0, n_0, a, b))
 pars_posterior
@@ -812,8 +811,8 @@ ggplot(sims %>% filter(dist == "posterior"),
   geom_point(data = medias_post, size = 5, colour = "black") +
   coord_equal()
 ```
-Podemos construir intervalos creíbles del 90% para estos dos parámetros, por ejemplo
-haciendo intervalos de percentiles:
+Podemos construir intervalos de credibilidad del 90% para estos dos parámetros,
+por ejemplo haciendo intervalos de percentiles:
 
 ```{r}
 f <- c(0.05, 0.5, 0.95)
@@ -829,12 +828,11 @@ Como comparación, los estimadores de máxima verosimlitud son
 ```{r}
 media_mv <- mean(cantantes$estatura_cm)
 sigma_mv <- mean((cantantes$estatura_cm - media_mv)^2) %>% sqrt
-c(media_mv, sigma_mv)
+c(mu_mle = media_mv, sigma_mle = sigma_mv)
 ```
 
-Ahora solo resta checar que el modelo es razonable. Veremos más adelante cómo hacer esto,
-usando la distribución predictiva posterior.
-
+Ahora solo resta checar que el modelo es razonable. Veremos más adelante cómo
+hacer esto, usando la distribución predictiva posterior.
 
 
 ## Pasos de un análisis de datos bayesiano {-}
@@ -936,7 +934,8 @@ done $n$ es el tamaño de muestra de la muestra original $x$.
 ### Ejemplo: estaturas de tenores {-}
 
 En este ejemplo, usaremos la posterior predictiva para checar nuestro modelo.
-Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra predictiva posterior, y compararemos estas muestras con la observada.
+Vamos a crear varias muestras, del mismo tamaño que la original, según nuestra
+predictiva posterior, y compararemos estas muestras con la observada.
 
 Y ahora simulamos otra muestra
 
@@ -975,9 +974,9 @@ ves y cómo lo resolverías?
 
 ### Ejemplo: modelo Poisson {-}
 
-Supongamos que pensamos el modelo para las observaciones es
-Poisson con parámetro $\lambda$. Pondremos como inicial para $\lambda$ una exponencial
-con media 10.
+Supongamos que pensamos el modelo para las observaciones es Poisson con
+parámetro $\lambda$. Pondremos como inicial para $\lambda$ una exponencial con
+media 10.
 
 Nótese que la posterior está dada por
 
@@ -1032,8 +1031,6 @@ ggplot(lineup_tbl, aes(x = x_rep)) +
 Y verificamos que en este caso el ajuste del modelo es apropiado.
 
 
-
-
 ## Predicción {-}
 
 Cuando queremos hacer predicciones particulares acerca de datos
@@ -1062,14 +1059,16 @@ f <- c(0.025, 0.5, 0.975)
 sims_posterior %>% summarise(f = f, y_pred = quantile(y_pred, f))
 ```
 
-Y con esto obtenemos el intervalo (163, 189), al 95%, para una nueva observación. Nótese
-que este intervalo no puede construirse con una simulación particular de la posterior de los parámetros,
-pues sería demasiado corto.
+Y con esto obtenemos el intervalo (163, 189), al 95%, para una nueva
+observación. Nótese que este intervalo no puede construirse con una simulación
+particular de la posterior de los parámetros, pues sería demasiado corto.
 
-Es posible demostrar que en este caso, la posterior predictiva tiene una forma conocida:
+Es posible demostrar que en este caso, la posterior predictiva tiene una forma
+conocida:
 
-- La posterior predictiva para el modelo normal-gamma inverso es una distribución
-$t$ con $2\alpha'$ grados de libertad, centrada en $\mu'$, y con escala $s^2 = \frac{\beta'}{\alpha'}\frac{n + n_0 + 1}{n +n_0}$
+- La posterior predictiva para el modelo normal-gamma inverso es una
+distribución $t$ con $2\alpha'$ grados de libertad, centrada en $\mu'$, y con
+escala $s^2 = \frac{\beta'}{\alpha'}\frac{n + n_0 + 1}{n +n_0}$
 
 ```{r}
 mu_post <- pars_posterior[1]

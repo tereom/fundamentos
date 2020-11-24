@@ -844,7 +844,7 @@ incurrir en sesgo, si ese costo se subsana con una reducción considerable de la
 varianza. Los estimadores insesgados que vimos en esta sección fueron subóptimos
 en muchos casos justamente porque son insesgados, e incurren en varianza grande.
 
-```{block2, type = 'ejercicio'}
+```{block, type = 'ejercicio'}
 Regresa a los ejemplos anteriores donde evaluamos el desempeño de la media
 posterior en varios ejemplos. Muestra en las gráficas dónde ves el balance
 entre sesgo y varianza que cumplen cuando los comparamos con estimadores
