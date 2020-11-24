@@ -33,14 +33,14 @@ probabilidad es sobre las distintas muestras que se pueden obtener según el
 diseño del muestreo.
 
 Los intervalos creíbles en principio no tienen por qué cumplir esta propiedad, pero
-consideramos en la práctica es una garantía mínima que deberían cumplir.
+consideramos que en la práctica es una garantía mínima que deberían cumplir.
 
 El enfoque resultante se llama **bayesiano calibrado**, @little2011 . La idea
 es seguir el enfoque bayesiano usual para construir nuestras estimaciones,
-pero verificar hasta donde es posible que los intervalos resultantes satisfacen
+pero verificar hasta donde sea posible que los intervalos resultantes satisfacen
 alguna garantía frecuentista básica.
 
-**Observación**: checar que la cobertura real es similar a la nominal es importante
+**Observación**. checar que la cobertura real es similar a la nominal es importante
 en los dos enfoques: frecuentista y bayesiano. Los intervalos frecuentistas, como
 hemos visto, generalmente son aproximados, y por lo tanto no cumplen automáticamente
 esta propiedad de calibración.
@@ -137,7 +137,7 @@ ejemplo %>% mutate(intervalo = intervalo_bayes(n, k)) %>% pull(intervalo) %>%
 
 ¿Cuáles de estos intervalos cubren al verdadero valor? Nótese que **no podemos
 descalificar a ningún método por no cubrir una vez**. Es fácil producir un intervalo
-con 100% de cobertura: (0,1). Pero no nos informa de dónde es probable que esté
+con 100% de cobertura: (0,1). Pero no nos informa dónde es probable que esté
 el parámetro.
 
 Sin embargo, podemos checar la cobertura frecuentista haciendo una cantidad grande de simulaciones:
@@ -182,8 +182,9 @@ graficar_cobertura <- function(cobertura_tbl){
 cobertura_wald %>% 
   graficar_cobertura()
 ```
+
 La cobertura real es mucho más baja que la nominal en muchos casos, especialmente
-cuando la $p$ es baja $n$ es chica. Pero incluso para muestras relativamente grandes (100),
+cuando la $p$ es baja y $n$ es chica. Pero incluso para muestras relativamente grandes (100),
 la cobertura es mala si $p$ es chica.
 
 Ahora probamos nuestro método alternativo:
@@ -198,8 +199,9 @@ bind_rows(cobertura_wald, cobertura_bayes) %>%
   mutate(tipo = factor(tipo, levels = c('intervalo_wald', 'intervalo_bayes'))) %>% 
   graficar_cobertura()
 ```
+
 Y vemos que en general el intervalo de Bayes es superior al de Wald, en sentido
-de que su cobertura es más cercana a la nominal. El caso donde fallan los dos
+de que su cobertura real es más cercana a la nominal. El caso donde fallan los dos
 es para muestras muy chicas $n=5, 10$, con probabilidades de éxito chicas $p\leq 0.02$.
 
 - Sin embargo, si tenemos información previa acerca del tamaño de la proporción que estamos
@@ -231,6 +233,7 @@ bind_rows(cobertura_wald, cobertura_bayes, cobertura_ac) %>%
   mutate(tipo = factor(tipo, levels = c('intervalo_wald', 'intervalo_bayes', 'intervalo_agresti_coull'))) %>% 
   graficar_cobertura()
 ```
+
 Que tiende a ser demasiado conservador para proporciones chicas:
 
 ```{r}
@@ -268,9 +271,7 @@ quantile(beta_sims, c(0.01, 0.05, 0.50, 0.90, 0.99)) %>% round(3)
 qplot(beta_sims)
 ```
 
-
 Veamos cómo se ven los intervalos bayesianos producidos con esta inicial:
-
 
 ```{r}
 crear_intervalo_bayes <- function(a, b){
@@ -296,15 +297,17 @@ cobertura_bayes <- calcular_cobertura(simulaciones,
 graficar_cobertura(bind_rows(cobertura_bayes, cobertura_ac) %>% filter(p < 0.05)) +
   ylim(c(0.5, 1))
 ```
+
 Y vemos que la calibración es similar. Notemos sin embargo que
-la longitud de los intervalos del intervalo bayesiano es **mucho
-más corto** que el de Agresti-Coull cuando la muestra es chica:
+la longitud del del intervalo bayesiano es **mucho menor** que el de 
+Agresti-Coull cuando la muestra es chica:
 
 ```{r}
 ggplot(bind_rows(cobertura_bayes, cobertura_ac), 
        aes(x = p, y = long_media, colour = tipo)) +
   geom_point() + facet_wrap(~n) 
 ```
+
 Cuando la muestra es chica, los intervalos de bayes son similares
 a los iniciales, y mucho más cortos que los de Agresti-Coull. 
 Para muestras intermedias (50-100) los intervalos bayesianos
@@ -340,6 +343,7 @@ bind_rows(beta_sims_inicial, beta_sims_posterior) %>%
   ggplot(aes(x = prop, fill = dist)) +
     geom_histogram(alpha = 0.5, position = "identity") 
 ```
+
 Donde vemos que no aprendimos mucho en este caso, pero nuestras creencias
 sí cambiaron en comparación con la inicial.
 
@@ -378,6 +382,7 @@ k <- sum(muestra_enigh$mas_150mil)
 k
 intervalo_bayes_2(120, sum(muestra_enigh$mas_150mil)) %>% round(3)
 ```
+
 La media posterior es
 
 ```{r}
@@ -386,6 +391,7 @@ prop_post
 ```
 
 El estimador de máxima verosimilitud es
+
 ```{r}
 k / 120
 ```
@@ -423,7 +429,7 @@ con el conocimiento previo, y esto resulta en **mayor precisión** en las estima
 ## Ejemplo: modelo normal y estaturas {-}
 
 Haremos un experimento donde simularemos muestras de los datos de cantantes. Usaremos el
-modelo normal-gama inverso que discutimos anteriormente, con la información inicial
+modelo normal-gamma inverso que discutimos anteriormente, con la información inicial
 que elicitamos. ¿Cómo se compara la estimación de máxima verosimilitud con la media
 posterior?
 
@@ -551,6 +557,7 @@ ggplot(aes(x = max_verosim, y = media_post)) +
   geom_segment(aes(x = .5, y = 6, xend = .5, yend = sqrt(b/(a - 1))), 
                colour='red', size=1, arrow =arrow(length = unit(0.5, "cm")))
 ```
+
 Nótese como estimaciones demasiado bajas o demasiada altas son contraídas
 hacia valores más consistentes con la inicial, lo cual resulta en 
 menor error. El valor esperado de $\sigma$ bajo la distribución inicial 
@@ -604,7 +611,6 @@ discutimos brevemente teoría general que nos sirve para seleccionar
 estimadores puntuales, y que esperemos ponga en contexto la parte
 anterior que acabamos de discutir. Usaremos algunos conceptos que vimos
 en la parte de propiedades de estimadores de máxima verosimilitud.
-
 
 Definimos una **función de pérdida** $L(\theta, \hat{\theta}_n)$, que 
 mide el costo de la discrepancia entre nuestro estimador 
