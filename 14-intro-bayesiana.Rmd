@@ -241,11 +241,6 @@ los de la inicial.
 
 Puedes experimentar en esta [shiny app](https://tereom.shinyapps.io/app_bernoulli/) con diferentes iniciales, número de volados y observación de éxitos.
 
-```{r shiny_bernoulli}
-knitr::include_app("https://tereom.shinyapps.io/app_bernoulli/", 
-    height = "1000px")
-```
-
 Ahora resumimos los elementos básicos de la inferencia bayesiana, que son
 relativamente simples:
 
@@ -947,10 +942,10 @@ Podemos simular varias muestras y hacer una prueba de lineup:
 
 ```{r}
 library(nullabor)
+set.seed(9921)
 sims_obs <- tibble(.n = 1:19) %>%
   mutate(estatura_cm = map(.n, ~ simular_normal_invgamma(20, pars_posterior))) %>%
   unnest(estatura_cm)
-set.seed(9921)
 pos <- sample(1:20, 1)
 lineup_tbl <- lineup(true = cantantes %>% select(estatura_cm),
                      samples = sims_obs, pos = pos)
