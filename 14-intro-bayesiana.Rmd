@@ -559,7 +559,6 @@ interés, y también están sujetas a críticas y confrontación con datos.
 
 Los dos ejemplos que hemos visto arriba son ejemplos de análisis conjugado:
 
-
 - (Beta-bernoulli) Si las observaciones $X_i$ son $\mathsf{Bernoulli}(p)$ ($n$ fija)
  queremos estimar $p$, y tomamos como distribución inicial para $p$ una $\mathsf{Beta}(a,b)$,
 entonces la posterior para $p$ cuando $S_n=k$ es $\mathsf{Beta}(k + a, n - k + b)$,
@@ -584,6 +583,25 @@ Nótese que en estos casos, dada una forma de la verosimilitud, tenemos una
 familia conocida de iniciales tales que las posteriores están en la misma
 familia. Estos modelos son convenientes porque podemos hacer simulaciones de la
 posterior de manera fácil, o usar sus propiedades teóricas.
+
+```{block, type = 'mathblock'}
+
+**Definición.** Un *modelo bayesiano conjugado* es aquel que mantiene la
+distribución posterior dentro de la misma familia que la distribución previa. 
+
+Es decir, sea una muestra $X_1, \ldots, X_n \overset{iid}{\sim} f(X\,|\,
+\theta),$ y sea $p (\theta ) = \pi(\theta \, | \, \varphi_0)$ 
+la distribución previa para nuestro parámetro desconocido $\theta$ donde
+$\varphi_0$ denota los hiper-parámetros que definen dicha distribución. 
+
+Bajo un modelo conjugado, la distribución posterior $p(\theta | \underline{X}_n)$ 
+satisface 
+$$p(\theta \, | \, \underline{X}_n) = \pi(\theta \, | \, \varphi_1),$$
+donde $\varphi_1$ son los hiper-parámetros actualizados del modelo que se usó para
+la previa.
+
+```
+
 
 Otro ejemplo típico es el modelo normal-normal:
 
@@ -655,7 +673,7 @@ parámetros $(\mu, \sigma^2)$.
 Comenzamos con $\sigma^2$. Como está el modelo, esta inicial debe estar dada
 para la precisión $\tau$, pero podemos simular para ver cómo se ve nuestra
 inicial para la desviación estándar. En la población general la desviación
-estándar es alrededor de 7 centímetros
+estándar es alrededor de 7 centímetros.
 
 ```{r}
 # Comenzamos seleccionando un valor que creemos típico para la desviación estándar
@@ -722,19 +740,22 @@ set.seed(3461)
 sims_tbl <- tibble(rep = 1:20) %>%
   mutate(estatura = map(rep, ~ simular_normal_invgamma(500, c(mu_0, n_0, a, b)))) %>%
   unnest(cols = c(estatura))
-ggplot(sims_tbl, aes(x = estatura)) + geom_histogram() +
+ggplot(sims_tbl, aes(x = estatura)) + 
+  geom_rect(inherit.aes = FALSE,
+            aes(xmin=150, xmax=180, ymin=0, ymax=+Inf), 
+            fill='gray', alpha=0.1) + 
+  geom_histogram() +
   facet_wrap(~ rep) +
-  geom_vline(xintercept = c(150, 180), colour = "red") + 
   ggtitle("Realizaciones de datos bajo la previa")
 ```
 
-Pusimos líneas de referencia en 150 y 180. Vemos que nuestras iniciales no
-producen simulaciones totalmente fuera del contexto, y parecen cubrir
-apropiadamente el espacio de posiblidades para estaturas de los tenores. Quizá
-hay algunas realizaciones poco creíbles, pero no extremadamente. En este punto,
-podemos regresar y ajustar la inicial para $\sigma$, que parece tomar valores
-demasiado grandes (produciendo por ejemplo una simulación con estatura de 220 y
-140, que deberían ser menos probables).
+Pusimos banda de referencia entre alturas de 150 y 180. Vemos que nuestras
+iniciales no producen simulaciones totalmente fuera del contexto, y parecen
+cubrir apropiadamente el espacio de posiblidades para estaturas de los tenores.
+Quizá hay algunas realizaciones poco creíbles, pero no extremadamente. En este
+punto, podemos regresar y ajustar la inicial para $\sigma$, que parece tomar
+valores demasiado grandes (produciendo por ejemplo una simulación con estatura
+de 220 y 140, que deberían ser menos probables).
 
 Ahora podemos usar los datos para calcular nuestras posteriores.
 
