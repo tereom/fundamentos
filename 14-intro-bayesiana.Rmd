@@ -594,11 +594,11 @@ Es decir, sea una muestra $X_1, \ldots, X_n \overset{iid}{\sim} f(X\,|\,
 la distribución previa para nuestro parámetro desconocido $\theta$ donde
 $\varphi_0$ denota los hiper-parámetros que definen dicha distribución. 
 
-Bajo un modelo conjugado, la distribución posterior $p(\theta | \underline{X}_n)$ 
+Bajo un modelo conjugado, la distribución posterior $p(\theta | X_1, \ldots, X_n)$ 
 satisface 
-$$p(\theta \, | \, \underline{X}_n) = \pi(\theta \, | \, \varphi_1),$$
-donde $\varphi_1$ son los hiper-parámetros actualizados del modelo que se usó para
-la previa.
+$$p(\theta \, | \, X_1, \ldots, X_n) = \pi(\theta \, | \, \varphi_1),$$
+donde $\varphi_1 = h(\varphi_0, X_1, \ldots, X_n)$ son los hiper-parámetros 
+actualizados del modelo que se usó para la previa.
 
 ```
 
@@ -631,6 +631,20 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
   - $\mu|\sigma,x$ es normal con media $\mu' = \frac{n_0\mu_{0}+n{\bar{x}}}{n_0 +n}$ y varianza $\sigma^2/({n_0 +n})$.
 
   - $p(\mu,\sigma|x) = p(\mu|x,\sigma)p(\sigma|x)$
+
+```{block , type = 'mathblock'}
+
+**Definición.** Decimos que la distribución conjunta de dos parámetros $\theta =
+(\mu, \tau)$ sigue una distribución Normal--Gamma-Inversa, si podemos establecer
+la siguiente estructura de dependencia condicional
+$$\pi(\mu, \tau ) = \pi(\mu \, | \, \tau) \, \pi(\tau),$$
+donde los factores siguen las siguientes distribuciones
+\begin{align*}
+\mu \, | \, \tau , \mu_0, n_0   \sim \mathsf{N}\left(\mu_0, \frac{1}{\tau n_0}\right), \qquad \text{y} \qquad \tau \, | \, \alpha_0, \beta_0  \sim \textsf{Gamma}(\alpha_0, \beta_0).
+\end{align*}
+
+```
+
 
 
 **Observaciones**
