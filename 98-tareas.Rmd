@@ -1064,3 +1064,28 @@ representa esta creencia con una inicial $Beta(50,50)$. ¿Cómo se compara la
 probabilidad posterior de concebir un niño (usando las distintas iniciales)?
 
 
+## 12. Familias conjugadas {-}
+
+Supongamos que nos interesa analizar el IQ de una muestra de estudiantes del 
+ITAM y suponemos que el IQ de un estudiante tiene una distribución normal 
+$x \sim N(\theta, \sigma^2)$ **con $\sigma ^ 2$ conocida.**
+Considera que observamos el IQ de un estudiante $x$. 
+La verosimilitud del modelo es:
+
+$$p(x|\theta)=\frac{1}{\sqrt{2\pi\sigma^2}}exp\left(-\frac{1}{2\sigma^2}(x-\theta)^2\right)$$
+
+Realizaremos un análisis bayesiano por lo que hace falta establer una 
+distribución inicial, elegimos $p(\theta)$ que se distribuya $N(\mu, \tau^2)$ 
+donde elegimos los parámetros $\mu, \tau$ ($\tau$ desviación 
+estándar) que mejor describan nuestras creencias
+iniciales, por ejemplo si tengo mucha certeza de que el $IQ$ promedio se ubica
+en $150$, elegiría $\mu=150$ y una desviación estándar chica, por ejemplo 
+$\tau = 5$. Entonces la distribución inicial es:
+
+$$p(\theta)=\frac{1}{\sqrt{2\pi\tau^2}}exp\left(-\frac{1}{2\tau^2}(\theta-\mu)^2\right)$$
+
+Calcula la distribución posterior $p(\theta|x) \propto p(x|\theta)p(\theta)$, 
+usando la inicial y verosimilitud que definimos arriba. Una vez que realices la
+multiplicación debes identificar el núcleo de una distribución Normal, 
+
+¿cuáles son sus parámetros (media y varianza)?
