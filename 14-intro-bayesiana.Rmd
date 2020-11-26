@@ -634,9 +634,9 @@ como distribuciones iniciales (dadas por 4 parámetros: $\mu_0, n_0, \alpha,\bet
 
 ```{block , type = 'mathblock'}
 
-**Definición.** Decimos que la distribución conjunta de dos parámetros $\theta =
-(\mu, \tau)$ sigue una distribución Normal--Gamma-Inversa, si podemos establecer
-la siguiente estructura de dependencia condicional
+**Definición.** Decimos que la distribución conjunta de dos variables aleatorias 
+$\theta = (\mu, \tau)$ sigue una distribución Normal--Gamma-Inversa, si podemos
+establecer la siguiente estructura de dependencia condicional
 $$\pi(\mu, \tau ) = \pi(\mu \, | \, \tau) \, \pi(\tau),$$
 donde los factores siguen las siguientes distribuciones
 \begin{align*}
