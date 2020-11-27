@@ -1,0 +1,94 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+## 1. Más pruebas de hipótesis {-}
+
+1. (Chihara) Los niveles de calcio en adultos saludables se distribuyen de acuerdo
+a una Normal con media 9.5 mg/dl y desviación estándar desconocida. Un médico 
+sospecha que la media de los niveles de calcio para mujeres en su comunidad es 
+distinta. Colecta mediciones de 20 mujeres saludables y encuentra que la media 
+es de 9.2 y la desviación estándar muestral de 1.1. Escribe la hipótesis nula, 
+realiza una prueba de hipótesis e interpreta los resultados.
+
+2. (Chihara) Los datos
+[Alelager](https://raw.githubusercontent.com/tereom/fundamentos/render-html/data/Alelager.csv)
+contienen unformación de calorías y alcohol (por volumen) para una muestra de
+cervezas ale y lager (por 12 oz). Investiga la hipótesis que las ales tienen más
+calorías que las lager.
+
+3. (Wasserman) Mendel criaba chícharos de semillas lisas amarillas y de semillas
+corrugadas verdes. Éstas daban lugar a 4 tipos de descendientes: amarrillas
+lisas, amarillas corrugadas, verdes lisas y verdes corrugadas. El número de cada
+una es multinomial con parámetro $p=(p_1, p_2, p_3, p_4)$. De acuerdo a su
+teoría de herencia este vector de probabilidades es:
+
+$$p=(9/16,3/16,3/16,1/16)$$
+
+A lo largo de $n=556$ experimentos observó $x=(315,101,108,32)$. Utiliza la
+prueba de cociente de verosimilitudes para probar $H_0:p=p_0$ contra $H_0:p\ne
+p_0$.
+
+4. (Wasserman) Sea $X=(X_1,\dots,X_n)\sim Uniforme(0,\theta)$ y $T=max(X)$ (el
+máximo de $X$). Queremos probar: $H_0: \theta=1/2$ contra $H_1:\theta>1/2$
+  
+En este caso la prueba Wald no es apropiada pues $T$ no converge a la Normal.
+Supongamos que decidimos probar la hipótesis rechazando $H_0$ si $T>c$.
+
+* Encuentra la función de potencia.  
+* ¿Qué valor de $c$ corresponde a un tamaño de prueba $\alpha=0.05$?  
+* En una muestra de tamaño $n=20$ con $T=0.48$ ¿cuál es el valor $p$?, ¿qué 
+concluyes acerca de $H_0$?  
+* En una muestra de tamaño $n=20$ con $T=0.52$ ¿cuál es el valor $p$?, ¿qué 
+concluyes acerca de $H_0$?
+  
+  
+## 2. Modelo Beta-Binomial {-}
+  
+Una compañía farmacéutica afirma que su nueva medicina incrementa la 
+probabilidad de concebir un niño (sexo masculino), pero aún no publican 
+estudios. Supón que conduces un experimento en el cual $50$ parejas se 
+seleccionan de manera aleatoria de la población, toman la medicina y conciben.
+Nacen 30 niños y 20 niñas.
+
+a) Quieres estimar la probabilidad de concebir un niño para parejas que toman la
+medicina. ¿Cuál es una inicial apropiada (experimenta con la distribución Beta
+para elegir)? No tiene que estar centrada en $0.5$ pues esta corresponde a
+personas que no toman la medicina, y la inicial debe reflejar tu incertidumbre
+sobre el efecto de la droga.
+
+b) Usando tu inicial de a) grafica la posterior y decide si es creíble que las
+parejas que toman la medicina tienen una probabilidad de $0.5$ de concebir un
+niño.
+
+c) Supón que la farmacéutica asevera que la probabilidad de concebir un niño
+cuando se toma la medicina es cercana al $60\%$ con alta certeza. Representa 
+esta postura con una distribución inicial $Beta(60,40)$. Comparala con la 
+inicial de un escéptico que afirma que la medicina no hace diferencia, 
+representa esta creencia con una inicial $Beta(50,50)$. ¿Cómo se compara la 
+probabilidad posterior de concebir un niño (usando las distintas iniciales)?
+  
+  
+## 3. Familias conjugadas {-}
+  
+Supongamos que nos interesa analizar el IQ de una muestra de estudiantes del
+ITAM y suponemos que el IQ de un estudiante tiene una distribución normal $x
+\sim N(\theta, \sigma^2)$ **con $\sigma ^ 2$ conocida.** Considera que
+observamos el IQ de un estudiante $x$. La verosimilitud del modelo es:
+  
+$$p(x|\theta)=\frac{1}{\sqrt{2\pi\sigma^2}}\exp\left(-\frac{1}{2\sigma^2}(x-\theta)^2\right)$$
+  
+Realizaremos un análisis bayesiano por lo que hace falta establer una
+distribución inicial, elegimos $p(\theta)$ que se distribuya $N(\mu, \lambda^2)$
+donde elegimos los parámetros $\mu, \lambda$ ($\lambda$ desviación estándar) que mejor
+describan nuestras creencias iniciales, por ejemplo si tengo mucha certeza de
+que el $IQ$ promedio se ubica en $150$, elegiría $\mu=150$ y una desviación
+estándar chica, por ejemplo $\lambda = 5$. Entonces la distribución inicial es:
+  
+$$p(\theta)=\frac{1}{\sqrt{2\pi\lambda^2}}\exp\left(-\frac{1}{2\lambda^2}(\theta-\mu)^2\right)$$
+  
+Calcula la distribución posterior $p(\theta|x) \propto p(x|\theta)p(\theta)$,
+usando la inicial y verosimilitud que definimos arriba. Una vez que realices la
+multiplicación debes identificar el núcleo de una distribución Normal, ¿cuáles
+son sus parámetros (media y varianza)?
