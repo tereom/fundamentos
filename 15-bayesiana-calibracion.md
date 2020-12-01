@@ -92,7 +92,7 @@ y calcula la proporción de éxitos. Un intervalo posterior de credibilidad del 
 encontrando los cuantiles 0.025 y 0.975 de una $\mathsf{Beta}(k + 2, n - k + 2)$
 
 $$I_a = \left [q_{0.025}(k+2, n+4), q_{0.975}(k+2, n+4)\right ]$$
-Que compararemos con el intervalo usual de Wald: si $\hat{\theta} = \frac{k}{n}$, entonces
+Que compararemos con el intervalo usual usando la aproximación normal (también conocido como intervalo de Wald): si $\hat{\theta} = \frac{k}{n}$, entonces
 
 $$I_w = \left [\hat{\theta} - 2 \sqrt{\frac{\hat{\theta}(1-\hat{\theta})}{n}}, \hat{\theta} + 2 \sqrt{\frac{\hat{\theta}(1-\hat{\theta})}{n}}\right]$$
 ¿Cómo podemos comparar la calibración de estos dos intervalos? Nominalmente, deben
@@ -723,7 +723,7 @@ se muestra como una horizontal punteada.
 
 ## Ejemplo: estimación de proporciones {-}
 
-Ahora repetimos el ejercicio 
+Ahora repetimos el ejercicio de simulación con ENIGH.
 
 
 ```r
@@ -773,8 +773,11 @@ estimaciones de máxima verosimilitud:
 estimadores_sim_ag <- estimadores_sim %>% 
   group_by(k, est_mv, media_post) %>% 
   summarise(n = n())
-ggplot(estimadores_sim_ag, aes(x = est_mv, media_post, size = n)) + geom_point() +
-  geom_abline()
+ggplot(estimadores_sim_ag, aes(x = est_mv, media_post)) + geom_point(aes(size = n)) +
+  geom_abline() +
+  geom_point(x = mean(datos$ing_cor > 150000), 
+             y = mean(datos$ing_cor > 150000), color = "red", 
+             size = 5, shape = 3)
 ```
 
 <img src="15-bayesiana-calibracion_files/figure-html/unnamed-chunk-36-1.png" width="576" style="display: block; margin: auto;" />
