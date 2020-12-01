@@ -315,6 +315,13 @@
       "Repository": "CRAN",
       "Hash": "ec8ca05cffcc70569eaaad8469d2a3a7"
     },
+    "expm": {
+      "Package": "expm",
+      "Version": "0.999-5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "6da939036c445e851f7ef690e349cc2c"
+    },
     "fansi": {
       "Package": "fansi",
       "Version": "0.4.1",
@@ -398,6 +405,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "b8cff1d1391fd1ad8b65877f4c7f2e53"
+    },
+    "gganimate": {
+      "Package": "gganimate",
+      "Version": "1.0.7",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "729026083340f1076e622886c5b337b7"
     },
     "ggplot2": {
       "Package": "ggplot2",
@@ -1098,6 +1112,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "acfacaf50a9f63d250c31c248dd9a5ba"
+    },
+    "tweenr": {
+      "Package": "tweenr",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "fc77eb5297507cccfa3349a606061030"
     },
     "urca": {
       "Package": "urca",

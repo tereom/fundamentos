@@ -600,12 +600,11 @@ estimaciones de máxima verosimilitud:
 estimadores_sim_ag <- estimadores_sim %>% 
   group_by(k, est_mv, media_post) %>% 
   summarise(n = n())
-ggplot(estimadores_sim_ag, aes(x = est_mv, media_post)) + 
-  geom_point(aes(size = n)) +
+ggplot(estimadores_sim_ag, aes(x = est_mv, media_post)) + geom_point(aes(size = n)) +
   geom_abline() +
   geom_point(x = mean(datos$ing_cor > 150000), 
              y = mean(datos$ing_cor > 150000), color = "red", 
-             size = 4, shape = 3)
+             size = 5, shape = 3)
 ```
 
 ## Teoría de decisión {-}

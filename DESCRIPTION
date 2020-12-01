@@ -19,7 +19,8 @@ Imports:
     rsample,
     reshape2, 
     plotly,
-    mapproj
+    mapproj, 
+    expm
 Remotes: rstudio/bookdown
 URL: https://github.com/tereom/fundamentos
 BugReports: https://github.com/tereom/fundamentos/issues
