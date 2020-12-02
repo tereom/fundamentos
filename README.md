@@ -2,7 +2,8 @@
 
 
 Notas del curso *Fundamentos de Estadística con Remuestreo* del programa de
-maestría en Ciencia de Datos del ITAM sitio: https://fundamentos-est.netlify.app
+maestría en Ciencia de Datos del ITAM sitio: https://tereom.github.io/fundamentos/
+
 
 ---
 
