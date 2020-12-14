@@ -251,7 +251,6 @@ sims_posterior <- tibble(rep = 1:5000) %>%
 sims_posterior
 ```
 
-
 Y ahora podemos aproximar fácilmente la probabilidad de interés:
 
 ```{r}
@@ -277,6 +276,32 @@ por la población?
 - ¿Qué conclusión práctica sacas de estos resultados?
 ```
 
+```{r, echo = FALSE}
+# esta no es una manera muy rápida, podríamos calcular todas las
+# simulaciones de cada parámetro de manera vectorizada
+sims <- tibble(rep = 1:3000) %>% 
+  mutate(sims_posterior = map(rep, ~ simular_conjunta(.x, datos)), 
+         sims_prior = map(rep, ~ rbeta(4, 2, 1))) %>% 
+  unnest(cols = c(sims_posterior, sims_prior))
+# ¿Cuáles son las probabilidades a priori de que cada sabor sea el preferido por la población?
+sims %>% 
+  group_by(rep) %>% 
+  mutate(sabor = sabor[which.max(sims_prior)]) %>% 
+  group_by(sabor) %>% 
+  count(sabor) %>% 
+  ungroup() %>% 
+  mutate(prop = n / sum(n))
+
+# Calcula la probabilidad de que mango sea preferido a limón?
+sims %>% 
+  filter(sabor %in% c("mango", "limón")) %>% 
+  group_by(rep) %>% 
+  mutate(sabor = sabor[which.max(sims_prior)]) %>% 
+  group_by(sabor) %>% 
+  count(sabor) %>% 
+  ungroup() %>% 
+  mutate(prop = n / sum(n))
+```
 
 ## Simulando de la posterior {-}
 
@@ -297,7 +322,87 @@ la función $f(\theta)$.
 
 ## Método de Metrópolis {-}
 
-En el método de Metrópolis, uno de los más antiguos, comenzamos
+Veremos un ejemplo relativemente simple que nos puede ayudar
+a ganar un poco de intuición acerca de este algoritmo.
+
+Supongamos que un vendedor de *Yakult* trabaja a lo largo de una cadena de
+islas:
+
+* Constantemente viaja entre las islas ofreciendo sus productos;
+
+* Al final de un día de trabajo decide si permanece en la misma isla o se 
+transporta a una de las $2$ islas vecinas;
+
+* El vendedor ignora la distribución de la población en las islas y el número
+total de islas; sin embargo, una vez que se encuentra en una isla puede
+investigar la población de la misma y también  de la isla a la que se propone
+viajar después.
+
+* El objetivo del vendedor es visitar las islas de manera proporcional a la 
+población de cada una. Con esto en mente el vendedor utiliza el siguiente 
+proceso: 
+    1) Lanza un volado, si el resultado es águila se propone ir a la isla 
+del lado izquierdo de su ubicación actual y si es sol a la del lado derecho.
+    2) Si la isla propuesta en el paso anterior tiene población mayor a la 
+población de la isla actual, el vendedor decide viajar a ella. Si la isla vecina 
+tiene población menor, entonces visita la isla propuesta con una probabilidad que 
+depende de la población de las islas. Sea $P^*$ la población de la isla 
+propuesta y $P_{t}$ la población de la isla actual. Entonces el vendedor
+cambia de isla con probabilidad 
+$$q_{mover}=P^*/P_{t}$$
+
+A la larga, si el vendedor sigue la heurística anterior la probabilidad de que
+el vendedor este en alguna de las islas coincide con la población relativa de
+la isla. 
+
+```{r, fig.height=6, fig.width=3.5}
+islas <- tibble(islas = 1:10, pob = 1:10)
+camina_isla <- function(i){ # i: isla actual
+    u <- runif(1) # volado
+    v <- ifelse(u < 0.5, i - 1, i + 1)  # isla vecina (índice)
+    if (v < 1 | v > 10) { # si estas en los extremos y el volado indica salir
+      return(i)
+    }
+    u2 <- runif(1)
+    p_move = min(islas$pob[v] / islas$pob[i], 1)
+    if (p_move  > u2) {
+        return(v) # isla destino
+    }
+    else {
+      return(i) # me quedo en la misma isla
+    }
+}
+pasos <- 100000
+iteraciones <- numeric(pasos)
+iteraciones[1] <- sample(1:10, 1) # isla inicial
+for (j in 2:pasos) {
+    iteraciones[j] <- camina_isla(iteraciones[j - 1])
+}
+caminata <- tibble(pasos = 1:pasos, isla = iteraciones)
+plot_caminata <- ggplot(caminata[1:1000, ], aes(x = pasos, y = isla)) +
+    geom_point(size = 0.8) +
+    geom_path(alpha = 0.5) +
+    coord_flip() + 
+    labs(title = "Caminata aleatoria") +
+    scale_y_continuous(expression(theta), breaks = 1:10) +
+    scale_x_continuous("Tiempo")
+plot_dist <- ggplot(caminata, aes(x = isla)) +
+    geom_histogram() +
+    scale_x_continuous(expression(theta), breaks = 1:10) +
+    labs(title = "Distribución objetivo", 
+       y = expression(P(theta)))
+plot_caminata / plot_dist
+```
+
+Notemos que para aproximar la distribución objetivo debemos permitir que el vendedor 
+recorra las islas durante una sucesión larga de pasos y registramos sus visitas. Y nuestra aproximación de la distribución es justamente el registro de sus 
+visitas. 
+
+¿Cómo se relaciona el ejemplo con la distribución posterior? Las distribución 
+de la cuál simularemos será justamente la posterior. Ahora pasaremos a un ejemplo donde
+buscamos simular de la distribución posterior del parámetro $\theta$.
+
+Al igual que en el ejemplo del vendedor, comenzamos
 con un valor inicial de los parámetros $\theta^{(0)}$ en el soporte de $p(\theta)$,
 es decir $p(\theta^{(0)})>0.$
 
@@ -589,38 +694,7 @@ Repite este proceso varias veces. Verifica que:
 
 ## ¿Por qué funciona Metrópolis? {-}
 
-Veremos un ejemplo relativemente simple que nos puede ayudar
-a mejorar nuestra intuición acerca de este algoritmo.
-
-Supongamos que un vendedor de *Yakult* trabaja a lo largo de una cadena de
-islas:
-
-* Constantemente viaja entre las islas ofreciendo sus productos;
-
-* Al final de un día de trabajo decide si permanece en la misma isla o se 
-transporta a una de las $2$ islas vecinas;
-
-* El vendedor ignora la distribución de la población en las islas y el número
-total de islas; sin embargo, una vez que se encuentra en una isla puede
-investigar la población de la misma y también  de la isla a la que se propone
-viajar después.
-
-* El objetivo del vendedor es visitar las islas de manera proporcional a la 
-población de cada una. Con esto en mente el vendedor utiliza el siguiente 
-proceso: 
-    1) Lanza un volado, si el resultado es águila se propone ir a la isla 
-del lado izquierdo de su ubicación actual y si es sol a la del lado derecho.
-    2) Si la isla propuesta en el paso anterior tiene población mayor a la 
-población de la isla actual, el vendedor decide viajar a ella. Si la isla vecina 
-tiene población menor, entonces visita la isla propuesta con una probabilidad que 
-depende de la población de las islas. Sea $P^*$ la población de la isla 
-propuesta y $P_{t}$ la población de la isla actual. Entonces el vendedor
-cambia de isla con probabilidad 
-$$q_{mover}=P^*/P_{t}$$
-
-A la larga, si el vendedor sigue la heurística anterior la probabilidad de que
-el vendedor este en alguna de las islas coincide con la población relativa de
-la isla. 
+Retomemos el ejemplo del vendedor de *Yakult*,
 
 ```{r, fig.height=6, fig.width=3.5}
 islas <- tibble(islas = 1:10, pob = 1:10)
@@ -728,7 +802,6 @@ Las $3$ puntos anteriores nos permiten generar muestras aleatorias de la
 distribución objetivo, sin importar si esta está normalizada. Esta técnica es
 particularmente útil cuando cuando la distribución objetivo es una posterior
 proporcional a $p(x|\theta)p(\theta)$.
-
 
 Para entender porque funciona el algoritmo de Metrópolis hace falta entender $2$
 puntos, primero que la distribución objetivo es **estable**: si la probabilidad
