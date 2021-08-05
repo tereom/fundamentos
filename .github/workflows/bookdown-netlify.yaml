@@ -16,6 +16,7 @@ jobs:
       - name: Setup R
         uses: r-lib/actions/setup-r@master
         with:
+          r-version: '3.5.3'
           crayon.enabled: 'FALSE'
 
       - uses: r-lib/actions/setup-pandoc@master
