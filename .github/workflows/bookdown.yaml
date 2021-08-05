@@ -3,6 +3,8 @@ on:
      branches:
        - render-html
 
+
+
 name: renderbook
 
 jobs:
@@ -12,12 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: r-lib/actions/setup-r@v1
-        with:
-          crayon.enabled: 'FALSE'
       - uses: r-lib/actions/setup-pandoc@v1
-      - name: Install packages
-        run: Rscript -e 'install.packages(c("rmarkdown","bookdown","tidyverse","patchwork","ggthemes","ggrepel","reshape2","kableExtra","timeDate","here","nullabor","LaplacesDemon","survey","srvyr","rsample","plotly","Hmisc","mapproj","expm"))'
-      - name: Render book
+      - name: Install rmarkdown
+        run: Rscript -e 'install.packages(c("rmarkdown","bookdown"))'
+      - name: Render Book
         run: Rscript -e 'bookdown::render_book("index.Rmd")'
       - uses: actions/upload-artifact@v1
         with:
@@ -26,7 +26,7 @@ jobs:
 
 # Need to first create an empty gh-pages branch
 # see https://pkgdown.r-lib.org/reference/deploy_site_github.html
-# and also add secrets for a GITHUB_PAT and EMAIL to the repository
+# and also add secrets for a GH_PAT and EMAIL to the repository
 # gh-action from Cecilapp/GitHub-Pages-deploy
   checkout-and-deploy:
    runs-on: ubuntu-latest
@@ -47,3 +47,5 @@ jobs:
           EMAIL: ${{ secrets.EMAIL }}               # must be a verified email
           GH_TOKEN: ${{ secrets.GH_PAT }} # https://github.com/settings/tokens
           BUILD_DIR: _book/                     # "_site/" by default
+
+
