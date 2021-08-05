@@ -769,7 +769,8 @@ buscar (VV) y en otra no se dio esa indicación. ¿Las instrucciones verbales
 ayudan a fusionar más rápido el estereograma?
 
 ```{r, message = FALSE, echo = FALSE, fig.width =4, fig.height = 3}
-fusion <- read_delim("./data/fusion_time.txt", delim = " ", trim_ws = TRUE)
+fusion <- read_table("./data/fusion_time.txt")
+
 ggplot(fusion, aes(x = nv.vv, y = time)) + geom_boxplot() + geom_jitter()
 ```
 
